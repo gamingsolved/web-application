@@ -6,14 +6,38 @@
 
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('bundles/app/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('bundles/app/default.css') }}">
         {% endblock %}
 
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <header class="clearfix">
+            <nav class="navbar navbar-fixed-top">
+                <div class="wrapper">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a class="brandname brand navbar-brand" href="{{ path('homepage') }}">Scalable Graphics</a>
+                        </div>
+                        <div class="collapse navbar-collapse" id="navbar">
+                            {{ include('_right-navigation.html.twig') }}
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+
+    {% block body %}{% endblock %}
 
         {% block javascripts %}
+            <script src="{{ asset('bundles/app/vendor/jquery/dist/jquery.min.js') }}"></script>
             <script src="{{ asset('bundles/app/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
         {% endblock %}
 

@@ -1,0 +1,116 @@
+body {
+    padding-top: 68px;
+    background-color: #fff;
+    color: #444;
+    white-space: normal;
+    font-weight: 300;
+}
+
+/* Custom page header */
+header nav {
+    margin-bottom: 0;
+    background-color: #444;
+}
+
+header .wrapper {
+    border-bottom: 1px solid #444;
+}
+
+header a {
+    color: #fff;
+}
+
+header a.brand:hover,
+header a.brand:focus {
+    color: #fff;
+    text-shadow: 0 0 5px #fff;
+}
+
+.navbar {
+    margin: 0;
+    padding-top: 6px;
+    border-color: #777;
+}
+
+.navbar-toggle {
+    margin-top: 12px;
+}
+
+.navbar-toggle,
+.btn-primary {
+    border-color: #444;
+    background-color: #444;
+}
+
+.navbar-toggle {
+    background-color: #777;
+}
+
+.icon-bar {
+    background-color: #444;
+}
+
+header + main {
+    margin-top: 40px;
+}
+
+main {
+    padding: 0 0 48px;
+    min-height: 400px;
+}
+
+section {
+    padding: 40px 0;
+}
+
+section:empty {
+    display: none;
+}
+
+.brand {
+
+}
+
+/* Make the masthead heading the same height as the navigation */
+.brandname {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #fff;
+    font-weight: 100;
+    font-size: 23px;
+    line-height: 20px;
+}
+
+.brandname .glyphicon {
+    top: 3px;
+}
+
+.brandname .right-word {
+    margin-left: -4px;
+}
+
+.messages {
+    margin-bottom: -20px;
+    padding-top: 0;
+    background-color: #fff;
+}
+
+#loggedin-info {
+    position: fixed;
+    top: 68px;
+    right: 0;
+    z-index: 1031;
+    padding: 0 4px 1px 7px;
+    border-radius: 0 0 0 7px;
+    background-color: #ddd;
+    color: #444;
+    font-weight: 300;
+}
+
+#navbar.collapsing #loggedin-info {
+    display: none;
+}
+
+#navbar.in #loggedin-info {
+    top: 204px;
+}
