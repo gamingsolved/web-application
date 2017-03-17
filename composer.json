@@ -16,6 +16,8 @@
             "Tests\\": "tests/"
         }
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": ">=7.1.0",
         "symfony/symfony": "3.2.*",
@@ -28,7 +30,8 @@
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "^2.0",
-        "twig/twig": "^1.0||^2.0"
+        "twig/twig": "^1.0||^2.0",
+        "friendsofsymfony/user-bundle": "^2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
