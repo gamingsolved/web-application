@@ -114,3 +114,14 @@ section:empty {
 #navbar.in #loggedin-info {
     top: 204px;
 }
+
+
+.jumbotron {
+    background-color: #347fac;
+    color: #fff;
+}
+
+.jumbotron a {
+    color: #fff;
+    font-weight: bold;
+}
