@@ -9,9 +9,8 @@ security:
         fos_userbundle:
             id: fos_user.user_provider.username
 
-    security:
-        encoders:
-            FOS\UserBundle\Model\UserInterface: bcrypt
+    encoders:
+        FOS\UserBundle\Model\UserInterface: bcrypt
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -27,12 +26,16 @@ security:
             pattern: ^/
             form_login:
                 provider: fos_userbundle
-                csrf_provider: security.csrf.token_manager
+                remember_me: true
+            remember_me:
+                    secret:   "%secret%"
+                    lifetime: 31536000 # 365 days in seconds
+                    path:     /
             logout:       true
             anonymous:    true
 
-      access_control:
-          - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-          - { path: ^/registration, role: IS_AUTHENTICATED_ANONYMOUSLY }
-          - { path: ^/password-reset, role: IS_AUTHENTICATED_ANONYMOUSLY }
-          - { path: ^/administration/, role: ROLE_ADMIN }
+    access_control:
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/registration, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/password-reset, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/administration/, role: ROLE_ADMIN }
