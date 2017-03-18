@@ -15,7 +15,7 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
 
         $client = static::createClient();
 
-        $client->request('GET', '/remoteDesktops/');
+        $client->request('GET', '/en/remoteDesktops/');
 
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
 
@@ -28,7 +28,7 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
 
         $client = $this->getClientThatRegisteredAndActivatedAUser();
 
-        $crawler = $client->request('GET', '/remoteDesktops/');
+        $crawler = $client->request('GET', '/en/remoteDesktops/');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 

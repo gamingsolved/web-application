@@ -35,7 +35,7 @@ trait Helpers
     protected function getClientThatRegisteredAndActivatedAUser() : Client
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/register/');
+        $crawler = $client->request('GET', '/en/register/');
 
         $buttonNode = $crawler->selectButton('Register');
 
@@ -52,7 +52,7 @@ trait Helpers
         $um = $container->get('fos_user.user_manager');
 
         $user = $um->findUserByEmail('testuser@example.com');
-        $client->request('GET', '/register/confirm/' . $user->getConfirmationToken());
+        $client->request('GET', '/en/register/confirm/' . $user->getConfirmationToken());
 
         return $client;
     }

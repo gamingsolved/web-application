@@ -16,14 +16,16 @@ class DefaultController extends Controller
      */
     public function catchallAction(Request $request)
     {
+        if (substr($request->getRequestUri(), 0, 7) === '/en/en/') {
+            return $this->render('default/notfound.html.twig');
+        }
+
         $redirectTo = '/en' . $request->getRequestUri();
         return $this->redirect($redirectTo);
     }
 
     public function indexAction(Request $request)
     {
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render('default/index.html.twig');
     }
 }
