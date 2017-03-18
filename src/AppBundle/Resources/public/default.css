@@ -49,6 +49,17 @@ header a.brand:focus {
     background-color: #444;
 }
 
+#langnav {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    background-color: #fff;
+    padding: 4px;
+    z-index: 99999999;
+    height: 20px;
+    font-size: 10px;
+}
+
 header + main {
     margin-top: 40px;
 }
