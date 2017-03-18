@@ -22,10 +22,6 @@ class DefaultController extends Controller
 
         $redirectTo = '/en' . $request->getRequestUri();
 
-        if (substr($request->getRequestUri(), 0, 4) === '/de/') {
-            $redirectTo = '/de' . $request->getRequestUri();
-        }
-
         return $this->redirect($redirectTo);
     }
 
