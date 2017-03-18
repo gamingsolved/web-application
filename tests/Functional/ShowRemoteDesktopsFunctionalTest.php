@@ -5,7 +5,7 @@ namespace Tests\Functional;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Helpers\Helpers;
 
-class CreateRemoteDesktopFunctionalTest extends WebTestCase
+class ShowRemoteDesktopsFunctionalTest extends WebTestCase
 {
     use Helpers;
 

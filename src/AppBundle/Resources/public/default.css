@@ -36,8 +36,7 @@ header a.brand:focus {
     margin-top: 12px;
 }
 
-.navbar-toggle,
-.btn-primary {
+.navbar-toggle {
     border-color: #444;
     background-color: #444;
 }
