@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\CloudInstance;
 
+use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\RemoteDesktop;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,7 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AwsCloudInstance extends CloudInstance
 {
-    const CLOUD_INSTANCE_PROVIDER = CloudInstance::CLOUD_INSTANCE_PROVIDER_AWS;
+    /**
+     * @var AwsCloudInstanceProvider
+     */
+    protected $awsCloudInstanceProvider;
 
     /**
      * @var string
@@ -28,6 +32,11 @@ class AwsCloudInstance extends CloudInstance
      */
     protected $remoteDesktop;
 
+    public function __construct()
+    {
+        $this->awsCloudInstanceProvider = new AwsCloudInstanceProvider();
+    }
+
     /**
      * @return string
      */
@@ -42,5 +51,13 @@ class AwsCloudInstance extends CloudInstance
     public function setRemoteDesktop(RemoteDesktop $remoteDesktop)
     {
         $this->remoteDesktop = $remoteDesktop;
+    }
+
+    /**
+     * @return AwsCloudInstanceProvider
+     */
+    public function getCloudInstanceProvider()
+    {
+        return $this->awsCloudInstanceProvider;
     }
 }

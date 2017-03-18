@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -43,9 +44,9 @@ class RemoteDesktop
 
     /**
      * @var int
-     * @ORM\Column(name="cloud_instance_provider", type="smallint", nullable=false)
+     * @ORM\Column(name="cloud_instance_provider_id", type="smallint", nullable=false)
      */
-    private $cloudInstanceProvider = CloudInstance::CLOUD_INSTANCE_PROVIDER_AWS;
+    private $cloudInstanceProviderId = CloudInstanceProvider::CLOUD_INSTANCE_PROVIDER_AWS_ID;
 
     /**
      * @var ArrayCollection|\AppBundle\Entity\CloudInstance\AwsCloudInstance
@@ -92,7 +93,7 @@ class RemoteDesktop
      */
     public function addCloudInstance(CloudInstance $cloudInstance)
     {
-        if ($this->cloudInstanceProvider == CloudInstance::CLOUD_INSTANCE_PROVIDER_AWS) {
+        if ($this->cloudInstanceProviderId == CloudInstanceProvider::CLOUD_INSTANCE_PROVIDER_AWS_ID) {
             $cloudInstance->setRemoteDesktop($this);
             $this->awsCloudInstances[] = $cloudInstance;
         } else {
@@ -106,7 +107,7 @@ class RemoteDesktop
      */
     public function getCloudInstances()
     {
-        if ($this->cloudInstanceProvider == CloudInstance::CLOUD_INSTANCE_PROVIDER_AWS) {
+        if ($this->cloudInstanceProviderId == CloudInstanceProvider::CLOUD_INSTANCE_PROVIDER_AWS_ID) {
             return $this->awsCloudInstances;
         } else {
             throw new \Exception();

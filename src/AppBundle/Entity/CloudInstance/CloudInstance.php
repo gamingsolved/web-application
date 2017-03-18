@@ -2,14 +2,15 @@
 
 namespace AppBundle\Entity\CloudInstance;
 
-abstract class CloudInstance
-{
-    const CLOUD_INSTANCE_PROVIDER_AWS = 0;
+use AppBundle\Entity\RemoteDesktop;
 
-    public function getCloudProvider()
-    {
-        if (!defined(self::CLOUD_INSTANCE_PROVIDER)) {
-            throw new \Exception();
-        }
-    }
+interface CloudInstanceInterface
+{
+    public function getCloudInstanceProvider();
+    public function setRemoteDesktop(RemoteDesktop $remoteDesktop);
+}
+
+abstract class CloudInstance implements CloudInstanceInterface
+{
+
 }
