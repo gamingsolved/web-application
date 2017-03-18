@@ -6,6 +6,7 @@ use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
+use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -121,7 +122,7 @@ class RemoteDesktop
     /**
      * @param RemoteDesktopKind $kind
      */
-    public function setKind(string $kind)
+    public function setKind(RemoteDesktopKind $kind)
     {
         $this->kind = $kind;
     }
@@ -132,6 +133,11 @@ class RemoteDesktop
     public function getKind()
     {
         return $this->kind;
+    }
+
+    public function setCloudInstanceProvider(CloudInstanceProviderInterface $cloudInstanceProvider)
+    {
+        $this->cloudInstanceProvider = $cloudInstanceProvider;
     }
 
     /**

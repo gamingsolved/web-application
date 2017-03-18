@@ -5,7 +5,8 @@
 {% endif %}
 <ul class="nav navbar-nav pull-right">
     {% if app.user %}
-        <li><a href="{{ path('remotedesktop_new') }}">Create new remote desktop</a></li>
+        <li><a href="{{ path('remotedesktops.new') }}">Your remote desktops</a></li>
+        <li><a href="{{ path('remotedesktops.new') }}">Create new remote desktop</a></li>
         <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
     {% else %}
         <li><a href="{{ path('fos_user_registration_register') }}">Register</a></li>

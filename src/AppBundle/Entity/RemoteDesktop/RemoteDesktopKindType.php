@@ -19,7 +19,7 @@ class RemoteDesktopKindType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if ($value === RemoteDesktopKind::GAMING) {
+        if ((int)$value === RemoteDesktopKind::GAMING) {
             return new RemoteDesktopKindGaming();
         } else {
             throw new \Exception('Could not convert the RemoteDesktopKind value ' . $value . ' to a known RemoteDesktopKind object');

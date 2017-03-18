@@ -19,7 +19,7 @@ class CloudInstanceProviderType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if ($value === CloudInstanceProvider::AWS) {
+        if ((int)$value === CloudInstanceProvider::AWS) {
             return new AwsCloudInstanceProvider();
         } else {
             throw new \Exception('Could not convert the CloudInstanceProvider value ' . $value . ' to a known CloudInstanceProvider object');

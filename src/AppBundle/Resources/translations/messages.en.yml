@@ -1,0 +1,12 @@
+foo: Blah
+
+remoteDesktop:
+    new:
+        form:
+            headline: Create a new remote desktop
+            title_label: Title for this remote desktop:
+            kind_label: What do you want to use this remote desktop for?
+            submit_label: Continue
+    kind:
+        games: Playing games
+        cad: Working with CAD programs
