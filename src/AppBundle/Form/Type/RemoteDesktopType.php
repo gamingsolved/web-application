@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Type;
 
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktopKind;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
@@ -15,13 +16,14 @@ class RemoteDesktopType extends AbstractType
         $builder
             ->add('title', TextType::class, ['label' => 'Title for this remote desktop'])
             ->add(
-                'remoteDesktopType',
+                'kind',
                 ChoiceType::class,
                 [
                     'choices' => [
-                        'Amazon AWS' => CloudInstanceProvider::CLOUD_INSTANCE_PROVIDER_AWS_ID
+                        'Playing games' => RemoteDesktopKind::GAMING,
+                        'Working with CAD programs' => RemoteDesktopKind::CAD
                     ],
-                    'label' => 'Cloud provider'
+                    'label' => 'What do you want to use this desktop for?'
                 ]
             );
     }
