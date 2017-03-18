@@ -1,5 +1,16 @@
 app:
     resource: "@AppBundle/Resources/config/routing.yml"
+    prefix: /{_locale}
+    requirements:
+        _locale: en|fr|de
 
 fos_user_all:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+    prefix: /{_locale}
+    requirements:
+        _locale: en|fr|de
+
+root:
+    path:     /
+    defaults: { _controller: AppBundle:Default:root }
+    methods:  [GET]

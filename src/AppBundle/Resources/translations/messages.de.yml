@@ -1,0 +1,17 @@
+navigation:
+    register: Registrieren
+    login: Einloggen
+
+remoteDesktop:
+    index:
+        headline: Ihre Remote-Desktops
+        no_remote_desktops_yet: Sie haben noch keine Remote-Desktops angelegt.
+    new:
+        form:
+            headline: Einen neuen Remote-Desktop anlegen
+            title_label: Name für diesen Remote-Desktop:
+            kind_label: Wofür möchten Sie diesen Remote-Desktop benutzen?
+            submit_label: Weiter
+    kind:
+        games: Computerspiele spielen
+        cad: Mit CAD Programmen arbeiten

@@ -1,8 +1,6 @@
 # Registration
 security:
     login:
-        username: Your username:
-        password: Your password:
         forgot_password: Forgot password?
 registration:
     email:
@@ -20,16 +18,6 @@ registration:
 
 # Password resetting
 resetting:
-    password_already_requested: The password for this user has already been requested within the last 24 hours.
-    check_email: An email has been sent to %email%. It contains a link you must click to reset your password.
-    request:
-        invalid_username: The username "%username%" does not exist.
-        username: Your username:
-        submit: Reset password
-    reset:
-        submit: Change password
-    flash:
-        success: The password has been reset successfully
     email:
         subject: Scalable Graphics Password Reset
         message: |

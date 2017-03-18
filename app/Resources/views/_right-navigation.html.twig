@@ -9,7 +9,7 @@
         <li><a href="{{ path('remotedesktops.new') }}">Create new remote desktop</a></li>
         <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
     {% else %}
-        <li><a href="{{ path('fos_user_registration_register') }}">Register</a></li>
-        <li><a href="{{ path('fos_user_security_login') }}">Login</a></li>
+        <li><a href="{{ path('fos_user_registration_register') }}">{{ "navigation.register"|trans }}</a></li>
+        <li><a href="{{ path('fos_user_security_login') }}">{{ "navigation.login"|trans }}</a></li>
     {% endif %}
 </ul>

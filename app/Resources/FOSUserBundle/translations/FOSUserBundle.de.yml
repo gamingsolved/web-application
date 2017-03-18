@@ -1,0 +1,32 @@
+# Registration
+security:
+    login:
+        forgot_password: Password vergessen?
+registration:
+    email:
+        subject: Willkommen bei Scalable Graphics!
+        message: |
+            Hallo,
+
+            Um Ihre Konto zu aktivieren, besuchen Sie bitte
+            %confirmationUrl%
+
+            Mit freundlichen Grüßen,
+
+            --
+              Das Scalable Graphics Team
+
+# Password resetting
+resetting:
+    email:
+        subject: Scalable Graphics - Password zurücksetzen
+        message: |
+            Hallo %username%!
+
+            Um ihr Passwort zurückzusetzen, besuchen Sie bitte
+            %confirmationUrl%
+
+            Mit freundlichen Grüßen,
+
+            --
+              Das Scalable Graphics Team

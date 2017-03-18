@@ -1,3 +1,7 @@
+navigation:
+    register: Sign up
+    login: Sign in
+
 remoteDesktop:
     index:
         headline: Your remote desktops

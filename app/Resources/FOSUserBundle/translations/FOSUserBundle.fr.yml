@@ -1,0 +1,4 @@
+# Registration
+security:
+    login:
+        forgot_password: Mot de passe oublié
