@@ -12,6 +12,7 @@ remoteDesktop:
     index:
         headline: Your remote desktops
         no_remote_desktops_yet: You do not yet have any remote desktops.
+        add_button: Create your first remote desktop now
     new:
         form:
             headline: Create a new remote desktop
