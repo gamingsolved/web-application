@@ -12,5 +12,12 @@ fos_user_all:
 
 root:
     path:     /
-    defaults: { _controller: AppBundle:Default:root }
+    defaults: { _controller: AppBundle:Default:catchall }
     methods:  [GET]
+
+catchall:
+    path:     /{catchall}
+    defaults: { _controller: AppBundle:Default:catchall }
+    methods:  [GET]
+    requirements:
+        catchall: ".+"

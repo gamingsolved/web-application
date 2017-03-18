@@ -35,8 +35,9 @@ security:
             anonymous:    true
 
     access_control:
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/administration/, role: ROLE_ADMIN }
-        - { path: ^/remoteDesktops, role: ROLE_USER }
+        - { path: ^/[a-z][a-z]/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/[a-z][a-z]/logout$, role: ROLE_USER }
+        - { path: ^/[a-z][a-z]/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/[a-z][a-z]/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/[a-z][a-z]/administration/, role: ROLE_ADMIN }
+        - { path: ^/[a-z][a-z]/remoteDesktops, role: ROLE_USER }

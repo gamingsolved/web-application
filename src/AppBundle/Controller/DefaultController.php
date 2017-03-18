@@ -8,15 +8,16 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
     /**
-     * The special root "/" (without a langauge tag) ends up here.
+     * We end up here if no other route matches
      *
      * Because we want users to always be on a language path, we redirect
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function rootAction()
+    public function catchallAction(Request $request)
     {
-        return $this->redirect('/en/');
+        $redirectTo = '/en' . $request->getRequestUri();
+        return $this->redirect($redirectTo);
     }
 
     public function indexAction(Request $request)
