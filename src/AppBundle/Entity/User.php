@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use FOS\UserBundle\Model\User as FOSUser;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,7 +23,7 @@ class User extends FOSUser
 
     /**
      * @var ArrayCollection|RemoteDesktop[]
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\RemoteDesktop", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", mappedBy="user")
      */
     private $remoteDesktops;
 

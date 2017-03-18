@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity\CloudInstance;
 
-use AppBundle\Entity\RemoteDesktop;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 
 interface CloudInstanceInterface
 {

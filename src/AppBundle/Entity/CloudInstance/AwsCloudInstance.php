@@ -3,7 +3,8 @@
 namespace AppBundle\Entity\CloudInstance;
 
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
-use AppBundle\Entity\RemoteDesktop;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,37 +28,49 @@ class AwsCloudInstance extends CloudInstance
 
     /**
      * @var RemoteDesktop
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop", inversedBy="awsCloudInstances")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="awsCloudInstances")
      * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id")
      */
     protected $remoteDesktop;
+
+    /**
+     * @var string
+     * @ORM\Column(name="regionInternalName", type="string", length=128)
+     */
+    protected $regionInternalName;
 
     public function __construct()
     {
         $this->awsCloudInstanceProvider = new AwsCloudInstanceProvider();
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId() : string
     {
         return $this->id;
     }
 
-    /**
-     * @param RemoteDesktop $remoteDesktop
-     */
     public function setRemoteDesktop(RemoteDesktop $remoteDesktop)
     {
         $this->remoteDesktop = $remoteDesktop;
     }
 
-    /**
-     * @return AwsCloudInstanceProvider
-     */
-    public function getCloudInstanceProvider()
+    public function getCloudInstanceProvider() : AwsCloudInstanceProvider
     {
         return $this->awsCloudInstanceProvider;
+    }
+
+    public function setRegionInternalName(string $regionInternalName)
+    {
+        $this->regionInternalName = $regionInternalName;
+    }
+
+    public function getRegionInternalName() : string
+    {
+        return $this->regionInternalName;
+    }
+
+    public function getRegion() : Region
+    {
+        return $this->getCloudInstanceProvider()->getRegionByInternalName($this->getRegionInternalName());
     }
 }

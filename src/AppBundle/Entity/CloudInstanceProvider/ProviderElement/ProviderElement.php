@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\CloudInstanceProvider;
+namespace AppBundle\Entity\CloudInstanceProvider\ProviderElement;
 
 abstract class ProviderElement
 {
