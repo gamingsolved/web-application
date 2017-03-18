@@ -21,7 +21,7 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
     public static function createRemoteDesktopKind(int $kind) : RemoteDesktopKindInterface
     {
         if ($kind === self::GAMING) {
-            return new RemoteDesktopKindGaming();
+            return new RemoteDesktopGamingKind();
         } else {
             throw new \Exception();
         }

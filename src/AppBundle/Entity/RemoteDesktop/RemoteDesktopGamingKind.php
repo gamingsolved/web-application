@@ -5,7 +5,7 @@ namespace AppBundle\Entity\RemoteDesktop;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 
-class RemoteDesktopKindGaming extends RemoteDesktopKind {
+class RemoteDesktopGamingKind extends RemoteDesktopKind {
 
     public function __toString(): string
     {
