@@ -22,9 +22,9 @@ class User extends FOSUser
 
     /**
      * @var ArrayCollection|RemoteDesktop[]
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\RemoteDesktop", mappedBy="users")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\RemoteDesktop", mappedBy="user")
      */
-    private $desktops;
+    private $remoteDesktops;
 
     public function __construct()
     {
@@ -34,17 +34,17 @@ class User extends FOSUser
     /**
      * @return ArrayCollection|RemoteDesktop[]
      */
-    public function getDesktops()
+    public function getRemoteDesktops()
     {
-        return $this->desktops;
+        return $this->remoteDesktops;
     }
 
     /**
-     * @param ArrayCollection|RemoteDesktop[] $desktops
+     * @param ArrayCollection|RemoteDesktop[] $remoteDesktops
      */
-    public function setDesktops($desktops)
+    public function setRemoteDesktops($remoteDesktops)
     {
-        $this->desktops = $desktops;
+        $this->remoteDesktops = $remoteDesktops;
     }
 
 }

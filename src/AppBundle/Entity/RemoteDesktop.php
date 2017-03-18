@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,7 +24,7 @@ class RemoteDesktop
 
     /**
      * @var \AppBundle\Entity\User
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\User", inversedBy="desktops")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\User", inversedBy="remoteDesktops")
      * @ORM\JoinColumn(name="users_id", referencedColumnName="id")
      */
     private $user;
@@ -47,20 +48,69 @@ class RemoteDesktop
     private $cloudInstanceProvider = CloudInstance::CLOUD_INSTANCE_PROVIDER_AWS;
 
     /**
-     * @var \AppBundle\Entity\CloudInstance\AwsCloudInstance
-     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\CloudInstance\AwsCloudInstance", mappedBy="remote_desktops")
+     * @var ArrayCollection|\AppBundle\Entity\CloudInstance\AwsCloudInstance
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\CloudInstance\AwsCloudInstance", mappedBy="remoteDesktop", cascade="all")
      */
-    private $awsCloudInstance;
+    private $awsCloudInstances;
+
+    public function __construct() {
+        $this->awsCloudInstances = new ArrayCollection();
+    }
 
     /**
-     * @return CloudInstance
+     * @return string
      */
-    public function getInstance()
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \AppBundle\Entity\User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param CloudInstance $cloudInstance
+     * @return void
+     * @throws \Exception
+     */
+    public function addCloudInstance(CloudInstance $cloudInstance)
     {
         if ($this->cloudInstanceProvider == CloudInstance::CLOUD_INSTANCE_PROVIDER_AWS) {
-            return $this->awsCloudInstance;
+            $cloudInstance->setRemoteDesktop($this);
+            $this->awsCloudInstances[] = $cloudInstance;
         } else {
             throw new \Exception();
         }
     }
+
+    /**
+     * @return ArrayCollection|CloudInstance
+     * @throws \Exception
+     */
+    public function getCloudInstances()
+    {
+        if ($this->cloudInstanceProvider == CloudInstance::CLOUD_INSTANCE_PROVIDER_AWS) {
+            return $this->awsCloudInstances;
+        } else {
+            throw new \Exception();
+        }
+    }
+
 }

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\CloudInstance;
 
+use AppBundle\Entity\RemoteDesktop;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,9 +22,25 @@ class AwsCloudInstance extends CloudInstance
     protected $id;
 
     /**
-     * @var
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\RemoteDesktop", inversedBy="aws_cart_instances")
+     * @var RemoteDesktop
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop", inversedBy="awsCloudInstances")
      * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id")
      */
     protected $remoteDesktop;
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param RemoteDesktop $remoteDesktop
+     */
+    public function setRemoteDesktop(RemoteDesktop $remoteDesktop)
+    {
+        $this->remoteDesktop = $remoteDesktop;
+    }
 }
