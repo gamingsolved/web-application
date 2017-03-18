@@ -23,7 +23,7 @@ class RemoteDesktopType extends AbstractType
                         'Playing games' => RemoteDesktopKind::GAMING,
                         'Working with CAD programs' => RemoteDesktopKind::CAD
                     ],
-                    'label' => 'What do you want to use this desktop for?'
+                    'label' => 'What do you want to use this remote desktop for?'
                 ]
             );
     }

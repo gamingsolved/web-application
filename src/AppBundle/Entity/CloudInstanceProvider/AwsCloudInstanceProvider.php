@@ -2,6 +2,10 @@
 
 namespace AppBundle\Entity\CloudInstanceProvider;
 
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
+
 class AwsCloudInstanceProvider extends CloudInstanceProvider
 {
     public function getRegions() : array

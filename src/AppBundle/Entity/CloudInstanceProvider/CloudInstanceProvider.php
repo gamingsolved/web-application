@@ -2,6 +2,10 @@
 
 namespace AppBundle\Entity\CloudInstanceProvider;
 
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
+
 interface CloudInstanceProviderInterface
 {
     /**
@@ -28,7 +32,7 @@ interface CloudInstanceProviderInterface
 
 abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
 {
-    const CLOUD_INSTANCE_PROVIDER_AWS_ID = 0;
+    const AWS = 0;
 
     /**
      * @param string $regionInternalName

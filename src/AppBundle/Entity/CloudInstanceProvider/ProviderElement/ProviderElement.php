@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\CloudInstanceProvider\ProviderElement;
 
+use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
+
 abstract class ProviderElement
 {
     protected $cloudInstanceProvider;
@@ -9,11 +11,11 @@ abstract class ProviderElement
     protected $humanName;
 
     /**
-     * @param CloudInstanceProvider $cloudInstanceProvider
+     * @param CloudInstanceProviderInterface $cloudInstanceProvider
      * @param string $internalName
      * @param string $humanName
      */
-    public function __construct(CloudInstanceProvider $cloudInstanceProvider, string $internalName, string $humanName)
+    public function __construct(CloudInstanceProviderInterface $cloudInstanceProvider, string $internalName, string $humanName)
     {
         $this->cloudInstanceProvider = $cloudInstanceProvider;
         $this->internalName = $internalName;

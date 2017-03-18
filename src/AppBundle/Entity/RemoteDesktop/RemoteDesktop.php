@@ -2,14 +2,18 @@
 
 namespace AppBundle\Entity\RemoteDesktop;
 
+use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
+use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\DBAL\Types\Type;
 
 Type::addType('RemoteDesktopKindType', 'AppBundle\Entity\RemoteDesktop\RemoteDesktopKindType');
+Type::addType('CloudInstanceProviderType', 'AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderType');
 
 /**
  * @ORM\Entity
@@ -59,10 +63,10 @@ class RemoteDesktop
     private $streamingClient = self::STREAMING_CLIENT_CGX;
 
     /**
-     * @var int
-     * @ORM\Column(name="cloud_instance_provider_id", type="smallint", nullable=false)
+     * @var CloudInstanceProvider
+     * @ORM\Column(name="cloud_instance_provider", type="CloudInstanceProviderType", nullable=false)
      */
-    private $cloudInstanceProviderId = CloudInstanceProvider::CLOUD_INSTANCE_PROVIDER_AWS_ID;
+    private $cloudInstanceProvider;
 
     /**
      * @var ArrayCollection|\AppBundle\Entity\CloudInstance\AwsCloudInstance
@@ -137,25 +141,23 @@ class RemoteDesktop
      */
     public function addCloudInstance(CloudInstance $cloudInstance)
     {
-        if ($this->cloudInstanceProviderId == CloudInstanceProvider::CLOUD_INSTANCE_PROVIDER_AWS_ID) {
+        if ($this->cloudInstanceProvider instanceof AwsCloudInstanceProvider && $cloudInstance instanceof AwsCloudInstance) {
             $cloudInstance->setRemoteDesktop($this);
             $this->awsCloudInstances[] = $cloudInstance;
         } else {
-            throw new \Exception();
+            throw new \Exception(
+                'Cannot add cloud instance of class ' . get_class($cloudInstance) .
+                ' because this remote desktop is configured for cloud instance provider ' . get_class($this->cloudInstanceProvider)
+            );
         }
     }
 
     /**
      * @return ArrayCollection|CloudInstance
-     * @throws \Exception
      */
     public function getCloudInstances()
     {
-        if ($this->cloudInstanceProviderId == CloudInstanceProvider::CLOUD_INSTANCE_PROVIDER_AWS_ID) {
-            return $this->awsCloudInstances;
-        } else {
-            throw new \Exception();
-        }
+        return $this->awsCloudInstances;
     }
 
 }
