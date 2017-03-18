@@ -19,7 +19,7 @@ class ShowRemoteDesktopsFunctionalTest extends WebTestCase
 
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals('http://localhost/login', $client->getResponse()->headers->get('location'));
+        $this->assertEquals('http://localhost/en/login', $client->getResponse()->headers->get('location'));
     }
 
     public function testRemoteDesktopsListAvailableWhenLoggedIn()

@@ -1,6 +1,12 @@
-navigation:
+_navigation:
     register: Registrieren
     login: Einloggen
+    logout: Ausloggen
+    your_remote_desktops: Ihre Remote-Desktops
+    create_new_remote_desktop: Remote-Desktop anlegen
+
+logoutSuccessful:
+    message: Sie haben sich erfolgreich ausgeloggt.
 
 remoteDesktop:
     index:

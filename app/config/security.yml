@@ -38,7 +38,7 @@ security:
                 path:     /
             logout:
                 path:   fos_user_security_logout
-                target: root
+                target: logout_successful
             anonymous: true
 
     access_control:

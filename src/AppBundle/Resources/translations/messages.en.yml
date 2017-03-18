@@ -1,6 +1,12 @@
-navigation:
+_navigation:
     register: Sign up
     login: Sign in
+    logout: Log out
+    your_remote_desktops: Your remote desktops
+    create_new_remote_desktop: Create new remote desktop
+
+logoutSuccessful:
+    message: You are now logged out.
 
 remoteDesktop:
     index:

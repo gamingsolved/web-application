@@ -21,11 +21,22 @@ class DefaultController extends Controller
         }
 
         $redirectTo = '/en' . $request->getRequestUri();
+
+        if (substr($request->getRequestUri(), 0, 4) === '/de/') {
+            $redirectTo = '/de' . $request->getRequestUri();
+        }
+
         return $this->redirect($redirectTo);
     }
 
     public function indexAction(Request $request)
     {
         return $this->render('default/index.html.twig');
+    }
+
+    public function logoutSuccessfulAction()
+    {
+        $this->addFlash('success', $this->get('translator')->trans('logoutSuccessful.message'));
+        return $this->render('default/logoutSuccessful.html.twig');
     }
 }
