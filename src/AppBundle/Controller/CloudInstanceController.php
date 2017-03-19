@@ -63,7 +63,7 @@ class CloudInstanceController extends Controller
             $em->persist($remoteDesktop);
             $em->flush();
 
-            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_CREATED);
+            return $this->redirectToRoute('remotedesktops.index');
         } else {
             return $this->render('AppBundle:cloudInstance:new.html.twig', ['form' => $form->createView()]);
         }

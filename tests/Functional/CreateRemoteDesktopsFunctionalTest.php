@@ -49,11 +49,11 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('For playing computer games', $crawler->filter('span.label-info')->first()->text());
+        $this->assertContains('For playing computer games', $crawler->filter('span.badge')->first()->text());
 
         // Two checks due to line break
         $this->assertContains('Current status:', $crawler->filter('span.label-default')->first()->text());
-        $this->assertContains('not running', $crawler->filter('span.label-default')->first()->text());
+        $this->assertContains('Not running', $crawler->filter('span.label-default')->first()->text());
 
         $this->assertContains('Launch this remote desktop', $crawler->filter('a.btn')->first()->text());
 
@@ -86,9 +86,11 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
         $buttonNode = $crawler->selectButton('Schedule launch');
         $form = $buttonNode->form();
 
-        $crawler = $client->submit($form, [
+        $client->submit($form, [
             'form[region]' => 'eu-central-1',
         ]);
+
+        $crawler = $client->followRedirect();
 
         // We want to be back in the overview
         $this->assertEquals(
@@ -98,15 +100,15 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('Current status:', $crawler->filter('span.label-info')->first()->text());
-        $this->assertContains('launching...', $crawler->filter('span.label-info')->first()->text());
+        $this->assertContains('Current status:', $crawler->filter('span.label-primary')->first()->text());
+        $this->assertContains('Launching...', $crawler->filter('span.label-primary')->first()->text());
 
         $this->assertEquals(
             0,
             $crawler->filter('a.btn:contains("Launch this remote desktop")')->count()
         );
 
-        $this->assertContains('Refresh launch status', $crawler->filter('a.btn')->first()->text());
+        $this->assertContains('Refresh status', $crawler->filter('a.btn')->first()->text());
     }
 
 }
