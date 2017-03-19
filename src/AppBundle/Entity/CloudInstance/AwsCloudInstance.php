@@ -63,7 +63,7 @@ class AwsCloudInstance extends CloudInstance
 
     /**
      * @var string
-     * @ORM\Column(name="admin_password", type="string", length=128)
+     * @ORM\Column(name="admin_password", type="string", length=128, nullable=true)
      */
     protected $adminPassword;
 

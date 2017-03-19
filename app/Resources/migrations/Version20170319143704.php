@@ -15,7 +15,7 @@ class Version20170319143704 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $this->addSql('ALTER TABLE aws_cloud_instances ADD admin_password VARCHAR(128) NOT NULL;');
+        $this->addSql('ALTER TABLE aws_cloud_instances ADD admin_password VARCHAR(128) NULL;');
     }
 
     /**

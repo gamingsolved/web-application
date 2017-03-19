@@ -5,6 +5,7 @@ namespace AppBundle\Command;
 use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinator;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
+use AppBundle\Utility\Cryptor;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -44,7 +45,17 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 $output->writeln('Flavor: ' . $cloudInstance->getFlavor()->getInternalName());
                 $output->writeln('Image: ' . $cloudInstance->getImage()->getInternalName());
                 $output->writeln('Region: ' . $cloudInstance->getRegion()->getInternalName());
-                $output->writeln('Admin password: ' . $cloudInstance->getAdminPassword());
+
+                $output->writeln('Admin password (decrypted): ' . $cloudInstance->getAdminPassword());
+
+                $cryptor = new Cryptor();
+                $output->writeln(
+                    'Admin password (decrypted): ' .
+                    $cryptor->decryptString(
+                        $cloudInstance->getAdminPassword(),
+                        $this->getContainer()->getParameter('secret')
+                    )
+                );
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
                     $output->writeln('Action: launching the cloud instance');
@@ -63,7 +74,10 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                     if ($cloudInstanceCoordinatorClass::hasFinishedLaunching($cloudInstance)) {
                         $adminPassword = null;
                         try {
-                            $adminPassword = $cloudInstanceCoordinatorClass::tryRetrievingAdminPassword($cloudInstance);
+                            $adminPassword = $cloudInstanceCoordinatorClass::tryRetrievingAdminPassword(
+                                $cloudInstance,
+                                $this->getContainer()->getParameter('secret')
+                            );
                         } catch (\Exception $e) {
                             $output->writeln('Could not retrieve admin password');
                         }
