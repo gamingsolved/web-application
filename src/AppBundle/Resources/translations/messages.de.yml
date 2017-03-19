@@ -20,5 +20,5 @@ remoteDesktop:
             kind_label: Wofür möchten Sie diesen Remote-Desktop benutzen?
             submit_label: Weiter
     kind:
-        games: Zum spielen von Computer-Games
-        cad: Zum arbeiten mit CAD Programmen
+        games: Zum Spielen von Computer-Games
+        cad: Zum Arbeiten mit CAD Programmen

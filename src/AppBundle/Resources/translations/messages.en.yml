@@ -15,6 +15,7 @@ remoteDesktop:
         add_button: Create a new remote desktop
         launch_button: Launch this remote desktop
         refresh_button: Refresh status
+        info_launching: Launching an instance can take up to 15 minutes.
     new:
         form:
             headline: Create a new remote desktop

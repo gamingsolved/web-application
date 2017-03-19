@@ -12,44 +12,53 @@
 
                         {% for remoteDesktop in remoteDesktops %}
 
-                            <div class="panel panel-success">
+                            <div class="panel panel-default remotedesktop-panel">
                                 <div class="panel-heading">
                                     <h2 class="panel-title">
                                         <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
                                         {{ remoteDesktop.title }}
-                                        <span class="badge pull-right">{{ remoteDesktop.kind|trans }}</span>
                                     </h2>
-
                                 </div>
 
                                 <div class="panel-body">
-                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
-                                            <h3>
-                                                <span class="label label-default">
-                                                    {{ "remoteDesktop.status.label"|trans }}
-                                                    <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                                                    {{ "remoteDesktop.status.never_launched"|trans }}
-                                                </span>
-                                            </h3>
-                                        {% endif %}
-
-                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_LAUNCHING') %}
-                                            <h3>
-                                                <span class="label label-primary launching-label">
-                                                    {{ "remoteDesktop.status.label"|trans }}
-                                                    <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-                                                    {{ "remoteDesktop.status.launching"|trans }}
-                                                </span>
-                                            </h3>
-
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
+                                        <h3>
                                             <span class="label label-default">
-                                                {{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}
+                                                {{ "remoteDesktop.status.label"|trans }}
+                                                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.status.never_launched"|trans }}
                                             </span>
-                                            &nbsp;
-                                            <span class="label label-default">
-                                                {{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}
+                                        </h3>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_LAUNCHING') %}
+                                        <h3>
+                                            <span class="label label-primary launching-label">
+                                                {{ "remoteDesktop.status.label"|trans }}
+                                                <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.status.launching"|trans }}
                                             </span>
-                                        {% endif %}
+                                        </h3>
+
+                                        <div class="alert alert-warning small" role="alert">
+                                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.info_launching"|trans }}
+                                        </div>
+
+                                        <span class="label label-default">
+                                            {{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}
+                                        </span>
+                                        &nbsp;
+                                        <span class="label label-default">
+                                            {{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}
+                                        </span>
+                                    {% endif %}
+
+                                    <div class="remotedesktop-kind-label">
+                                        <span class="label label-default">
+                                            {{ remoteDesktop.kind|trans }}
+                                        </span>
+                                    </div>
                                 </div>
 
                                 <div class="panel-footer">
@@ -93,8 +102,9 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/app/static-vendor/jquery.pulse.1.0.0.min.js') }}"></script>
 
+    {# This adds a nice "breathing" effect to status labels of desktops that wait for launch to finish #}
+    <script src="{{ asset('bundles/app/static-vendor/jquery.pulse.1.0.0.min.js') }}"></script>
     <script>
         var properties = {
             opacity: 0.25
