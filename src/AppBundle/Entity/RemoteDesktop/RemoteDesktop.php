@@ -202,6 +202,16 @@ class RemoteDesktop
         return $status;
     }
 
+    public function getPublicAddress() : string
+    {
+        return $this->getActiveCloudInstance()->getPublicAddress();
+    }
+
+    public function getAdminPassword() : string
+    {
+        return $this->getActiveCloudInstance()->getAdminPassword();
+    }
+
     public function getFlavorOfActiveCloudInstance() : Flavor
     {
         return $this->getActiveCloudInstance()->getFlavor();

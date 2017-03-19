@@ -33,6 +33,9 @@ interface CloudInstanceInterface
 
     public function setAdminPassword(string $password);
     public function getAdminPassword() : string;
+
+    public function setPublicAddress(string $addr);
+    public function getPublicAddress() : string;
 }
 
 abstract class CloudInstance implements CloudInstanceInterface
@@ -46,6 +49,8 @@ abstract class CloudInstance implements CloudInstanceInterface
     const RUNSTATUS_SCHEDULED_FOR_SHUTDOWN = 3;
     const RUNSTATUS_SHUTTING_DOWN = 4;
     const RUNSTATUS_SHUT_DOWN = 5;
+
+    const ADMIN_PASSWORD_ENCRYPTION_KEY = '06c528c143c3f5c73ae200048782bd422a4f1b90';
 
     public static function getStatusName(int $status) : string {
         switch ($status) {

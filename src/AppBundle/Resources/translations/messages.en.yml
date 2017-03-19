@@ -16,6 +16,9 @@ remoteDesktop:
         launch_button: Launch this remote desktop
         refresh_button: Refresh status
         info_launching: Launching an instance can take up to 15 minutes.
+        publicaddress_label: IP address:
+        username_label: Username:
+        password_label: Password:
     new:
         form:
             headline: Create a new remote desktop
@@ -29,6 +32,7 @@ remoteDesktop:
         label: Current status:
         never_launched: Not running
         launching: Launching...
+        running: Ready to use
 
 cloudInstance:
     new:

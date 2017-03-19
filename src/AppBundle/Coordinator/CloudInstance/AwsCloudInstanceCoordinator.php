@@ -81,13 +81,14 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
                 $cloudInstance->setPublicAddress(
                     $result['Instances'][0]['NetworkInterfaces']['Association']['PublicIp']
                 );
+                return true;
+            } else {
+                return false;
             }
         } catch (\Exception $e) {
             $this->output->writeln($e->getMessage());
             return false;
         }
-
-        return true;
     }
 
     /**

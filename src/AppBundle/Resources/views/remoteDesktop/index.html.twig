@@ -23,8 +23,8 @@
                                 <div class="panel-body">
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
                                         <h3>
+                                            {{ "remoteDesktop.status.label"|trans }}
                                             <span class="label label-default">
-                                                {{ "remoteDesktop.status.label"|trans }}
                                                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                                                 {{ "remoteDesktop.status.never_launched"|trans }}
                                             </span>
@@ -33,8 +33,8 @@
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_LAUNCHING') %}
                                         <h3>
+                                            {{ "remoteDesktop.status.label"|trans }}
                                             <span class="label label-primary launching-label">
-                                                {{ "remoteDesktop.status.label"|trans }}
                                                 <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
                                                 {{ "remoteDesktop.status.launching"|trans }}
                                             </span>
@@ -44,7 +44,34 @@
                                             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.info_launching"|trans }}
                                         </div>
+                                    {% endif %}
 
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_RUNNING') %}
+                                        <h3>
+                                            {{ "remoteDesktop.status.label"|trans }}
+                                            <span class="label label-success">
+                                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.status.running"|trans }}
+                                            </span>
+                                        </h3>
+
+                                        <ul class="list-group">
+                                            <li class="list-group-item">
+                                                <strong>{{ "remoteDesktop.index.publicaddress_label"|trans }}</strong>
+                                                {{ remoteDesktop.publicAddress }}
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>{{ "remoteDesktop.index.username_label"|trans }}</strong>
+                                                Administrator
+                                            </li>
+                                            <li class="list-group-item">
+                                                <strong>{{ "remoteDesktop.index.password_label"|trans }}</strong>
+                                                {{ remoteDesktop.adminPassword }}
+                                            </li>
+                                        </ul>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
                                         <span class="label label-default">
                                             {{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}
                                         </span>

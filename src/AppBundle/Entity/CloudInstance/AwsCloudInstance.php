@@ -8,6 +8,7 @@ use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
+use AppBundle\Utility\Cryptor;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -181,12 +182,24 @@ class AwsCloudInstance extends CloudInstance
 
     public function setAdminPassword(string $password)
     {
-        $this->adminPassword = $password;
+        $cryptor = new Cryptor();
+        $this->adminPassword = $cryptor->encryptString(
+            $password,
+            CloudInstance::ADMIN_PASSWORD_ENCRYPTION_KEY
+        );
     }
 
     public function getAdminPassword() : string
     {
-        return (string)$this->adminPassword;
+        if ($this->adminPassword != '') {
+            $cryptor = new Cryptor();
+            return $cryptor->decryptString(
+                $this->adminPassword,
+                CloudInstance::ADMIN_PASSWORD_ENCRYPTION_KEY
+            );
+        } else {
+            return '';
+        }
     }
 
 
