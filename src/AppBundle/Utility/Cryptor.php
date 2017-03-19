@@ -70,7 +70,7 @@ class Cryptor
             $fmt = $this->format;
         }
         // Build an initialisation vector
-        $iv = mcrypt_create_iv($this->iv_num_bytes, MCRYPT_DEV_URANDOM);
+        $iv = openssl_random_pseudo_bytes($this->iv_num_bytes);
         // Hash the key
         $keyhash = openssl_digest($key, $this->hash_algo, true);
         // and encrypt

@@ -46,16 +46,18 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 $output->writeln('Image: ' . $cloudInstance->getImage()->getInternalName());
                 $output->writeln('Region: ' . $cloudInstance->getRegion()->getInternalName());
 
-                $output->writeln('Admin password (decrypted): ' . $cloudInstance->getAdminPassword());
+                $output->writeln('Admin password (encrypted): ' . $cloudInstance->getAdminPassword());
 
-                $cryptor = new Cryptor();
-                $output->writeln(
-                    'Admin password (decrypted): ' .
-                    $cryptor->decryptString(
-                        $cloudInstance->getAdminPassword(),
-                        $this->getContainer()->getParameter('secret')
-                    )
-                );
+                if ($cloudInstance->getAdminPassword() !== '') {
+                    $cryptor = new Cryptor();
+                    $output->writeln(
+                        'Admin password (decrypted): ' .
+                        $cryptor->decryptString(
+                            $cloudInstance->getAdminPassword(),
+                            $this->getContainer()->getParameter('secret')
+                        )
+                    );
+                }
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
                     $output->writeln('Action: launching the cloud instance');
