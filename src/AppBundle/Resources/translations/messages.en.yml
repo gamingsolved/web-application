@@ -22,6 +22,9 @@ remoteDesktop:
     kind:
         games: For playing computer games
         cad: For working with CAD programs
+    status:
+        label: Current status:
+        never_launched: Not running
 
 cloudInstance:
     new:

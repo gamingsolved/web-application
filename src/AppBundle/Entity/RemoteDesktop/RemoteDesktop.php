@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\PersistentCollection;
 
 Type::addType('RemoteDesktopKindType', 'AppBundle\Entity\RemoteDesktop\RemoteDesktopKindType');
 Type::addType('CloudInstanceProviderType', 'AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderType');
@@ -23,6 +24,11 @@ Type::addType('CloudInstanceProviderType', 'AppBundle\Entity\CloudInstanceProvid
 class RemoteDesktop
 {
     const STREAMING_CLIENT_CGX = 0;
+
+    const STATUS_NEVER_LAUNCHED = 0;
+    const STATUS_LAUNCHING = 0;
+    const STATUS_RUNNING = 0;
+    const STATUS_STOPPED = 0;
 
     /**
      * @var string
@@ -50,12 +56,6 @@ class RemoteDesktop
      * @ORM\Column(name="kind", type="RemoteDesktopKindType", nullable=false)
      */
     private $kind;
-
-    /**
-     * @var boolean
-     * @ORM\Column(name="is_running", type="boolean", nullable=false)
-     */
-    private $isRunning = false;
 
     /**
      * @var int
@@ -160,9 +160,16 @@ class RemoteDesktop
     /**
      * @return ArrayCollection|CloudInstance
      */
-    public function getCloudInstances()
+    public function getCloudInstances() : PersistentCollection
     {
         return $this->awsCloudInstances;
+    }
+
+    public function getStatus() : int
+    {
+        if ($this->getCloudInstances()->isEmpty()) {
+            return self::STATUS_NEVER_LAUNCHED;
+        }
     }
 
 }

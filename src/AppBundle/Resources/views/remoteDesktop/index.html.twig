@@ -10,10 +10,27 @@
 
                     {% if remoteDesktops %}
                         {% for remoteDesktop in remoteDesktops %}
-                            <div class="well remote-desktop-box">
-                                <h2>{{ remoteDesktop.title }}</h2>
-                                <span class="label label-info">{{ remoteDesktop.kind|trans }}</span>
 
+
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h2 class="panel-title">{{ remoteDesktop.title }}</h2>
+                                </div>
+
+                                <div class="panel-body">
+                                    <span class="label label-info">{{ remoteDesktop.kind|trans }}</span>
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
+                                        <span class="label label-default">
+                                        {{ "remoteDesktop.status.label"|trans }}
+                                            {{ "remoteDesktop.status.never_launched"|trans }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="panel-footer">
+                                    <button class="btn btn-success">Launch</button>
+                                </div>
                             </div>
                         {% endfor %}
                     {% else %}

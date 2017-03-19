@@ -36,7 +36,7 @@ class AwsCloudInstance extends CloudInstance
 
     /**
      * @var string
-     * @ORM\Column(name="regionInternalName", type="string", length=128)
+     * @ORM\Column(name="region_internal_name", type="string", length=128)
      */
     protected $regionInternalName;
 
