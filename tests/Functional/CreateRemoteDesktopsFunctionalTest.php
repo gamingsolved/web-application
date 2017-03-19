@@ -43,6 +43,8 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
         $crawler = $client->request('GET', '/en/remoteDesktops/');
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->text());
 
+        $this->assertContains('For playing computer games', $crawler->filter('span.label-info')->text());
+
         $this->assertNotContains('You do not yet have any remote desktops.', $crawler->filter('body')->text());
     }
 

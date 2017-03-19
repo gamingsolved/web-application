@@ -135,3 +135,7 @@ section:empty {
     color: #fff;
     font-weight: bold;
 }
+
+.remote-desktop-box h2 {
+    margin-top: 0;
+}

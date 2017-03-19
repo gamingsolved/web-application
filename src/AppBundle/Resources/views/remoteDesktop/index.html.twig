@@ -10,9 +10,10 @@
 
                     {% if remoteDesktops %}
                         {% for remoteDesktop in remoteDesktops %}
-                            <div class="well">
+                            <div class="well remote-desktop-box">
                                 <h2>{{ remoteDesktop.title }}</h2>
-                                {{ remoteDesktop.kind|trans }}
+                                <span class="label label-info">{{ remoteDesktop.kind|trans }}</span>
+
                             </div>
                         {% endfor %}
                     {% else %}
