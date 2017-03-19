@@ -51,13 +51,16 @@ header a.brand:focus {
 
 #langnav {
     position: fixed;
-    top: 0px;
-    right: 0px;
-    background-color: #fff;
-    padding: 4px;
+    left: 0px;
+    bottom: 0px;
+    background-color: #444;
+    color: #777;
+    padding: 16px;
     z-index: 99999999;
-    height: 20px;
-    font-size: 10px;
+}
+
+#langnav a {
+    color: #777;
 }
 
 header + main {
