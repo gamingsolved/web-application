@@ -3,14 +3,18 @@
 namespace AppBundle\Coordinator\CloudInstance;
 
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
+use Symfony\Component\Console\Output\OutputInterface;
 
 interface CloudInstanceCoordinator
 {
-    public static function launch(CloudInstance $cloudInstance) : bool;
+    public function __construct(array $credentials, Region $region, OutputInterface $output);
 
-    public static function hasFinishedLaunching(CloudInstance $cloudInstance) : bool;
+    public function launch(CloudInstance $cloudInstance) : bool;
 
-    public static function tryRetrievingAdminPassword(CloudInstance $cloudInstance, string $encryptionKey) : string;
+    public function hasFinishedLaunching(CloudInstance $cloudInstance) : bool;
+
+    public function tryRetrievingAdminPassword(CloudInstance $cloudInstance, string $encryptionKey) : string;
 
     //public static function getPublicAddress(CloudInstance $cloudInstance) : string;
 }

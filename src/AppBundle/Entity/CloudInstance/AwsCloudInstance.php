@@ -63,9 +63,24 @@ class AwsCloudInstance extends CloudInstance
 
     /**
      * @var string
+     * @ORM\Column(name="public_address", type="string", length=128, nullable=true)
+     */
+    protected $publicAddress;
+
+    /**
+     * @var string
      * @ORM\Column(name="admin_password", type="string", length=128, nullable=true)
      */
     protected $adminPassword;
+
+
+    // The following fields are AWS specific
+
+    /**
+     * @var string
+     * @ORM\Column(name="ec2_instance_id", type="string", length=128, nullable=true)
+     */
+    protected $ec2InstanceId;
 
 
     public function __construct()
@@ -154,6 +169,16 @@ class AwsCloudInstance extends CloudInstance
         return $this->getCloudInstanceProvider()->getRegionByInternalName($this->regionInternalName);
     }
 
+    public function setPublicAddress(string $addr)
+    {
+        $this->publicAddress = $addr;
+    }
+
+    public function getPublicAddress() : string
+    {
+        return (string)$this->publicAddress;
+    }
+
     public function setAdminPassword(string $password)
     {
         $this->adminPassword = $password;
@@ -162,5 +187,18 @@ class AwsCloudInstance extends CloudInstance
     public function getAdminPassword() : string
     {
         return (string)$this->adminPassword;
+    }
+
+
+    // The following are AWS specific
+
+    public function setEc2InstanceId(string $id)
+    {
+        $this->ec2InstanceId = $id;
+    }
+
+    public function getEc2InstanceId() : string
+    {
+        return (string)$this->ec2InstanceId;
     }
 }
