@@ -14,6 +14,7 @@ remoteDesktop:
         no_remote_desktops_yet: You do not yet have any remote desktops.
         add_button: Create a new remote desktop
         launch_button: Launch this remote desktop
+        refresh_button: Refresh status
     new:
         form:
             headline: Create a new remote desktop
@@ -25,7 +26,8 @@ remoteDesktop:
         cad: For working with CAD programs
     status:
         label: Current status:
-        never_launched: not running
+        never_launched: Not running
+        launching: Launching...
 
 cloudInstance:
     new:

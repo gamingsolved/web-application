@@ -43,6 +43,18 @@ class AwsCloudInstance extends CloudInstance
     protected $flavorInternalName;
 
     /**
+     * @var int
+     * @ORM\Column(name="status", type="smallint")
+     */
+    protected $status;
+
+    /**
+     * @var int
+     * @ORM\Column(name="runstatus", type="smallint")
+     */
+    protected $runstatus;
+
+    /**
      * @var string
      * @ORM\Column(name="image_internal_name", type="string", length=128)
      */
@@ -82,6 +94,32 @@ class AwsCloudInstance extends CloudInstance
     public function getRegionInternalName() : string
     {
         return $this->regionInternalName;
+    }
+
+    public function setStatus(int $status)
+    {
+        if ($status < self::STATUS_IN_USE || $status > self::STATUS_ARCHIVED) {
+            throw new \Exception('Status ' . $status . ' is invalid');
+        }
+        $this->status = $status;
+    }
+
+    public function getStatus() : int
+    {
+        return $this->status;
+    }
+
+    public function setRunstatus(int $runstatus)
+    {
+        if ($runstatus < self::RUNSTATUS_SCHEDULED_FOR_LAUNCH || $runstatus > self::RUNSTATUS_SHUT_DOWN) {
+            throw new \Exception('Runstatus ' . $runstatus . ' is invalid');
+        }
+        $this->runstatus = $runstatus;
+    }
+
+    public function getRunstatus() : int
+    {
+        return $this->runstatus;
     }
 
     public function setFlavor(Flavor $flavor)

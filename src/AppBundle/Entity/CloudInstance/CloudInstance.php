@@ -12,6 +12,12 @@ interface CloudInstanceInterface
 {
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface;
 
+    public function setStatus(int $status);
+    public function getStatus() : int;
+
+    public function setRunstatus(int $runstatus);
+    public function getRunstatus() : int;
+
     public function setFlavor(Flavor $flavor);
     public function getFlavor() : Flavor;
 
@@ -26,5 +32,13 @@ interface CloudInstanceInterface
 
 abstract class CloudInstance implements CloudInstanceInterface
 {
+    const STATUS_IN_USE = 0;
+    const STATUS_ARCHIVED = 1;
 
+    const RUNSTATUS_SCHEDULED_FOR_LAUNCH = 0;
+    const RUNSTATUS_LAUNCHING = 1;
+    const RUNSTATUS_RUNNING = 2;
+    const RUNSTATUS_SCHEDULED_FOR_SHUTDOWN = 3;
+    const RUNSTATUS_SHUTTING_DOWN = 4;
+    const RUNSTATUS_SHUT_DOWN = 5;
 }

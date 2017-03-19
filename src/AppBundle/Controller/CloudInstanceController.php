@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -53,6 +54,9 @@ class CloudInstanceController extends Controller
                 $remoteDesktop,
                 $cloudInstanceProvider->getRegionByInternalName($form->get('region')->getData())
             );
+
+            $cloudInstance->setStatus(CloudInstance::STATUS_IN_USE);
+            $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH);
 
             $remoteDesktop->addCloudInstance($cloudInstance);
             $em = $this->getDoctrine()->getManager();

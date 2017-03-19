@@ -14,7 +14,7 @@ class CloudInstanceProviderType extends Type
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        return 'INT';
+        return 'SMALLINT';
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)

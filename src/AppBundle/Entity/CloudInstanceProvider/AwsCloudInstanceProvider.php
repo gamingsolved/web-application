@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\CloudInstanceProvider;
 
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
+use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstanceInterface;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
@@ -84,7 +85,6 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
 
             // We use this indirection because it ensures we get only persist a valid region
             $instance->setRegion($this->getRegionByInternalName($region->getInternalName()));
-
         } else {
             throw new \Exception('Cannot provide AWS cloud instance for remote desktop kind ' . get_class($remoteDesktop->getKind()));
         }

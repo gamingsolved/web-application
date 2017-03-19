@@ -4,6 +4,7 @@ namespace AppBundle\Entity\RemoteDesktop;
 
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\CloudInstance\CloudInstanceInterface;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
@@ -167,11 +168,49 @@ class RemoteDesktop
 
     public function getStatus() : int
     {
-        if ($this->getCloudInstances()->isEmpty()) {
-            return self::STATUS_NEVER_LAUNCHED;
+        $status = null;
+
+        $cloudInstances = $this->getCloudInstances();
+
+        if ($cloudInstances->isEmpty()) {
+            $status = self::STATUS_NEVER_LAUNCHED;
         } else {
-            return self::STATUS_LAUNCHING;
+            $activeCloudInstance = $this->getActiveCloudInstance();
+
+            switch ($activeCloudInstance->getRunstatus()) {
+                case CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH:
+                case CloudInstance::RUNSTATUS_LAUNCHING:
+                    $status = self::STATUS_LAUNCHING;
+                    break;
+                case CloudInstance::RUNSTATUS_RUNNING:
+                    $status = self::STATUS_RUNNING;
+                    break;
+                case CloudInstance::RUNSTATUS_SCHEDULED_FOR_SHUTDOWN:
+                case CloudInstance::RUNSTATUS_SHUTTING_DOWN:
+                case CloudInstance::RUNSTATUS_SHUT_DOWN:
+                    $status = self::STATUS_STOPPED;
+                    break;
+                default:
+                    throw new \Exception('Unexpected cloud instance runstatus ' . $activeCloudInstance->getRunstatus());
+
+            }
         }
+
+        return $status;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    protected function getActiveCloudInstance() : CloudInstanceInterface {
+        $cloudInstances = $this->getCloudInstances();
+        /** @var CloudInstance $cloudInstance */
+        foreach ($cloudInstances as $cloudInstance) {
+            if ($cloudInstance->getStatus() == CloudInstance::STATUS_IN_USE) {
+                return $cloudInstance;
+            }
+        }
+        throw new \Exception('Could not find the active instance for remote desktop ' . $this->getId());
     }
 
 }
