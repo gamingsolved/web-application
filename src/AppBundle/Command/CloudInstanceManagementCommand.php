@@ -102,7 +102,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
                     $output->writeln('Action: launching the cloud instance');
-                    if ($cloudInstanceCoordinator->launch($cloudInstance)) {
+                    if ($cloudInstanceCoordinator->cloudInstanceWasLaunched($cloudInstance)) {
                         $output->writeln('Action result: success');
                         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_LAUNCHING);
                         $em->persist($cloudInstance);
@@ -114,21 +114,29 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING) {
                     $output->writeln('Action: probing if finished launching, acquiring info');
-                    if ($cloudInstanceCoordinator->hasFinishedLaunching($cloudInstance)) {
-                        if ($cloudInstanceCoordinator->tryRetrievingAdminPassword(
+                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunching($cloudInstance)) {
+                        $output->writeln('Action result: success');
+
+                        $output->writeln('Action: trying to retrieve Windows admin password');
+                        if ($cloudInstanceCoordinator->cloudInstanceAdminPasswordCouldBeRetrieved(
                                 $cloudInstance,
                                 $this->getContainer()->getParameter('secret'))
                         ) {
-                            // We assume that we only have one chance to get the password, thus we store it in any case
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
                             $em->persist($cloudInstance);
                             $em->flush();
+                            $output->writeln('Action result: success');
+                        } else {
+                            $output->writeln('Action result: failure');
                         }
+                    } else {
+                        $output->writeln('Action result: failure');
                     }
                 }
 
                 $output->writeln('');
             }
         }
+        $output->writeln('All done, exiting.');
     }
 }

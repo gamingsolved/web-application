@@ -41,7 +41,7 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * @param AwsCloudInstance $cloudInstance
      * @return bool
      */
-    public function launch(CloudInstance $cloudInstance) : bool
+    public function cloudInstanceWasLaunched(CloudInstance $cloudInstance) : bool
     {
         try {
             $result = $this->ec2Client->runInstances([
@@ -70,7 +70,7 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * @param AwsCloudInstance $cloudInstance
      * @return bool
      */
-    public function hasFinishedLaunching(CloudInstance $cloudInstance) : bool
+    public function cloudInstanceHasFinishedLaunching(CloudInstance $cloudInstance) : bool
     {
         try {
             $result = $this->ec2Client->describeInstances([
@@ -96,7 +96,7 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * @param AwsCloudInstance $cloudInstance
      * @return bool
      */
-    public function tryRetrievingAdminPassword(CloudInstance $cloudInstance, string $encryptionKey) : bool
+    public function cloudInstanceAdminPasswordCouldBeRetrieved(CloudInstance $cloudInstance, string $encryptionKey) : bool
     {
         try {
             $result = $this->ec2Client->getPasswordData([

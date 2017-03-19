@@ -10,11 +10,11 @@ interface CloudInstanceCoordinator
 {
     public function __construct(array $credentials, Region $region, OutputInterface $output);
 
-    public function launch(CloudInstance $cloudInstance) : bool;
+    public function cloudInstanceWasLaunched(CloudInstance $cloudInstance) : bool;
 
-    public function hasFinishedLaunching(CloudInstance $cloudInstance) : bool;
+    public function cloudInstanceHasFinishedLaunching(CloudInstance $cloudInstance) : bool;
 
-    public function tryRetrievingAdminPassword(CloudInstance $cloudInstance, string $encryptionKey) : bool;
+    public function cloudInstanceAdminPasswordCouldBeRetrieved(CloudInstance $cloudInstance, string $encryptionKey) : bool;
 
     //public static function getPublicAddress(CloudInstance $cloudInstance) : string;
 }
