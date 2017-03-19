@@ -133,12 +133,12 @@ class RemoteDesktop
         return $this->kind;
     }
 
-    public function setCloudInstanceProvider(CloudInstanceProviderInterface $cloudInstanceProvider)
+    public function setCloudInstanceProvider(CloudInstanceProvider $cloudInstanceProvider)
     {
         $this->cloudInstanceProvider = $cloudInstanceProvider;
     }
 
-    public function getCloudInstanceProvider() : CloudInstanceProviderInterface
+    public function getCloudInstanceProvider() : CloudInstanceProvider
     {
         return $this->cloudInstanceProvider;
     }

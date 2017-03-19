@@ -27,7 +27,14 @@ interface CloudInstanceProviderInterface
 
 abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
 {
-    const AWS = 0;
+    const PROVIDER_AWS = 0;
+
+    const PROVIDERS = [
+        self::PROVIDER_AWS => [
+            'name' => 'Amazon Web Services',
+            'class' => AwsCloudInstanceProvider::class
+        ]
+    ];
 
     /**
      * @throws \Exception

@@ -19,7 +19,7 @@ class CloudInstanceProviderType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if ((int)$value === CloudInstanceProvider::AWS) {
+        if ((int)$value === CloudInstanceProvider::PROVIDER_AWS) {
             return new AwsCloudInstanceProvider();
         } else {
             throw new \Exception('Could not convert the CloudInstanceProvider value ' . $value . ' to a known CloudInstanceProvider object');
@@ -29,7 +29,7 @@ class CloudInstanceProviderType extends Type
     public function convertToDatabaseValue($valueObject, AbstractPlatform $platform)
     {
         if ($valueObject instanceof AwsCloudInstanceProvider) {
-            $value = CloudInstanceProvider::AWS;
+            $value = CloudInstanceProvider::PROVIDER_AWS;
         } else {
             throw new \Exception('Could not convert the CloudInstanceProvider object of class ' . get_class($valueObject) . ' to a known CloudInstanceProvider value');
         }

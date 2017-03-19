@@ -41,4 +41,40 @@ abstract class CloudInstance implements CloudInstanceInterface
     const RUNSTATUS_SCHEDULED_FOR_SHUTDOWN = 3;
     const RUNSTATUS_SHUTTING_DOWN = 4;
     const RUNSTATUS_SHUT_DOWN = 5;
+
+    public static function getStatusName(int $status) : string {
+        switch ($status) {
+            case self::STATUS_IN_USE:
+                return 'in use';
+                break;
+            case self::STATUS_ARCHIVED:
+                return 'archived';
+                break;
+        }
+        return 'Could not resolve status to name';
+    }
+
+    public static function getRunstatusName(int $runstatus) : string {
+        switch ($runstatus) {
+            case self::RUNSTATUS_SCHEDULED_FOR_LAUNCH:
+                return 'scheduled for launch';
+                break;
+            case self::RUNSTATUS_LAUNCHING:
+                return 'launching';
+                break;
+            case self::RUNSTATUS_RUNNING:
+                return 'running';
+                break;
+            case self::RUNSTATUS_SCHEDULED_FOR_SHUTDOWN:
+                return 'scheduled for shutdown';
+                break;
+            case self::RUNSTATUS_SHUTTING_DOWN:
+                return 'shutting down';
+                break;
+            case self::RUNSTATUS_SHUT_DOWN:
+                return 'shut down';
+                break;
+        }
+        return 'Could not resolve runstatus to name';
+    }
 }
