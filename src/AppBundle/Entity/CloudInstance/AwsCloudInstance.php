@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\CloudInstance;
 
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
+use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\Mapping as ORM;
@@ -54,7 +55,7 @@ class AwsCloudInstance extends CloudInstance
         $this->remoteDesktop = $remoteDesktop;
     }
 
-    public function getCloudInstanceProvider() : AwsCloudInstanceProvider
+    public function getCloudInstanceProvider() : CloudInstanceProviderInterface
     {
         return $this->awsCloudInstanceProvider;
     }

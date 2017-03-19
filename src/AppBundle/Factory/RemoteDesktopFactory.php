@@ -13,6 +13,7 @@ abstract class RemoteDesktopFactory
     {
         $remoteDesktop = new RemoteDesktop();
         $remoteDesktop->setUser($user);
+        $remoteDesktop->setTitle($form->get('title')->getData());
         $remoteDesktop->setKind(
             RemoteDesktopKind::createRemoteDesktopKind(
                 $form->get('kind')->getData()

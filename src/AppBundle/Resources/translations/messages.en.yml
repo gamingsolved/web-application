@@ -28,4 +28,4 @@ cloudprovider:
         region:
             eu-west-1: Ireland
             eu-central-1: Germany
-            eu-west-1: US East
+            us-east-1: US East

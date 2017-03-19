@@ -134,6 +134,11 @@ class RemoteDesktop
         $this->cloudInstanceProvider = $cloudInstanceProvider;
     }
 
+    public function getCloudInstanceProvider() : CloudInstanceProviderInterface
+    {
+        return $this->cloudInstanceProvider;
+    }
+
     /**
      * @param CloudInstance $cloudInstance
      * @return void
