@@ -18,3 +18,7 @@ remotedesktops.new:
     defaults: { _controller: AppBundle:RemoteDesktop:new }
     methods:  [GET, POST]
 
+cloudinstances.new:
+    path:     /remoteDesktops/{remoteDesktop}/cloudInstances/new
+    defaults: { _controller: AppBundle:CloudInstance:new }
+    methods:  [GET, POST]

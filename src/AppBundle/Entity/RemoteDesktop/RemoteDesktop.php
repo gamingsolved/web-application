@@ -103,18 +103,12 @@ class RemoteDesktop
         return $this->user;
     }
 
-    /**
-     * @param string $title
-     */
     public function setTitle(string $title)
     {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle() : string
     {
         return $this->title;
     }

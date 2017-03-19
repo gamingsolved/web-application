@@ -22,3 +22,10 @@ remoteDesktop:
     kind:
         games: Playing games
         cad: Working with CAD programs
+
+cloudprovider:
+    aws:
+        region:
+            eu-west-1: Ireland
+            eu-central-1: Germany
+            eu-west-1: US East
