@@ -32,7 +32,8 @@
         "incenteev/composer-parameter-handler": "^2.0",
         "twig/twig": "^1.0||^2.0",
         "friendsofsymfony/user-bundle": "^2.0",
-        "doctrine/doctrine-migrations-bundle": "^1.0"
+        "doctrine/doctrine-migrations-bundle": "^1.0",
+        "aws/aws-sdk-php-symfony": "^1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
