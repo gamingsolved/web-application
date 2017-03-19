@@ -4,10 +4,20 @@ namespace AppBundle\Coordinator\CloudInstance;
 
 use AppBundle\Entity\CloudInstance\CloudInstance;
 
-class AwsCloudInstanceCoordinator
+class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
 {
-    public static function launchCloudInstance(CloudInstance $cloudInstance) : bool
+    public static function launch(CloudInstance $cloudInstance) : bool
     {
         return true;
+    }
+
+    public static function hasFinishedLaunching(CloudInstance $cloudInstance) : bool
+    {
+        return true;
+    }
+
+    public static function tryRetrievingAdminPassword(CloudInstance $cloudInstance) : string
+    {
+        return 'secretAdminPwd';
     }
 }

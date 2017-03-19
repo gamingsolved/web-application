@@ -2,9 +2,9 @@
 
 namespace AppBundle\Command;
 
-use AppBundle\Coordinator\CloudInstance\AwsCloudInstanceCoordinator;
-use AppBundle\Entity\CloudInstance\AwsCloudInstance;
+use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinator;
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -26,47 +26,54 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
-        /** @var EntityRepository $awsCloudInstanceRepo */
-        $awsCloudInstanceRepo = $em->getRepository('AppBundle\Entity\CloudInstance\AwsCloudInstance');
 
-        $awsCloudInstancesInUse = $awsCloudInstanceRepo->findBy(['status' => CloudInstance::STATUS_IN_USE]);
+        foreach (CloudInstanceProvider::PROVIDERS as $provider) {
+            $output->writeln('Attempting to handle cloud instances for provider: ' . $provider['name']);
 
-        $output->writeln('Attempting to handle cloud instances');
+            /** @var CloudInstanceCoordinator $cloudInstanceCoordinatorClass */
+            $cloudInstanceCoordinatorClass = $provider['cloudInstanceCoordinatorClass'];
 
-        /** @var AwsCloudInstance $awsCloudInstance */
-        foreach ($awsCloudInstancesInUse as $awsCloudInstance)
-        {
-            $output->writeln('Found cloud instance ' . $awsCloudInstance->getId());
-            $output->writeln('Current run status: ' . CloudInstance::getRunstatusName($awsCloudInstance->getRunstatus()));
-            $output->writeln('Flavor: ' . $awsCloudInstance->getFlavor()->getInternalName());
-            $output->writeln('Image: ' . $awsCloudInstance->getImage()->getInternalName());
-            $output->writeln('Region: ' . $awsCloudInstance->getRegion()->getInternalName());
+            /** @var EntityRepository $cloudInstanceRepo */
+            $cloudInstanceRepo = $em->getRepository($provider['cloudInstanceClass']);
+            $cloudInstancesInUse = $cloudInstanceRepo->findBy(['status' => CloudInstance::STATUS_IN_USE]);
 
-            if ($awsCloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
-                $output->writeln('Action: launching the cloud instance');
-                if (AwsCloudInstanceCoordinator::launchCloudInstance($awsCloudInstance)) {
-                    $output->writeln('Action result: success');
-                    $awsCloudInstance->setRunstatus(CloudInstance::RUNSTATUS_LAUNCHING);
-                    $em->persist($awsCloudInstance);
-                    $em->flush();
-                } else {
-                    $output->writeln('Action result: failure');
+            /** @var CloudInstance $cloudInstance */
+            foreach ($cloudInstancesInUse as $cloudInstance) {
+                $output->writeln('Found cloud instance ' . $cloudInstance->getId());
+                $output->writeln('Current run status: ' . CloudInstance::getRunstatusName($cloudInstance->getRunstatus()));
+                $output->writeln('Flavor: ' . $cloudInstance->getFlavor()->getInternalName());
+                $output->writeln('Image: ' . $cloudInstance->getImage()->getInternalName());
+                $output->writeln('Region: ' . $cloudInstance->getRegion()->getInternalName());
+
+                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
+                    $output->writeln('Action: launching the cloud instance');
+                    if ($cloudInstanceCoordinatorClass::launch($cloudInstance)) {
+                        $output->writeln('Action result: success');
+                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_LAUNCHING);
+                        $em->persist($cloudInstance);
+                        $em->flush();
+                    } else {
+                        $output->writeln('Action result: failure');
+                    }
                 }
-            }
 
-            if ($awsCloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING) {
-                $output->writeln('Action: launching');
-                if (AwsCloudInstanceCoordinator::launchCloudInstance($awsCloudInstance)) {
-                    $output->writeln('Action result: success');
-                    $awsCloudInstance->setRunstatus(CloudInstance::RUNSTATUS_LAUNCHING);
-                    $em->persist($awsCloudInstance);
-                    $em->flush();
-                } else {
-                    $output->writeln('Action result: failure');
+                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING) {
+                    $output->writeln('Action: probing if finished launching, acquiring info');
+                    if ($cloudInstanceCoordinatorClass::hasFinishedLaunching($cloudInstance)) {
+                        $adminPassword = null;
+                        try {
+                            $adminPassword = $cloudInstanceCoordinatorClass::tryRetrievingAdminPassword($cloudInstance);
+                        } catch (\Exception $e) {
+                            $output->writeln('Could not retrieve admin password');
+                        }
+                        if (!is_null($adminPassword)) {
+                            // We assume that we only have once chance to get the password, thus we store it in any case
+                        }
+                    }
                 }
-            }
 
-            $output->writeln('');
+                $output->writeln('');
+            }
         }
     }
 }

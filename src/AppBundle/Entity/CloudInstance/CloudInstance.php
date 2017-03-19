@@ -10,6 +10,8 @@ use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 
 interface CloudInstanceInterface
 {
+    public function getId() : string;
+
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface;
 
     public function setStatus(int $status);

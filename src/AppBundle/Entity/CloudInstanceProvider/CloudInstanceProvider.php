@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\CloudInstanceProvider;
 
+use AppBundle\Coordinator\CloudInstance\AwsCloudInstanceCoordinator;
+use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstanceInterface;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
@@ -32,7 +34,8 @@ abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
     const PROVIDERS = [
         self::PROVIDER_AWS => [
             'name' => 'Amazon Web Services',
-            'class' => AwsCloudInstanceProvider::class
+            'cloudInstanceClass' => AwsCloudInstance::class,
+            'cloudInstanceCoordinatorClass' => AwsCloudInstanceCoordinator::class
         ]
     ];
 
