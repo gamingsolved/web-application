@@ -14,7 +14,7 @@ interface CloudInstanceCoordinator
 
     public function hasFinishedLaunching(CloudInstance $cloudInstance) : bool;
 
-    public function tryRetrievingAdminPassword(CloudInstance $cloudInstance, string $encryptionKey) : string;
+    public function tryRetrievingAdminPassword(CloudInstance $cloudInstance, string $encryptionKey) : bool;
 
     //public static function getPublicAddress(CloudInstance $cloudInstance) : string;
 }

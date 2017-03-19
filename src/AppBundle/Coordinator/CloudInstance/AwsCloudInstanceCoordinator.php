@@ -96,7 +96,7 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * @param AwsCloudInstance $cloudInstance
      * @return bool
      */
-    public function tryRetrievingAdminPassword(CloudInstance $cloudInstance, string $encryptionKey) : string
+    public function tryRetrievingAdminPassword(CloudInstance $cloudInstance, string $encryptionKey) : bool
     {
         try {
             $result = $this->ec2Client->getPasswordData([
@@ -104,17 +104,42 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ]);
 
             if ($result['PasswordData'] !== '') {
-                $cryptor = new Cryptor();
-                return $cryptor->encryptString(
-                    'secret password',
-                    $encryptionKey
-                );
+
+                /*
+                 * We decrypt the password data we get from the AWS api.
+                 * This gives us the clear text password. In order to not
+                 * have clear text passwords in the db, the value we store
+                 * is a symmetric encryption of the clear text password.
+                 *
+                 * We do not simply use the AWS encrypted version, but roll our
+                 * own, because what we get here is AWS specific, but in the app
+                 * we need something generic.
+                 */
+
+                $base64Pwd = $result['PasswordData'];
+                $encryptedPwd = base64_decode($base64Pwd);
+                $cleartextPwd = '';
+
+                $keypairPrivateKeyResource = openssl_get_privatekey($this->keypairPrivateKey);
+
+                if (openssl_private_decrypt($encryptedPwd, $cleartextPwd, $keypairPrivateKeyResource)) {
+                    $cryptor = new Cryptor();
+                    $cloudInstance->setAdminPassword(
+                        $cryptor->encryptString(
+                            $cleartextPwd,
+                            $encryptionKey
+                        )
+                    );
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
             }
         } catch (\Exception $e) {
             $this->output->writeln($e->getMessage());
             return false;
         }
-
-        return true;
     }
 }

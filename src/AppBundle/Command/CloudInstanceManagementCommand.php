@@ -115,18 +115,11 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING) {
                     $output->writeln('Action: probing if finished launching, acquiring info');
                     if ($cloudInstanceCoordinator->hasFinishedLaunching($cloudInstance)) {
-                        $adminPassword = null;
-                        try {
-                            $adminPassword = $cloudInstanceCoordinator->tryRetrievingAdminPassword(
+                        if ($cloudInstanceCoordinator->tryRetrievingAdminPassword(
                                 $cloudInstance,
-                                $this->getContainer()->getParameter('secret')
-                            );
-                        } catch (\Exception $e) {
-                            $output->writeln('Could not retrieve admin password');
-                        }
-                        if (!is_null($adminPassword)) {
+                                $this->getContainer()->getParameter('secret'))
+                        ) {
                             // We assume that we only have one chance to get the password, thus we store it in any case
-                            $cloudInstance->setAdminPassword($adminPassword);
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
                             $em->persist($cloudInstance);
                             $em->flush();
