@@ -13,6 +13,7 @@ remoteDesktop:
         headline: Your remote desktops
         no_remote_desktops_yet: You do not yet have any remote desktops.
         add_button: Create a new remote desktop
+        launch_button: Launch this remote desktop
     new:
         form:
             headline: Create a new remote desktop

@@ -14,7 +14,10 @@
 
                             <div class="panel panel-success">
                                 <div class="panel-heading">
-                                    <h2 class="panel-title">{{ remoteDesktop.title }}</h2>
+                                    <h2 class="panel-title">
+                                        <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
+                                        {{ remoteDesktop.title }}
+                                    </h2>
                                 </div>
 
                                 <div class="panel-body">
@@ -29,7 +32,10 @@
                                 </div>
 
                                 <div class="panel-footer">
-                                    <button class="btn btn-primary">Launch</button>
+                                    <a class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-expand" aria-hidden="true"></span>
+                                        {{ "remoteDesktop.index.launch_button"|trans }}
+                                    </a>
                                 </div>
                             </div>
                         {% endfor %}

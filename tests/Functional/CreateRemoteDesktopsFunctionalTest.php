@@ -51,6 +51,8 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
         // Two checks due to line break
         $this->assertContains('Current status:', $crawler->filter('span.label-default')->text());
         $this->assertContains('not running', $crawler->filter('span.label-default')->text());
+
+        $this->assertContains('Launch this remote desktop', $crawler->filter('a.btn')->text());
     }
 
 }
