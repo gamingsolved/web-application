@@ -20,6 +20,10 @@ header a {
     color: #fff;
 }
 
+header a.brand {
+    font-weight: bolder;
+}
+
 header a.brand:hover,
 header a.brand:focus {
     color: #fff;
@@ -80,10 +84,6 @@ section:empty {
     display: none;
 }
 
-.brand {
-
-}
-
 /* Make the masthead heading the same height as the navigation */
 .brandname {
     margin-top: 0;
@@ -114,7 +114,6 @@ section:empty {
     right: 0;
     z-index: 1031;
     padding: 0 4px 1px 7px;
-    border-radius: 0 0 0 7px;
     background-color: #ddd;
     color: #444;
     font-weight: 300;
