@@ -30,7 +30,7 @@ remoteDesktop:
 cloudInstance:
     new:
         form:
-            headline: Start an instance of your remote desktop
+            headline: Launch your remote desktop
             region_label: Please select the region which is closest to your current position:
             submit_label: Continue
 

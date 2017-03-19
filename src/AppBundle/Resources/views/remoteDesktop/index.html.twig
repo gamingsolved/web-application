@@ -33,10 +33,12 @@
 
                                 <div class="panel-footer">
 
-                                    <a class="btn btn-primary">
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
+                                    <a href="{{ path('cloudinstances.new', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-primary">
                                         <span class="glyphicon glyphicon-expand" aria-hidden="true"></span>
                                         {{ "remoteDesktop.index.launch_button"|trans }}
                                     </a>
+                                    {% endif %}
 
                                 </div>
 
