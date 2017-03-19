@@ -5,11 +5,26 @@
 {% endif %}
 <ul class="nav navbar-nav pull-right">
     {% if app.user %}
-        <li><a href="{{ path('remotedesktops.index') }}">{{ "_navigation.your_remote_desktops"|trans }}</a></li>
-        <li><a href="{{ path('remotedesktops.new') }}">{{ "_navigation.create_new_remote_desktop"|trans }}</a></li>
+        <li>
+            <a href="{{ path('remotedesktops.index') }}">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                {{ "_navigation.your_remote_desktops"|trans }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('remotedesktops.new') }}">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                {{ "_navigation.create_new_remote_desktop"|trans }}
+            </a>
+        </li>
         <li><a href="{{ path('fos_user_security_logout') }}">{{ "_navigation.logout"|trans }}</a></li>
     {% else %}
         <li><a href="{{ path('fos_user_registration_register') }}">{{ "_navigation.register"|trans }}</a></li>
-        <li><a href="{{ path('fos_user_security_login') }}">{{ "_navigation.login"|trans }}</a></li>
+        <li>
+            <a href="{{ path('fos_user_security_login') }}">
+                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+                {{ "_navigation.login"|trans }}
+            </a>
+        </li>
     {% endif %}
 </ul>
