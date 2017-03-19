@@ -48,7 +48,9 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
 
         $this->assertContains('For playing computer games', $crawler->filter('span.label-info')->text());
 
-        $this->assertContains('Status: turned off', $crawler->filter('span.label-default')->text());
+        // Two checks due to line break
+        $this->assertContains('Current status:', $crawler->filter('span.label-default')->text());
+        $this->assertContains('not running', $crawler->filter('span.label-default')->text());
     }
 
 }

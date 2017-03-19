@@ -24,7 +24,7 @@ remoteDesktop:
         cad: For working with CAD programs
     status:
         label: Current status:
-        never_launched: Not running
+        never_launched: not running
 
 cloudInstance:
     new:
