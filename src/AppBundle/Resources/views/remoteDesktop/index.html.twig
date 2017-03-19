@@ -9,8 +9,8 @@
                     <h1>{{ "remoteDesktop.index.headline"|trans }}</h1>
 
                     {% if remoteDesktops %}
-                        {% for remoteDesktop in remoteDesktops %}
 
+                        {% for remoteDesktop in remoteDesktops %}
 
                             <div class="panel panel-success">
                                 <div class="panel-heading">
@@ -32,18 +32,25 @@
                                 </div>
 
                                 <div class="panel-footer">
+
                                     <a class="btn btn-primary">
                                         <span class="glyphicon glyphicon-expand" aria-hidden="true"></span>
                                         {{ "remoteDesktop.index.launch_button"|trans }}
                                     </a>
+
                                 </div>
+
                             </div>
                         {% endfor %}
+
                     {% else %}
+
                         <div class="alert alert-info" role="alert">
                             {{ "remoteDesktop.index.no_remote_desktops_yet"|trans }}
                         </div>
+
                     {% endif %}
+
                     <a href="{{ path('remotedesktops.new') }}" type="button" class="btn btn-success btn-lg">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                         {{ "remoteDesktop.index.add_button"|trans }}
