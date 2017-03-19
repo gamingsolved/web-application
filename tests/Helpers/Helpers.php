@@ -43,7 +43,7 @@ trait Helpers
 
         $client->submit($form, array(
             'fos_user_registration_form[email]' => 'testuser@example.com',
-            'fos_user_registration_form[username]' => 'testuser@localhost',
+            'fos_user_registration_form[username]' => 'testuser',
             'fos_user_registration_form[plainPassword][first]' => 'test123',
             'fos_user_registration_form[plainPassword][second]' => 'test123',
         ));

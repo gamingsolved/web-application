@@ -12,7 +12,7 @@ remoteDesktop:
     index:
         headline: Your remote desktops
         no_remote_desktops_yet: You do not yet have any remote desktops.
-        add_button: Create your first remote desktop now
+        add_button: Create a new remote desktop
     new:
         form:
             headline: Create a new remote desktop
@@ -20,8 +20,8 @@ remoteDesktop:
             kind_label: What do you want to use this remote desktop for?
             submit_label: Continue
     kind:
-        games: Playing games
-        cad: Working with CAD programs
+        games: For playing computer games
+        cad: For working with CAD programs
 
 cloudInstance:
     new:

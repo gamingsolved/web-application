@@ -12,6 +12,7 @@ remoteDesktop:
     index:
         headline: Ihre Remote-Desktops
         no_remote_desktops_yet: Sie haben noch keine Remote-Desktops angelegt.
+        add_button: Einen neuen Remote Desktop anlegen
     new:
         form:
             headline: Einen neuen Remote-Desktop anlegen
@@ -19,5 +20,5 @@ remoteDesktop:
             kind_label: Wofür möchten Sie diesen Remote-Desktop benutzen?
             submit_label: Weiter
     kind:
-        games: Computerspiele spielen
-        cad: Mit CAD Programmen arbeiten
+        games: Zum spielen von Computer-Games
+        cad: Zum arbeiten mit CAD Programmen
