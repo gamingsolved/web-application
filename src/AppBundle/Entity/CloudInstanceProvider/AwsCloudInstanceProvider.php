@@ -12,15 +12,43 @@ use AppBundle\Entity\RemoteDesktop\RemoteDesktopGamingKind;
 
 class AwsCloudInstanceProvider extends CloudInstanceProvider
 {
+    protected $flavors;
+    protected $images;
     protected $regions;
 
     public function __construct()
     {
+        $this->flavors = [
+            new Flavor($this, 'g2.2xlarge', '8 CPUs, 15 GB RAM, 1 GPU')
+        ];
+
+        $this->images = [
+            new Image($this, 'ami-efc87b9c', 'AMI efc87b9c'),
+            new Image($this, 'ami-f2fde69e', 'AMI f2fde69e'),
+            new Image($this, 'ami-b0c7f2da', 'AMI b0c7f2da')
+        ];
+
         $this->regions = [
             new Region($this, 'eu-west-1', 'cloudprovider.aws.region.eu-west-1'),
             new Region($this, 'eu-central-1', 'cloudprovider.aws.region.eu-central-1'),
             new Region($this, 'us-east-1', 'cloudprovider.aws.region.us-east-1')
         ];
+    }
+
+    /**
+     * @return Flavor[]
+     */
+    public function getFlavors(): array
+    {
+        return $this->flavors;
+    }
+
+    /**
+     * @return Image[]
+     */
+    public function getImages(): array
+    {
+        return $this->images;
     }
 
     /**
@@ -34,23 +62,29 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstanceInterface
     {
         if ($remoteDesktop->getKind() instanceof RemoteDesktopGamingKind) {
-            $instance = new AwsCloudInstance();
-            $instance->setFlavor(new Flavor($this, 'g2.2xlarge', ''));
 
+            $instance = new AwsCloudInstance();
+            $instance->setFlavor($this->getFlavorByInternalName('g2.2xlarge'));
+
+            $amiInternalName = '';
             switch ($region->getInternalName()) {
                 case 'eu-west-1':
-                    $ami = 'ami-efc87b9c';
+                    $amiInternalName = 'ami-efc87b9c';
                     break;
                 case 'eu-central-1':
-                    $ami = 'ami-f2fde69e';
+                    $amiInternalName = 'ami-f2fde69e';
                     break;
                 case 'us-east-1':
-                    $ami = 'ami-b0c7f2da';
+                    $amiInternalName = 'ami-b0c7f2da';
                     break;
                 default:
                     throw new \Exception('Cannot match region ' . $region->getInternalName() . ' to an AMI.');
             }
-            $instance->setImage(new Image($this, $ami, 'Gaming image for ' . $region->getInternalName()));
+            $instance->setImage($this->getImageByInternalName($amiInternalName));
+
+            // We use this indirection because it ensures we get only persist a valid region
+            $instance->setRegion($this->getRegionByInternalName($region->getInternalName()));
+
         } else {
             throw new \Exception('Cannot provide AWS cloud instance for remote desktop kind ' . get_class($remoteDesktop->getKind()));
         }

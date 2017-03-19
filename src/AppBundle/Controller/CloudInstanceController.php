@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -47,6 +46,22 @@ class CloudInstanceController extends Controller
             ->add('send', SubmitType::class, ['label' => 'cloudInstance.new.form.submit_label', 'attr' => ['class' => 'btn-primary']])
             ->getForm();
 
-        return $this->render('AppBundle:cloudInstance:new.html.twig', ['form' => $form->createView()]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $cloudInstance = $cloudInstanceProvider->createInstanceForRemoteDesktopAndRegion(
+                $remoteDesktop,
+                $cloudInstanceProvider->getRegionByInternalName($form->get('region')->getData())
+            );
+
+            $remoteDesktop->addCloudInstance($cloudInstance);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($remoteDesktop);
+            $em->flush();
+
+            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_CREATED);
+        } else {
+            return $this->render('AppBundle:cloudInstance:new.html.twig', ['form' => $form->createView()]);
+        }
     }
 }

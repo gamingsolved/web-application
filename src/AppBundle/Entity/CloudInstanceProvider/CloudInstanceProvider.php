@@ -10,7 +10,15 @@ use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 
 interface CloudInstanceProviderInterface
 {
+    public function getFlavors() : array;
+
+    public function getImages() : array;
+
     public function getRegions() : array;
+
+    public function getFlavorByInternalName(string $flavorInternalName) : Flavor;
+
+    public function getImageByInternalName(string $imageInternalName) : Image;
 
     public function getRegionByInternalName(string $regionInternalName) : Region;
 
@@ -24,6 +32,28 @@ abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
     /**
      * @throws \Exception
      */
+    public function getFlavorByInternalName(string $flavorInternalName) : Flavor
+    {
+        $flavors = $this->getFlavors();
+        foreach ($flavors as $flavor) {
+            if ($flavor->getInternalName() == $flavorInternalName) {
+                return $flavor;
+            }
+        }
+        throw new \Exception('Could not find flavor with internal name' . $flavorInternalName);
+    }
+
+    public function getImageByInternalName(string $imageInternalName) : Image
+    {
+        $images = $this->getImages();
+        foreach ($images as $image) {
+            if ($image->getInternalName() == $imageInternalName) {
+                return $image;
+            }
+        }
+        throw new \Exception('Could not find image with internal name' . $imageInternalName);
+    }
+
     public function getRegionByInternalName(string $regionInternalName) : Region
     {
         $regions = $this->getRegions();

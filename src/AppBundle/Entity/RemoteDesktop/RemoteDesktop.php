@@ -26,9 +26,9 @@ class RemoteDesktop
     const STREAMING_CLIENT_CGX = 0;
 
     const STATUS_NEVER_LAUNCHED = 0;
-    const STATUS_LAUNCHING = 0;
-    const STATUS_RUNNING = 0;
-    const STATUS_STOPPED = 0;
+    const STATUS_LAUNCHING = 1;
+    const STATUS_RUNNING = 2;
+    const STATUS_STOPPED = 3;
 
     /**
      * @var string
@@ -169,6 +169,8 @@ class RemoteDesktop
     {
         if ($this->getCloudInstances()->isEmpty()) {
             return self::STATUS_NEVER_LAUNCHED;
+        } else {
+            return self::STATUS_LAUNCHING;
         }
     }
 

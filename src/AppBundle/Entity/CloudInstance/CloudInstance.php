@@ -12,11 +12,14 @@ interface CloudInstanceInterface
 {
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface;
 
-    //public function setFlavor(Flavor $flavor);
+    public function setFlavor(Flavor $flavor);
+    public function getFlavor() : Flavor;
 
-    //public function setImage(Image $image);
+    public function setImage(Image $image);
+    public function getImage() : Image;
 
-    //public function setRegion(Region $region);
+    public function setRegion(Region $region);
+    public function getRegion() : Region;
 
     public function setRemoteDesktop(RemoteDesktop $remoteDesktop);
 }
