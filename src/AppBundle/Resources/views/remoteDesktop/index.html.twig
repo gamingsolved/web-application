@@ -23,23 +23,33 @@
                                 </div>
 
                                 <div class="panel-body">
-                                    <h4>
                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
-                                            <span class="label label-default">
-                                                {{ "remoteDesktop.status.label"|trans }}
-                                                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                                                {{ "remoteDesktop.status.never_launched"|trans }}
-                                            </span>
+                                            <h4>
+                                                <span class="label label-default">
+                                                    {{ "remoteDesktop.status.label"|trans }}
+                                                    <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                                                    {{ "remoteDesktop.status.never_launched"|trans }}
+                                                </span>
+                                            </h4>
                                         {% endif %}
 
                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_LAUNCHING') %}
-                                            <span class="label label-primary">
-                                                {{ "remoteDesktop.status.label"|trans }}
-                                                <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
-                                                {{ "remoteDesktop.status.launching"|trans }}
+                                            <h4>
+                                                <span class="label label-primary">
+                                                    {{ "remoteDesktop.status.label"|trans }}
+                                                    <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                                                    {{ "remoteDesktop.status.launching"|trans }}
+                                                </span>
+                                            </h4>
+
+                                            <span class="label label-default">
+                                                {{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}
+                                            </span>
+                                            &nbsp;
+                                            <span class="label label-default">
+                                                {{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}
                                             </span>
                                         {% endif %}
-                                    </h4>
                                 </div>
 
                                 <div class="panel-footer">

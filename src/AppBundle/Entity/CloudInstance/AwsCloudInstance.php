@@ -17,11 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 class AwsCloudInstance extends CloudInstance
 {
     /**
-     * @var AwsCloudInstanceProvider
-     */
-    protected $awsCloudInstanceProvider;
-
-    /**
      * @var string
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(name="id", type="guid")
@@ -83,7 +78,7 @@ class AwsCloudInstance extends CloudInstance
 
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface
     {
-        return $this->awsCloudInstanceProvider;
+        return new AwsCloudInstanceProvider();
     }
 
     public function setRegionInternalName(string $regionInternalName)
@@ -129,7 +124,7 @@ class AwsCloudInstance extends CloudInstance
 
     public function getFlavor() : Flavor
     {
-        return $this->getCloudInstanceProvider()->getFlavorByInternalName($this->getFlavorInternalName());
+        return $this->getCloudInstanceProvider()->getFlavorByInternalName($this->flavorInternalName);
     }
 
     public function setImage(Image $image)
@@ -139,7 +134,7 @@ class AwsCloudInstance extends CloudInstance
 
     public function getImage() : Image
     {
-        return $this->getCloudInstanceProvider()->getImageByInternalName($this->getImageInternalName());
+        return $this->getCloudInstanceProvider()->getImageByInternalName($this->imageInternalName);
     }
 
 
@@ -150,6 +145,6 @@ class AwsCloudInstance extends CloudInstance
 
     public function getRegion() : Region
     {
-        return $this->getCloudInstanceProvider()->getRegionByInternalName($this->getRegionInternalName());
+        return $this->getCloudInstanceProvider()->getRegionByInternalName($this->regionInternalName);
     }
 }

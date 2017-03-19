@@ -8,6 +8,9 @@ use AppBundle\Entity\CloudInstance\CloudInstanceInterface;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -197,6 +200,21 @@ class RemoteDesktop
         }
 
         return $status;
+    }
+
+    public function getFlavorOfActiveCloudInstance() : Flavor
+    {
+        return $this->getActiveCloudInstance()->getFlavor();
+    }
+
+    public function getImageOfActiveCloudInstance() : Image
+    {
+        return $this->getActiveCloudInstance()->getImage();
+    }
+
+    public function getRegionOfActiveCloudInstance() : Region
+    {
+        return $this->getActiveCloudInstance()->getRegion();
     }
 
     /**
