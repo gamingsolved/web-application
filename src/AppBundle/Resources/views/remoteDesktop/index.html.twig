@@ -34,7 +34,7 @@
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_LAUNCHING') %}
                                         <h3>
                                             {{ "remoteDesktop.status.label"|trans }}
-                                            <span class="label label-primary launching-label">
+                                            <span class="label label-primary label-pulsating">
                                                 <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
                                                 {{ "remoteDesktop.status.launching"|trans }}
                                             </span>
@@ -136,7 +136,7 @@
         var properties = {
             opacity: 0.25
         };
-        var el = $('.launching-label');
+        var el = $('.label-pulsating');
         el.pulse(properties, { pulses : -1, duration: 4000, interval: 2000 });
     </script>
 
