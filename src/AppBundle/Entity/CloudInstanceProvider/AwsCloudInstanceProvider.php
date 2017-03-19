@@ -10,6 +10,7 @@ use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktopGamingKind;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktopCadKind;
 
 class AwsCloudInstanceProvider extends CloudInstanceProvider
 {
@@ -62,7 +63,9 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
 
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstanceInterface
     {
-        if ($remoteDesktop->getKind() instanceof RemoteDesktopGamingKind) {
+        if (   $remoteDesktop->getKind() instanceof RemoteDesktopGamingKind
+            || $remoteDesktop->getKind() instanceof RemoteDesktopCadKind
+        ) {
 
             $instance = new AwsCloudInstance();
             $instance->setFlavor($this->getFlavorByInternalName('g2.2xlarge'));

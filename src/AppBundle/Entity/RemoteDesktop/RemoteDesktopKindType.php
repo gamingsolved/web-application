@@ -19,21 +19,19 @@ class RemoteDesktopKindType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if ((int)$value === RemoteDesktopKind::GAMING) {
-            return new RemoteDesktopGamingKind();
-        } else {
-            throw new \Exception('Could not convert the RemoteDesktopKind value ' . $value . ' to a known RemoteDesktopKind object');
-        }
+        return RemoteDesktopKind::createRemoteDesktopKind((int)$value);
     }
 
     public function convertToDatabaseValue($valueObject, AbstractPlatform $platform)
     {
         if ($valueObject instanceof RemoteDesktopGamingKind) {
-            $value = RemoteDesktopKind::GAMING;
-        } else {
-            throw new \Exception('Could not convert the RemoteDesktopKind object of class ' . get_class($valueObject) . ' to a known RemoteDesktopKind value');
+            return $value = RemoteDesktopKind::GAMING;
         }
 
-        return $value;
+        if ($valueObject instanceof RemoteDesktopCadKind) {
+            return $value = RemoteDesktopKind::CAD;
+        }
+
+        throw new \Exception('Could not convert the RemoteDesktopKind object of class ' . get_class($valueObject) . ' to a known RemoteDesktopKind value');
     }
 }

@@ -40,6 +40,18 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
             'remote_desktop[kind]' => '0' // "Gaming"
         ]);
 
+        $client->followRedirect();
+
+        // Verify that we went into the instance creation workflow
+        $container = $client->getContainer();
+        $em = $container->get('doctrine.orm.entity_manager');
+        $repo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
+        $remoteDesktop = $repo->findOneBy(['title' => 'My first remote desktop']);
+        $this->assertEquals(
+            '/en/remoteDesktops/' . $remoteDesktop->getId() . '/cloudInstances/new',
+            $client->getRequest()->getRequestUri()
+        );
+
         $crawler = $client->request('GET', '/en/remoteDesktops/');
 
         $this->assertEquals(
@@ -71,7 +83,7 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
 
         $crawler = $client->click($link);
 
-        // Verify that we wen into the new instance creation workflow
+        // Verify that we went into the instance creation workflow
         $container = $client->getContainer();
         $em = $container->get('doctrine.orm.entity_manager');
         $repo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');

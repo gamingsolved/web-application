@@ -22,8 +22,12 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
     {
         if ($kind === self::GAMING) {
             return new RemoteDesktopGamingKind();
-        } else {
-            throw new \Exception();
         }
+
+        if ($kind === self::CAD) {
+            return new RemoteDesktopCadKind();
+        }
+
+        throw new \Exception('Unknown remote desktop kind ' . $kind);
     }
 }
