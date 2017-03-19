@@ -30,6 +30,9 @@ interface CloudInstanceInterface
     public function getRegion() : Region;
 
     public function setRemoteDesktop(RemoteDesktop $remoteDesktop);
+
+    public function setAdminPassword(string $password);
+    public function getAdminPassword() : string;
 }
 
 abstract class CloudInstance implements CloudInstanceInterface

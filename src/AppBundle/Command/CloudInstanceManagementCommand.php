@@ -44,6 +44,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 $output->writeln('Flavor: ' . $cloudInstance->getFlavor()->getInternalName());
                 $output->writeln('Image: ' . $cloudInstance->getImage()->getInternalName());
                 $output->writeln('Region: ' . $cloudInstance->getRegion()->getInternalName());
+                $output->writeln('Admin password: ' . $cloudInstance->getAdminPassword());
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
                     $output->writeln('Action: launching the cloud instance');
@@ -67,7 +68,10 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                             $output->writeln('Could not retrieve admin password');
                         }
                         if (!is_null($adminPassword)) {
-                            // We assume that we only have once chance to get the password, thus we store it in any case
+                            // We assume that we only have one chance to get the password, thus we store it in any case
+                            $cloudInstance->setAdminPassword($adminPassword);
+                            $em->persist($cloudInstance);
+                            $em->flush();
                         }
                     }
                 }

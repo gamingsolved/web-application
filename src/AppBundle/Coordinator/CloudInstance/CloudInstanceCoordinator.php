@@ -11,4 +11,6 @@ interface CloudInstanceCoordinator
     public static function hasFinishedLaunching(CloudInstance $cloudInstance) : bool;
 
     public static function tryRetrievingAdminPassword(CloudInstance $cloudInstance) : string;
+
+    //public static function getPublicAddress(CloudInstance $cloudInstance) : string;
 }

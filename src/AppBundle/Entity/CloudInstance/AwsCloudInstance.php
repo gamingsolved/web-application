@@ -61,6 +61,13 @@ class AwsCloudInstance extends CloudInstance
      */
     protected $regionInternalName;
 
+    /**
+     * @var string
+     * @ORM\Column(name="admin_password", type="string", length=128)
+     */
+    protected $adminPassword;
+
+
     public function __construct()
     {
         $this->awsCloudInstanceProvider = new AwsCloudInstanceProvider();
@@ -137,7 +144,6 @@ class AwsCloudInstance extends CloudInstance
         return $this->getCloudInstanceProvider()->getImageByInternalName($this->imageInternalName);
     }
 
-
     public function setRegion(Region $region)
     {
         $this->regionInternalName = $region->getInternalName();
@@ -146,5 +152,15 @@ class AwsCloudInstance extends CloudInstance
     public function getRegion() : Region
     {
         return $this->getCloudInstanceProvider()->getRegionByInternalName($this->regionInternalName);
+    }
+
+    public function setAdminPassword(string $password)
+    {
+        $this->adminPassword = $password;
+    }
+
+    public function getAdminPassword() : string
+    {
+        return (string)$this->adminPassword;
     }
 }
