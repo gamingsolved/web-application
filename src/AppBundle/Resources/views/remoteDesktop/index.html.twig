@@ -24,23 +24,23 @@
 
                                 <div class="panel-body">
                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
-                                            <h4>
+                                            <h3>
                                                 <span class="label label-default">
                                                     {{ "remoteDesktop.status.label"|trans }}
                                                     <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                                                     {{ "remoteDesktop.status.never_launched"|trans }}
                                                 </span>
-                                            </h4>
+                                            </h3>
                                         {% endif %}
 
                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_LAUNCHING') %}
-                                            <h4>
+                                            <h3>
                                                 <span class="label label-primary launching-label">
                                                     {{ "remoteDesktop.status.label"|trans }}
                                                     <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
                                                     {{ "remoteDesktop.status.launching"|trans }}
                                                 </span>
-                                            </h4>
+                                            </h3>
 
                                             <span class="label label-default">
                                                 {{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}
