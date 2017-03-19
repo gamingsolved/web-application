@@ -77,9 +77,9 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
                 'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
             ]);
 
-            if ($result['Instances'][0]['State']['Name'] === 'running') {
+            if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'running') {
                 $cloudInstance->setPublicAddress(
-                    $result['Instances'][0]['NetworkInterfaces']['Association']['PublicIp']
+                    $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'][0]['Association']['PublicIp']
                 );
                 return true;
             } else {
@@ -105,18 +105,6 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ]);
 
             if ($result['PasswordData'] !== '') {
-
-                /*
-                 * We decrypt the password data we get from the AWS api.
-                 * This gives us the clear text password. In order to not
-                 * have clear text passwords in the db, the value we store
-                 * is a symmetric encryption of the clear text password.
-                 *
-                 * We do not simply use the AWS encrypted version, but roll our
-                 * own, because what we get here is AWS specific, but in the app
-                 * we need something generic.
-                 */
-
                 $base64Pwd = $result['PasswordData'];
                 $encryptedPwd = base64_decode($base64Pwd);
                 $cleartextPwd = '';
@@ -124,13 +112,7 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
                 $keypairPrivateKeyResource = openssl_get_privatekey($this->keypairPrivateKey);
 
                 if (openssl_private_decrypt($encryptedPwd, $cleartextPwd, $keypairPrivateKeyResource)) {
-                    $cryptor = new Cryptor();
-                    $cloudInstance->setAdminPassword(
-                        $cryptor->encryptString(
-                            $cleartextPwd,
-                            $encryptionKey
-                        )
-                    );
+                    $cloudInstance->setAdminPassword($cleartextPwd);
                     return true;
                 } else {
                     return false;
