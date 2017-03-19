@@ -23,6 +23,13 @@ remoteDesktop:
         games: Playing games
         cad: Working with CAD programs
 
+cloudInstance:
+    new:
+        form:
+            headline: Start an instance of your remote desktop
+            region_label: Please select the region which is closest to your current position:
+            submit_label: Continue
+
 cloudprovider:
     aws:
         region:

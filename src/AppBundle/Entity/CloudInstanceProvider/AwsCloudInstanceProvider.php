@@ -12,16 +12,23 @@ use AppBundle\Entity\RemoteDesktop\RemoteDesktopGamingKind;
 
 class AwsCloudInstanceProvider extends CloudInstanceProvider
 {
+    protected $regions;
+
+    public function __construct()
+    {
+        $this->regions = [
+            new Region($this, 'eu-west-1', 'cloudprovider.aws.region.eu-west-1'),
+            new Region($this, 'eu-central-1', 'cloudprovider.aws.region.eu-central-1'),
+            new Region($this, 'us-east-1', 'cloudprovider.aws.region.us-east-1')
+        ];
+    }
+
     /**
      * @return Region[]
      */
     public function getRegions(): array
     {
-        return [
-            new Region($this, 'eu-west-1', 'cloudprovider.aws.region.eu-west-1'),
-            new Region($this, 'eu-central-1', 'cloudprovider.aws.region.eu-central-1'),
-            new Region($this, 'us-east-1', 'cloudprovider.aws.region.us-east-1')
-        ];
+        return $this->regions;
     }
 
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstanceInterface

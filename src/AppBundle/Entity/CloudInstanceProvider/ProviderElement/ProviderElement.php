@@ -24,11 +24,11 @@ abstract class ProviderElement
 
     public function getInternalName() : string
     {
-        return $this->getInternalName();
+        return $this->internalName;
     }
 
     public function getHumanName() : string
     {
-        return $this->getHumanName();
+        return $this->humanName;
     }
 }

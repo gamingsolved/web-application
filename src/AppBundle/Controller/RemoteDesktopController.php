@@ -36,7 +36,7 @@ class RemoteDesktopController extends Controller
             $em->persist($remoteDesktop);
             $em->flush();
 
-            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('cloudinstances.new', ['remoteDesktop' => $remoteDesktop->getId()], Response::HTTP_CREATED);
         } else {
             return $this->render('AppBundle:remoteDesktop:new.html.twig', ['form' => $form->createView()]);
         }

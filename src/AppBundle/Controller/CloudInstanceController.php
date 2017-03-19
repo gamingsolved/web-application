@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -26,15 +27,10 @@ class CloudInstanceController extends Controller
         $cloudInstanceProvider = $remoteDesktop->getCloudInstanceProvider();
 
         $regions = $cloudInstanceProvider->getRegions();
-
-        $logger = $this->get('logger');
-        $logger->info($regions[0]->getInternalName());
-
         $regionChoices = [];
 
         foreach ($regions as $region) {
-            $regionChoices['foo'] = 'bar';
-            //$regionChoices[$region->getHumanName()] = $region->getInternalName();
+            $regionChoices[$region->getHumanName()] = $region->getInternalName();
         }
 
         $form = $this->createFormBuilder()
@@ -43,10 +39,12 @@ class CloudInstanceController extends Controller
                 ChoiceType::class,
                 [
                     'choices' => $regionChoices,
+                    'expanded' => true,
+                    'multiple' => false,
                     'label' => 'cloudInstance.new.form.region_label'
                 ]
             )
-            ->add('send', SubmitType::class, ['label' => 'cloudInstance.new.form.submit_label'])
+            ->add('send', SubmitType::class, ['label' => 'cloudInstance.new.form.submit_label', 'attr' => ['class' => 'btn-primary']])
             ->getForm();
 
         return $this->render('AppBundle:cloudInstance:new.html.twig', ['form' => $form->createView()]);

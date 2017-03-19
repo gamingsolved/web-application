@@ -23,9 +23,11 @@ class RemoteDesktopType extends AbstractType
                         'remoteDesktop.kind.games' => RemoteDesktopKind::GAMING,
                         'remoteDesktop.kind.cad' => RemoteDesktopKind::CAD
                     ],
+                    'expanded' => true,
+                    'multiple' => false,
                     'label' => 'remoteDesktop.new.form.kind_label'
                 ]
             )
-            ->add('Save', SubmitType::class, ['label' => 'remoteDesktop.new.form.submit_label', 'attr' => ['class' => 'btn-success']]);
+            ->add('send', SubmitType::class, ['label' => 'remoteDesktop.new.form.submit_label', 'attr' => ['class' => 'btn-primary']]);
     }
 }
