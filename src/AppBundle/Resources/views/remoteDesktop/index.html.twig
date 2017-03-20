@@ -166,8 +166,8 @@
                                 <div class="panel-footer">
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
-                                    <a href="{{ path('cloudinstances.new', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-primary">
-                                        <span class="glyphicon glyphicon-expand" aria-hidden="true"></span>
+                                    <a href="{{ path('cloudinstances.new', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-success">
+                                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                                         {{ "remoteDesktop.index.launch_button"|trans }}
                                     </a>
                                     {% endif %}
@@ -215,7 +215,7 @@
                     {% endif %}
 
                     <p>
-                        <a href="{{ path('remotedesktops.new') }}" type="button" class="btn btn-success btn-lg">
+                        <a href="{{ path('remotedesktops.new') }}" type="button" class="btn btn-primary btn-lg">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             {{ "remoteDesktop.index.add_button"|trans }}
                         </a>

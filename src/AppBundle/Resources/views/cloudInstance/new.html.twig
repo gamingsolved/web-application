@@ -12,6 +12,10 @@
                         {{ form_widget(form) }}
                         {{ form_end(form) }}
                     </div>
+                    <a href="{{ path('remotedesktops.index') }}" class="btn btn-default">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        {{ "cloudInstance.new.launch_later_button"|trans }}
+                    </a>
                 </div>
             </div>
         </div>

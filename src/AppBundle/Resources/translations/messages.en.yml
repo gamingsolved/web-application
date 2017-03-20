@@ -50,7 +50,8 @@ cloudInstance:
         form:
             headline: Launch your remote desktop
             region_label: Please select the region which is closest to your current position:
-            submit_label: Schedule launch
+            submit_label: Launch now
+        launch_later_button: Launch later
 
 cloudprovider:
     aws:
