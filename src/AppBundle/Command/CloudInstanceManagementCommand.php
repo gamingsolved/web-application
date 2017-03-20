@@ -93,10 +93,10 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
                     $output->writeln('Action: launching the cloud instance');
                     if ($cloudInstanceCoordinator->cloudInstanceWasLaunched($cloudInstance)) {
-                        $output->writeln('Action result: success');
                         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_LAUNCHING);
                         $em->persist($cloudInstance);
                         $em->flush();
+                        $output->writeln('Action result: success');
                     } else {
                         $output->writeln('Action result: failure');
                     }
@@ -159,10 +159,10 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_START) {
                     $output->writeln('Action: asking the cloud instance to start');
                     if ($cloudInstanceCoordinator->cloudInstanceWasAskedToStart($cloudInstance)) {
-                        $output->writeln('Action result: success');
                         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STARTING);
                         $em->persist($cloudInstance);
                         $em->flush();
+                        $output->writeln('Action result: success');
                     } else {
                         $output->writeln('Action result: failure');
                     }
@@ -186,10 +186,10 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION) {
                     $output->writeln('Action: asking the cloud instance to stop');
                     if ($cloudInstanceCoordinator->cloudInstanceWasAskedToTerminate($cloudInstance)) {
-                        $output->writeln('Action result: success');
                         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_TERMINATING);
                         $em->persist($cloudInstance);
                         $em->flush();
+                        $output->writeln('Action result: success');
                     } else {
                         $output->writeln('Action result: failure');
                     }
