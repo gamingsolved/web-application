@@ -166,7 +166,8 @@
                                 <div class="panel-footer">
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
-                                    <a href="{{ path('cloudinstances.new', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-success">
+                                    <a href="{{ path('cloudinstances.new', { 'remoteDesktop': remoteDesktop.id }) }}"
+                                       class="btn btn-success remotedesktop-action-button">
                                         <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                                         {{ "remoteDesktop.index.launch_button"|trans }}
                                     </a>
@@ -177,25 +178,28 @@
                                         or remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING')
                                         or remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATING')
                                     %}
-                                        <a href="{{ path('remotedesktops.index') }}" class="btn btn-info">
+                                        <a href="{{ path('remotedesktops.index') }}" class="btn btn-info remotedesktop-action-button">
                                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.refresh_button"|trans }}
                                         </a>
                                     {% endif %}
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
-                                        <a href="{{ path('remotedesktops.stop', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-warning">
+                                        <a href="{{ path('remotedesktops.stop', { 'remoteDesktop': remoteDesktop.id }) }}"
+                                           class="btn btn-warning remotedesktop-action-button">
                                             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.stop_button"|trans }}
                                         </a>
                                     {% endif %}
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
-                                        <a href="{{ path('remotedesktops.start', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-success">
+                                        <a href="{{ path('remotedesktops.start', { 'remoteDesktop': remoteDesktop.id }) }}"
+                                           class="btn btn-success remotedesktop-action-button">
                                             <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.start_button"|trans }}
                                         </a>
-                                        <a href="{{ path('remotedesktops.terminate', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-danger">
+                                        <a href="{{ path('remotedesktops.terminate', { 'remoteDesktop': remoteDesktop.id }) }}"
+                                           class="btn btn-danger remotedesktop-action-button">
                                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.terminate_button"|trans }}
                                         </a>

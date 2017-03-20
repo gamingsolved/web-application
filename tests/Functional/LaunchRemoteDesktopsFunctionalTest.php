@@ -2,6 +2,9 @@
 
 namespace Tests\Functional;
 
+use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Helpers\Helpers;
 
@@ -34,9 +37,11 @@ class LaunchRemoteDesktopsFunctionalTest extends WebTestCase
 
         // Verify that we went into the instance creation workflow
         $container = $client->getContainer();
+        /** @var EntityManager $em */
         $em = $container->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
-        $remoteDesktop = $repo->findOneBy(['title' => 'My first remote desktop']);
+        $remoteDesktopRepo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
+        /** @var RemoteDesktop $remoteDesktop */
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
         $this->assertEquals(
             '/en/remoteDesktops/' . $remoteDesktop->getId() . '/cloudInstances/new',
             $client->getRequest()->getRequestUri()
@@ -69,7 +74,30 @@ class LaunchRemoteDesktopsFunctionalTest extends WebTestCase
             $crawler->filter('a.btn:contains("Launch this remote desktop")')->count()
         );
 
-        $this->assertContains('Refresh status', $crawler->filter('a.btn')->first()->text());
+        $this->assertContains('Refresh status', $crawler->filter('a.remotedesktop-action-button')->first()->text());
+
+        // Switching to "Ready to use" status
+
+        // We must pull this again because else Doctrine is irritated (because due to the browsing, this old object is out of sync)
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+        /** @var CloudInstance $cloudInstance */
+        $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
+        $cloudInstance->setPublicAddress('121.122.123.124');
+        $cloudInstance->setAdminPassword('foo');
+        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
+        $em->persist($cloudInstance);
+        $em->flush();
+
+        $crawler = $client->request('GET', '/en/remoteDesktops/');
+
+        $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
+
+        $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
+        $this->assertContains('Ready to use', $crawler->filter('span.label')->first()->text());
+        $this->assertContains('Stop this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
+
+        // We want to build on this in other tests
+        return $client;
     }
 
 }

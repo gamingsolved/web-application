@@ -66,7 +66,7 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Not running', $crawler->filter('span.label-default')->first()->text());
 
-        $this->assertContains('Launch this remote desktop', $crawler->filter('a.btn')->first()->text());
+        $this->assertContains('Launch this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
 
         // We want to build on this in other tests
         return $client;
