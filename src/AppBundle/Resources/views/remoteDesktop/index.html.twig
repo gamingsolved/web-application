@@ -138,8 +138,15 @@
                                     {% endif %}
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_RUNNING') %}
-                                        <a href="{{ path('remotedesktops.stop', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-danger">
-                                            <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+                                        <a href="{{ path('remotedesktops.stop', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-warning">
+                                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.stop_button"|trans }}
+                                        </a>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
+                                        <a href="{{ path('remotedesktops.terminate', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-danger">
+                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.stop_button"|trans }}
                                         </a>
                                     {% endif %}

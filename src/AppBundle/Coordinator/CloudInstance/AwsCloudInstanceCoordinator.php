@@ -70,7 +70,7 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * @param AwsCloudInstance $cloudInstance
      * @return bool
      */
-    public function cloudInstanceHasFinishedLaunching(CloudInstance $cloudInstance) : bool
+    public function cloudInstanceHasFinishedLaunchingOrStarting(CloudInstance $cloudInstance) : bool
     {
         try {
             $result = $this->ec2Client->describeInstances([
@@ -130,7 +130,66 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * @param AwsCloudInstance $cloudInstance param type differs intentionally
      * @return bool
      */
-    public function cloudInstanceWasAskedToShutDown(CloudInstance $cloudInstance) : bool
+    public function cloudInstanceWasAskedToStop(CloudInstance $cloudInstance) : bool
+    {
+        try {
+            $this->ec2Client->stopInstances([
+                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+            ]);
+        } catch (\Exception $e) {
+            $this->output->writeln($e->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     * @return bool
+     */
+    public function cloudInstanceHasFinishedStopping(CloudInstance $cloudInstance) : bool
+    {
+        try {
+            $result = $this->ec2Client->describeInstances([
+                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+            ]);
+
+            if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'stopped') {
+                $cloudInstance->setPublicAddress('');
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->output->writeln($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     * @return bool
+     */
+    public function cloudInstanceWasAskedToStart(CloudInstance $cloudInstance) : bool
+    {
+        try {
+            $this->ec2Client->startInstances([
+                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+            ]);
+        } catch (\Exception $e) {
+            $this->output->writeln($e->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     * @return bool
+     */
+    public function cloudInstanceWasAskedToTerminate(CloudInstance $cloudInstance) : bool
     {
         try {
             $this->ec2Client->terminateInstances([
@@ -142,5 +201,28 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
         }
 
         return true;
+    }
+
+    /**
+     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     * @return bool
+     */
+    public function cloudInstanceHasFinishedTerminating(CloudInstance $cloudInstance) : bool
+    {
+        try {
+            $result = $this->ec2Client->describeInstances([
+                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+            ]);
+
+            if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'terminated') {
+                $cloudInstance->setPublicAddress('');
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->output->writeln($e->getMessage());
+            return false;
+        }
     }
 }

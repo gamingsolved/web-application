@@ -32,7 +32,10 @@ class RemoteDesktop
     const STATUS_NEVER_LAUNCHED = 0;
     const STATUS_LAUNCHING = 1;
     const STATUS_RUNNING = 2;
-    const STATUS_STOPPED = 3;
+    const STATUS_STOPPING = 3;
+    const STATUS_STOPPED = 4;
+    const STATUS_TERMINATING = 5;
+    const STATUS_TERMINATED = 6;
 
     /**
      * @var string
@@ -183,15 +186,26 @@ class RemoteDesktop
             switch ($activeCloudInstance->getRunstatus()) {
                 case CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH:
                 case CloudInstance::RUNSTATUS_LAUNCHING:
-                    $status = self::STATUS_LAUNCHING;
+                case CloudInstance::RUNSTATUS_SCHEDULED_FOR_START:
+                case CloudInstance::RUNSTATUS_STARTING:
+                $status = self::STATUS_LAUNCHING;
                     break;
                 case CloudInstance::RUNSTATUS_RUNNING:
                     $status = self::STATUS_RUNNING;
                     break;
-                case CloudInstance::RUNSTATUS_SCHEDULED_FOR_SHUTDOWN:
-                case CloudInstance::RUNSTATUS_SHUTTING_DOWN:
-                case CloudInstance::RUNSTATUS_SHUT_DOWN:
+                case CloudInstance::RUNSTATUS_SCHEDULED_FOR_STOP:
+                case CloudInstance::RUNSTATUS_STOPPING:
+                    $status = self::STATUS_STOPPING;
+                    break;
+                case CloudInstance::RUNSTATUS_STOPPED:
                     $status = self::STATUS_STOPPED;
+                    break;
+                case CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION:
+                case CloudInstance::RUNSTATUS_SCHEDULED_TERMINATING:
+                    $status = self::STATUS_TERMINATING;
+                    break;
+                case CloudInstance::RUNSTATUS_SCHEDULED_TERMINATED:
+                    $status = self::STATUS_TERMINATED;
                     break;
                 default:
                     throw new \Exception('Unexpected cloud instance runstatus ' . $activeCloudInstance->getRunstatus());
@@ -227,9 +241,37 @@ class RemoteDesktop
         return $this->getActiveCloudInstance()->getRegion();
     }
 
-    public function sheduleForShutdown()
+    public function sheduleForStop()
     {
-        $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_SHUTDOWN);
+        $activeCloudInstance = $this->getActiveCloudInstance();
+
+        if ($activeCloudInstance->getRunstatus() == CloudInstance::RUNSTATUS_RUNNING) {
+            $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_STOP);
+        } else {
+            throw new \Exception('Cannot shedule a cloud instance for stopping that is not running');
+        }
+    }
+
+    public function sheduleForStart()
+    {
+        $activeCloudInstance = $this->getActiveCloudInstance();
+
+        if ($activeCloudInstance->getRunstatus() == CloudInstance::RUNSTATUS_STOPPED) {
+            $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_START);
+        } else {
+            throw new \Exception('Cannot shedule a cloud instance for starting that is not stopped');
+        }
+    }
+
+    public function sheduleForTermination()
+    {
+        $activeCloudInstance = $this->getActiveCloudInstance();
+
+        if ($activeCloudInstance->getRunstatus() == CloudInstance::RUNSTATUS_STOPPED) {
+            $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION);
+        } else {
+            throw new \Exception('Cannot shedule a cloud instance for termination that is not running');
+        }
     }
 
     /**

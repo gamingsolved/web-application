@@ -46,9 +46,14 @@ abstract class CloudInstance implements CloudInstanceInterface
     const RUNSTATUS_SCHEDULED_FOR_LAUNCH = 0;
     const RUNSTATUS_LAUNCHING = 1;
     const RUNSTATUS_RUNNING = 2;
-    const RUNSTATUS_SCHEDULED_FOR_SHUTDOWN = 3;
-    const RUNSTATUS_SHUTTING_DOWN = 4;
-    const RUNSTATUS_SHUT_DOWN = 5;
+    const RUNSTATUS_SCHEDULED_FOR_STOP = 3;
+    const RUNSTATUS_STOPPING = 4;
+    const RUNSTATUS_STOPPED = 5;
+    const RUNSTATUS_SCHEDULED_FOR_START = 6;
+    const RUNSTATUS_STARTING = 7;
+    const RUNSTATUS_SCHEDULED_FOR_TERMINATION = 8;
+    const RUNSTATUS_SCHEDULED_TERMINATING = 9;
+    const RUNSTATUS_SCHEDULED_TERMINATED = 10;
 
     const ADMIN_PASSWORD_ENCRYPTION_KEY = '06c528c143c3f5c73ae200048782bd422a4f1b90';
 
@@ -75,13 +80,13 @@ abstract class CloudInstance implements CloudInstanceInterface
             case self::RUNSTATUS_RUNNING:
                 return 'running';
                 break;
-            case self::RUNSTATUS_SCHEDULED_FOR_SHUTDOWN:
+            case self::RUNSTATUS_SCHEDULED_FOR_STOP:
                 return 'scheduled for shutdown';
                 break;
-            case self::RUNSTATUS_SHUTTING_DOWN:
+            case self::RUNSTATUS_STOPPING:
                 return 'shutting down';
                 break;
-            case self::RUNSTATUS_SHUT_DOWN:
+            case self::RUNSTATUS_STOPPED:
                 return 'shut down';
                 break;
         }

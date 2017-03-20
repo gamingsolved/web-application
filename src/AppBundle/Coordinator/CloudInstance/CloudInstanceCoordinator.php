@@ -12,9 +12,17 @@ interface CloudInstanceCoordinator
 
     public function cloudInstanceWasLaunched(CloudInstance $cloudInstance) : bool;
 
-    public function cloudInstanceHasFinishedLaunching(CloudInstance $cloudInstance) : bool;
+    public function cloudInstanceHasFinishedLaunchingOrStarting(CloudInstance $cloudInstance) : bool;
 
     public function cloudInstanceAdminPasswordCouldBeRetrieved(CloudInstance $cloudInstance, string $encryptionKey) : bool;
 
-    public function cloudInstanceWasAskedToShutDown(CloudInstance $cloudInstance) : bool;
+    public function cloudInstanceWasAskedToStop(CloudInstance $cloudInstance) : bool;
+
+    public function cloudInstanceHasFinishedStopping(CloudInstance $cloudInstance) : bool;
+
+    public function cloudInstanceWasAskedToStart(CloudInstance $cloudInstance) : bool;
+
+    public function cloudInstanceWasAskedToTerminate(CloudInstance $cloudInstance) : bool;
+
+    public function cloudInstanceHasFinishedTerminating(CloudInstance $cloudInstance) : bool;
 }

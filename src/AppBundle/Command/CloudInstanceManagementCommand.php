@@ -87,6 +87,9 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 $output->writeln('Public IP: ' . $cloudInstance->getPublicAddress());
                 $output->writeln('Admin password: ' . $cloudInstance->getAdminPassword());
 
+
+                // Launching
+
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
                     $output->writeln('Action: launching the cloud instance');
                     if ($cloudInstanceCoordinator->cloudInstanceWasLaunched($cloudInstance)) {
@@ -101,7 +104,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING) {
                     $output->writeln('Action: probing if launch is complete, retrieve info');
-                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunching($cloudInstance)) {
+                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunchingOrStarting($cloudInstance)) {
                         $em->persist($cloudInstance);
                         $em->flush();
                         $output->writeln('Action result: success');
@@ -123,13 +126,82 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                     }
                 }
 
-                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_SHUTDOWN) {
-                    $output->writeln('Action: asking the cloud instance to shut down');
-                    if ($cloudInstanceCoordinator->cloudInstanceWasAskedToShutDown($cloudInstance)) {
+
+                // Stopping
+
+                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_STOP) {
+                    $output->writeln('Action: asking the cloud instance to stop');
+                    if ($cloudInstanceCoordinator->cloudInstanceWasAskedToStop($cloudInstance)) {
                         $output->writeln('Action result: success');
-                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SHUTTING_DOWN);
+                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPING);
                         $em->persist($cloudInstance);
                         $em->flush();
+                    } else {
+                        $output->writeln('Action result: failure');
+                    }
+                }
+
+                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STOPPING) {
+                    $output->writeln('Action: probing if stop is complete, retrieve info');
+                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunchingOrStarting($cloudInstance)) {
+                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPED);
+                        $em->persist($cloudInstance);
+                        $em->flush();
+                        $output->writeln('Action result: success');
+                    } else {
+                        $output->writeln('Action result: failure');
+                    }
+                }
+
+
+                // Starting
+
+                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_START) {
+                    $output->writeln('Action: asking the cloud instance to start');
+                    if ($cloudInstanceCoordinator->cloudInstanceWasAskedToStart($cloudInstance)) {
+                        $output->writeln('Action result: success');
+                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STARTING);
+                        $em->persist($cloudInstance);
+                        $em->flush();
+                    } else {
+                        $output->writeln('Action result: failure');
+                    }
+                }
+
+                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STARTING) {
+                    $output->writeln('Action: probing if start is complete, retrieve info');
+                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunchingOrStarting($cloudInstance)) {
+                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
+                        $em->persist($cloudInstance);
+                        $em->flush();
+                        $output->writeln('Action result: success');
+                    } else {
+                        $output->writeln('Action result: failure');
+                    }
+                }
+
+
+                // Terminating
+
+                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION) {
+                    $output->writeln('Action: asking the cloud instance to stop');
+                    if ($cloudInstanceCoordinator->cloudInstanceWasAskedToTerminate($cloudInstance)) {
+                        $output->writeln('Action result: success');
+                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_TERMINATING);
+                        $em->persist($cloudInstance);
+                        $em->flush();
+                    } else {
+                        $output->writeln('Action result: failure');
+                    }
+                }
+
+                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_TERMINATING) {
+                    $output->writeln('Action: probing if stop is complete, retrieve info');
+                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunchingOrStarting($cloudInstance)) {
+                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_TERMINATED);
+                        $em->persist($cloudInstance);
+                        $em->flush();
+                        $output->writeln('Action result: success');
                     } else {
                         $output->writeln('Action result: failure');
                     }

@@ -55,7 +55,7 @@ class RemoteDesktopController extends Controller
             return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
         }
 
-        $remoteDesktop->sheduleForShutdown();
+        $remoteDesktop->sheduleForStop();
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($remoteDesktop);
