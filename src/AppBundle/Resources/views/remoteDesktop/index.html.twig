@@ -100,6 +100,16 @@
                                         </ul>
                                     {% endif %}
 
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING') %}
+                                        <h3>
+                                            {{ "remoteDesktop.status.label"|trans }}
+                                            <span class="label label-warning label-pulsating">
+                                                <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.status.stopping"|trans }}
+                                            </span>
+                                        </h3>
+                                    {% endif %}
+
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
                                         <h3>
                                             {{ "remoteDesktop.status.label"|trans }}
@@ -110,16 +120,38 @@
                                         </h3>
                                     {% endif %}
 
-                                    <div class="well well-sm remotedesktop-infobox">
-                                    {% if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
-                                        <span class="label label-default">{{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}</span>
-
-                                        &nbsp;
-                                        <span class="label label-default">{{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}</span>
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATING') %}
+                                        <h3>
+                                            {{ "remoteDesktop.status.label"|trans }}
+                                            <span class="label label-danger label-pulsating">
+                                                <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.status.terminating"|trans }}
+                                            </span>
+                                        </h3>
                                     {% endif %}
 
-                                    &nbsp;
-                                    <span class="label label-default">{{ remoteDesktop.kind|trans }}</span>
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATED') %}
+                                        <h3>
+                                            {{ "remoteDesktop.status.label"|trans }}
+                                            <span class="label label-default">
+                                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.status.terminated"|trans }}
+                                            </span>
+                                        </h3>
+                                    {% endif %}
+
+                                    <div class="well well-sm remotedesktop-infobox">
+                                        {%
+                                            if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED')
+                                            and remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATED')
+                                        %}
+                                            <span class="label label-default">{{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}</span>
+                                            &nbsp;
+                                            <span class="label label-default">{{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}</span>
+                                        {% endif %}
+
+                                        &nbsp;
+                                        <span class="label label-default">{{ remoteDesktop.kind|trans }}</span>
                                     </div>
                                 </div>
 
