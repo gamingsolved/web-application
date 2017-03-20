@@ -30,8 +30,8 @@ class RemoteDesktop
     const STREAMING_CLIENT_CGX = 0;
 
     const STATUS_NEVER_LAUNCHED = 0;
-    const STATUS_LAUNCHING = 1;
-    const STATUS_RUNNING = 2;
+    const STATUS_BOOTING = 1;
+    const STATUS_READY_TO_USE = 2;
     const STATUS_STOPPING = 3;
     const STATUS_STOPPED = 4;
     const STATUS_TERMINATING = 5;
@@ -188,10 +188,10 @@ class RemoteDesktop
                 case CloudInstance::RUNSTATUS_LAUNCHING:
                 case CloudInstance::RUNSTATUS_SCHEDULED_FOR_START:
                 case CloudInstance::RUNSTATUS_STARTING:
-                $status = self::STATUS_LAUNCHING;
+                $status = self::STATUS_BOOTING;
                     break;
                 case CloudInstance::RUNSTATUS_RUNNING:
-                    $status = self::STATUS_RUNNING;
+                    $status = self::STATUS_READY_TO_USE;
                     break;
                 case CloudInstance::RUNSTATUS_SCHEDULED_FOR_STOP:
                 case CloudInstance::RUNSTATUS_STOPPING:

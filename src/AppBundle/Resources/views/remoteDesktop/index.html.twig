@@ -35,7 +35,7 @@
                                         </h3>
                                     {% endif %}
 
-                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_LAUNCHING') %}
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_BOOTING') %}
                                         <h3>
                                             {{ "remoteDesktop.status.label"|trans }}
                                             <span class="label label-success label-pulsating">
@@ -52,7 +52,7 @@
                                         </div>
                                     {% endif %}
 
-                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_RUNNING') %}
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
                                         <h3>
                                             {{ "remoteDesktop.status.label"|trans }}
                                             <span class="label label-success">
@@ -172,14 +172,18 @@
                                     </a>
                                     {% endif %}
 
-                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_LAUNCHING') %}
+                                    {%
+                                        if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_BOOTING')
+                                        or remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING')
+                                        or remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATING')
+                                    %}
                                         <a href="{{ path('remotedesktops.index') }}" class="btn btn-info">
                                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.refresh_button"|trans }}
                                         </a>
                                     {% endif %}
 
-                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_RUNNING') %}
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
                                         <a href="{{ path('remotedesktops.stop', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-warning">
                                             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.stop_button"|trans }}
