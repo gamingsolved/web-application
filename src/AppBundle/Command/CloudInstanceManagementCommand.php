@@ -6,8 +6,6 @@ use AppBundle\Coordinator\CloudInstance\AwsCloudInstanceCoordinator;
 use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinator;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
-use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
-use AppBundle\Utility\Cryptor;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -102,7 +100,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 }
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING) {
-                    $output->writeln('Action: probing if finished launching, acquiring info');
+                    $output->writeln('Action: probing if launch is complete, retrieve info');
                     if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunching($cloudInstance)) {
                         $em->persist($cloudInstance);
                         $em->flush();
