@@ -94,7 +94,7 @@
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING') %}
                                         <h3>
                                             {{ "remoteDesktop.status.label"|trans }}
-                                            <span class="label label-warning label-pulsating"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>{{ "remoteDesktop.status.stopping"|trans }}</span>
+                                            <span class="label label-warning label-pulsating"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp;{{ "remoteDesktop.status.stopping"|trans }}</span>
                                         </h3>
 
                                         <hr>
@@ -115,7 +115,7 @@
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATING') %}
                                         <h3>
                                             {{ "remoteDesktop.status.label"|trans }}
-                                            <span class="label label-danger label-pulsating"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>{{ "remoteDesktop.status.terminating"|trans }}</span>
+                                            <span class="label label-danger label-pulsating"><span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp;{{ "remoteDesktop.status.terminating"|trans }}</span>
                                         </h3>
                                     {% endif %}
 
@@ -234,7 +234,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {# This adds a nice "breathing" effect to status labels of desktops that wait for launch to finish #}
+    {# This adds a nice "breathing" effect to status labels of desktops that are in a transition state #}
     <script src="{{ asset('bundles/app/static-vendor/jquery.pulse.1.0.0.min.js') }}"></script>
     <script>
         var properties = {
