@@ -44,6 +44,8 @@
                                             </span>
                                         </h3>
 
+                                        <hr>
+
                                         <div class="alert alert-warning small" role="alert">
                                             <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.info_launching"|trans }}
@@ -61,16 +63,16 @@
 
                                         <ul class="list-group">
                                             <li class="list-group-item">
-                                                <strong>{{ "remoteDesktop.index.publicaddress_label"|trans }}</strong>
-                                                {{ remoteDesktop.publicAddress }}
+                                                {{ "remoteDesktop.index.publicaddress_label"|trans }}
+                                                <label>{{ remoteDesktop.publicAddress }}</label>
                                             </li>
                                             <li class="list-group-item">
-                                                <strong>{{ "remoteDesktop.index.username_label"|trans }}</strong>
-                                                Administrator
+                                                {{ "remoteDesktop.index.username_label"|trans }}
+                                                <label>Administrator</label>
                                             </li>
                                             <li class="list-group-item">
-                                                <strong>{{ "remoteDesktop.index.password_label"|trans }}</strong>
-                                                {{ remoteDesktop.adminPassword }}
+                                                {{ "remoteDesktop.index.password_label"|trans }}
+                                                <label>{{ remoteDesktop.adminPassword }}</label>
                                             </li>
                                             <li class="list-group-item list-group-item-success">
                                                 <p>
