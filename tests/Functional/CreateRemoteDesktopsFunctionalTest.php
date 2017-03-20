@@ -61,10 +61,9 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('For playing computer games', $crawler->filter('div.remotedesktop-kind-label')->first()->text());
+        $this->assertContains('For playing computer games', $crawler->filter('div.remotedesktop-infobox')->first()->text());
 
-        // Two checks due to line break
-        $this->assertContains('Current status:', $crawler->filter('span.label-default')->first()->text());
+        $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Not running', $crawler->filter('span.label-default')->first()->text());
 
         $this->assertContains('Launch this remote desktop', $crawler->filter('a.btn')->first()->text());
@@ -112,7 +111,7 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('Current status:', $crawler->filter('span.label-primary')->first()->text());
+        $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Launching...', $crawler->filter('span.label-primary')->first()->text());
 
         $this->assertEquals(
