@@ -5,7 +5,7 @@ namespace Tests\Functional;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Helpers\Helpers;
 
-class CreateRemoteDesktopsFunctionalTest extends WebTestCase
+class LaunchRemoteDesktopsFunctionalTest extends WebTestCase
 {
     use Helpers;
 
@@ -22,25 +22,15 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
         $this->assertEquals('http://localhost/en/login', $client->getResponse()->headers->get('location'));
     }
 
-    public function testCreateRemoteDesktop()
+    public function testLaunchRemoteDesktop()
     {
-        $this->resetDatabase();
-
-        $client = $this->getClientThatRegisteredAndActivatedAUser();
+        $client = (new CreateRemoteDesktopsFunctionalTest())->testCreateRemoteDesktop();
 
         $crawler = $client->request('GET', '/en/remoteDesktops/');
-        $link = $crawler->selectLink('Create a new remote desktop')->first()->link();
+
+        $link = $crawler->selectLink('Launch this remote desktop')->first()->link();
+
         $crawler = $client->click($link);
-
-        $buttonNode = $crawler->selectButton('Continue');
-        $form = $buttonNode->form();
-
-        $client->submit($form, [
-            'remote_desktop[title]' => 'My first remote desktop',
-            'remote_desktop[kind]' => '0' // "Gaming"
-        ]);
-
-        $client->followRedirect();
 
         // Verify that we went into the instance creation workflow
         $container = $client->getContainer();
@@ -52,24 +42,34 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
             $client->getRequest()->getRequestUri()
         );
 
-        $crawler = $client->request('GET', '/en/remoteDesktops/');
+        $this->assertContains('Launch your remote desktop', $crawler->filter('h1')->first()->text());
 
+        $buttonNode = $crawler->selectButton('Launch now');
+        $form = $buttonNode->form();
+
+        $client->submit($form, [
+            'form[region]' => 'eu-central-1',
+        ]);
+
+        $crawler = $client->followRedirect();
+
+        // We want to be back in the overview
         $this->assertEquals(
-            0,
-            $crawler->filter('div.alert-info:contains("You do not yet have any remote desktops.")')->count()
+            '/en/remoteDesktops/',
+            $client->getRequest()->getRequestUri()
         );
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('For playing computer games', $crawler->filter('div.remotedesktop-infobox')->first()->text());
-
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
-        $this->assertContains('Not running', $crawler->filter('span.label-default')->first()->text());
+        $this->assertContains('Booting...', $crawler->filter('span.label')->first()->text());
 
-        $this->assertContains('Launch this remote desktop', $crawler->filter('a.btn')->first()->text());
+        $this->assertEquals(
+            0,
+            $crawler->filter('a.btn:contains("Launch this remote desktop")')->count()
+        );
 
-        // We want to build on this in other tests
-        return $client;
+        $this->assertContains('Refresh status', $crawler->filter('a.btn')->first()->text());
     }
 
 }
