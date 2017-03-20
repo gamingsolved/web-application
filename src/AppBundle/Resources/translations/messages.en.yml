@@ -3,7 +3,7 @@ _navigation:
     login: Sign in
     logout: Log out
     your_remote_desktops: Your remote desktops
-    create_new_remote_desktop: Create new remote desktop
+    create_new_remote_desktop: Create a new remote desktop
 
 logoutSuccessful:
     message: You are now logged out.

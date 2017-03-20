@@ -28,8 +28,8 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
 
         $client = $this->getClientThatRegisteredAndActivatedAUser();
 
-        $crawler = $client->request('GET', '/en/');
-        $link = $crawler->selectLink('Create new remote desktop')->link();
+        $crawler = $client->request('GET', '/en/remoteDesktops/');
+        $link = $crawler->selectLink('Create a new remote desktop')->first()->link();
         $crawler = $client->click($link);
 
         $buttonNode = $crawler->selectButton('Continue');
@@ -94,7 +94,7 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
 
         $this->assertContains('Launch your remote desktop', $crawler->filter('h1')->first()->text());
 
-        $buttonNode = $crawler->selectButton('Schedule launch');
+        $buttonNode = $crawler->selectButton('Launch now');
         $form = $buttonNode->form();
 
         $client->submit($form, [
@@ -112,7 +112,7 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
-        $this->assertContains('Launching...', $crawler->filter('span.label-primary')->first()->text());
+        $this->assertContains('Booting...', $crawler->filter('span.label')->first()->text());
 
         $this->assertEquals(
             0,
