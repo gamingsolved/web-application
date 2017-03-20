@@ -1,5 +1,28 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    <style>
+        body {
+            padding-top: 0;
+            background: url(/bundles/app/homepage-background.jpg);
+            background-size: cover;
+        }
+
+        .jumbotron {
+            background-color: rgb(0, 0, 0, 0.5);
+            color: #fff;
+            text-shadow: 1px 1px 1px #000;
+        }
+
+        .jumbotron h1 {
+            color: #ffbe18;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     <div class="jumbotron">
         <section class="container">
@@ -10,6 +33,12 @@
             </p>
             <p>
                 No need to buy an expensive gaming rig - you simply pay as you go, starting as low as $1 per hour.
+            </p>
+            <hr>
+            <p class="text-center">
+                <a href="{{ path('fos_user_registration_register') }}" type="button" class="btn btn-warning btn-lg">
+                    Sign up now and start playing.
+                </a>
             </p>
         </section>
     </div>

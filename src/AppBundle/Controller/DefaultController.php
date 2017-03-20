@@ -29,7 +29,13 @@ class DefaultController extends Controller
 
     public function indexAction(Request $request)
     {
-        return $this->render('default/index.html.twig');
+        $user = $this->getUser();
+
+        if (!is_null($user)) {
+            return $this->redirectToRoute('remotedesktops.index');
+        } else {
+            return $this->render('default/index.html.twig');
+        }
     }
 
     public function logoutSuccessfulAction()
