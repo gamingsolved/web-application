@@ -1,5 +1,9 @@
 {% extends '::base.html.twig' %}
 
+{% set clientDownloadButtonsAlreadyShown = false %}
+{% set clientDownloadUriWin = 'https://s3-eu-west-1.amazonaws.com/sgx.aws.cgx-client-1.8/Windows/cgxClient-Scalable+Graphics-CGX.1.8.0.12.exe' %}
+{% set clientDownloadUriMac = 'https://s3-eu-west-1.amazonaws.com/sgx.aws.cgx-client-1.8/OSX/CGX_1.8.0.11.dmg' %}
+
 {% block body %}
     <main>
         <div class="container">
@@ -68,6 +72,29 @@
                                                 <strong>{{ "remoteDesktop.index.password_label"|trans }}</strong>
                                                 {{ remoteDesktop.adminPassword }}
                                             </li>
+                                            <li class="list-group-item list-group-item-success">
+                                                <p>
+                                                    <strong>{{ "remoteDesktop.index.connect_now_using_clients"|trans }}</strong>
+                                                </p>
+                                                <p>
+                                                    <a href="{{ clientDownloadUriWin }}"
+                                                       type="button"
+                                                       class="btn btn-default btn-sm"
+                                                    >
+                                                        <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+                                                        {{ "remoteDesktop.index.download_client_windows"|trans }}
+                                                    </a>
+
+                                                    <a href="{{ clientDownloadUriMac }}"
+                                                       type="button"
+                                                       class="btn btn-default btn-sm"
+                                                    >
+                                                        <span class="glyphicon glyphicon-apple" aria-hidden="true"></span>
+                                                        {{ "remoteDesktop.index.download_client_mac"|trans }}
+                                                    </a>
+                                                </p>
+                                                {% set clientDownloadButtonsAlreadyShown = true %}
+                                            </li>
                                         </ul>
                                     {% endif %}
 
@@ -83,20 +110,14 @@
 
                                     <div class="well well-sm remotedesktop-infobox">
                                     {% if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
-                                        <span class="label label-default">
-                                            {{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}
-                                        </span>
+                                        <span class="label label-default">{{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}</span>
 
                                         &nbsp;
-                                        <span class="label label-default">
-                                            {{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}
-                                        </span>
+                                        <span class="label label-default">{{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}</span>
                                     {% endif %}
 
                                     &nbsp;
-                                    <span class="label label-default">
-                                        {{ remoteDesktop.kind|trans }}
-                                    </span>
+                                    <span class="label label-default">{{ remoteDesktop.kind|trans }}</span>
                                     </div>
                                 </div>
 
@@ -136,10 +157,34 @@
 
                     {% endif %}
 
-                    <a href="{{ path('remotedesktops.new') }}" type="button" class="btn btn-success btn-lg">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        {{ "remoteDesktop.index.add_button"|trans }}
-                    </a>
+                    <p>
+                        <a href="{{ path('remotedesktops.new') }}" type="button" class="btn btn-success btn-lg">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            {{ "remoteDesktop.index.add_button"|trans }}
+                        </a>
+                    </p>
+
+                    {% if not clientDownloadButtonsAlreadyShown %}
+                        <hr>
+                        <p>
+                            <a href="{{ clientDownloadUriWin }}"
+                               type="button"
+                               class="btn btn-default btn-sm"
+                            >
+                                <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+                                {{ "remoteDesktop.index.download_client_windows"|trans }}
+                            </a>
+
+                            <a href="{{ clientDownloadUriMac }}"
+                               type="button"
+                               class="btn btn-default btn-sm"
+                            >
+                                <span class="glyphicon glyphicon-apple" aria-hidden="true"></span>
+                                {{ "remoteDesktop.index.download_client_mac"|trans }}
+                            </a>
+                        </p>
+                    {% endif %}
+
                 </div>
             </div>
         </div>

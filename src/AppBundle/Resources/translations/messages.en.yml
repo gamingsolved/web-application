@@ -13,6 +13,8 @@ remoteDesktop:
         headline: Your remote desktops
         no_remote_desktops_yet: You do not yet have any remote desktops.
         add_button: Create a new remote desktop
+        download_client_windows: Download the Windows client
+        download_client_mac: Download the Mac client
         launch_button: Launch this remote desktop
         refresh_button: Refresh status
         stop_button: Stop this remote desktop
@@ -20,6 +22,7 @@ remoteDesktop:
         publicaddress_label: IP address:
         username_label: Username:
         password_label: Password:
+        connect_now_using_clients: Connect to your remote desktop now using one of our clients:
     new:
         form:
             headline: Create a new remote desktop
