@@ -16,5 +16,5 @@ interface CloudInstanceCoordinator
 
     public function cloudInstanceAdminPasswordCouldBeRetrieved(CloudInstance $cloudInstance, string $encryptionKey) : bool;
 
-    //public static function getPublicAddress(CloudInstance $cloudInstance) : string;
+    public function cloudInstanceWasAskedToShutDown(CloudInstance $cloudInstance) : bool;
 }

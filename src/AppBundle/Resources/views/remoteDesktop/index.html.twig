@@ -71,6 +71,16 @@
                                         </ul>
                                     {% endif %}
 
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
+                                        <h3>
+                                            {{ "remoteDesktop.status.label"|trans }}
+                                            <span class="label label-default">
+                                                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.status.stopped"|trans }}
+                                            </span>
+                                        </h3>
+                                    {% endif %}
+
                                     <div class="well well-sm remotedesktop-infobox">
                                     {% if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
                                         <span class="label label-default">

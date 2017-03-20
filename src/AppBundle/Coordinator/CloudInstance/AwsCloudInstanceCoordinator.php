@@ -125,4 +125,22 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             return false;
         }
     }
+
+    /**
+     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     * @return bool
+     */
+    public function cloudInstanceWasAskedToShutDown(CloudInstance $cloudInstance) : bool
+    {
+        try {
+            $this->ec2Client->terminateInstances([
+                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+            ]);
+        } catch (\Exception $e) {
+            $this->output->writeln($e->getMessage());
+            return false;
+        }
+
+        return true;
+    }
 }

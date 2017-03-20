@@ -125,6 +125,18 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                     }
                 }
 
+                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_SHUTDOWN) {
+                    $output->writeln('Action: asking the cloud instance to shut down');
+                    if ($cloudInstanceCoordinator->cloudInstanceWasAskedToShutDown($cloudInstance)) {
+                        $output->writeln('Action result: success');
+                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SHUTTING_DOWN);
+                        $em->persist($cloudInstance);
+                        $em->flush();
+                    } else {
+                        $output->writeln('Action result: failure');
+                    }
+                }
+
                 $output->writeln('');
             }
         }

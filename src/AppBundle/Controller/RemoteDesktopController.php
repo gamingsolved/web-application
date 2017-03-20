@@ -51,19 +51,16 @@ class RemoteDesktopController extends Controller
     {
         $user = $this->getUser();
 
-        $form = $this->createForm(RemoteDesktopType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            $remoteDesktop = RemoteDesktopFactory::createFromForm($form, $user);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($remoteDesktop);
-            $em->flush();
-
-            return $this->redirectToRoute('cloudinstances.new', ['remoteDesktop' => $remoteDesktop->getId()]);
-        } else {
-            return $this->render('AppBundle:remoteDesktop:new.html.twig', ['form' => $form->createView()]);
+        if ($remoteDesktop->getUser()->getId() !== $user->getId()) {
+            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
         }
 
+        $remoteDesktop->sheduleForShutdown();
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($remoteDesktop);
+        $em->flush();
+
+        return $this->redirectToRoute('remotedesktops.index');
     }
 }

@@ -34,6 +34,7 @@ remoteDesktop:
         never_launched: Not running
         launching: Launching...
         running: Ready to use
+        stopped: Terminated
 
 cloudInstance:
     new:

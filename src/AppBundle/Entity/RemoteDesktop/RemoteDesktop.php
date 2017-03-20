@@ -227,6 +227,11 @@ class RemoteDesktop
         return $this->getActiveCloudInstance()->getRegion();
     }
 
+    public function sheduleForShutdown()
+    {
+        $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_SHUTDOWN);
+    }
+
     /**
      * @throws \Exception
      */
