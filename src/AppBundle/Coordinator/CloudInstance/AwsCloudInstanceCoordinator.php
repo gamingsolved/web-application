@@ -5,7 +5,6 @@ namespace AppBundle\Coordinator\CloudInstance;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
-use AppBundle\Utility\Cryptor;
 use Aws\Sdk;
 use Symfony\Component\Console\Output\OutputInterface;
 
