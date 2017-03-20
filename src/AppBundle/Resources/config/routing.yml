@@ -23,6 +23,16 @@ remotedesktops.stop:
     defaults: { _controller: AppBundle:RemoteDesktop:stop }
     methods:  [GET]
 
+remotedesktops.start:
+    path:     /remoteDesktops/{remoteDesktop}/start
+    defaults: { _controller: AppBundle:RemoteDesktop:start }
+    methods:  [GET]
+
+remotedesktops.terminate:
+    path:     /remoteDesktops/{remoteDesktop}/terminate
+    defaults: { _controller: AppBundle:RemoteDesktop:terminate }
+    methods:  [GET]
+
 cloudinstances.new:
     path:     /remoteDesktops/{remoteDesktop}/cloudInstances/new
     defaults: { _controller: AppBundle:CloudInstance:new }

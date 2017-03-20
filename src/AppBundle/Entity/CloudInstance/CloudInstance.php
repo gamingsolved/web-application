@@ -81,14 +81,30 @@ abstract class CloudInstance implements CloudInstanceInterface
                 return 'running';
                 break;
             case self::RUNSTATUS_SCHEDULED_FOR_STOP:
-                return 'scheduled for shutdown';
+                return 'scheduled for stop';
                 break;
             case self::RUNSTATUS_STOPPING:
-                return 'shutting down';
+                return 'stopping';
                 break;
             case self::RUNSTATUS_STOPPED:
-                return 'shut down';
+                return 'stopped';
                 break;
+            case self::RUNSTATUS_SCHEDULED_FOR_START:
+                return 'scheduled for start';
+                break;
+            case self::RUNSTATUS_STARTING;
+                return 'starting';
+                break;
+            case self::RUNSTATUS_SCHEDULED_FOR_TERMINATION:
+                return 'scheduled for termination';
+                break;
+            case self::RUNSTATUS_SCHEDULED_TERMINATING:
+                return 'terminating';
+                break;
+            case self::RUNSTATUS_SCHEDULED_TERMINATED:
+                return 'terminated';
+                break;
+
         }
         return 'Could not resolve runstatus to name';
     }

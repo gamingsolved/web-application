@@ -18,7 +18,10 @@ remoteDesktop:
         launch_button: Launch this remote desktop
         refresh_button: Refresh status
         stop_button: Stop this remote desktop
-        info_launching: Launching an instance can take up to 15 minutes.
+        start_button: Start this remote desktop
+        terminate_button: Remove this remote desktop
+        info_launching: Booting a remote desktop can take between 30 seconds and 15 minutes.
+        info_stopping: Stopping a remote desktop can take up to 5 minutes.
         publicaddress_label: IP address:
         username_label: Username:
         password_label: Password:
@@ -35,12 +38,12 @@ remoteDesktop:
     status:
         label: Current status:
         never_launched: Not running
-        launching: Launching...
+        launching: Booting...
         running: Ready to use
         stopping: Stopping...
         stopped: Stopped
-        terminating: Terminating...
-        terminated: Terminated
+        terminating: Removing...
+        terminated: Removed
 
 cloudInstance:
     new:

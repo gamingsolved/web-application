@@ -63,4 +63,44 @@ class RemoteDesktopController extends Controller
 
         return $this->redirectToRoute('remotedesktops.index');
     }
+
+    /**
+     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     */
+    public function startAction(RemoteDesktop $remoteDesktop, Request $request)
+    {
+        $user = $this->getUser();
+
+        if ($remoteDesktop->getUser()->getId() !== $user->getId()) {
+            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
+        }
+
+        $remoteDesktop->sheduleForStart();
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($remoteDesktop);
+        $em->flush();
+
+        return $this->redirectToRoute('remotedesktops.index');
+    }
+
+    /**
+     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     */
+    public function terminateAction(RemoteDesktop $remoteDesktop, Request $request)
+    {
+        $user = $this->getUser();
+
+        if ($remoteDesktop->getUser()->getId() !== $user->getId()) {
+            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
+        }
+
+        $remoteDesktop->sheduleForTermination();
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($remoteDesktop);
+        $em->flush();
+
+        return $this->redirectToRoute('remotedesktops.index');
+    }
 }

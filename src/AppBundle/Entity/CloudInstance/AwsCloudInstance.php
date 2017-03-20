@@ -129,7 +129,7 @@ class AwsCloudInstance extends CloudInstance
 
     public function setRunstatus(int $runstatus)
     {
-        if ($runstatus < self::RUNSTATUS_SCHEDULED_FOR_LAUNCH || $runstatus > self::RUNSTATUS_STOPPED) {
+        if ($runstatus < self::RUNSTATUS_SCHEDULED_FOR_LAUNCH || $runstatus > self::RUNSTATUS_SCHEDULED_TERMINATED) {
             throw new \Exception('Runstatus ' . $runstatus . ' is invalid');
         }
         $this->runstatus = $runstatus;
