@@ -8,6 +8,7 @@ use AppBundle\Form\Type\RemoteDesktopType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class RemoteDesktopController extends Controller
 {
@@ -24,6 +25,29 @@ class RemoteDesktopController extends Controller
     }
 
     public function newAction(Request $request)
+    {
+        $user = $this->getUser();
+
+        $form = $this->createForm(RemoteDesktopType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $remoteDesktop = RemoteDesktopFactory::createFromForm($form, $user);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($remoteDesktop);
+            $em->flush();
+
+            return $this->redirectToRoute('cloudinstances.new', ['remoteDesktop' => $remoteDesktop->getId()]);
+        } else {
+            return $this->render('AppBundle:remoteDesktop:new.html.twig', ['form' => $form->createView()]);
+        }
+
+    }
+
+    /**
+     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     */
+    public function stopAction(RemoteDesktop $remoteDesktop, Request $request)
     {
         $user = $this->getUser();
 

@@ -141,3 +141,8 @@ section:empty {
 .remotedesktop-panel {
     margin-bottom: 72px;
 }
+
+.remotedesktop-infobox {
+    margin-top: 36px;
+    margin-bottom: 0;
+}

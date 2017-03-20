@@ -71,6 +71,7 @@
                                         </ul>
                                     {% endif %}
 
+                                    <div class="well well-sm remotedesktop-infobox">
                                     {% if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
                                         <span class="label label-default">
                                             {{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}
@@ -86,6 +87,7 @@
                                     <span class="label label-default">
                                         {{ remoteDesktop.kind|trans }}
                                     </span>
+                                    </div>
                                 </div>
 
                                 <div class="panel-footer">
@@ -101,6 +103,13 @@
                                         <a href="{{ path('remotedesktops.index') }}" class="btn btn-info">
                                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.refresh_button"|trans }}
+                                        </a>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_RUNNING') %}
+                                        <a href="{{ path('remotedesktops.stop', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-danger">
+                                            <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.stop_button"|trans }}
                                         </a>
                                     {% endif %}
 

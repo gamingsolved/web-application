@@ -15,6 +15,7 @@ remoteDesktop:
         add_button: Create a new remote desktop
         launch_button: Launch this remote desktop
         refresh_button: Refresh status
+        stop_button: Stop this remote desktop
         info_launching: Launching an instance can take up to 15 minutes.
         publicaddress_label: IP address:
         username_label: Username:
