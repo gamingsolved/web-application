@@ -2,6 +2,7 @@
 
 namespace Tests\Helpers;
 
+use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -13,6 +14,7 @@ trait Helpers
     protected function resetDatabase(KernelInterface $kernel = null)
     {
         if (is_null($kernel)) {
+            /** @var Client $client */
             $client = static::createClient();
             $kernel = $client->getKernel();
         }
@@ -34,6 +36,7 @@ trait Helpers
 
     protected function getClientThatRegisteredAndActivatedAUser() : Client
     {
+        /** @var Client $client */
         $client = static::createClient();
         $crawler = $client->request('GET', '/en/register/');
 
@@ -51,6 +54,7 @@ trait Helpers
         $container = $client->getContainer();
         $um = $container->get('fos_user.user_manager');
 
+        /** @var User $user */
         $user = $um->findUserByEmail('testuser@example.com');
         $client->request('GET', '/en/register/confirm/' . $user->getConfirmationToken());
 
