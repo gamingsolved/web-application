@@ -28,6 +28,12 @@ class StartRemoteDesktopsFunctionalTest extends WebTestCase
             0,
             $crawler->filter('a.btn:contains("Start this remote desktop")')->count()
         );
+
+        $this->assertContains('Refresh status', $crawler->filter('.panel-footer a.btn')->first()->text());
+        $this->assertEquals(
+            1,
+            $crawler->filter('.panel-footer a.btn')->count()
+        );
     }
 
     public function testStartRemoteDesktop()

@@ -24,9 +24,10 @@ class StopRemoteDesktopsFunctionalTest extends WebTestCase
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Stopping...', $crawler->filter('span.label')->first()->text());
 
+        $this->assertContains('Refresh status', $crawler->filter('.panel-footer a.btn')->first()->text());
         $this->assertEquals(
-            0,
-            $crawler->filter('a.btn:contains("Stop this remote desktop")')->count()
+            1,
+            $crawler->filter('.panel-footer a.btn')->count()
         );
     }
 
