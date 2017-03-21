@@ -2,6 +2,8 @@
 
 namespace Tests\Functional;
 
+use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Helpers\Helpers;
 
@@ -40,19 +42,23 @@ class CreateRemoteDesktopsFunctionalTest extends WebTestCase
             'remote_desktop[kind]' => '0' // "Gaming"
         ]);
 
-        $client->followRedirect();
+        $crawler = $client->followRedirect();
 
         // Verify that we went into the instance creation workflow
         $container = $client->getContainer();
         $em = $container->get('doctrine.orm.entity_manager');
+        /** @var EntityRepository $repo */
         $repo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
+        /** @var RemoteDesktop $remoteDesktop */
         $remoteDesktop = $repo->findOneBy(['title' => 'My first remote desktop']);
         $this->assertEquals(
             '/en/remoteDesktops/' . $remoteDesktop->getId() . '/cloudInstances/new',
             $client->getRequest()->getRequestUri()
         );
 
-        $crawler = $client->request('GET', '/en/remoteDesktops/');
+        // We do not follow through, thus not launching an instance, going back to the overview
+        $link = $crawler->selectLink('Launch later')->first()->link();
+        $crawler = $client->click($link);
 
         $this->assertEquals(
             0,

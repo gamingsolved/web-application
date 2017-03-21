@@ -4,6 +4,7 @@
 
     docker run --name sew-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mysql:5.7
     docker exec -ti sew-mysql mysql -psecret -e "CREATE DATABASE sgew_dev;"
+    php bin/console --env=dev doctrine:migrations:migrate
 
     php bin/console assets:install --symlink
 
