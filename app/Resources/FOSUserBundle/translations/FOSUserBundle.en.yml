@@ -1,7 +1,11 @@
-# Registration
+# Login
+sign_in: Sign in
 security:
     login:
         forgot_password: Forgot password?
+
+# Registration
+sign_up: Sign up
 registration:
     email:
         subject: Welcome to ubiqMachine!
