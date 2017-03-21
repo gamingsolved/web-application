@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Helpers\Helpers;
 
-class StopRemoteDesktopsFunctionalTest extends WebTestCase
+class StopRemoteDesktopFunctionalTest extends WebTestCase
 {
     use Helpers;
 
@@ -33,7 +33,7 @@ class StopRemoteDesktopsFunctionalTest extends WebTestCase
 
     public function testStopRemoteDesktop()
     {
-        $client = (new LaunchRemoteDesktopsFunctionalTest())->testLaunchRemoteDesktop();
+        $client = (new LaunchRemoteDesktopFunctionalTest())->testLaunchRemoteDesktop();
 
         $crawler = $client->request('GET', '/en/remoteDesktops/');
 

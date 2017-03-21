@@ -33,7 +33,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
 
     public function testRemoveRemoteDesktop()
     {
-        $client = (new StopRemoteDesktopsFunctionalTest())->testStopRemoteDesktop();
+        $client = (new StopRemoteDesktopFunctionalTest())->testStopRemoteDesktop();
 
         $crawler = $client->request('GET', '/en/remoteDesktops/');
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Helpers\Helpers;
 
-class CreateRemoteDesktopsFunctionalTest extends WebTestCase
+class CreateRemoteDesktopFunctionalTest extends WebTestCase
 {
     use Helpers;
 
