@@ -145,6 +145,11 @@ section:empty {
     font-weight: 400;
 }
 
+.label-default {
+    background-color: #ddd;
+    color: #444
+}
+
 .remotedesktop-panel {
     margin-bottom: 72px;
 }
