@@ -55,7 +55,7 @@ class RemoteDesktopController extends Controller
             return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
         }
 
-        $remoteDesktop->sheduleForStop();
+        $remoteDesktop->scheduleForStop();
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($remoteDesktop);
@@ -75,7 +75,7 @@ class RemoteDesktopController extends Controller
             return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
         }
 
-        $remoteDesktop->sheduleForStart();
+        $remoteDesktop->scheduleForStart();
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($remoteDesktop);
@@ -95,7 +95,7 @@ class RemoteDesktopController extends Controller
             return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
         }
 
-        $remoteDesktop->sheduleForTermination();
+        $remoteDesktop->scheduleForTermination();
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($remoteDesktop);

@@ -241,36 +241,36 @@ class RemoteDesktop
         return $this->getActiveCloudInstance()->getRegion();
     }
 
-    public function sheduleForStop()
+    public function scheduleForStop()
     {
         $activeCloudInstance = $this->getActiveCloudInstance();
 
         if ($activeCloudInstance->getRunstatus() == CloudInstance::RUNSTATUS_RUNNING) {
             $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_STOP);
         } else {
-            throw new \Exception('Cannot shedule a cloud instance for stopping that is not running');
+            throw new \Exception('Cannot schedule a cloud instance for stopping that is not running');
         }
     }
 
-    public function sheduleForStart()
+    public function scheduleForStart()
     {
         $activeCloudInstance = $this->getActiveCloudInstance();
 
         if ($activeCloudInstance->getRunstatus() == CloudInstance::RUNSTATUS_STOPPED) {
             $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_START);
         } else {
-            throw new \Exception('Cannot shedule a cloud instance for starting that is not stopped');
+            throw new \Exception('Cannot schedule a cloud instance for starting that is not stopped');
         }
     }
 
-    public function sheduleForTermination()
+    public function scheduleForTermination()
     {
         $activeCloudInstance = $this->getActiveCloudInstance();
 
         if ($activeCloudInstance->getRunstatus() == CloudInstance::RUNSTATUS_STOPPED) {
             $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION);
         } else {
-            throw new \Exception('Cannot shedule a cloud instance for termination that is not running');
+            throw new \Exception('Cannot schedule a cloud instance for termination that is not running');
         }
     }
 
