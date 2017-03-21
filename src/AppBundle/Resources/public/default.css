@@ -110,7 +110,7 @@ section:empty {
 
 #loggedin-info {
     position: fixed;
-    top: 68px;
+    top: 58px;
     right: 0;
     z-index: 1031;
     padding: 0 4px 1px 7px;
