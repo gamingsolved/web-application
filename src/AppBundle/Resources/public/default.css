@@ -76,6 +76,10 @@ main {
     min-height: 400px;
 }
 
+.container {
+    max-width: 960px;
+}
+
 section {
     padding: 40px 0;
 }
