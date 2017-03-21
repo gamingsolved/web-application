@@ -97,7 +97,8 @@ class LaunchRemoteDesktopsFunctionalTest extends WebTestCase
         $em->persist($cloudInstance);
         $em->flush();
 
-        $crawler = $client->request('GET', '/en/remoteDesktops/');
+        $link = $crawler->selectLink('Refresh status')->first()->link();
+        $crawler = $client->click($link);
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
@@ -113,6 +114,7 @@ class LaunchRemoteDesktopsFunctionalTest extends WebTestCase
 
         $this->assertContains('Password:', $crawler->filter('li.list-group-item')->eq(2)->text());
         $this->assertContains('foo', $crawler->filter('li.list-group-item')->eq(2)->text());
+
 
         // We want to build on this in other tests
         return $client;
