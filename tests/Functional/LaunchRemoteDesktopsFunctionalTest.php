@@ -5,24 +5,29 @@ namespace Tests\Functional;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Tests\Helpers\Helpers;
 
 class LaunchRemoteDesktopsFunctionalTest extends WebTestCase
 {
     use Helpers;
 
-    public function testCreatingRemoteDesktopNotAvailableWhenNotLoggedIn()
+    protected function verifyDektopStatusBooting(Client $client, Crawler $crawler)
     {
-        $this->resetDatabase();
+        $link = $crawler->selectLink('Refresh status')->first()->link();
+        $crawler = $client->click($link);
 
-        $client = static::createClient();
+        $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $client->request('GET', '/en/remoteDesktops/new');
+        $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
+        $this->assertContains('Booting...', $crawler->filter('span.label')->first()->text());
 
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
-
-        $this->assertEquals('http://localhost/en/login', $client->getResponse()->headers->get('location'));
+        $this->assertEquals(
+            0,
+            $crawler->filter('a.btn:contains("Launch this remote desktop")')->count()
+        );
     }
 
     public function testLaunchRemoteDesktop()
@@ -35,7 +40,6 @@ class LaunchRemoteDesktopsFunctionalTest extends WebTestCase
 
         $crawler = $client->click($link);
 
-        // Verify that we went into the instance creation workflow
         $container = $client->getContainer();
         /** @var EntityManager $em */
         $em = $container->get('doctrine.orm.entity_manager');
@@ -64,21 +68,26 @@ class LaunchRemoteDesktopsFunctionalTest extends WebTestCase
             $client->getRequest()->getRequestUri()
         );
 
-        $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
-        $this->assertContains('Booting...', $crawler->filter('span.label')->first()->text());
+        // At this point, the instance is in "Scheduled for launch" state
 
-        $this->assertEquals(
-            0,
-            $crawler->filter('a.btn:contains("Launch this remote desktop")')->count()
-        );
+        $this->verifyDektopStatusBooting($client, $crawler);
 
-        $this->assertContains('Refresh status', $crawler->filter('a.remotedesktop-action-button')->first()->text());
 
-        // Switching to "Ready to use" status
+        // Switching instance to "Launching" status, which must not change the desktop status
 
-        // We must pull this again because else Doctrine is irritated (because due to the browsing, this old object is out of sync)
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+        /** @var CloudInstance $cloudInstance */
+        $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
+        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_LAUNCHING);
+        $em->persist($cloudInstance);
+        $em->flush();
+
+        $this->verifyDektopStatusBooting($client, $crawler);
+
+
+        // Switching instance to "Running" status, which must put the desktop into "Ready to use" status
+
         $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
         /** @var CloudInstance $cloudInstance */
         $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
