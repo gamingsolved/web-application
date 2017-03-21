@@ -9,3 +9,8 @@
     php bin/console assets:install --symlink
 
     php bin/console --env=dev app:cloudinstancemanagement "AKI..." "QA8..." ~/Dropbox/cloudgaming/gaming-vm-keypair.pem
+
+
+## Color scheme
+
+http://paletton.com/#uid=53y0u0koMBxeEOzk8HwuDy6x1pp
