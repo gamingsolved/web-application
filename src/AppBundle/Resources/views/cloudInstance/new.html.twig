@@ -1,23 +1,21 @@
 {% extends '::base.html.twig' %}
 
 {% block body %}
-    <main>
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    <h1>{{ "cloudInstance.new.form.headline"|trans }}</h1>
-                    <div class="well">
-                        {{ form_start(form) }}
-                        {{ form_errors(form) }}
-                        {{ form_widget(form) }}
-                        {{ form_end(form) }}
-                    </div>
-                    <a href="{{ path('remotedesktops.index') }}" class="btn btn-default">
-                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                        {{ "cloudInstance.new.launch_later_button"|trans }}
-                    </a>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>{{ "cloudInstance.new.form.headline"|trans }}</h1>
+                <div class="well">
+                    {{ form_start(form) }}
+                    {{ form_errors(form) }}
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
                 </div>
+                <a href="{{ path('remotedesktops.index') }}" class="btn btn-default">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    {{ "cloudInstance.new.launch_later_button"|trans }}
+                </a>
             </div>
         </div>
-    </main>
+    </div>
 {% endblock %}

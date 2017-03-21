@@ -1,19 +1,17 @@
 {% extends '::base.html.twig' %}
 
 {% block body %}
-    <main>
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    <h1>{{ "remoteDesktop.new.form.headline"|trans }}</h1>
-                    <div class="well">
-                        {{ form_start(form) }}
-                        {{ form_errors(form) }}
-                        {{ form_widget(form) }}
-                        {{ form_end(form) }}
-                    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>{{ "remoteDesktop.new.form.headline"|trans }}</h1>
+                <div class="well">
+                    {{ form_start(form) }}
+                    {{ form_errors(form) }}
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 {% endblock %}
