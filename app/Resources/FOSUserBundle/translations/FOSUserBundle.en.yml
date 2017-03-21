@@ -4,7 +4,7 @@ security:
         forgot_password: Forgot password?
 registration:
     email:
-        subject: Welcome to Scalable Graphics!
+        subject: Welcome to ubiqMachine!
         message: |
             Hello,
 
@@ -14,12 +14,12 @@ registration:
             With best regards,
 
             --
-              The Scalable Graphics Team
+              The ubiqMachine team
 
 # Password resetting
 resetting:
     email:
-        subject: Scalable Graphics Password Reset
+        subject: ubiqMachine Password Reset
         message: |
             Hello %username%!
 
@@ -29,4 +29,4 @@ resetting:
             With best regards,
 
             --
-              The Scalable Graphics Team
+              The ubiqMachine team

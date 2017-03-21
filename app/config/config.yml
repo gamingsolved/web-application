@@ -81,8 +81,8 @@ fos_user:
         confirmation:
             enabled: true
     from_email:
-        address:     info@scalablegraphics.com
-        sender_name: Scalable Graphics
+        address:     info@ubiqMachine.com
+        sender_name: ubiqMachine
 
 doctrine_migrations:
     dir_name: "%kernel.root_dir%/Resources/migrations"

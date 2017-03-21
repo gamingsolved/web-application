@@ -4,22 +4,22 @@ security:
         forgot_password: Password vergessen?
 registration:
     email:
-        subject: Willkommen bei Scalable Graphics!
+        subject: Willkommen bei ubiqMachine!
         message: |
             Hallo,
 
-            Um Ihre Konto zu aktivieren, besuchen Sie bitte
+            Um Ihr Konto zu aktivieren, besuchen Sie bitte
             %confirmationUrl%
 
             Mit freundlichen Grüßen,
 
             --
-              Das Scalable Graphics Team
+              Das ubiqMachine Team
 
 # Password resetting
 resetting:
     email:
-        subject: Scalable Graphics - Password zurücksetzen
+        subject: ubiqMachine - Password zurücksetzen
         message: |
             Hallo %username%!
 
@@ -29,4 +29,4 @@ resetting:
             Mit freundlichen Grüßen,
 
             --
-              Das Scalable Graphics Team
+              Das ubiqMachine Team

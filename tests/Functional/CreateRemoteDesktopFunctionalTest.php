@@ -67,7 +67,7 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('For playing computer games', $crawler->filter('div.remotedesktop-infobox')->first()->text());
+        $this->assertContains('Gaming: Preinstalled with Steam and UPlay', $crawler->filter('div.remotedesktop-infobox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Not running', $crawler->filter('span.label-default')->first()->text());

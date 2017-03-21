@@ -1,4 +1,4 @@
-# scalablegraphics-enduser-webapp
+# ubiqmachine-enduser-webapp
 
 ## Scratchpad
 
