@@ -127,10 +127,8 @@ section:empty {
     top: 204px;
 }
 
-
 .jumbotron {
-    background-color: #347fac;
-    color: #fff;
+    color: #000;
 }
 
 .jumbotron a {
