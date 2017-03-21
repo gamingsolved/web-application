@@ -96,6 +96,15 @@ class LaunchRemoteDesktopsFunctionalTest extends WebTestCase
         $this->assertContains('Ready to use', $crawler->filter('span.label')->first()->text());
         $this->assertContains('Stop this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
 
+        $this->assertContains('IP address:', $crawler->filter('li.list-group-item')->eq(0)->text());
+        $this->assertContains('121.122.123.124', $crawler->filter('li.list-group-item')->eq(0)->text());
+
+        $this->assertContains('Username:', $crawler->filter('li.list-group-item')->eq(1)->text());
+        $this->assertContains('Administrator', $crawler->filter('li.list-group-item')->eq(1)->text());
+
+        $this->assertContains('Password:', $crawler->filter('li.list-group-item')->eq(2)->text());
+        $this->assertContains('foo', $crawler->filter('li.list-group-item')->eq(2)->text());
+
         // We want to build on this in other tests
         return $client;
     }
