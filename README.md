@@ -1,4 +1,4 @@
-# ubiqmachine-enduser-webapp
+# ubiqmachine-webapp
 
 ## Scratchpad
 
@@ -9,6 +9,18 @@
     php bin/console assets:install --symlink
 
     php bin/console --env=dev app:cloudinstancemanagement "AKI..." "QA8..." ~/Dropbox/cloudgaming/gaming-vm-keypair.pem
+
+
+    
+    rsync -avc --exclude app/config/parameters.yml --exclude .git --exclude var/cache/dev --exclude var/cache/test --exclude var/logs/dev.log --exclude var/logs/test.log ./ www-data@5.45.99.8:/opt/ubiqmachine-webapp/prod/
+
+    
+    sudo -u www-data php bin/console --env=prod cache:clear
+    
+    sudo -u www-data php bin/console --env=prod doctrine:migrations:migrate
+    
+    sudo -u www-data php bin/console --env=prod server:start
+
 
 
 ## Color scheme
