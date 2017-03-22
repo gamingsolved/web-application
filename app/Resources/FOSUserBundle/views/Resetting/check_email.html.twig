@@ -1,0 +1,10 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+    <h1>{{ "resetting.request.submit"|trans }}</h1>
+    <div class="well">
+        {{ 'resetting.check_email'|trans({'%tokenLifetime%': tokenLifetime})|nl2br }}
+    </div>
+{% endblock %}

@@ -11,5 +11,8 @@
 {% endblock %}
 
 {% block fos_user_content %}
-{% include "FOSUserBundle:Resetting:request_content.html.twig" %}
+    <h1>{{ "resetting.request.submit"|trans }}</h1>
+    <div class="well">
+        {% include "FOSUserBundle:Resetting:request_content.html.twig" %}
+    </div>
 {% endblock fos_user_content %}

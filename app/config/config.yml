@@ -80,6 +80,11 @@ fos_user:
     registration:
         confirmation:
             enabled: true
+    resetting:
+        email:
+           from_email:
+              address:     info@ubiqMachine.com
+              sender_name: ubiqMachine
     from_email:
         address:     info@ubiqMachine.com
         sender_name: ubiqMachine
