@@ -19,6 +19,8 @@
     
     sudo -u www-data php bin/console --env=preprod doctrine:migrations:migrate
     
+    php bin/console --env=preprod app:cloudinstancemanagement `echo /etc/ubiqmachine/webapp/secrets/aws-api-key.txt` `echo /etc/ubiqmachine/webapp/secrets/aws-api-secret.txt` /etc/ubiqmachine/webapp/secrets/aws-keypair-private-key.pem
+    
 
     rsync -avc --exclude app/config/parameters.yml --exclude .git --exclude var/cache/dev --exclude var/cache/test --exclude var/logs/dev.log --exclude var/logs/test.log ./ www-data@5.45.99.8:/opt/ubiqmachine-webapp/prod/
 
