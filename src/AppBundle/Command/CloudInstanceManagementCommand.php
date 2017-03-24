@@ -88,6 +88,34 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 $output->writeln('Admin password: ' . $cloudInstance->getAdminPassword());
 
 
+                // Launching and Starting
+
+                if (   $cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING
+                    || $cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STARTING) {
+                    $output->writeln('Action: probing if launch or start is complete, retrieve info');
+                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunchingOrStarting($cloudInstance)) {
+                        $em->persist($cloudInstance);
+                        $em->flush();
+                        $output->writeln('Action result: success');
+
+                        $output->writeln('Action: trying to retrieve Windows admin password');
+                        if ($cloudInstanceCoordinator->cloudInstanceAdminPasswordCouldBeRetrieved(
+                            $cloudInstance,
+                            $this->getContainer()->getParameter('secret'))
+                        ) {
+                            $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
+                            $em->persist($cloudInstance);
+                            $em->flush();
+                            $output->writeln('Action result: success');
+                        } else {
+                            $output->writeln('Action result: failure');
+                        }
+                    } else {
+                        $output->writeln('Action result: failure');
+                    }
+                }
+
+
                 // Launching
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
@@ -97,30 +125,6 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                         $em->persist($cloudInstance);
                         $em->flush();
                         $output->writeln('Action result: success');
-                    } else {
-                        $output->writeln('Action result: failure');
-                    }
-                }
-
-                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING) {
-                    $output->writeln('Action: probing if launch is complete, retrieve info');
-                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunchingOrStarting($cloudInstance)) {
-                        $em->persist($cloudInstance);
-                        $em->flush();
-                        $output->writeln('Action result: success');
-
-                        $output->writeln('Action: trying to retrieve Windows admin password');
-                        if ($cloudInstanceCoordinator->cloudInstanceAdminPasswordCouldBeRetrieved(
-                                $cloudInstance,
-                                $this->getContainer()->getParameter('secret'))
-                        ) {
-                            $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
-                            $em->persist($cloudInstance);
-                            $em->flush();
-                            $output->writeln('Action result: success');
-                        } else {
-                            $output->writeln('Action result: failure');
-                        }
                     } else {
                         $output->writeln('Action result: failure');
                     }
@@ -160,18 +164,6 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                     $output->writeln('Action: asking the cloud instance to start');
                     if ($cloudInstanceCoordinator->cloudInstanceWasAskedToStart($cloudInstance)) {
                         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STARTING);
-                        $em->persist($cloudInstance);
-                        $em->flush();
-                        $output->writeln('Action result: success');
-                    } else {
-                        $output->writeln('Action result: failure');
-                    }
-                }
-
-                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STARTING) {
-                    $output->writeln('Action: probing if start is complete, retrieve info');
-                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunchingOrStarting($cloudInstance)) {
-                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
                         $em->persist($cloudInstance);
                         $em->flush();
                         $output->writeln('Action result: success');
