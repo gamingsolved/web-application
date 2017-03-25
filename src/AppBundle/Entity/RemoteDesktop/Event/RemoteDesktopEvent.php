@@ -27,8 +27,8 @@ class RemoteDesktopEvent
 
     /**
      * @var RemoteDesktop
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="remoteDesktopEvents" , nullable=false)
-     * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="remoteDesktopEvents" )
+     * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id", nullable=false)
      */
     protected $remoteDesktop;
 

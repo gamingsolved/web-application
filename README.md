@@ -1,5 +1,32 @@
 # ubiqmachine-webapp
 
+## Setup
+
+Prerequisite: 
+* docker-compose >= 1.9
+* docker-engine >= 1.12
+
+### Linux 
+
+    docker-compose build
+    docker-compose run --rm ub_phpfpm composer install --prefer-dist
+    docker-compose up -d 
+    bin/docker-ip-helper.sh
+    bin/docker-console doc:data:create
+    bin/console-docker doc:sch:up --force
+
+### Mac OS (docker-machine)
+
+    docker-machine start ubiqmachine
+    eval $(docker-machine env ubiqmachine)
+    docker-compose run --rm ub_phpfpm composer install --prefer-dist
+    docker-compose up -d
+    bin/docker-ip-helper.sh $(docker-machine ip ubiqmachine)
+    bin/docker-console doc:data:create
+    bin/console-docker doc:sch:up --force
+    
+Now open [http://ubiqmachine.local]
+
 ## Coding Rules
 
 All DateTime values must always be handled as UTC, and must always explicitly be created so:
