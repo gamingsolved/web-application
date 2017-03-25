@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Service;
 
+use AppBundle\Entity\Billing\BillableItemsRepositoryInterface;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEventsRepositoryInterface;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
@@ -23,6 +24,11 @@ class MockRemoteDesktopEventsRepository implements RemoteDesktopEventsRepository
         $this->events[$remoteDesktopEvent->getId()][] = $remoteDesktopEvent;
         return true;
     }
+}
+
+class MockBillableItemsRepository implements BillableItemsRepositoryInterface
+{
+
 }
 
 
