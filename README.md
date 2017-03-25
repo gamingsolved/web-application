@@ -1,5 +1,18 @@
 # ubiqmachine-webapp
 
+## Coding Rules
+
+All DateTime values must always be handled as UTC, and must always explicitly be created so:
+
+    $dt = new \DateTime('now', new \DateTimeZone('UTC'));
+    
+Also, when taking parameters of type DateTime, please check for compliance like so:
+    
+    if ($dt->getTimezone()->getName() !== 'UTC') throw new \Exception();
+    
+If you want to present a datetime to the user, please convert at the last moment possible (view layer etc.).
+
+
 ## Scratchpad
 
     docker run --name sew-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mysql:5.7

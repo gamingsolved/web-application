@@ -82,8 +82,20 @@ class RemoteDesktop
      */
     private $awsCloudInstances;
 
+    /**
+     * @var ArrayCollection|\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent", mappedBy="remoteDesktop", cascade="all")
+     */
+    private $remoteDesktopEvents;
+
     public function __construct() {
         $this->awsCloudInstances = new ArrayCollection();
+        $this->remoteDesktopEvents = new ArrayCollection();
+    }
+
+    public function setId(string $id) : void
+    {
+        $this->id = $id;
     }
 
     /**
