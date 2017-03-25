@@ -6,7 +6,5 @@ use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 
 interface RemoteDesktopEventsRepositoryInterface
 {
-    public function hasEvents(RemoteDesktop $remoteDesktop) : bool;
-
-    public function addEvent() : bool;
+    public function countForRemoteDesktop(RemoteDesktop $remoteDesktop) : int;
 }

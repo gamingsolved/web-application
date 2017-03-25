@@ -4,6 +4,7 @@ namespace AppBundle\Entity\RemoteDesktop\Event;
 
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity
@@ -43,10 +44,21 @@ class RemoteDesktopEvent
      */
     protected $datetimeOccured;
 
-
-    public function setId(string $id) : void
+    public function __construct(RemoteDesktop $remoteDesktop, int $eventType, \DateTime $datetimeOccured)
     {
-        $this->id = $id;
+        $this->id = $uuid4 = Uuid::uuid4();
+
+        $this->remoteDesktop = $remoteDesktop;
+
+        if ($eventType < self::EVENT_TYPE_LAUNCHED || $eventType > self::EVENT_TYPE_STARTED) {
+            throw new \Exception('Event type ' . $eventType . ' is invalid');
+        }
+        $this->eventType = $eventType;
+
+        if ($datetimeOccured->getTimezone()->getName() !== 'UTC') {
+            throw new \Exception('Provided time zone is not UTC.');
+        }
+        $this->datetimeOccured = $datetimeOccured;
     }
 
     public function getId() : string
@@ -54,30 +66,9 @@ class RemoteDesktopEvent
         return $this->id;
     }
 
-    public function setRemoteDesktop(RemoteDesktop $remoteDesktop)
-    {
-        $this->remoteDesktop = $remoteDesktop;
-    }
-
-    public function setEventType(int $eventType)
-    {
-        if ($eventType < self::EVENT_TYPE_LAUNCHED || $eventType > self::EVENT_TYPE_STARTED) {
-            throw new \Exception('Event type ' . $eventType . ' is invalid');
-        }
-        $this->eventType = $eventType;
-    }
-
     public function getEventType() : int
     {
         return $this->eventType;
-    }
-
-    public function setDatetimeOccured(\DateTime $datetimeOccured) : void
-    {
-        if ($datetimeOccured->getTimezone()->getName() !== 'UTC') {
-            throw new \Exception('Provided time zone is not UTC.');
-        }
-        $this->datetimeOccured = $datetimeOccured;
     }
 
     public function getDatetimeOccured() : \DateTime
