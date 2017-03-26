@@ -7,29 +7,8 @@ use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEventsRepositoryInterface;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Service\BillingService;
+use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
-
-
-class MockRemoteDesktopEventsRepository implements RemoteDesktopEventsRepositoryInterface
-{
-    protected $events = [];
-
-    public function countForRemoteDesktop(RemoteDesktop $remoteDesktop) : int
-    {
-        return count($this->events[$remoteDesktop->getId()]);
-    }
-
-    public function add(RemoteDesktopEvent $remoteDesktopEvent) : bool
-    {
-        $this->events[$remoteDesktopEvent->getId()][] = $remoteDesktopEvent;
-        return true;
-    }
-}
-
-class MockBillableItemsRepository implements BillableItemsRepositoryInterface
-{
-
-}
 
 
 class BillingServiceTest extends TestCase
@@ -39,16 +18,17 @@ class BillingServiceTest extends TestCase
         $remoteDesktop = new RemoteDesktop();
         $remoteDesktop->setId('r1');
 
-        $e = new RemoteDesktopEvent(
-            $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_LAUNCHED,
-            new \DateTime('now', new \DateTimeZone('UTC'))
-        );
+        $remoteDesktopEventsRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $eventsRepo = new MockRemoteDesktopEventsRepository();
-        $eventsRepo->add($e);
+        $remoteDesktopEventsRepo->expects($this->once())
+            ->method('findBy')
+            ->with(['remoteDesktop' => $remoteDesktop])
+            ->willReturn([]);
 
-        $bs = new BillingService($eventsRepo);
+        $bs = new BillingService($remoteDesktopEventsRepo);
 
         $billableItems = $bs->generateBillableItems($remoteDesktop);
 
