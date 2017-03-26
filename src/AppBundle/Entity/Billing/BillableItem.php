@@ -30,6 +30,20 @@ class BillableItem
     protected $itemType;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="timewindow_begin", type="datetime", nullable=false)
+     */
+    protected $timewindowBegin;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="timewindow_end", type="datetime", nullable=false)
+     */
+    protected $timewindowEnd;
+
+    /**
      * @var ArrayCollection|\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent
      * @ORM\OneToMany(targetEntity="\AppBundle\Entity\CloudInstance\AwsCloudInstance", mappedBy="billableItem", cascade="all")
      */
