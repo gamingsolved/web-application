@@ -8,16 +8,27 @@ use Doctrine\ORM\EntityRepository;
 
 class BillingService
 {
-    protected $remoteDesktopEventsRepository;
+    protected $remoteDesktopEventRepository;
+    protected $billableItemRepository;
 
-    public function __construct(EntityRepository $remoteDesktopEventsRepository)
+    public function __construct(EntityRepository $remoteDesktopEventRepository, EntityRepository $billableItemRepository)
     {
-        $this->remoteDesktopEventsRepository = $remoteDesktopEventsRepository;
+        $this->remoteDesktopEventRepository = $remoteDesktopEventRepository;
+        $this->billableItemRepository = $billableItemRepository;
     }
 
     public function generateBillableItems(RemoteDesktop $remoteDesktop) : array
     {
-        $this->remoteDesktopEventsRepository->findBy(['remoteDesktop' => $remoteDesktop]);
-        return [];
+        $remoteDesktopEvents = $this->remoteDesktopEventRepository->findBy(
+            ['remoteDesktop' => $remoteDesktop],
+            ['datetimeOccured' => 'DESC'],
+            1000
+        );
+
+        // No events means there is nothing billable
+        if (sizeof($remoteDesktopEvents) === 0)
+        {
+            return [];
+        }
     }
 }

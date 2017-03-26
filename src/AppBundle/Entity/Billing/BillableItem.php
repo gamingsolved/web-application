@@ -8,10 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="billable_items")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Billing\BillableItemRepository")
  */
 class BillableItem
 {
     const ITEM_TYPE_REMOTEDESKTOPUSAGE = 1;
+    const BILLABLE_TIMEWINDOW_REMOTEDESKTOPUSAGE = 3600; // A minimum of 1 hour is billed when using a remote desktop
 
     /**
      * @var string
