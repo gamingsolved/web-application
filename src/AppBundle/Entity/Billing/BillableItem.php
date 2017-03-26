@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Billing;
 
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -50,7 +51,30 @@ class BillableItem
     protected $relatedRemoteDesktopEvents;
 
 
-    public function __construct() {
+    public function __construct(\DateTime $timewindowBegin, array $relatedRemoteDesktopEvents) {
         $this->relatedRemoteDesktopEvents = new ArrayCollection();
+
+        /** @var RemoteDesktopEvent $remoteDesktopEvent */
+        foreach ($relatedRemoteDesktopEvents as $remoteDesktopEvent) {
+            if (get_class($remoteDesktopEvent) !== RemoteDesktopEvent::class) {
+                throw new \Exception('This is not an instance of class RemoteDesktopEvent: ' . (string)$remoteDesktopEvent);
+            }
+            $this->relatedRemoteDesktopEvents->add($remoteDesktopEvent);
+        }
+
+        if ($timewindowBegin->getTimezone()->getName() !== 'UTC') {
+            throw new \Exception('Provided time zone is not UTC.');
+        }
+        $this->timewindowBegin = $timewindowBegin;
+
+        $this->timewindowEnd = $this->relatedRemoteDesktopEvents->add(new \DateInterval('PT' . self::BILLABLE_TIMEWINDOW_REMOTEDESKTOPUSAGE . 'S'));
+    }
+
+    public function getTimewindowBegin() : \DateTime
+    {
+        if ($this->timewindowBegin->getTimezone()->getName() !== 'UTC') {
+            throw new \Exception('Stored time zone is not UTC.');
+        }
+        return $this->timewindowBegin;
     }
 }

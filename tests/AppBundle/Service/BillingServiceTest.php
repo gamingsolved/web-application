@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Service;
 
+use AppBundle\Entity\Billing\BillableItemRepository;
 use AppBundle\Entity\Billing\BillableItemsRepositoryInterface;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEventsRepositoryInterface;
@@ -18,19 +19,24 @@ class BillingServiceTest extends TestCase
         $remoteDesktop = new RemoteDesktop();
         $remoteDesktop->setId('r1');
 
-        $remoteDesktopEventsRepo = $this
+        $remoteDesktopEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventsRepo->expects($this->once())
+        $remoteDesktopEventRepo->expects($this->once())
             ->method('findBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'DESC'], 1000)
+            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([]);
 
-        $bs = new BillingService($remoteDesktopEventsRepo, new BillableItemsRepositoryInterface());
+        $billableItemRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $billableItems = $bs->generateBillableItems($remoteDesktop);
+        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+
+        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, new \DateTime('now', new \DateTimeZone('UTC')));
 
         $this->assertEmpty($billableItems);
     }
@@ -42,24 +48,39 @@ class BillingServiceTest extends TestCase
 
         $event = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_LAUNCHED,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
             new \DateTime('2017-03-26 18:37:01', new \DateTimeZone('UTC'))
         );
 
-        $remoteDesktopEventsRepo = $this
+        $remoteDesktopEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventsRepo->expects($this->once())
+        $remoteDesktopEventRepo->expects($this->once())
             ->method('findBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'DESC'], 1000)
+            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$event]);
 
-        $bs = new BillingService($remoteDesktopEventsRepo);
+        $billableItemRepo = $this
+            ->getMockBuilder(BillableItemRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
+        $billableItemRepo->expects($this->once())
+            ->method('findItemForDesktopCoveringDateTime')
+            ->with($remoteDesktop, $event->getDatetimeOccured())
+            ->willReturn(false);
 
+        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateBillableItems($remoteDesktop);
+        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, new \DateTime('2017-03-26 18:40:00', new \DateTimeZone('UTC')));
+
+        $this->assertCount(1, $billableItems);
+
+        /** @var \AppBundle\Entity\Billing\BillableItem $actualBillableItem */
+        $actualBillableItem = $billableItems[0];
+
+        $this->assertEquals(new \DateTime('2017-03-26 18:37:01', new \DateTimeZone('UTC')), $actualBillableItem->getTimewindowBegin());
     }
 }
