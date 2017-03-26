@@ -8,20 +8,13 @@ use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEventsRepositoryInterface;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Service\BillingService;
+use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 
 
 class BillingServiceTest extends TestCase
 {
-    protected $utc;
-
-    public function __construct($name = null, array $data = [], $dataName = '')
-    {
-        $this->utc = new \DateTimeZone('UTC');
-        parent::__construct($name, $data, $dataName);
-    }
-
     public function testNoBillableItemsForRemoteDesktopWithoutEvents()
     {
         $remoteDesktop = new RemoteDesktop();
@@ -44,7 +37,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, new \DateTime('now', $this->utc));
+        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('now'));
 
         $this->assertEmpty($billableItems);
     }
@@ -57,7 +50,7 @@ class BillingServiceTest extends TestCase
         $event = new RemoteDesktopEvent(
             $remoteDesktop,
             RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
-            new \DateTime('2017-03-26 18:37:01', new \DateTimeZone('UTC'))
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
         $remoteDesktopEventRepo = $this
@@ -82,13 +75,13 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, new \DateTime('2017-03-26 18:40:00', $this->utc));
+        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 18:40:00'));
 
         $this->assertCount(1, $billableItems);
 
         /** @var \AppBundle\Entity\Billing\BillableItem $actualBillableItem */
         $actualBillableItem = $billableItems[0];
 
-        $this->assertEquals(new \DateTime('2017-03-26 18:37:01', $this->utc), $actualBillableItem->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $actualBillableItem->getTimewindowBegin());
     }
 }
