@@ -13,8 +13,9 @@ use Ramsey\Uuid\Uuid;
  */
 class RemoteDesktopEvent
 {
-    const EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING = 1;
-    const EVENT_TYPE_DESKTOP_BEGAN_STOPPING  = 2;
+    const EVENT_TYPE_LAUNCHED = 1;
+    const EVENT_TYPE_STOPPED  = 2;
+    const EVENT_TYPE_STARTED  = 3;
 
     /**
      * @var string
@@ -27,7 +28,7 @@ class RemoteDesktopEvent
     /**
      * @var RemoteDesktop
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="remoteDesktopEvents")
-     * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id", nullable=false)
      */
     protected $remoteDesktop;
 
@@ -58,7 +59,7 @@ class RemoteDesktopEvent
 
         $this->remoteDesktop = $remoteDesktop;
 
-        if ($eventType < self::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING || $eventType > self::EVENT_TYPE_DESKTOP_BEGAN_STOPPING) {
+        if ($eventType < self::EVENT_TYPE_LAUNCHED || $eventType > self::EVENT_TYPE_STARTED) {
             throw new \Exception('Event type ' . $eventType . ' is invalid');
         }
         $this->eventType = $eventType;

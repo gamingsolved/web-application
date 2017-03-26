@@ -1,0 +1,37 @@
+version: '2'
+services:
+  ub_nginx:
+    build: docker/nginx
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    environment:
+      - NGINX_HOST=ubiqmachine.local
+    links:
+      - ub_phpfpm
+    expose:
+      - 80
+    command: wait-for-it ub_phpfpm:9000 -- nginx
+
+  ub_phpfpm:
+    build: docker/phpfpm
+    user: www-data
+    links:
+      - ub_db
+    volumes:
+      - ./:/var/www
+      - composer_cache:/var/www/.composer
+    working_dir: /var/www
+
+  ub_db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    expose:
+      - 3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+  composer_cache:
