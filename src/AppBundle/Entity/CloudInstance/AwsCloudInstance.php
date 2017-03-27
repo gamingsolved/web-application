@@ -7,8 +7,10 @@ use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Utility\Cryptor;
+use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -132,6 +134,16 @@ class AwsCloudInstance extends CloudInstance
         if ($runstatus < self::RUNSTATUS_SCHEDULED_FOR_LAUNCH || $runstatus > self::RUNSTATUS_SCHEDULED_TERMINATED) {
             throw new \Exception('Runstatus ' . $runstatus . ' is invalid');
         }
+
+        if ($runstatus === self::RUNSTATUS_RUNNING) {
+            $remoteDesktopEvent = new RemoteDesktopEvent(
+                $this->remoteDesktop,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+                DateTimeUtility::createDateTime('now')
+            );
+            $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+        }
+
         $this->runstatus = $runstatus;
     }
 

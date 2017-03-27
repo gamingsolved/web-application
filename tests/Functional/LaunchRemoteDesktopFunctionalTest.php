@@ -3,6 +3,7 @@
 namespace Tests\Functional;
 
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -44,7 +45,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $container = $client->getContainer();
         /** @var EntityManager $em */
         $em = $container->get('doctrine.orm.entity_manager');
-        $remoteDesktopRepo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
+        $remoteDesktopRepo = $em->getRepository(RemoteDesktop::class);
         /** @var RemoteDesktop $remoteDesktop */
         $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
         $this->assertEquals(
@@ -97,6 +98,19 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
         $em->persist($cloudInstance);
         $em->flush();
+
+        $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
+        $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
+        $this->assertEquals(
+            1,
+            sizeof($remoteDesktopEvents)
+        );
+        /** @var RemoteDesktopEvent $remoteDesktopEvent */
+        $remoteDesktopEvent = $remoteDesktopEvents[0];
+        $this->assertEquals(
+            $remoteDesktopEvent->getEventType(),
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING
+        );
 
         $link = $crawler->selectLink('Refresh status')->first()->link();
         $crawler = $client->click($link);

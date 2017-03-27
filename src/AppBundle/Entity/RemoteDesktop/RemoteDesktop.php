@@ -11,6 +11,7 @@ use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -174,6 +175,16 @@ class RemoteDesktop
                 ' because this remote desktop is configured for cloud instance provider ' . get_class($this->cloudInstanceProvider)
             );
         }
+    }
+
+    /**
+     * @param RemoteDesktopEvent $remoteDesktopEvent
+     * @return void
+     * @throws \Exception
+     */
+    public function addRemoteDesktopEvent(RemoteDesktopEvent $remoteDesktopEvent)
+    {
+        $this->remoteDesktopEvents->add($remoteDesktopEvent);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Tests\Functional;
 
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -85,6 +86,19 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
         $em->persist($cloudInstance);
         $em->flush();
+
+        $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
+        $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
+        $this->assertEquals(
+            2, // Two, because there is one from the launch on which we build
+            sizeof($remoteDesktopEvents)
+        );
+        /** @var RemoteDesktopEvent $remoteDesktopEvent */
+        $remoteDesktopEvent = $remoteDesktopEvents[0];
+        $this->assertEquals(
+            $remoteDesktopEvent->getEventType(),
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING
+        );
 
         $link = $crawler->selectLink('Refresh status')->first()->link();
         $crawler = $client->click($link);
