@@ -13,8 +13,8 @@ use Ramsey\Uuid\Uuid;
  */
 class RemoteDesktopEvent
 {
-    const EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING = 1;
-    const EVENT_TYPE_DESKTOP_BEGAN_STOPPING  = 2;
+    const EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING = 0;
+    const EVENT_TYPE_DESKTOP_BEGAN_STOPPING  = 1;
 
     /**
      * @var string

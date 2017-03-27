@@ -14,7 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BillableItem
 {
-    const ITEM_TYPE_REMOTEDESKTOPUSAGE = 1;
     const BILLABLE_TIMEWINDOW_REMOTEDESKTOPUSAGE = 3600; // A minimum of 1 hour is billed when using a remote desktop
 
     /**
@@ -31,12 +30,6 @@ class BillableItem
      * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id", nullable=false)
      */
     protected $remoteDesktop;
-
-    /**
-     * @var int
-     * @ORM\Column(name="item_type", type="smallint", nullable=false)
-     */
-    protected $itemType;
 
     /**
      * @var \DateTime $timewindowBegin The begin of the window for which this item covers costs - inclusive
