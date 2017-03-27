@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Factory\RemoteDesktopFactory;
 use AppBundle\Form\Type\RemoteDesktopType;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,7 @@ class RemoteDesktopController extends Controller
         $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
+        /** @var EntityRepository $rdRepo */
         $rdRepo = $em->getRepository(RemoteDesktop::class);
 
         $remoteDesktops = $rdRepo->findBy(['user' => $user]);
