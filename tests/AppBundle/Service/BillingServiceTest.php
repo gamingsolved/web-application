@@ -360,6 +360,52 @@ class BillingServiceTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-27 00:37:01'), $billableItems[0]->getTimewindowBegin());
     }
 
+    public function testNoBillableItemForLaunchedAndStoppedRemoteDesktopIfAllBillingItemsAlreadyExist()
+    {
+        $remoteDesktop = new RemoteDesktop();
+        $remoteDesktop->setId('r1');
+
+        $finishedLaunchingEvent1 = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+        );
+
+        $beganStoppingEvent1 = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            DateTimeUtility::createDateTime('2017-03-27 00:37:01')
+        );
+
+        $remoteDesktopEventRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $remoteDesktopEventRepo->expects($this->once())
+            ->method('findBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
+            ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
+
+        $latestExistingBillableItem = new BillableItem(DateTimeUtility::createDateTime('2017-03-27 00:37:01'), []);
+
+        $billableItemRepo = $this
+            ->getMockBuilder(BillableItemRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $billableItemRepo->expects($this->once())
+            ->method('findOneBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->willReturn($latestExistingBillableItem);
+
+        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+
+        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
+
+        $this->assertCount(0, $billableItems);
+    }
+
     public function testTwoBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgo()
     {
         $remoteDesktop = new RemoteDesktop();
