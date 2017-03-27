@@ -2,8 +2,6 @@
 
 namespace AppBundle\Entity\CloudInstanceProvider;
 
-use AppBundle\Coordinator\CloudInstance\AwsCloudInstanceCoordinator;
-use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstanceInterface;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
@@ -25,6 +23,8 @@ interface CloudInstanceProviderInterface
     public function getRegionByInternalName(string $regionInternalName) : Region;
 
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstanceInterface;
+
+    public function getHourlyCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float;
 }
 
 abstract class CloudInstanceProvider implements CloudInstanceProviderInterface

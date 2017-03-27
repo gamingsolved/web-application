@@ -94,4 +94,23 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
 
         return $instance;
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function getHourlyCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float
+    {
+        if ($flavor->getInternalName() === 'g2.2xlarge') {
+            return '1.99';
+        } else {
+            throw new \Exception(
+                'Could not get hourly costs for flavor '
+                . $flavor->getInternalName()
+                . ', image '
+                . $image->getInternalName()
+                . ', region'
+                . $region->getInternalName()
+            );
+        }
+    }
 }
