@@ -84,6 +84,12 @@ class RemoteDesktop
     private $awsCloudInstances;
 
     /**
+     * @var ArrayCollection|\AppBundle\Entity\Billing\BillableItem
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Billing\BillableItem", mappedBy="remoteDesktop", cascade="all")
+     */
+    private $billableItems;
+
+    /**
      * @var ArrayCollection|\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent
      * @ORM\OneToMany(targetEntity="\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent", mappedBy="remoteDesktop", cascade="all")
      */
@@ -91,6 +97,7 @@ class RemoteDesktop
 
     public function __construct() {
         $this->awsCloudInstances = new ArrayCollection();
+        $this->billableItems = new ArrayCollection();
         $this->remoteDesktopEvents = new ArrayCollection();
     }
 

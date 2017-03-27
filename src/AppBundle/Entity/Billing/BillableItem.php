@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Billing;
 
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,6 +24,13 @@ class BillableItem
      * @ORM\Id
      */
     protected $id;
+
+    /**
+     * @var RemoteDesktop
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="billableItems")
+     * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id", nullable=false)
+     */
+    protected $remoteDesktop;
 
     /**
      * @var int

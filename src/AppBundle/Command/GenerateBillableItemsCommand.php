@@ -45,6 +45,10 @@ class GenerateBillableItemsCommand extends ContainerAwareCommand
             /** @var BillableItem $generatedBillableItem */
             foreach ($generatedBillableItems as $generatedBillableItem) {
                 $output->writeln('Generated billable item: ' . $generatedBillableItem->getTimewindowBegin()->format('Y-m-d H:i:s'));
+                $output->writeln('Trying to persist...');
+                $em->persist($generatedBillableItem);
+                $em->flush();
+                $output->writeln('Done.');
             }
 
             $output->writeln('');
