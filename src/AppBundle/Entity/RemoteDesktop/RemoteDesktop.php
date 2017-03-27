@@ -14,6 +14,7 @@ use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\DBAL\Types\Type;
@@ -78,19 +79,19 @@ class RemoteDesktop
     private $cloudInstanceProvider;
 
     /**
-     * @var ArrayCollection|\AppBundle\Entity\CloudInstance\AwsCloudInstance
+     * @var Collection|\AppBundle\Entity\CloudInstance\AwsCloudInstance
      * @ORM\OneToMany(targetEntity="\AppBundle\Entity\CloudInstance\AwsCloudInstance", mappedBy="remoteDesktop", cascade="all")
      */
     private $awsCloudInstances;
 
     /**
-     * @var ArrayCollection|\AppBundle\Entity\Billing\BillableItem
+     * @var Collection|\AppBundle\Entity\Billing\BillableItem
      * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Billing\BillableItem", mappedBy="remoteDesktop", cascade="all")
      */
     private $billableItems;
 
     /**
-     * @var ArrayCollection|\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent
+     * @var Collection|\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent
      * @ORM\OneToMany(targetEntity="\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent", mappedBy="remoteDesktop", cascade="all")
      */
     private $remoteDesktopEvents;
@@ -195,9 +196,9 @@ class RemoteDesktop
     }
 
     /**
-     * @return ArrayCollection|CloudInstance
+     * @return Collection|CloudInstance
      */
-    public function getCloudInstances() : PersistentCollection
+    public function getCloudInstances() : Collection
     {
         return $this->awsCloudInstances;
     }
@@ -302,6 +303,18 @@ class RemoteDesktop
         } else {
             throw new \Exception('Cannot schedule a cloud instance for termination that is not running');
         }
+    }
+
+    public function getHourlyCosts() : float
+    {
+        $activeCloudInstance = $this->getActiveCloudInstance();
+        return $activeCloudInstance
+            ->getCloudInstanceProvider()
+            ->getHourlyCostsForFlavorImageRegionCombination(
+                $activeCloudInstance->getFlavor(),
+                $activeCloudInstance->getImage(),
+                $activeCloudInstance->getRegion()
+            );
     }
 
     /**
