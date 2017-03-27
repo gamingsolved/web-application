@@ -292,7 +292,7 @@ class BillingServiceTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
 
-        $latestExistingBillableItem = new BillableItem(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), []);
+        $latestExistingBillableItem = new BillableItem($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 18:37:01'));
 
         $billableItemRepo = $this
             ->getMockBuilder(BillableItemRepository::class)
@@ -346,7 +346,7 @@ class BillingServiceTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
 
-        $latestExistingBillableItem = new BillableItem(DateTimeUtility::createDateTime('2017-03-26 23:37:01'), []);
+        $latestExistingBillableItem = new BillableItem($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 23:37:01'));
 
         $billableItemRepo = $this
             ->getMockBuilder(BillableItemRepository::class)
@@ -395,7 +395,7 @@ class BillingServiceTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
 
-        $latestExistingBillableItem = new BillableItem(DateTimeUtility::createDateTime('2017-03-27 00:37:01'), []);
+        $latestExistingBillableItem = new BillableItem($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 00:37:01'));
 
         $billableItemRepo = $this
             ->getMockBuilder(BillableItemRepository::class)

@@ -21,7 +21,7 @@ class BillingService
         $this->billableItemRepository = $billableItemRepository;
     }
 
-    protected function generateProlongations(array $remoteDesktopEvents, BillableItem &$newestBillableItem, array &$generatedBillableItems, \DateTime $upto)
+    protected function generateProlongations(RemoteDesktop $remoteDesktop, array $remoteDesktopEvents, BillableItem &$newestBillableItem, array &$generatedBillableItems, \DateTime $upto)
     {
         $beganStoppingFound = false;
         $uptoReached = false;
@@ -59,7 +59,8 @@ class BillingService
 
             if (!$beganStoppingFound) {
                 $newBillableItem = new BillableItem(
-                    $newestBillableItem->getTimewindowEnd(), []
+                    $remoteDesktop,
+                    $newestBillableItem->getTimewindowEnd()
                 );
                 $generatedBillableItems[] = clone($newBillableItem);
                 $newestBillableItem = $newBillableItem;
@@ -111,7 +112,7 @@ class BillingService
             );
 
             if (!is_null($newestBillableItem)) {
-                $this->generateProlongations($remoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
+                $this->generateProlongations($remoteDesktop, $remoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
             }
 
 
@@ -156,7 +157,7 @@ class BillingService
                             }
 
                             if (!$found) {
-                                $newBillableItem = new BillableItem($remoteDesktopEvent->getDatetimeOccured(), []);
+                                $newBillableItem = new BillableItem($remoteDesktop, $remoteDesktopEvent->getDatetimeOccured());
                                 $generatedBillableItems[] = $newBillableItem;
                                 $newestBillableItem = clone($newBillableItem);
 
@@ -174,7 +175,7 @@ class BillingService
                                  *  exists     prolongation  prolongation              to be created
                                  */
 
-                                $this->generateProlongations($remoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
+                                $this->generateProlongations($remoteDesktop, $remoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
                             }
 
                         }

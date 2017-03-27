@@ -45,24 +45,8 @@ class BillableItem
      */
     protected $timewindowEnd;
 
-    /**
-     * @var ArrayCollection|\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\CloudInstance\AwsCloudInstance", mappedBy="billableItem", cascade="all")
-     */
-    protected $relatedRemoteDesktopEvents;
 
-
-    public function __construct(\DateTime $timewindowBegin, array $relatedRemoteDesktopEvents) {
-        $this->relatedRemoteDesktopEvents = new ArrayCollection();
-
-        /** @var RemoteDesktopEvent $remoteDesktopEvent */
-        foreach ($relatedRemoteDesktopEvents as $remoteDesktopEvent) {
-            if (get_class($remoteDesktopEvent) !== RemoteDesktopEvent::class) {
-                throw new \Exception('This is not an instance of class RemoteDesktopEvent: ' . (string)$remoteDesktopEvent);
-            }
-            $this->relatedRemoteDesktopEvents->add($remoteDesktopEvent);
-        }
-
+    public function __construct(RemoteDesktop $remoteDesktop, \DateTime $timewindowBegin) {
         if ($timewindowBegin->getTimezone()->getName() !== 'UTC') {
             throw new \Exception('Provided time zone is not UTC.');
         }
@@ -70,6 +54,8 @@ class BillableItem
 
         $this->timewindowEnd = clone($timewindowBegin);
         $this->timewindowEnd = $this->timewindowEnd->add(new \DateInterval('PT' . self::BILLABLE_TIMEWINDOW_REMOTEDESKTOPUSAGE . 'S'));
+
+        $this->remoteDesktop = $remoteDesktop;
     }
 
     public function getTimewindowBegin() : \DateTime
