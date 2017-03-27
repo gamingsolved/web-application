@@ -5,7 +5,6 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\Billing\BillableItemRepository;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEventsRepositoryInterface;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityRepository;
 
@@ -20,6 +19,50 @@ class BillingService
     {
         $this->remoteDesktopEventRepository = $remoteDesktopEventRepository;
         $this->billableItemRepository = $billableItemRepository;
+    }
+
+    protected function generateProlongations(array $remoteDesktopEvents, BillableItem &$newestBillableItem, array &$generatedBillableItems, \DateTime $upto)
+    {
+        $beganStoppingFound = false;
+        $uptoReached = false;
+
+        while ($beganStoppingFound === false && (!$uptoReached)) {
+
+            $remoteDesktopEventsInTimewindow = [];
+
+            /** @var RemoteDesktopEvent $remoteDesktopEvent */
+            foreach ($remoteDesktopEvents as $remoteDesktopEvent) {
+                if (   $remoteDesktopEvent->getDatetimeOccured() >= $newestBillableItem->getTimewindowBegin()
+                    && $remoteDesktopEvent->getDatetimeOccured() < $newestBillableItem->getTimewindowEnd()
+                    && $remoteDesktopEvent->getDatetimeOccured() <= $upto
+                ) {
+                    $remoteDesktopEventsInTimewindow[] = $remoteDesktopEvent;
+                }
+            }
+
+            if (sizeof($remoteDesktopEventsInTimewindow) !== 0) {
+                /** @var RemoteDesktopEvent $lastRemoteDesktopEventInTimeWindow */
+                $lastRemoteDesktopEventInTimeWindow = $remoteDesktopEventsInTimewindow[sizeof($remoteDesktopEventsInTimewindow) - 1];
+                if ($lastRemoteDesktopEventInTimeWindow->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING) {
+                    $beganStoppingFound = true;
+                }
+            }
+
+            // If the last event in the time window of the newest billable item wasn't "began stopping",
+            // then we must assume that the desktop is still running, and need to prolongue.
+
+            if (!$beganStoppingFound) {
+                $newBillableItem = new BillableItem(
+                    $newestBillableItem->getTimewindowEnd(), []
+                );
+                $generatedBillableItems[] = clone($newBillableItem);
+                $newestBillableItem = $newBillableItem;
+            }
+
+            if ($newestBillableItem->getTimewindowEnd() >= $upto) {
+                $uptoReached = true;
+            }
+        }
     }
 
     /**
@@ -41,14 +84,14 @@ class BillingService
             $generatedBillableItems = [];
         } else {
 
-            /* We first need to find out if there are billable items which need to be "prolonged"
-             * (i.e., they need to be seamlessly followed by a new item because during the last existing
+            /* We first need to find out if the newest known billable items needs to be "prolonged"
+             * (i.e., it needs to be seamlessly followed by a new item because during the last existing
              * item, the desktop has not been stopped and is therefore still running, like this:
              *
-             * desktop                     desktop
-             * started                     stopped
-             * |                             |
-             * ##########|**********|**********|--------------------------------->
+             * desktop                     desktop     desktop
+             * started                     stopped     started
+             * |                             |            |
+             * |#########|**********|**********|--------------------------------->
              *     |          |           |
              *  item        this        this
              *  exists    needs to    needs to
@@ -57,55 +100,42 @@ class BillingService
 
             // Get the chronologically last billable item
 
-            /** @var BillableItem $newestExistingBillableItem */
-            $newestExistingBillableItem = $this->billableItemRepository->findOneBy(
+            /** @var BillableItem $newestBillableItem */
+            $newestBillableItem = $this->billableItemRepository->findOneBy(
                 ['remoteDesktop' => $remoteDesktop],
                 ['timewindowBegin' => 'DESC']
             );
 
-            if (!is_null($newestExistingBillableItem)) {
-
-                $beganStoppingFound = false;
-
-                while ($beganStoppingFound === false) {
-                    /** @var RemoteDesktopEvent $remoteDesktopEvent */
-                    foreach ($remoteDesktopEvents as $remoteDesktopEvent) {
-                        if ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING
-                            && $remoteDesktopEvent->getDatetimeOccured() >= $newestExistingBillableItem->getTimewindowBegin()
-                            && $remoteDesktopEvent->getDatetimeOccured() < $newestExistingBillableItem->getTimewindowEnd()
-                        ) {
-                            $beganStoppingFound = true;
-                        }
-                    }
-
-                    // If the desktop did not begin stopping during this item's time window,
-                    // then we must assume that is is still running
-
-                    if (!$beganStoppingFound) {
-                        $newExistingBillableItem = new BillableItem(
-                            $newestExistingBillableItem->getTimewindowEnd(), []
-                        );
-                        $generatedBillableItems[] = clone($newExistingBillableItem);
-                        $newestExistingBillableItem = $newExistingBillableItem;
-                    }
-                }
-
+            if (!is_null($newestBillableItem)) {
+                $this->generateProlongations($remoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
             }
+
+
+            /*
+             * desktop                     desktop     desktop
+             * started                     stopped     started
+             * |                             |            |
+             * |#########|**********|**********|----------|#########|------------>
+             *     |          |           |                    |
+             *  item       created by   created by          this needs
+             *  exists     prolongation  prolongation      to be created
+             */
+
+
+            // Now we need to find out if there is a completely new item we need to create
 
             /** @var RemoteDesktopEvent $remoteDesktopEvent */
             foreach ($remoteDesktopEvents as $remoteDesktopEvent) {
                 if ($remoteDesktopEvent->getDatetimeOccured() <= $upto) {
-                    if ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING) {
 
-                        // Is this launch already covered by a billable item?
+                    // Only consider events which occured after the newest billable item we have, if any
+                    if (   (!is_null($newestBillableItem) && $remoteDesktopEvent->getDatetimeOccured() >= $newestBillableItem->getTimewindowEnd())
+                        || (is_null($newestBillableItem))
+                    ) {
 
-                        $billableItem = $this->billableItemRepository->findItemForDesktopCoveringDateTime(
-                            $remoteDesktop,
-                            $remoteDesktopEvent->getDatetimeOccured()
-                        );
+                        if ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING) {
 
-                        // Not by a stored one
-                        if ($billableItem === false) {
+                            // Is this launch already covered by a billable item?
 
                             /** @var BillableItem $generatedBillableItem */
                             $found = false;
@@ -119,21 +149,19 @@ class BillingService
                                 }
                             }
 
-                            // And not by a generated one
                             if (!$found) {
-                                $billableItem = new BillableItem($remoteDesktopEvent->getDatetimeOccured(), [$remoteDesktopEvent]);
-                                $generatedBillableItems[] = $billableItem;
+                                $newBillableItem = new BillableItem($remoteDesktopEvent->getDatetimeOccured(), []);
+                                $generatedBillableItems[] = $newBillableItem;
+                                $newestBillableItem = clone($newBillableItem);
+
+                                $this->generateProlongations($remoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
                             }
+
                         }
+
                     }
                 }
             }
-
-
-            // Do we need to create additional billable items because the desktop has not been stopped within the time
-            // windows of existing billable items?
-
-
 
         }
 

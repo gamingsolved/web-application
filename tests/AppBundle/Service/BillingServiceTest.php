@@ -69,9 +69,9 @@ class BillingServiceTest extends TestCase
             ->getMock();
 
         $billableItemRepo->expects($this->once())
-            ->method('findItemForDesktopCoveringDateTime')
-            ->with($remoteDesktop, $event->getDatetimeOccured())
-            ->willReturn(false);
+            ->method('findOneBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
@@ -112,9 +112,9 @@ class BillingServiceTest extends TestCase
             ->getMock();
 
         $billableItemRepo->expects($this->once())
-            ->method('findItemForDesktopCoveringDateTime')
-            ->with($remoteDesktop, $event->getDatetimeOccured())
-            ->willReturn(false);
+            ->method('findOneBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 

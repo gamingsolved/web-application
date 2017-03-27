@@ -67,7 +67,8 @@ class BillableItem
         }
         $this->timewindowBegin = $timewindowBegin;
 
-        $this->timewindowEnd = $this->relatedRemoteDesktopEvents->add(new \DateInterval('PT' . self::BILLABLE_TIMEWINDOW_REMOTEDESKTOPUSAGE . 'S'));
+        $this->timewindowEnd = clone($timewindowBegin);
+        $this->timewindowEnd = $this->timewindowEnd->add(new \DateInterval('PT' . self::BILLABLE_TIMEWINDOW_REMOTEDESKTOPUSAGE . 'S'));
     }
 
     public function getTimewindowBegin() : \DateTime
