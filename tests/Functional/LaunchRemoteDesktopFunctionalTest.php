@@ -2,12 +2,16 @@
 
 namespace Tests\Functional;
 
+use AppBundle\Entity\Billing\AccountMovement;
+use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Helpers\Helpers;
 
@@ -130,6 +134,24 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('Password:', $crawler->filter('li.list-group-item')->eq(2)->text());
         $this->assertContains('foo', $crawler->filter('li.list-group-item')->eq(2)->text());
 
+
+        // Check that billing worked
+        $kernel = static::createClient()->getKernel();
+        $kernel->boot();
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArgvInput(['', 'app:generatebillableitems', '--no-interaction', '--force', '-q']);
+        $application->run($input);
+
+        /** @var AccountMovementRepository $accountMovementRepo */
+        $accountMovementRepo = $em->getRepository(AccountMovement::class);
+
+        $this->assertSame(
+            -1.99,
+            $accountMovementRepo->getAccountBalanceForUser($remoteDesktop->getUser())
+        );
 
         // We want to build on this in other tests
         return $client;
