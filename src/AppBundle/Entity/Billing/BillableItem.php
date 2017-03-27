@@ -31,14 +31,14 @@ class BillableItem
     protected $itemType;
 
     /**
-     * @var \DateTime
+     * @var \DateTime $timewindowBegin The begin of the window for which this item covers costs - inclusive
      *
      * @ORM\Column(name="timewindow_begin", type="datetime", nullable=false)
      */
     protected $timewindowBegin;
 
     /**
-     * @var \DateTime
+     * @var \DateTime $timewindowEnd The end of the window for which this item covers costs - not inclusive
      *
      * @ORM\Column(name="timewindow_end", type="datetime", nullable=false)
      */
@@ -76,5 +76,13 @@ class BillableItem
             throw new \Exception('Stored time zone is not UTC.');
         }
         return $this->timewindowBegin;
+    }
+
+    public function getTimewindowEnd() : \DateTime
+    {
+        if ($this->timewindowEnd->getTimezone()->getName() !== 'UTC') {
+            throw new \Exception('Stored time zone is not UTC.');
+        }
+        return $this->timewindowEnd;
     }
 }
