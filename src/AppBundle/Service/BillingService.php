@@ -26,6 +26,11 @@ class BillingService
         $beganStoppingFound = false;
         $uptoReached = false;
 
+        // We do not look into the future, that is, we do not
+        if ($newestBillableItem->getTimewindowEnd() >= $upto) {
+            return;
+        }
+
         while ($beganStoppingFound === false && (!$uptoReached)) {
 
             $remoteDesktopEventsInTimewindow = [];
@@ -89,8 +94,8 @@ class BillingService
              * item, the desktop has not been stopped and is therefore still running, like this:
              *
              * desktop                     desktop     desktop
-             * started                     stopped     started
-             * |                             |            |
+             * started                     stopped     started          up to
+             * |                             |            |               |
              * |#########|**********|**********|--------------------------------->
              *     |          |           |
              *  item        this        this
@@ -111,18 +116,21 @@ class BillingService
             }
 
 
+
+            // Now we need to find out if there is a completely new item we need to create.
+            // This is the case even if prolongations were created, but they then the desktop
+            // was off for a longer period.
+
             /*
              * desktop                     desktop     desktop
-             * started                     stopped     started
-             * |                             |            |
-             * |#########|**********|**********|----------|#########|------------>
+             * started                     stopped     started          up to
+             * |                             |            |               |
+             * |#########|**********|**********|----------|#########------------->
              *     |          |           |                    |
              *  item       created by   created by          this needs
              *  exists     prolongation  prolongation      to be created
              */
 
-
-            // Now we need to find out if there is a completely new item we need to create
 
             /** @var RemoteDesktopEvent $remoteDesktopEvent */
             foreach ($remoteDesktopEvents as $remoteDesktopEvent) {
@@ -153,6 +161,20 @@ class BillingService
                                 $newBillableItem = new BillableItem($remoteDesktopEvent->getDatetimeOccured(), []);
                                 $generatedBillableItems[] = $newBillableItem;
                                 $newestBillableItem = clone($newBillableItem);
+
+                                // Now that we generated a new billable item, we immediately want to know if it has
+                                // prolongations, to avoid generating further items which are not neccessary because
+                                // the prolongations already cover that.
+
+                                /*
+                                 * desktop                     desktop     desktop
+                                 * started                     stopped     started          up to
+                                 * |                             |            |               |
+                                 * |#########|**********|**********|----------|#########|#########|---->
+                                 *     |          |           |                             |
+                                 *  item       created by   created by                  this needs
+                                 *  exists     prolongation  prolongation              to be created
+                                 */
 
                                 $this->generateProlongations($remoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
                             }
