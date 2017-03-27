@@ -44,8 +44,8 @@ class BillableItem
     protected $timewindowEnd;
 
     /**
-     * @var int
-     * @ORM\Column(name="price", type="float")
+     * @var float
+     * @ORM\Column(name="price", type="float", nullable=false)
      */
     protected $price;
 
