@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Billing;
 
 use AppBundle\Entity\User;
+use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,10 +58,10 @@ class AccountMovement
 
     protected function __construct() {}
 
-    public static function createDebitMovement(User $user, BillableItem $billableItem, float $amount) : AccountMovement
+    public static function createDebitMovement(User $user, BillableItem $billableItem) : AccountMovement
     {
-        if ($amount >= 0.0) {
-            throw new \Exception('Debit amount must be negative, ' . $amount . ' is not.');
+        if ($billableItem->getPrice() < 0.0) {
+            throw new \Exception('Debit amount must not be negative, but ' . $billableItem->getPrice() . ' is.');
         }
 
         $accountMovement = new AccountMovement();
@@ -68,7 +69,8 @@ class AccountMovement
         $accountMovement->user = $user;
         $accountMovement->billableItem = $billableItem;
         $accountMovement->movementType = self::MOVEMENT_TYPE_DEBIT;
-        $accountMovement->amount = $amount;
+        $accountMovement->amount = (float)($billableItem->getPrice() * -1.0);
+        $accountMovement->datetimeOccured = DateTimeUtility::createDateTime();
 
         return $accountMovement;
     }

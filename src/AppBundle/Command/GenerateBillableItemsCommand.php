@@ -2,6 +2,7 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
@@ -47,6 +48,11 @@ class GenerateBillableItemsCommand extends ContainerAwareCommand
                 $output->writeln('Generated billable item: ' . $generatedBillableItem->getTimewindowBegin()->format('Y-m-d H:i:s'));
                 $output->writeln('Trying to persist...');
                 $em->persist($generatedBillableItem);
+                $em->flush();
+                $output->writeln('Done.');
+                $output->writeln('Booking a debit for this billable item...');
+                $accountMovement = AccountMovement::createDebitMovement($remoteDesktop->getUser(), $generatedBillableItem);
+                $em->persist($accountMovement);
                 $em->flush();
                 $output->writeln('Done.');
             }

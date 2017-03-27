@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="billable_items")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Billing\BillableItemRepository")
  */
 class BillableItem
 {
@@ -82,5 +81,10 @@ class BillableItem
             throw new \Exception('Stored time zone is not UTC.');
         }
         return clone($this->timewindowEnd);
+    }
+
+    public function getPrice() : float
+    {
+        return $this->price;
     }
 }
