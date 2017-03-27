@@ -3,6 +3,7 @@
 namespace Tests\Functional;
 
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -51,6 +52,22 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
 
 
         // At this point, the instance is in "Scheduled for stop" state
+
+        $container = $client->getContainer();
+        /** @var EntityManager $em */
+        $em = $container->get('doctrine.orm.entity_manager');
+        $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
+        $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
+        $this->assertEquals(
+            2, // Two, because there is one from the launch on which we build
+            sizeof($remoteDesktopEvents)
+        );
+        /** @var RemoteDesktopEvent $remoteDesktopEvent */
+        $remoteDesktopEvent = $remoteDesktopEvents[1];
+        $this->assertEquals(
+            $remoteDesktopEvent->getEventType(),
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING
+        );
 
         $this->verifyDektopStatusStopping($client, $crawler);
 

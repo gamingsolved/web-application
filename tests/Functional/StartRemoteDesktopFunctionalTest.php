@@ -90,7 +90,7 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
         $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
         $this->assertEquals(
-            2, // Two, because there is one from the launch on which we build
+            3, // Two, because there is one from the launch and one from the stop on which we build
             sizeof($remoteDesktopEvents)
         );
         /** @var RemoteDesktopEvent $remoteDesktopEvent */

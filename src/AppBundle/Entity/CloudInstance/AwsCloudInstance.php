@@ -135,10 +135,21 @@ class AwsCloudInstance extends CloudInstance
             throw new \Exception('Runstatus ' . $runstatus . ' is invalid');
         }
 
+        // We are billing as fair as possible: We only count costs once the user has their machine available...
         if ($runstatus === self::RUNSTATUS_RUNNING) {
             $remoteDesktopEvent = new RemoteDesktopEvent(
                 $this->remoteDesktop,
                 RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+                DateTimeUtility::createDateTime('now')
+            );
+            $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+        }
+
+        // ...and stop as soon as they don't want it anymore
+        if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_STOP) {
+            $remoteDesktopEvent = new RemoteDesktopEvent(
+                $this->remoteDesktop,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
                 DateTimeUtility::createDateTime('now')
             );
             $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
