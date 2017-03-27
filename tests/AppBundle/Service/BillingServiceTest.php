@@ -4,11 +4,8 @@ namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\Billing\BillableItemRepository;
-use AppBundle\Entity\Billing\BillableItemsRepositoryInterface;
-use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEventsRepositoryInterface;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktopGamingKind;
 use AppBundle\Service\BillingService;
