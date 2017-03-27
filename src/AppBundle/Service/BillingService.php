@@ -26,7 +26,8 @@ class BillingService
         $beganStoppingFound = false;
         $uptoReached = false;
 
-        // We do not look into the future, that is, we do not
+        // We do not look into the future, that is, we do not try to prolong into billable items
+        // whose start time would lie after $upto.
         if ($newestBillableItem->getTimewindowEnd() >= $upto) {
             return;
         }
@@ -39,7 +40,7 @@ class BillingService
             foreach ($remoteDesktopEvents as $remoteDesktopEvent) {
                 if (   $remoteDesktopEvent->getDatetimeOccured() >= $newestBillableItem->getTimewindowBegin()
                     && $remoteDesktopEvent->getDatetimeOccured() < $newestBillableItem->getTimewindowEnd()
-                    && $remoteDesktopEvent->getDatetimeOccured() <= $upto
+                    && $remoteDesktopEvent->getDatetimeOccured() < $upto
                 ) {
                     $remoteDesktopEventsInTimewindow[] = $remoteDesktopEvent;
                 }
@@ -72,7 +73,7 @@ class BillingService
 
     /**
      * @param RemoteDesktop $remoteDesktop
-     * @param \DateTime $upto Point in time up to which to consider events - inclusive!
+     * @param \DateTime $upto Point in time up to which to consider events - exclusive!
      * @return array
      */
     public function generateMissingBillableItems(RemoteDesktop $remoteDesktop, \DateTime $upto) : array
@@ -134,7 +135,7 @@ class BillingService
 
             /** @var RemoteDesktopEvent $remoteDesktopEvent */
             foreach ($remoteDesktopEvents as $remoteDesktopEvent) {
-                if ($remoteDesktopEvent->getDatetimeOccured() <= $upto) {
+                if ($remoteDesktopEvent->getDatetimeOccured() < $upto) {
 
                     // Only consider events which occured after the newest billable item we have, if any
                     if (   (!is_null($newestBillableItem) && $remoteDesktopEvent->getDatetimeOccured() >= $newestBillableItem->getTimewindowEnd())
