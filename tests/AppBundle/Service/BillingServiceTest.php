@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class BillingServiceTest extends TestCase
 {
+
     public function testNoBillableItemsForRemoteDesktopWithoutEvents()
     {
         $remoteDesktop = new RemoteDesktop();
@@ -42,6 +43,7 @@ class BillingServiceTest extends TestCase
 
         $this->assertEmpty($billableItems);
     }
+
 
     public function testOneBillableItemForLaunchedRemoteDesktop()
     {
@@ -85,6 +87,7 @@ class BillingServiceTest extends TestCase
 
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $actualBillableItem->getTimewindowBegin());
     }
+
 
     public function testOneBillableItemForMultipleTimesLaunchedAndStoppedRemoteDesktop()
     {
@@ -147,6 +150,7 @@ class BillingServiceTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $actualBillableItem->getTimewindowBegin());
     }
 
+
     public function testThreeBillableItemsForMultipleTimesLaunchedAndStoppedRemoteDesktop()
     {
         $remoteDesktop = new RemoteDesktop();
@@ -207,6 +211,7 @@ class BillingServiceTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 20:37:01'), $billableItems[2]->getTimewindowBegin());
     }
 
+
     public function testSevenBillableItemsForLaunchedAndStoppedRemoteDesktop()
     {
         $remoteDesktop = new RemoteDesktop();
@@ -258,6 +263,7 @@ class BillingServiceTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 23:37:01'), $billableItems[5]->getTimewindowBegin());
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-27 00:37:01'), $billableItems[6]->getTimewindowBegin());
     }
+
 
     public function testOnlySixBillableItemsForLaunchedAndStoppedRemoteDesktopIfOneBillingItemAlreadyExists()
     {
@@ -312,6 +318,7 @@ class BillingServiceTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-27 00:37:01'), $billableItems[5]->getTimewindowBegin());
     }
 
+
     public function testOnlyOneBillableItemForLaunchedAndStoppedRemoteDesktopIfSixBillingItemsAlreadyExist()
     {
         $remoteDesktop = new RemoteDesktop();
@@ -360,6 +367,7 @@ class BillingServiceTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-27 00:37:01'), $billableItems[0]->getTimewindowBegin());
     }
 
+
     public function testNoBillableItemForLaunchedAndStoppedRemoteDesktopIfAllBillingItemsAlreadyExist()
     {
         $remoteDesktop = new RemoteDesktop();
@@ -406,6 +414,7 @@ class BillingServiceTest extends TestCase
         $this->assertCount(0, $billableItems);
     }
 
+
     public function testTwoBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgo()
     {
         $remoteDesktop = new RemoteDesktop();
@@ -446,6 +455,7 @@ class BillingServiceTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $billableItems[0]->getTimewindowBegin());
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 19:37:01'), $billableItems[1]->getTimewindowBegin());
     }
+
 
     public function testOneBillableItemForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedWithinOneHour()
     {
@@ -493,6 +503,7 @@ class BillingServiceTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $billableItems[0]->getTimewindowBegin());
     }
 
+
     public function testTwoBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedMoreThanOneHourLater()
     {
         $remoteDesktop = new RemoteDesktop();
@@ -539,6 +550,7 @@ class BillingServiceTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $billableItems[0]->getTimewindowBegin());
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 19:37:01'), $billableItems[1]->getTimewindowBegin());
     }
+
 
     public function testOneBillableItemsForRemoteDesktopLaunchedWithinTheUptoHourAndStoppedMoreThanOneHourLater()
     {
@@ -597,6 +609,7 @@ class BillingServiceTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $billableItems[0]->getTimewindowBegin());
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 19:37:01'), $billableItems[1]->getTimewindowBegin());
     }
+
 
     public function testTwoBillableItemsForTwoUsagesWithALargeGapBetweenThem()
     {
