@@ -3,7 +3,6 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity\Billing\BillableItem;
-use AppBundle\Entity\Billing\BillableItemRepository;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
@@ -81,7 +80,7 @@ class BillingServiceTest extends TestCase
             ->willReturn([$event]);
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -142,7 +141,7 @@ class BillingServiceTest extends TestCase
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1, $finishedLaunchingEvent2, $beganStoppingEvent2]);
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -203,7 +202,7 @@ class BillingServiceTest extends TestCase
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1, $finishedLaunchingEvent2, $beganStoppingEvent2]);
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -251,7 +250,7 @@ class BillingServiceTest extends TestCase
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -308,7 +307,7 @@ class BillingServiceTest extends TestCase
         );
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -364,7 +363,7 @@ class BillingServiceTest extends TestCase
         );
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -415,7 +414,7 @@ class BillingServiceTest extends TestCase
         );
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -453,7 +452,7 @@ class BillingServiceTest extends TestCase
             ->willReturn([$event]);
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -500,7 +499,7 @@ class BillingServiceTest extends TestCase
             ->willReturn([$finishedLaunchingEvent, $beganStoppingEvent]);
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -546,7 +545,7 @@ class BillingServiceTest extends TestCase
             ->willReturn([$finishedLaunchingEvent, $beganStoppingEvent]);
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -593,7 +592,7 @@ class BillingServiceTest extends TestCase
             ->willReturn([$finishedLaunchingEvent, $beganStoppingEvent]);
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -663,7 +662,7 @@ class BillingServiceTest extends TestCase
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1, $finishedLaunchingEvent2, $beganStoppingEvent2]);
 
         $billableItemRepo = $this
-            ->getMockBuilder(BillableItemRepository::class)
+            ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
