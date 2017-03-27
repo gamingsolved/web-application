@@ -157,7 +157,10 @@ class BillingService
                             }
 
                             if (!$found) {
-                                $newBillableItem = new BillableItem($remoteDesktop, $remoteDesktopEvent->getDatetimeOccured());
+                                $newBillableItem = new BillableItem(
+                                    $remoteDesktop,
+                                    $remoteDesktopEvent->getDatetimeOccured()
+                                );
                                 $generatedBillableItems[] = $newBillableItem;
                                 $newestBillableItem = clone($newBillableItem);
 

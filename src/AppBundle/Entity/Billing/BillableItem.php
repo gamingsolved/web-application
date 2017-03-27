@@ -45,6 +45,12 @@ class BillableItem
      */
     protected $timewindowEnd;
 
+    /**
+     * @var int
+     * @ORM\Column(name="price", type="float")
+     */
+    protected $price;
+
 
     public function __construct(RemoteDesktop $remoteDesktop, \DateTime $timewindowBegin) {
         if ($timewindowBegin->getTimezone()->getName() !== 'UTC') {
@@ -56,6 +62,12 @@ class BillableItem
         $this->timewindowEnd = $this->timewindowEnd->add(new \DateInterval('PT' . self::BILLABLE_TIMEWINDOW_REMOTEDESKTOPUSAGE . 'S'));
 
         $this->remoteDesktop = $remoteDesktop;
+
+        $this->price = $remoteDesktop->getHourlyCosts();
+
+        if ($this->price < 0.0) {
+            throw new \Exception('Negative price of ' . $this->price . ' is invalid.');
+        }
     }
 
     public function getTimewindowBegin() : \DateTime

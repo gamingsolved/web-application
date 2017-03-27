@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity\CloudInstanceProvider;
 
-use AppBundle\Entity\CloudInstance\CloudInstanceInterface;
+use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
@@ -22,7 +22,7 @@ interface CloudInstanceProviderInterface
 
     public function getRegionByInternalName(string $regionInternalName) : Region;
 
-    public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstanceInterface;
+    public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstance;
 
     public function getHourlyCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float;
 }

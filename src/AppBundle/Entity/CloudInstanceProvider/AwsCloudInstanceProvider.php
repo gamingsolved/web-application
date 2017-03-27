@@ -61,7 +61,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         return $this->regions;
     }
 
-    public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstanceInterface
+    public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstance
     {
         if (   $remoteDesktop->getKind() instanceof RemoteDesktopGamingKind
             || $remoteDesktop->getKind() instanceof RemoteDesktopCadKind

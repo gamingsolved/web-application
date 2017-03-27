@@ -89,6 +89,7 @@ class AwsCloudInstance extends CloudInstance
     public function __construct()
     {
         $this->awsCloudInstanceProvider = new AwsCloudInstanceProvider();
+        $this->setStatus(self::STATUS_IN_USE);
     }
 
     public function getId() : string
@@ -104,16 +105,6 @@ class AwsCloudInstance extends CloudInstance
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface
     {
         return new AwsCloudInstanceProvider();
-    }
-
-    public function setRegionInternalName(string $regionInternalName)
-    {
-        $this->regionInternalName = $regionInternalName;
-    }
-
-    public function getRegionInternalName() : string
-    {
-        return $this->regionInternalName;
     }
 
     public function setStatus(int $status)

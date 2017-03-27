@@ -5,9 +5,12 @@ namespace Tests\AppBundle\Service;
 use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\Billing\BillableItemRepository;
 use AppBundle\Entity\Billing\BillableItemsRepositoryInterface;
+use AppBundle\Entity\CloudInstance\AwsCloudInstance;
+use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEventsRepositoryInterface;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktopGamingKind;
 use AppBundle\Service\BillingService;
 use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityRepository;
@@ -17,10 +20,25 @@ use PHPUnit\Framework\TestCase;
 class BillingServiceTest extends TestCase
 {
 
-    public function testNoBillableItemsForRemoteDesktopWithoutEvents()
+    protected function getRemoteDesktop() : RemoteDesktop
     {
         $remoteDesktop = new RemoteDesktop();
+        $remoteDesktop->setCloudInstanceProvider(new AwsCloudInstanceProvider());
         $remoteDesktop->setId('r1');
+        $remoteDesktop->setKind(new RemoteDesktopGamingKind());
+        $awsCloudInstanceProvider = new AwsCloudInstanceProvider();
+        $remoteDesktop->addCloudInstance(
+            $awsCloudInstanceProvider->createInstanceForRemoteDesktopAndRegion(
+                $remoteDesktop,
+                $awsCloudInstanceProvider->getRegionByInternalName('eu-central-1')
+            )
+        );
+        return $remoteDesktop;
+    }
+
+    public function testNoBillableItemsForRemoteDesktopWithoutEvents()
+    {
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $remoteDesktopEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
@@ -47,8 +65,7 @@ class BillingServiceTest extends TestCase
 
     public function testOneBillableItemForLaunchedRemoteDesktop()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $event = new RemoteDesktopEvent(
             $remoteDesktop,
@@ -91,8 +108,7 @@ class BillingServiceTest extends TestCase
 
     public function testOneBillableItemForMultipleTimesLaunchedAndStoppedRemoteDesktop()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
@@ -153,8 +169,7 @@ class BillingServiceTest extends TestCase
 
     public function testThreeBillableItemsForMultipleTimesLaunchedAndStoppedRemoteDesktop()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
@@ -214,8 +229,7 @@ class BillingServiceTest extends TestCase
 
     public function testSevenBillableItemsForLaunchedAndStoppedRemoteDesktop()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
@@ -267,8 +281,7 @@ class BillingServiceTest extends TestCase
 
     public function testOnlySixBillableItemsForLaunchedAndStoppedRemoteDesktopIfOneBillingItemAlreadyExists()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
@@ -292,7 +305,10 @@ class BillingServiceTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
 
-        $latestExistingBillableItem = new BillableItem($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 18:37:01'));
+        $latestExistingBillableItem = new BillableItem(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+        );
 
         $billableItemRepo = $this
             ->getMockBuilder(BillableItemRepository::class)
@@ -321,8 +337,7 @@ class BillingServiceTest extends TestCase
 
     public function testOnlyOneBillableItemForLaunchedAndStoppedRemoteDesktopIfSixBillingItemsAlreadyExist()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
@@ -346,7 +361,10 @@ class BillingServiceTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
 
-        $latestExistingBillableItem = new BillableItem($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 23:37:01'));
+        $latestExistingBillableItem = new BillableItem(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 23:37:01')
+        );
 
         $billableItemRepo = $this
             ->getMockBuilder(BillableItemRepository::class)
@@ -370,8 +388,7 @@ class BillingServiceTest extends TestCase
 
     public function testNoBillableItemForLaunchedAndStoppedRemoteDesktopIfAllBillingItemsAlreadyExist()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
@@ -395,7 +412,10 @@ class BillingServiceTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
 
-        $latestExistingBillableItem = new BillableItem($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 00:37:01'));
+        $latestExistingBillableItem = new BillableItem(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-27 00:37:01')
+        );
 
         $billableItemRepo = $this
             ->getMockBuilder(BillableItemRepository::class)
@@ -417,8 +437,7 @@ class BillingServiceTest extends TestCase
 
     public function testTwoBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgo()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $event = new RemoteDesktopEvent(
             $remoteDesktop,
@@ -459,8 +478,7 @@ class BillingServiceTest extends TestCase
 
     public function testOneBillableItemForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedWithinOneHour()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $finishedLaunchingEvent = new RemoteDesktopEvent(
             $remoteDesktop,
@@ -506,8 +524,7 @@ class BillingServiceTest extends TestCase
 
     public function testTwoBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedMoreThanOneHourLater()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $finishedLaunchingEvent = new RemoteDesktopEvent(
             $remoteDesktop,
@@ -554,8 +571,7 @@ class BillingServiceTest extends TestCase
 
     public function testOneBillableItemsForRemoteDesktopLaunchedWithinTheUptoHourAndStoppedMoreThanOneHourLater()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $finishedLaunchingEvent = new RemoteDesktopEvent(
             $remoteDesktop,
@@ -613,8 +629,7 @@ class BillingServiceTest extends TestCase
 
     public function testTwoBillableItemsForTwoUsagesWithALargeGapBetweenThem()
     {
-        $remoteDesktop = new RemoteDesktop();
-        $remoteDesktop->setId('r1');
+        $remoteDesktop = $this->getRemoteDesktop();
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
