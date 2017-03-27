@@ -83,12 +83,10 @@ class BillingService
             ['datetimeOccured' => 'ASC']
         );
 
-        $generatedBillableItems = null;
+        $generatedBillableItems = [];
 
         // No events means there is nothing billable
-        if (sizeof($remoteDesktopEvents) === 0) {
-            $generatedBillableItems = [];
-        } else {
+        if (sizeof($remoteDesktopEvents) !== 0) {
 
             /* We first need to find out if the newest known billable items needs to be "prolonged"
              * (i.e., it needs to be seamlessly followed by a new item because during the last existing
@@ -115,7 +113,6 @@ class BillingService
             if (!is_null($newestBillableItem)) {
                 $this->generateProlongations($remoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
             }
-
 
 
             // Now we need to find out if there is a completely new item we need to create.
@@ -186,10 +183,6 @@ class BillingService
                 }
             }
 
-        }
-
-        if (is_null($generatedBillableItems)) {
-            throw new \Exception('Missing branch in decision logic: the $generatedBillableItems was never actively set.');
         }
 
         return $generatedBillableItems;

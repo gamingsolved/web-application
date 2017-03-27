@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Service;
 
+use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\Billing\BillableItemRepository;
 use AppBundle\Entity\Billing\BillableItemsRepositoryInterface;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
@@ -256,6 +257,107 @@ class BillingServiceTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 22:37:01'), $billableItems[4]->getTimewindowBegin());
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 23:37:01'), $billableItems[5]->getTimewindowBegin());
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-27 00:37:01'), $billableItems[6]->getTimewindowBegin());
+    }
+
+    public function testOnlySixBillableItemsForLaunchedAndStoppedRemoteDesktopIfOneBillingItemAlreadyExists()
+    {
+        $remoteDesktop = new RemoteDesktop();
+        $remoteDesktop->setId('r1');
+
+        $finishedLaunchingEvent1 = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+        );
+
+        $beganStoppingEvent1 = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            DateTimeUtility::createDateTime('2017-03-27 00:37:01')
+        );
+
+        $remoteDesktopEventRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $remoteDesktopEventRepo->expects($this->once())
+            ->method('findBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
+            ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
+
+        $latestExistingBillableItem = new BillableItem(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), []);
+
+        $billableItemRepo = $this
+            ->getMockBuilder(BillableItemRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $billableItemRepo->expects($this->once())
+            ->method('findOneBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->willReturn($latestExistingBillableItem);
+
+        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+
+        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
+
+        $this->assertCount(6, $billableItems);
+
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 19:37:01'), $billableItems[0]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 20:37:01'), $billableItems[1]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 21:37:01'), $billableItems[2]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 22:37:01'), $billableItems[3]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 23:37:01'), $billableItems[4]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-27 00:37:01'), $billableItems[5]->getTimewindowBegin());
+    }
+
+    public function testOnlyOneBillableItemForLaunchedAndStoppedRemoteDesktopIfSixBillingItemsAlreadyExist()
+    {
+        $remoteDesktop = new RemoteDesktop();
+        $remoteDesktop->setId('r1');
+
+        $finishedLaunchingEvent1 = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+        );
+
+        $beganStoppingEvent1 = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            DateTimeUtility::createDateTime('2017-03-27 00:37:01')
+        );
+
+        $remoteDesktopEventRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $remoteDesktopEventRepo->expects($this->once())
+            ->method('findBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
+            ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
+
+        $latestExistingBillableItem = new BillableItem(DateTimeUtility::createDateTime('2017-03-26 23:37:01'), []);
+
+        $billableItemRepo = $this
+            ->getMockBuilder(BillableItemRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $billableItemRepo->expects($this->once())
+            ->method('findOneBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->willReturn($latestExistingBillableItem);
+
+        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+
+        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
+
+        $this->assertCount(1, $billableItems);
+
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-27 00:37:01'), $billableItems[0]->getTimewindowBegin());
     }
 
     public function testTwoBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgo()
