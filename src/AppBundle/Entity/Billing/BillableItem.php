@@ -65,7 +65,7 @@ class BillableItem
         if ($timewindowBegin->getTimezone()->getName() !== 'UTC') {
             throw new \Exception('Provided time zone is not UTC.');
         }
-        $this->timewindowBegin = $timewindowBegin;
+        $this->timewindowBegin = clone($timewindowBegin);
 
         $this->timewindowEnd = clone($timewindowBegin);
         $this->timewindowEnd = $this->timewindowEnd->add(new \DateInterval('PT' . self::BILLABLE_TIMEWINDOW_REMOTEDESKTOPUSAGE . 'S'));
@@ -76,7 +76,7 @@ class BillableItem
         if ($this->timewindowBegin->getTimezone()->getName() !== 'UTC') {
             throw new \Exception('Stored time zone is not UTC.');
         }
-        return $this->timewindowBegin;
+        return clone($this->timewindowBegin);
     }
 
     public function getTimewindowEnd() : \DateTime
@@ -84,6 +84,6 @@ class BillableItem
         if ($this->timewindowEnd->getTimezone()->getName() !== 'UTC') {
             throw new \Exception('Stored time zone is not UTC.');
         }
-        return $this->timewindowEnd;
+        return clone($this->timewindowEnd);
     }
 }

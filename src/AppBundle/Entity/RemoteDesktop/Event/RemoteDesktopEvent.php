@@ -66,7 +66,7 @@ class RemoteDesktopEvent
         if ($datetimeOccured->getTimezone()->getName() !== 'UTC') {
             throw new \Exception('Provided time zone is not UTC.');
         }
-        $this->datetimeOccured = $datetimeOccured;
+        $this->datetimeOccured = clone($datetimeOccured);
     }
 
     public function getId() : string
@@ -84,7 +84,7 @@ class RemoteDesktopEvent
         if ($this->datetimeOccured->getTimezone()->getName() !== 'UTC') {
             throw new \Exception('Stored time zone is not UTC.');
         }
-        return $this->datetimeOccured;
+        return clone($this->datetimeOccured);
     }
 
 }
