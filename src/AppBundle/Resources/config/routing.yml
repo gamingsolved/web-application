@@ -48,7 +48,12 @@ payment.new:
     defaults: { _controller: AppBundle:Payment:new }
     methods:  [GET, POST]
 
-payment.success:
-    path:     /accountMovement/{accountMovement}/payment/success
-    defaults: { _controller: AppBundle:Payment:success }
+payment.finish:
+    path:     /accountMovement/{accountMovement}/payment/finish
+    defaults: { _controller: AppBundle:Payment:finish }
+    methods:  [GET]
+
+payment.cancel:
+    path:     /accountMovement/{accountMovement}/payment/cancel
+    defaults: { _controller: AppBundle:Payment:cancel }
     methods:  [GET]

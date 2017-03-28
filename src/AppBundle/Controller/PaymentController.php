@@ -16,8 +16,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class PaymentController extends Controller
 {
 
-    private function createPayment(PaymentInstruction $instruction)
+    private function createPayment(AccountMovement $accountMovement)
     {
+        $instruction = $accountMovement->getPaymentInstruction();
         $pendingTransaction = $instruction->getPendingTransaction();
 
         if ($pendingTransaction !== null) {
@@ -31,27 +32,53 @@ class PaymentController extends Controller
     }
 
     /**
-     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     * @ParamConverter("accountMovement", class="AppBundle:Billing\AccountMovement")
      */
-    public function successAction(AccountMovement $accountMovement)
+    public function finishAction(AccountMovement $accountMovement)
     {
+        $payment = $this->createPayment($accountMovement);
 
+        /** @var PluginControllerInterface $ppc */
+        $ppc = $this->get('payment.plugin_controller');
+        $result = $ppc->approveAndDeposit($payment->getId(), $payment->getTargetAmount());
+
+        if ($result->getStatus() === Result::STATUS_SUCCESS) {
+            return $this->render(
+                'AppBundle:payment:finish.html.twig',
+                ['success' => true, 'amount' => $accountMovement->getAmount()]
+            );
+        }
+
+        if ($result->getStatus() === Result::STATUS_PENDING) {
+            $ex = $result->getPluginException();
+
+            if ($ex instanceof ActionRequiredException) {
+                $action = $ex->getAction();
+
+                if ($action instanceof VisitUrl) {
+                    return $this->redirect($action->getUrl());
+                }
+            }
+        }
+
+        // Something went wrong
+        throw $result->getPluginException();
     }
 
     /**
-     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     * @ParamConverter("accountMovement", class="AppBundle:Billing\AccountMovement")
      */
     public function newAction(Request $request, AccountMovement $accountMovement)
     {
         $predefined_data = [
             'paypal_express_checkout' => [
                 'return_url'=>
-                    'http://localhost:8000/en/'
+                    'http://localhost:8000/en/accountMovement/'
                     . $accountMovement->getId()
-                    . 'payment/finish?hashedAccountMovementId='
+                    . '/payment/finish?hashedAccountMovementId='
                     . sha1($accountMovement->getId() . $this->container->getParameter('secret')),
                 'cancel_url' =>
-                    'http://localhost:8000/en/'. $accountMovement->getId() .'payment/cancel',
+                    'http://localhost:8000/en/accountMovement/'. $accountMovement->getId() .'/payment/cancel',
                 'useraction' =>
                     'commit',
             ],
@@ -71,17 +98,16 @@ class PaymentController extends Controller
             $ppc = $this->get('payment.plugin_controller');
             $ppc->createPaymentInstruction($instruction = $form->getData());
 
-            $payment = $this->createPayment($instruction);
+            $accountMovement->setPaymentInstruction($instruction);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($accountMovement);
+            $em->flush();
+
+            $payment = $this->createPayment($accountMovement);
 
             $ppc = $this->get('payment.plugin_controller');
             /** @var Result $result */
             $result = $ppc->approveAndDeposit($payment->getId(), $payment->getTargetAmount());
-
-            if ($result->getStatus() === Result::STATUS_SUCCESS) {
-                return $this->render(
-                    'AppBundle:payment:success.html.twig'
-                );
-            }
 
             if ($result->getStatus() === Result::STATUS_PENDING) {
                 $ex = $result->getPluginException();
@@ -101,10 +127,7 @@ class PaymentController extends Controller
 
         return $this->render(
             'AppBundle:payment:new.html.twig',
-            [
-                'form' => $form->createView(),
-                'amount' => 10.0
-            ]
+            ['form' => $form->createView()]
         );
     }
 

@@ -9,7 +9,7 @@
                     {{ form_start(form) }}
                     {{ form_errors(form) }}
                     {{ form_widget(form) }}
-                    <input type="submit" value="Load ${{ amount|number_format(2, '.', ',') }} into your account" />
+                    <input type="submit" class="btn btn-primary" value="{{ "payment.new.form.submit_label" }}" />
                     {{ form_end(form) }}
                 </div>
             </div>
