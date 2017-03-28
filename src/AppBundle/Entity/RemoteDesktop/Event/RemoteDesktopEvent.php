@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\RemoteDesktop\Event;
 
-use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
@@ -43,13 +42,6 @@ class RemoteDesktopEvent
      * @ORM\Column(name="datetime_occured", type="datetime", nullable=false)
      */
     protected $datetimeOccured;
-
-    /**
-     * @var BillableItem
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Billing\BillableItem", inversedBy="remoteDesktopEvents")
-     * @ORM\JoinColumn(name="billable_item_id", referencedColumnName="id")
-     */
-    protected $billableItem;
 
 
     public function __construct(RemoteDesktop $remoteDesktop, int $eventType, \DateTime $datetimeOccured)
