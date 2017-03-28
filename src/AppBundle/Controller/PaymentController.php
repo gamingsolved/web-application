@@ -11,6 +11,7 @@ use JMS\Payment\CoreBundle\PluginController\Result;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\Payment\CoreBundle\Form\ChoosePaymentMethodType;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class PaymentController extends Controller {
 
@@ -28,33 +29,47 @@ class PaymentController extends Controller {
         return $ppc->createPayment($instruction->getId(), $amount);
     }
 
-    public function finishAction(string $accountMovementId)
+    /**
+     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     */
+    public function successAction(AccountMovement $accountMovement)
     {
 
     }
 
-    public function newAction(Request $request)
+    /**
+     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     */
+    public function newAction(Request $request, AccountMovement $accountMovement)
     {
         $user = $this->getUser();
-        $accountMovement = AccountMovement::createDepositMovement($user, '10.0');
+        //$accountMovement = AccountMovement::createDepositMovement($user, '10.0');
 
-        $config = [
+        $predefined_data = [
             'paypal_express_checkout' => [
-                'return_url' => 'http://localhost:8000/en/payment/' . $accountMovement->getId() . '/finish',
-                'cancel_url' => 'http://localhost:8000/en/cancel/' . $accountMovement->getId() . '/cancel',
-                'useraction' => 'commit',
+                'return_url'=>
+                    'http://localhost:8000/en/'
+                    . $accountMovement->getId()
+                    . 'payment/finish?hashedAccountMovementId='
+                    . sha1($accountMovement->getId() . $this->container->getParameter('secret')),
+                'cancel_url' =>
+                    'http://localhost:8000/en/'. $accountMovement->getId() .'payment/cancel',
+                'useraction' =>
+                    'commit',
             ],
         ];
 
         $form = $this->createForm(ChoosePaymentMethodType::class, null, [
-            'amount'          => 10.0,
+            'amount'          => $accountMovement->getAmount(),
             'currency'        => 'USD',
-            'predefined_data' => $config
+            'predefined_data' => $predefined_data
         ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $form->
+
             /** @var PluginControllerInterface $ppc */
             $ppc = $this->get('payment.plugin_controller');
             $ppc->createPaymentInstruction($instruction = $form->getData());

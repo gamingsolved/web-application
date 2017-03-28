@@ -108,6 +108,11 @@ class AccountMovement
         return $this->id;
     }
 
+    public function getAmount() : float
+    {
+        return $this->amount;
+    }
+
     public function setPaymentInstruction(PaymentInstruction $paymentInstruction)
     {
         $this->paymentInstruction = $paymentInstruction;
