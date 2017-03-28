@@ -94,3 +94,12 @@ doctrine_migrations:
     namespace: Application\Migrations
     table_name: migration_versions
     name: Application Migrations
+
+jms_payment_core:
+    encryption:
+        secret: "%jms_payment_core_encryption_secret%"
+
+jms_payment_paypal:
+    username: "%paypal_api_username%" # not your account username
+    password: "%paypal_api_password%" # not your account password
+    signature: "%paypal_api_signature%"

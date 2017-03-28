@@ -17,3 +17,9 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    paypal_api_username: foo
+    paypal_api_password: bar
+    paypal_api_signature: baz
+
+    jms_payment_core_encryption_secret: ThisTokenIsNotSoSecretChangeIt
