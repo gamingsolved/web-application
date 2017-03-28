@@ -5,9 +5,11 @@ namespace AppBundle\Controller;
 use JMS\Payment\CoreBundle\Entity\PaymentInstruction;
 use JMS\Payment\CoreBundle\Plugin\Exception\Action\VisitUrl;
 use JMS\Payment\CoreBundle\Plugin\Exception\ActionRequiredException;
+use JMS\Payment\CoreBundle\PluginController\PluginControllerInterface;
 use JMS\Payment\CoreBundle\PluginController\Result;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\Payment\CoreBundle\Form\ChoosePaymentMethodType;
+use Symfony\Component\HttpFoundation\Request;
 
 class PaymentController extends Controller {
 
@@ -25,7 +27,7 @@ class PaymentController extends Controller {
         return $ppc->createPayment($instruction->getId(), $amount);
     }
 
-    public function newAction()
+    public function newAction(Request $request)
     {
         $config = [
             'paypal_express_checkout' => [
@@ -41,7 +43,10 @@ class PaymentController extends Controller {
             'predefined_data' => $config
         ]);
 
+        $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var PluginControllerInterface $ppc */
             $ppc = $this->get('payment.plugin_controller');
             $ppc->createPaymentInstruction($instruction = $form->getData());
 
