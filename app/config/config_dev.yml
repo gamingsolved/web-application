@@ -34,4 +34,4 @@ monolog:
 #    delivery_addresses: ['me@example.com']
 
 jms_payment_paypal:
-    debug: true # Use the Sandbox
+    debug: true # true = Use the Sandbox

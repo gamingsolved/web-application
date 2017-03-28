@@ -73,6 +73,9 @@ class PaymentController extends Controller {
                     }
                 }
             }
+
+            // Something went wrong
+            throw $result->getPluginException();
         }
 
         return $this->render(
