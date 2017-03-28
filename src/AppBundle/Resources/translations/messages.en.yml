@@ -10,6 +10,10 @@ logoutSuccessful:
 
 remoteDesktop:
     index:
+        negative_account_balance: Negative account balance!
+        your_current_account_balance_is: Your current account balance is
+        your_current_account_balance_is_only: Your current account balance is only
+        click_here_to_increase_your_balance: Click here to increase your balance
         headline: Your remote desktops
         no_remote_desktops_yet: You do not yet have any remote desktops.
         costs_per_hour: Costs per hour

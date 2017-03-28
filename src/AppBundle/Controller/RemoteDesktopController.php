@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Billing\AccountMovement;
+use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Factory\RemoteDesktopFactory;
 use AppBundle\Form\Type\RemoteDesktopType;
@@ -18,12 +20,22 @@ class RemoteDesktopController extends Controller
         $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        /** @var EntityRepository $rdRepo */
-        $rdRepo = $em->getRepository(RemoteDesktop::class);
+        /** @var EntityRepository $remoteDesktopRepo */
+        $remoteDesktopRepo = $em->getRepository(RemoteDesktop::class);
 
-        $remoteDesktops = $rdRepo->findBy(['user' => $user]);
+        $remoteDesktops = $remoteDesktopRepo->findBy(['user' => $user]);
 
-        return $this->render('AppBundle:remoteDesktop:index.html.twig', ['remoteDesktops' => $remoteDesktops]);
+        /** @var AccountMovementRepository $accountMovementRepo */
+        $accountMovementRepo = $em->getRepository(AccountMovement::class);
+
+        return $this->render(
+            'AppBundle:remoteDesktop:index.html.twig',
+            [
+                'remoteDesktops' => $remoteDesktops,
+                'currentAccountBalance' => $accountMovementRepo->getAccountBalanceForUser($user),
+                'currentAccountBalanceAbsolute' => abs($accountMovementRepo->getAccountBalanceForUser($user))
+            ]
+        );
     }
 
     public function newAction(Request $request)
