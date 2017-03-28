@@ -37,3 +37,8 @@ cloudinstances.new:
     path:     /remoteDesktops/{remoteDesktop}/cloudInstances/new
     defaults: { _controller: AppBundle:CloudInstance:new }
     methods:  [GET, POST]
+
+payment.new:
+    path:     /payment/new
+    defaults: { _controller: AppBundle:Payment:new }
+    methods:  [GET, POST]

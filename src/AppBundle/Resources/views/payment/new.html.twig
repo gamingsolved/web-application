@@ -1,0 +1,18 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>{{ "payment.new.form.headline"|trans }}</h1>
+                <div class="well">
+                    {{ form_start(form) }}
+                    {{ form_errors(form) }}
+                    {{ form_widget(form) }}
+                    <input type="submit" value="Load ${{ amount|number_format(2, '.', ',') }} into your account" />
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
