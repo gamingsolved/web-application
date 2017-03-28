@@ -7,6 +7,7 @@ use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +34,7 @@ class CloudInstanceController extends Controller
             $regionChoices[$region->getHumanName()] = $region->getInternalName();
         }
 
+        /** @var Form $form */
         $form = $this->createFormBuilder()
             ->add(
                 'region',

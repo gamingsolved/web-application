@@ -13,7 +13,8 @@ use JMS\Payment\CoreBundle\Form\ChoosePaymentMethodType;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-class PaymentController extends Controller {
+class PaymentController extends Controller
+{
 
     private function createPayment(PaymentInstruction $instruction)
     {
@@ -42,9 +43,6 @@ class PaymentController extends Controller {
      */
     public function newAction(Request $request, AccountMovement $accountMovement)
     {
-        $user = $this->getUser();
-        //$accountMovement = AccountMovement::createDepositMovement($user, '10.0');
-
         $predefined_data = [
             'paypal_express_checkout' => [
                 'return_url'=>
@@ -68,7 +66,6 @@ class PaymentController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $form->
 
             /** @var PluginControllerInterface $ppc */
             $ppc = $this->get('payment.plugin_controller');
