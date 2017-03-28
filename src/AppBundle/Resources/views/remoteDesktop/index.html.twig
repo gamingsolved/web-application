@@ -24,10 +24,28 @@
                             </div>
 
                             <div class="panel-body">
+
                                 {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
                                     <h3>
                                         <span class="label label-default">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.never_launched"|trans }}</span>
                                     </h3>
+                                {% else %}
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
+                                        <div class="well well-sm pull-right hourlycostsbox">
+                                            <small>
+                                                {{ "remoteDesktop.index.current_costs_per_hour"|trans }}
+                                                ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts }}
+                                            </small>
+                                        </div>
+                                    {% else %}
+                                        <div class="well well-sm pull-right hourlycostsbox">
+                                            <small>
+                                                {{ "remoteDesktop.index.costs_per_hour"|trans }}
+                                                ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts }}
+                                            </small>
+                                        </div>
+                                    {% endif %}
+                                    <hr>
                                 {% endif %}
 
                                 {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_BOOTING') %}
@@ -137,11 +155,11 @@
                             <div class="panel-footer">
 
                                 {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
-                                <a href="{{ path('cloudinstances.new', { 'remoteDesktop': remoteDesktop.id }) }}"
-                                   class="btn btn-default remotedesktop-action-button">
-                                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                                    {{ "remoteDesktop.index.launch_button"|trans }}
-                                </a>
+                                    <a href="{{ path('cloudinstances.new', { 'remoteDesktop': remoteDesktop.id }) }}"
+                                       class="btn btn-default remotedesktop-action-button">
+                                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                        {{ "remoteDesktop.index.launch_button"|trans }}
+                                    </a>
                                 {% endif %}
 
                                 {%
