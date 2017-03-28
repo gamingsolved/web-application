@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Billing\AccountMovement;
-use JMS\Payment\CoreBundle\Entity\PaymentInstruction;
 use JMS\Payment\CoreBundle\Plugin\Exception\Action\VisitUrl;
 use JMS\Payment\CoreBundle\Plugin\Exception\ActionRequiredException;
 use JMS\Payment\CoreBundle\PluginController\PluginControllerInterface;
@@ -12,11 +11,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\Payment\CoreBundle\Form\ChoosePaymentMethodType;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentController extends Controller
 {
 
-    private function createPayment(AccountMovement $accountMovement)
+    protected function createPayment(AccountMovement $accountMovement)
     {
         $instruction = $accountMovement->getPaymentInstruction();
         $pendingTransaction = $instruction->getPendingTransaction();
@@ -72,13 +72,18 @@ class PaymentController extends Controller
     {
         $predefined_data = [
             'paypal_express_checkout' => [
-                'return_url'=>
-                    'http://localhost:8000/en/accountMovement/'
-                    . $accountMovement->getId()
-                    . '/payment/finish?hashedAccountMovementId='
-                    . sha1($accountMovement->getId() . $this->container->getParameter('secret')),
+                'return_url' =>
+                    $this->generateUrl(
+                        'payment.finish',
+                        ['accountMovement' => $accountMovement->getId()],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
                 'cancel_url' =>
-                    'http://localhost:8000/en/accountMovement/'. $accountMovement->getId() .'/payment/cancel',
+                    $this->generateUrl(
+                        'payment.cancel',
+                        ['accountMovement' => $accountMovement->getId()],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
                 'useraction' =>
                     'commit',
             ],
@@ -87,6 +92,7 @@ class PaymentController extends Controller
         $form = $this->createForm(ChoosePaymentMethodType::class, null, [
             'amount'          => $accountMovement->getAmount(),
             'currency'        => 'USD',
+            'default_method'  => 'paypal_express_checkout',
             'predefined_data' => $predefined_data
         ]);
 
