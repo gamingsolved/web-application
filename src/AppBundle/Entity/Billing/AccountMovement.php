@@ -5,6 +5,8 @@ namespace AppBundle\Entity\Billing;
 use AppBundle\Entity\User;
 use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Payment\CoreBundle\Entity\PaymentInstruction;
+use JMS\Payment\CoreBundle\Model\PaymentInstructionInterface;
 
 /**
  * @ORM\Entity
@@ -57,6 +59,18 @@ class AccountMovement
      */
     protected $amount;
 
+    /**
+     * @var PaymentInstruction
+     * @ORM\OneToOne(targetEntity="JMS\Payment\CoreBundle\Entity\PaymentInstruction")
+     */
+    protected $paymentInstruction;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="payment_finished", type="boolean", nullable=true)
+     */
+    protected $paymentFinished;
+
     protected function __construct() {}
 
     public static function createDebitMovement(User $user, BillableItem $billableItem) : AccountMovement
@@ -74,5 +88,33 @@ class AccountMovement
         $accountMovement->datetimeOccured = DateTimeUtility::createDateTime();
 
         return $accountMovement;
+    }
+
+    public static function createDepositMovement(User $user, float $amount) : AccountMovement
+    {
+        $accountMovement = new AccountMovement();
+
+        $accountMovement->user = $user;
+        $accountMovement->movementType = self::MOVEMENT_TYPE_DEBIT;
+        $accountMovement->paymentFinished = false;
+        $accountMovement->amount = (float)$amount;
+        $accountMovement->datetimeOccured = DateTimeUtility::createDateTime();
+
+        return $accountMovement;
+    }
+
+    public function getId() : string
+    {
+        return $this->id;
+    }
+
+    public function setPaymentInstruction(PaymentInstruction $paymentInstruction)
+    {
+        $this->paymentInstruction = $paymentInstruction;
+    }
+
+    public function getPaymentInstruction(): PaymentInstruction
+    {
+        return $this->paymentInstruction;
     }
 }

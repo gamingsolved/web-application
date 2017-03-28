@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Billing\AccountMovement;
 use JMS\Payment\CoreBundle\Entity\PaymentInstruction;
 use JMS\Payment\CoreBundle\Plugin\Exception\Action\VisitUrl;
 use JMS\Payment\CoreBundle\Plugin\Exception\ActionRequiredException;
@@ -27,12 +28,20 @@ class PaymentController extends Controller {
         return $ppc->createPayment($instruction->getId(), $amount);
     }
 
+    public function finishAction(string $accountMovementId)
+    {
+
+    }
+
     public function newAction(Request $request)
     {
+        $user = $this->getUser();
+        $accountMovement = AccountMovement::createDepositMovement($user, '10.0');
+
         $config = [
             'paypal_express_checkout' => [
-                'return_url' => 'http://localhost:8000/return',
-                'cancel_url' => 'http://localhost:8000/cancel',
+                'return_url' => 'http://localhost:8000/en/payment/' . $accountMovement->getId() . '/finish',
+                'cancel_url' => 'http://localhost:8000/en/cancel/' . $accountMovement->getId() . '/cancel',
                 'useraction' => 'commit',
             ],
         ];
