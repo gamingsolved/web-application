@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Billing\AccountMovement;
+use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -57,17 +59,48 @@ class CloudInstanceController extends Controller
                 $cloudInstanceProvider->getRegionByInternalName($form->get('region')->getData())
             );
 
+            $hourlyCosts = $cloudInstance
+                ->getCloudInstanceProvider()
+                ->getHourlyCostsForFlavorImageRegionCombination(
+                    $cloudInstance->getFlavor(),
+                    $cloudInstance->getImage(),
+                    $cloudInstance->getRegion()
+                );
+
+            $em = $this->getDoctrine()->getManager();
+            /** @var AccountMovementRepository $accountMovementRepository */
+            $accountMovementRepository = $em->getRepository(AccountMovement::class);
+
+            if ($hourlyCosts > $accountMovementRepository->getAccountBalanceForUser($user)) {
+                return $this->render(
+                    'AppBundle:cloudInstance:new.html.twig',
+                    [
+                        'insufficientBalance' => true,
+                        'currentBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
+                        'hourlyCosts' => $hourlyCosts,
+                        'form' => $form->createView()
+                    ]
+                );
+            }
+
             $cloudInstance->setStatus(CloudInstance::STATUS_IN_USE);
             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH);
 
             $remoteDesktop->addCloudInstance($cloudInstance);
-            $em = $this->getDoctrine()->getManager();
             $em->persist($remoteDesktop);
             $em->flush();
 
             return $this->redirectToRoute('remotedesktops.index');
         } else {
-            return $this->render('AppBundle:cloudInstance:new.html.twig', ['form' => $form->createView()]);
+            return $this->render(
+                'AppBundle:cloudInstance:new.html.twig',
+                [
+                    'insufficientBalance' => false,
+                    'currentBalance' => null,
+                    'hourlyCosts' => null,
+                    'form' => $form->createView()
+                ]
+            );
         }
     }
 }

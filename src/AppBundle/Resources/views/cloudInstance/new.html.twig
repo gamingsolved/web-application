@@ -5,6 +5,30 @@
         <div class="row">
             <div class="col-xs-12">
                 <h1>{{ "cloudInstance.new.form.headline"|trans }}</h1>
+
+                {% if insufficientBalance %}
+                    <div class="alert alert-danger">
+                        <p>
+                            <strong>
+                                {{ "cloudInstance.new.insufficient_balance_message_one"|trans }}
+                            </strong>
+                        </p>
+                        <p>
+                            {{
+                            "cloudInstance.new.insufficient_balance_message_two"
+                            |trans(
+                            {
+                                "%currentBalance%": currentBalance|number_format(2, '.', ','),
+                                "%hourlyCosts%": hourlyCosts|number_format(2, '.', ',')
+                            }
+                            )
+                            }}
+                        </p>
+                        <hr>
+                        <a class="btn btn-primary" href="{{ path('accountmovements.new') }}">{{ "cloudInstance.new.click_here_to_increase_your_balance"|trans }}</a>
+                    </div>
+                {% endif %}
+
                 <div class="well">
                     {{ form_start(form) }}
                     {{ form_errors(form) }}
