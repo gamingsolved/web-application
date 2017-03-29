@@ -4,14 +4,26 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <h1>{{ "payment.new.form.headline"|trans }}</h1>
-                <div class="well">
-                    {{ form_start(form) }}
-                    {{ form_errors(form) }}
-                    {{ form_widget(form) }}
-                    <input type="submit" class="btn btn-primary" value="{{ "payment.new.form.submit_label" }}" />
-                    {{ form_end(form) }}
-                </div>
+
+                {% if accessDenied %}
+
+                    <div class="alert alert-danger">
+                        {{ "payment.finish.accessDenied_message"|trans }}
+                    </div>
+
+                {% else %}
+
+                    <h1>{{ "payment.new.form.headline"|trans }}</h1>
+                    <div class="well">
+                        {{ form_start(form) }}
+                        {{ form_errors(form) }}
+                        {{ form_widget(form) }}
+                        <input type="submit" class="btn btn-primary" value="{{ "payment.new.form.submit_label" }}" />
+                        {{ form_end(form) }}
+                    </div>
+
+                {% endif %}
+
             </div>
         </div>
     </div>

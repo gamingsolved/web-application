@@ -137,6 +137,19 @@ class PaymentController extends Controller
      */
     public function newAction(Request $request, AccountMovement $accountMovement)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($accountMovement->getUser()->getId() !== $user->getId()) {
+            return $this->render(
+                'AppBundle:payment:new.html.twig',
+                [
+                    'accessDenied' => true,
+                    'form' => null
+                ]
+            );
+        }
+
         $predefined_data = [
             'paypal_express_checkout' => [
                 'return_url' =>
@@ -200,7 +213,10 @@ class PaymentController extends Controller
 
         return $this->render(
             'AppBundle:payment:new.html.twig',
-            ['form' => $form->createView()]
+            [
+                'accessDenied' => false,
+                'form' => $form->createView()
+            ]
         );
     }
 
