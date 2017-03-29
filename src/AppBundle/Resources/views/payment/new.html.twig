@@ -21,15 +21,17 @@
 
                     <h1>{{ "payment.new.form.headline"|trans }}</h1>
 
-
                     <div class="well">
                         <p>
-                            {{ "payment.new.form.description"|trans({"%amount%": amount|number_format(2, '.', ',')}) }}
+                            {{ "payment.new.form.description_one"|trans }}
+                        </p>
+                        <p>
+                            <strong>
+                                {{ "payment.new.form.description_two"|trans({"%amount%": amount|number_format(2, '.', ',')}) }}
+                            </strong>
                         </p>
 
-                        <p style="margin-top: 32px; margin-bottom: 32px;">
-                            <img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" style="margin-right:7px;">
-                        </p>
+                        <hr>
 
                         {{ form_start(form) }}
                         {{ form_errors(form) }}
@@ -37,6 +39,11 @@
                         <input type="submit" class="btn btn-primary" value="{{ "payment.new.form.submit_label"|trans }}" />
                         {{ form_end(form) }}
                     </div>
+
+                    <div class="pull-right">
+                        <img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" style="margin-right:7px;">
+                    </div>
+
 
                 {% endif %}
 

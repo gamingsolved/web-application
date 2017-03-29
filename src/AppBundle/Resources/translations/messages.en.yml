@@ -72,7 +72,8 @@ payment:
     new:
         form:
             headline: Initiate payment transaction
-            description: In order to successfully increase your balance by $%amount%, you need to pay via PayPal.
+            description_one: In order to successfully increase your balance, you need to pay via PayPal.
+            description_two: When you return from the PayPal site, the amount of $%amount% is immediately added to your balance.
             submit_label: Open the PayPal website now
 
     finish:
@@ -88,4 +89,5 @@ accountMovement:
             headline: Increase your balance
             amount_label: Please choose the amount to use for increasing your balance:
             submit_label: Continue to payment
+        current_balance: Your current balance is $%balance%.
         back_to_remotedesktops: Back to your remote desktops

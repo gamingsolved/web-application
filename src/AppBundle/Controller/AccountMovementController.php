@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Billing\AccountMovement;
+use AppBundle\Entity\Billing\AccountMovementRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -13,6 +14,8 @@ class AccountMovementController extends Controller
 {
     public function newDepositAction(Request $request)
     {
+        $user = $this->getUser();
+
         /** @var Form $form */
         $form = $this
             ->createFormBuilder()
@@ -40,11 +43,12 @@ class AccountMovementController extends Controller
 
         $form->handleRequest($request);
 
+        $em = $this->getDoctrine()->getManager();
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $user = $this->getUser();
             $accountMovement = AccountMovement::createDepositMovement($user, (float)$form->get('amount')->getData());
-            $em = $this->getDoctrine()->getManager();
             $em->persist($accountMovement);
             $em->flush();
 
@@ -52,10 +56,14 @@ class AccountMovementController extends Controller
 
         } else {
 
+            /** @var AccountMovementRepository $accountMovementRepository */
+            $accountMovementRepository = $em->getRepository(AccountMovement::class);
+
             return $this->render(
                 'AppBundle:accountMovement:newDeposit.html.twig',
                 [
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
+                    'balance' => $accountMovementRepository->getAccountBalanceForUser($user)
                 ]
             );
 

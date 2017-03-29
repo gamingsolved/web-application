@@ -6,6 +6,11 @@
             <div class="col-xs-12">
                 <h1>{{ "accountMovement.newDeposit.form.headline"|trans }}</h1>
                 <div class="well">
+
+                    <div class="alert alert-info">
+                        {{ "accountMovement.newDeposit.current_balance"|trans({"%balance%": balance|number_format(2, '.', ',')}) }}
+                    </div>
+
                     {{ form_start(form) }}
                     {{ form_errors(form) }}
                     {{ form_widget(form) }}
