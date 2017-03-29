@@ -72,4 +72,5 @@ payment:
     finish:
         success_message: The amount of $%amount% has been added to your balance.
         cancel_message: The transaction was canceled, and the amount of $%amount% has NOT been added to your balance!
+        current_balance: Your current balance is $%balance.
         accessDenied_message: You are not allowed to access this page.

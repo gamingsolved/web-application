@@ -14,10 +14,14 @@
                     {% if success %}
                         <div class="alert alert-success">
                             {{ "payment.finish.success_message"|trans({"%amount%": amount}) }}
+                            <br>
+                            {{ "payment.finish.current_balance"|trans({"%balance%": balance}) }}
                         </div>
                     {% else %}
                         <div class="alert alert-warning">
                             {{ "payment.finish.cancel_message"|trans({"%amount%": amount}) }}
+                            <br>
+                            {{ "payment.finish.current_balance"|trans({"%balance%": balance}) }}
                         </div>
                     {% endif %}
 

@@ -54,11 +54,6 @@ class PaymentController extends Controller
             );
         }
 
-        $em = $this->getDoctrine()->getManager();
-        /** @var AccountMovementRepository $accountMovementRepository */
-        $accountMovementRepository = $em->getRepository(AccountMovement::class);
-
-
         $payment = $this->createPayment($accountMovement);
 
         /** @var PluginControllerInterface $ppc */
@@ -66,6 +61,10 @@ class PaymentController extends Controller
         $result = $ppc->approveAndDeposit($payment->getId(), $payment->getTargetAmount());
 
         if ($result->getStatus() === Result::STATUS_SUCCESS) {
+
+            $em = $this->getDoctrine()->getManager();
+            /** @var AccountMovementRepository $accountMovementRepository */
+            $accountMovementRepository = $em->getRepository(AccountMovement::class);
 
             $accountMovement->setPaymentFinished(true);
             $em->persist($accountMovement);
@@ -103,9 +102,33 @@ class PaymentController extends Controller
      */
     public function cancelAction(Request $request, AccountMovement $accountMovement)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($accountMovement->getUser()->getId() !== $user->getId()) {
+            return $this->render(
+                'AppBundle:payment:finish.html.twig',
+                [
+                    'success' => false,
+                    'accessDenied' => true,
+                    'amount' => null,
+                    'balance' => null
+                ]
+            );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        /** @var AccountMovementRepository $accountMovementRepository */
+        $accountMovementRepository = $em->getRepository(AccountMovement::class);
+
         return $this->render(
             'AppBundle:payment:finish.html.twig',
-            ['success' => false, 'accessDenied' => false, 'amount' => $accountMovement->getAmount()]
+            [
+                'success' => false,
+                'accessDenied' => false,
+                'amount' => $accountMovement->getAmount(),
+                'balance' => $accountMovementRepository->getAccountBalanceForUser($user)
+            ]
         );
     }
 
