@@ -47,3 +47,4 @@ security:
         - { path: ^/[a-z][a-z]/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/[a-z][a-z]/administration, role: ROLE_ADMIN }
         - { path: ^/[a-z][a-z]/remoteDesktops, role: ROLE_USER }
+        - { path: ^/[a-z][a-z]/accountMovements, role: ROLE_USER }

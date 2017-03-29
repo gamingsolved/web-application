@@ -69,8 +69,21 @@ cloudprovider:
             us-east-1: US East
 
 payment:
+    new:
+        form:
+            headline: Initiate payment transaction
+            submit_label: Finish your transaction via PayPal
+
     finish:
         success_message: The amount of $%amount% has been added to your balance.
         cancel_message: The transaction was canceled, and the amount of $%amount% has NOT been added to your balance!
-        current_balance: Your current balance is $%balance.
+        current_balance: Your current balance is $%balance%.
         accessDenied_message: You are not allowed to access this page.
+
+accountMovement:
+    newDeposit:
+        form:
+            headline: Increase your balance
+            amount_label: Please choose the amount to use for increasing your balance:
+            submit_label: Continue to payment
+        back_to_remotedesktops: Back to your remote desktops

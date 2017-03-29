@@ -26,13 +26,13 @@ class AccountMovementController extends Controller
                     ],
                     'expanded' => true,
                     'multiple' => false,
-                    'label' => 'accountmovement.new.form.amount_label'
+                    'label' => 'accountMovement.newDeposit.form.amount_label'
                 ]
             )
             ->add(
                 'send',
                 SubmitType::class,
-                ['label' => 'accountmovement.new.form.submit_label', 'attr' => ['class' => 'btn-primary']]
+                ['label' => 'accountMovement.newDeposit.form.submit_label', 'attr' => ['class' => 'btn-primary']]
             )
             ->getForm();
 
