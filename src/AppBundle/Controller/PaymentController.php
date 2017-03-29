@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Billing\AccountMovement;
+use AppBundle\Entity\Billing\AccountMovementRepository;
+use AppBundle\Entity\User;
 use JMS\Payment\CoreBundle\Plugin\Exception\Action\VisitUrl;
 use JMS\Payment\CoreBundle\Plugin\Exception\ActionRequiredException;
 use JMS\Payment\CoreBundle\PluginController\PluginControllerInterface;
@@ -34,8 +36,29 @@ class PaymentController extends Controller
     /**
      * @ParamConverter("accountMovement", class="AppBundle:Billing\AccountMovement")
      */
-    public function finishAction(AccountMovement $accountMovement)
+    public function finishAction(Request $request, AccountMovement $accountMovement)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (   ($request->query->get('accountMovementIdHash') !== sha1($accountMovement->getId() . $this->getParameter('secret')))
+            || ($accountMovement->getUser()->getId() !== $user->getId())) {
+            return $this->render(
+                'AppBundle:payment:finish.html.twig',
+                [
+                    'success' => false,
+                    'accessDenied' => true,
+                    'amount' => null,
+                    'balance' => null
+                ]
+            );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        /** @var AccountMovementRepository $accountMovementRepository */
+        $accountMovementRepository = $em->getRepository(AccountMovement::class);
+
+
         $payment = $this->createPayment($accountMovement);
 
         /** @var PluginControllerInterface $ppc */
@@ -43,9 +66,19 @@ class PaymentController extends Controller
         $result = $ppc->approveAndDeposit($payment->getId(), $payment->getTargetAmount());
 
         if ($result->getStatus() === Result::STATUS_SUCCESS) {
+
+            $accountMovement->setPaymentFinished(true);
+            $em->persist($accountMovement);
+            $em->flush();
+
             return $this->render(
                 'AppBundle:payment:finish.html.twig',
-                ['success' => true, 'amount' => $accountMovement->getAmount()]
+                [
+                    'success' => true,
+                    'accessDenied' => false,
+                    'amount' => $accountMovement->getAmount(),
+                    'balance' => $accountMovementRepository->getAccountBalanceForUser($user)
+                ]
             );
         }
 
@@ -68,6 +101,17 @@ class PaymentController extends Controller
     /**
      * @ParamConverter("accountMovement", class="AppBundle:Billing\AccountMovement")
      */
+    public function cancelAction(Request $request, AccountMovement $accountMovement)
+    {
+        return $this->render(
+            'AppBundle:payment:finish.html.twig',
+            ['success' => false, 'accessDenied' => false, 'amount' => $accountMovement->getAmount()]
+        );
+    }
+
+    /**
+     * @ParamConverter("accountMovement", class="AppBundle:Billing\AccountMovement")
+     */
     public function newAction(Request $request, AccountMovement $accountMovement)
     {
         $predefined_data = [
@@ -77,7 +121,7 @@ class PaymentController extends Controller
                         'payment.finish',
                         ['accountMovement' => $accountMovement->getId()],
                         UrlGeneratorInterface::ABSOLUTE_URL
-                    ),
+                    ) . '?accountMovementIdHash=' . sha1($accountMovement->getId() . $this->getParameter('secret')),
                 'cancel_url' =>
                     $this->generateUrl(
                         'payment.cancel',

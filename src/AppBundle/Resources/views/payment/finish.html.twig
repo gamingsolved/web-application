@@ -5,14 +5,22 @@
         <div class="row">
             <div class="col-xs-12">
 
-                {% if success %}
-                    <div class="alert alert-success">
-                        {{ "payment.finish.success_message"|trans({'%amount%': amount}) }}
+                {% if accessDenied %}
+                    <div class="alert alert-danger">
+                        {{ "payment.finish.accessDenied_message"|trans }}
                     </div>
                 {% else %}
-                    <div class="alert alert-danger">
 
-                    </div>
+                    {% if success %}
+                        <div class="alert alert-success">
+                            {{ "payment.finish.success_message"|trans({"%amount%": amount}) }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            {{ "payment.finish.cancel_message"|trans({"%amount%": amount}) }}
+                        </div>
+                    {% endif %}
+
                 {% endif %}
             </div>
         </div>

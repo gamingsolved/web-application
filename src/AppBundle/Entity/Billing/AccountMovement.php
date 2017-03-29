@@ -108,6 +108,11 @@ class AccountMovement
         return $this->id;
     }
 
+    public function getUser() : User
+    {
+        return $this->user;
+    }
+
     public function getAmount() : float
     {
         return $this->amount;
@@ -116,6 +121,11 @@ class AccountMovement
     public function setPaymentInstruction(PaymentInstruction $paymentInstruction)
     {
         $this->paymentInstruction = $paymentInstruction;
+    }
+
+    public function setPaymentFinished(bool $paymentFinished)
+    {
+        $this->paymentFinished = $paymentFinished;
     }
 
     public function getPaymentInstruction(): PaymentInstruction

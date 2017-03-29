@@ -13,17 +13,17 @@
                     <div class="alert alert-danger small" role="alert">
                         <strong>{{ "remoteDesktop.index.negative_account_balance"|trans }}</strong>
                         {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>-${{ currentAccountBalanceAbsolute|number_format(2, '.', ',') }}</strong>.
-                        <a href="#">{{ "remoteDesktop.index.click_here_to_increase_your_balance"|trans }}</a>.
+                        <a href="{{ path('accountmovements.new') }}">{{ "remoteDesktop.index.click_here_to_increase_your_balance"|trans }}</a>.
                     </div>
                 {% elseif currentAccountBalance < 5.0 %}
                     <div class="alert alert-warning small" role="alert">
                         {{ "remoteDesktop.index.your_current_account_balance_is_only"|trans }} <strong>${{ currentAccountBalance|number_format(2, '.', ',') }}</strong>.
-                        <a href="#">{{ "remoteDesktop.index.click_here_to_increase_your_balance"|trans }}</a>.
+                        <a href="{{ path('accountmovements.new') }}">{{ "remoteDesktop.index.click_here_to_increase_your_balance"|trans }}</a>.
                     </div>
                 {% else %}
                     <div class="alert alert-success small" role="alert">
                         {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>${{ currentAccountBalance|number_format(2, '.', ',') }}</strong>.
-                        <a href="#">{{ "remoteDesktop.index.click_here_to_increase_your_balance"|trans }}</a>.
+                        <a href="{{ path('accountmovements.new') }}">{{ "remoteDesktop.index.click_here_to_increase_your_balance"|trans }}</a>.
                     </div>
                 {% endif %}
 

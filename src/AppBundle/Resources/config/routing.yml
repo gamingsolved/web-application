@@ -38,22 +38,22 @@ cloudinstances.new:
     defaults: { _controller: AppBundle:CloudInstance:new }
     methods:  [GET, POST]
 
-accountmovement.new:
-    path:     /accountMovement/newDeposit
+accountmovements.new:
+    path:     /accountMovements/newDeposit
     defaults: { _controller: AppBundle:AccountMovement:newDeposit }
     methods:  [GET, POST]
 
 payment.new:
-    path:     /accountMovement/{accountMovement}/payment/new
+    path:     /accountMovements/{accountMovement}/payment/new
     defaults: { _controller: AppBundle:Payment:new }
     methods:  [GET, POST]
 
 payment.finish:
-    path:     /accountMovement/{accountMovement}/payment/finish
+    path:     /accountMovements/{accountMovement}/payment/finish
     defaults: { _controller: AppBundle:Payment:finish }
     methods:  [GET]
 
 payment.cancel:
-    path:     /accountMovement/{accountMovement}/payment/cancel
+    path:     /accountMovements/{accountMovement}/payment/cancel
     defaults: { _controller: AppBundle:Payment:cancel }
     methods:  [GET]
