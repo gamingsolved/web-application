@@ -145,6 +145,7 @@ class PaymentController extends Controller
                 'AppBundle:payment:new.html.twig',
                 [
                     'accessDenied' => true,
+                    'amount' => null,
                     'form' => null
                 ]
             );
@@ -215,6 +216,7 @@ class PaymentController extends Controller
             'AppBundle:payment:new.html.twig',
             [
                 'accessDenied' => false,
+                'amount' => $accountMovement->getAmount(),
                 'form' => $form->createView()
             ]
         );

@@ -22,7 +22,9 @@ class AccountMovementController extends Controller
                 [
                     'choices' => [
                         '$5.00' => '5.0',
-                        '$10.00' => '10.0'
+                        '$10.00' => '10.0',
+                        '$25.00' => '25.0',
+                        '$50.00' => '50.0'
                     ],
                     'expanded' => true,
                     'multiple' => false,
@@ -52,7 +54,9 @@ class AccountMovementController extends Controller
 
             return $this->render(
                 'AppBundle:accountMovement:newDeposit.html.twig',
-                ['form' => $form->createView()]
+                [
+                    'form' => $form->createView()
+                ]
             );
 
         }

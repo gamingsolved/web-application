@@ -13,12 +13,28 @@
 
                 {% else %}
 
+                    <style>
+                        #jms_choose_payment_method {
+                            display: none;
+                        }
+                    </style>
+
                     <h1>{{ "payment.new.form.headline"|trans }}</h1>
+
+
                     <div class="well">
+                        <p>
+                            {{ "payment.new.form.description"|trans({"%amount%": amount|number_format(2, '.', ',')}) }}
+                        </p>
+
+                        <p style="margin-top: 32px; margin-bottom: 32px;">
+                            <img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" style="margin-right:7px;">
+                        </p>
+
                         {{ form_start(form) }}
                         {{ form_errors(form) }}
                         {{ form_widget(form) }}
-                        <input type="submit" class="btn btn-primary" value="{{ "payment.new.form.submit_label" }}" />
+                        <input type="submit" class="btn btn-primary" value="{{ "payment.new.form.submit_label"|trans }}" />
                         {{ form_end(form) }}
                     </div>
 

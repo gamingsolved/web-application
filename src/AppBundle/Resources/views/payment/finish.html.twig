@@ -13,19 +13,25 @@
 
                     {% if success %}
                         <div class="alert alert-success">
-                            {{ "payment.finish.success_message"|trans({"%amount%": amount}) }}
-                            <br>
-                            {{ "payment.finish.current_balance"|trans({"%balance%": balance}) }}
+                            <strong>{{ "payment.finish.success_message"|trans({"%amount%": amount|number_format(2, '.', ',')}) }}</strong>
+                            <hr>
+                            {{ "payment.finish.current_balance"|trans({"%balance%": balance|number_format(2, '.', ',')}) }}
                         </div>
                     {% else %}
                         <div class="alert alert-warning">
-                            {{ "payment.finish.cancel_message"|trans({"%amount%": amount}) }}
-                            <br>
-                            {{ "payment.finish.current_balance"|trans({"%balance%": balance}) }}
+                            <strong>{{ "payment.finish.cancel_message"|trans({"%amount%": amount|number_format(2, '.', ',')}) }}</strong>
+                            <hr>
+                            {{ "payment.finish.current_balance"|trans({"%balance%": balance|number_format(2, '.', ',')}) }}
                         </div>
                     {% endif %}
 
                 {% endif %}
+
+                <a href="{{ path('remotedesktops.index') }}" class="btn btn-default">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    {{ "payment.finish.back_to_remotedesktops"|trans }}
+                </a>
+
             </div>
         </div>
     </div>
