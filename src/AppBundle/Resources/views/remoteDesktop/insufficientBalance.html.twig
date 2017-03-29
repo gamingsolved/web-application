@@ -16,11 +16,15 @@
                         "remoteDesktop.insufficientBalance.insufficient_balance_message_two"
                         |trans(
                         {
-                            "%currentBalance%": currentBalance|number_format(2, '.', ','),
                             "%hourlyCosts%": hourlyCosts|number_format(2, '.', ',')
                         }
                         )
                         }}
+                        {% if currentBalance < 0.0 %}
+                            <strong>-${{ currentBalanceAbsolute|number_format(2, '.', ',') }}</strong>.
+                        {% else %}
+                            <strong>${{ currentBalance|number_format(2, '.', ',') }}</strong>.
+                        {% endif %}
                     </p>
                     <hr>
                     <a class="btn btn-primary" href="{{ path('accountmovements.new') }}">{{ "remoteDesktop.insufficientBalance.click_here_to_increase_your_balance"|trans }}</a>

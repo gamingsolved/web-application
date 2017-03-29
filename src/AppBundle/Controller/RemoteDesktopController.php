@@ -99,7 +99,7 @@ class RemoteDesktopController extends Controller
                 [
                     'hourlyCosts' => $remoteDesktop->getHourlyCosts(),
                     'currentBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
-                    'currentAccountBalanceAbsolute' => abs($accountMovementRepository->getAccountBalanceForUser($user))
+                    'currentBalanceAbsolute' => abs($accountMovementRepository->getAccountBalanceForUser($user))
                 ]
             );
         }

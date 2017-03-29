@@ -56,7 +56,7 @@ remoteDesktop:
     insufficientBalance:
         headline: Insufficient balance
         insufficient_balance_message_one: Your account balance is too low to start this remote desktop.
-        insufficient_balance_message_two: Running this remote desktop costs $%hourlyCosts% per hour, but your current balance is $%currentBalance%.
+        insufficient_balance_message_two: Running this remote desktop costs $%hourlyCosts% per hour, but your current balance is
         click_here_to_increase_your_balance: Click here to increase your balance now
 
 
@@ -69,7 +69,7 @@ cloudInstance:
             submit_label: Launch now
         launch_later_button: Launch later
         insufficient_balance_message_one: Your account balance is too low to launch this remote desktop.
-        insufficient_balance_message_two: Running this remote desktop costs $%hourlyCosts% per hour, but your current balance is $%currentBalance%.
+        insufficient_balance_message_two: Running this remote desktop costs $%hourlyCosts% per hour, but your current balance is
         click_here_to_increase_your_balance: Click here to increase your balance now
 
 cloudprovider:

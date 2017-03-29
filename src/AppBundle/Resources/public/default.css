@@ -166,6 +166,11 @@ section:empty {
     margin-bottom: 2px;
 }
 
+div.alert hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 /* vietnamese */
 @font-face {
     font-family: 'Nunito';
