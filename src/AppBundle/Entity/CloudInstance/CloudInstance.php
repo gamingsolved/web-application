@@ -14,6 +14,8 @@ interface CloudInstanceInterface
 
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface;
 
+    public function getHourlyCosts() : float;
+
     public function setStatus(int $status);
     public function getStatus() : int;
 
@@ -30,6 +32,7 @@ interface CloudInstanceInterface
     public function getRegion() : Region;
 
     public function setRemoteDesktop(RemoteDesktop $remoteDesktop);
+    public function getRemoteDesktop() : RemoteDesktop;
 
     public function setAdminPassword(string $password);
     public function getAdminPassword() : string;

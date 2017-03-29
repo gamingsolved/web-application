@@ -102,9 +102,25 @@ class AwsCloudInstance extends CloudInstance
         $this->remoteDesktop = $remoteDesktop;
     }
 
+    public function getRemoteDesktop(): RemoteDesktop
+    {
+        return $this->remoteDesktop;
+    }
+
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface
     {
         return new AwsCloudInstanceProvider();
+    }
+
+    public function getHourlyCosts(): float
+    {
+        return $this
+            ->getCloudInstanceProvider()
+            ->getHourlyCostsForFlavorImageRegionCombination(
+                $this->getFlavor(),
+                $this->getImage(),
+                $this->getRegion()
+            );
     }
 
     public function setStatus(int $status)

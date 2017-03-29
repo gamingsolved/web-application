@@ -305,14 +305,7 @@ class RemoteDesktop
 
     public function getHourlyCosts() : float
     {
-        $activeCloudInstance = $this->getActiveCloudInstance();
-        return $activeCloudInstance
-            ->getCloudInstanceProvider()
-            ->getHourlyCostsForFlavorImageRegionCombination(
-                $activeCloudInstance->getFlavor(),
-                $activeCloudInstance->getImage(),
-                $activeCloudInstance->getRegion()
-            );
+        return $this->getActiveCloudInstance()->getHourlyCosts();
     }
 
     /**

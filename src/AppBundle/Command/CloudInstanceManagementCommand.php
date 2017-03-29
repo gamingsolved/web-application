@@ -4,6 +4,8 @@ namespace AppBundle\Command;
 
 use AppBundle\Coordinator\CloudInstance\AwsCloudInstanceCoordinator;
 use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinator;
+use AppBundle\Entity\Billing\AccountMovement;
+use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use Doctrine\ORM\EntityManager;
@@ -62,6 +64,9 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
+        /** @var AccountMovementRepository $accountMovementRepository */
+        $accountMovementRepository = $em->getRepository(AccountMovement::class);
+
         foreach (self::CLOUD_INSTANCE_CLASSES as $cloudInstanceClass) {
             $output->writeln('Attempting to handle cloud instances of class: ' . $cloudInstanceClass);
 
@@ -80,6 +85,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 );
 
                 $output->writeln('Found cloud instance ' . $cloudInstance->getId());
+                $output->writeln('Owner: ' . $cloudInstance->getRemoteDesktop()->getUser()->getUsername());
                 $output->writeln('Current run status: ' . CloudInstance::getRunstatusName($cloudInstance->getRunstatus()));
                 $output->writeln('Flavor: ' . $cloudInstance->getFlavor()->getInternalName());
                 $output->writeln('Image: ' . $cloudInstance->getImage()->getInternalName());
@@ -119,14 +125,26 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 // Launching
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
-                    $output->writeln('Action: launching the cloud instance');
-                    if ($cloudInstanceCoordinator->cloudInstanceWasLaunched($cloudInstance)) {
-                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_LAUNCHING);
-                        $em->persist($cloudInstance);
-                        $em->flush();
-                        $output->writeln('Action result: success');
+
+                    $hourlyCosts = $cloudInstance->getHourlyCosts();
+                    $accountBalance = $accountMovementRepository
+                        ->getAccountBalanceForUser(
+                            $cloudInstance->getRemoteDesktop()->getUser()
+                        );
+
+                    if ($hourlyCosts > $accountBalance) {
+                        $output->writeln('Action: would launch the cloud instance, but owner has insufficient balance');
+                        $output->writeln('Hourly costs would be ' . $hourlyCosts . ', balance is only ' . $accountBalance);
                     } else {
-                        $output->writeln('Action result: failure');
+                        $output->writeln('Action: launching the cloud instance');
+                        if ($cloudInstanceCoordinator->cloudInstanceWasLaunched($cloudInstance)) {
+                            $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_LAUNCHING);
+                            $em->persist($cloudInstance);
+                            $em->flush();
+                            $output->writeln('Action result: success');
+                        } else {
+                            $output->writeln('Action result: failure');
+                        }
                     }
                 }
 
@@ -161,14 +179,26 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 // Starting
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_START) {
-                    $output->writeln('Action: asking the cloud instance to start');
-                    if ($cloudInstanceCoordinator->cloudInstanceWasAskedToStart($cloudInstance)) {
-                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STARTING);
-                        $em->persist($cloudInstance);
-                        $em->flush();
-                        $output->writeln('Action result: success');
+
+                    $hourlyCosts = $cloudInstance->getHourlyCosts();
+                    $accountBalance = $accountMovementRepository
+                        ->getAccountBalanceForUser(
+                            $cloudInstance->getRemoteDesktop()->getUser()
+                        );
+
+                    if ($hourlyCosts > $accountBalance) {
+                        $output->writeln('Action: would start the cloud instance, but owner has insufficient balance');
+                        $output->writeln('Hourly costs would be ' . $hourlyCosts . ', balance is only ' . $accountBalance);
                     } else {
-                        $output->writeln('Action result: failure');
+                        $output->writeln('Action: asking the cloud instance to start');
+                        if ($cloudInstanceCoordinator->cloudInstanceWasAskedToStart($cloudInstance)) {
+                            $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STARTING);
+                            $em->persist($cloudInstance);
+                            $em->flush();
+                            $output->writeln('Action result: success');
+                        } else {
+                            $output->writeln('Action result: failure');
+                        }
                     }
                 }
 
