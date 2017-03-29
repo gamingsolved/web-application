@@ -1,0 +1,31 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>{{ "remoteDesktop.insufficientBalance.headline"|trans }}</h1>
+                <div class="alert alert-danger">
+                    <p>
+                        <strong>
+                            {{ "remoteDesktop.insufficientBalance.insufficient_balance_message_one"|trans }}
+                        </strong>
+                    </p>
+                    <p>
+                        {{
+                        "remoteDesktop.insufficientBalance.insufficient_balance_message_two"
+                        |trans(
+                        {
+                            "%currentBalance%": currentBalance|number_format(2, '.', ','),
+                            "%hourlyCosts%": hourlyCosts|number_format(2, '.', ',')
+                        }
+                        )
+                        }}
+                    </p>
+                    <hr>
+                    <a class="btn btn-primary" href="{{ path('accountmovements.new') }}">{{ "remoteDesktop.insufficientBalance.click_here_to_increase_your_balance"|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

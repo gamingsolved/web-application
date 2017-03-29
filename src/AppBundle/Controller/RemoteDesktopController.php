@@ -89,6 +89,20 @@ class RemoteDesktopController extends Controller
             return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
         }
 
+        $em = $this->getDoctrine()->getManager();
+        /** @var AccountMovementRepository $accountMovementRepository */
+        $accountMovementRepository = $em->getRepository(AccountMovement::class);
+
+        if ($remoteDesktop->getHourlyCosts() > $accountMovementRepository->getAccountBalanceForUser($user)) {
+            return $this->render(
+                'AppBundle:remoteDesktop:insufficientBalance.html.twig',
+                [
+                    'hourlyCosts' => $remoteDesktop->getHourlyCosts(),
+                    'currentBalance' => $accountMovementRepository->getAccountBalanceForUser($user)
+                ]
+            );
+        }
+
         $remoteDesktop->scheduleForStart();
 
         $em = $this->getDoctrine()->getManager();
