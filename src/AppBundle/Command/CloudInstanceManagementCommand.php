@@ -94,6 +94,25 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 $output->writeln('Admin password: ' . $cloudInstance->getAdminPassword());
 
 
+                // Running
+
+                if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_RUNNING) {
+                    $accountBalance = $accountMovementRepository
+                        ->getAccountBalanceForUser(
+                            $cloudInstance->getRemoteDesktop()->getUser()
+                        );
+
+                    // If a user had $1.99 of balance and started a desktop, their balance
+                    // is now $0.00 - don't kill instances in this case!
+                    // But if they have negative balance, there is no reason to keep
+                    // the instances running.
+                    if ($accountBalance < 0.0) {
+                        $output->writeln('Action: Scheduling stop, because at ' . $accountBalance . ', owner balance is below $0.00!');
+                        $cloudInstance->getRemoteDesktop()->scheduleForStop();
+                    }
+                }
+
+
                 // Launching and Starting
 
                 if (   $cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING
