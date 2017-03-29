@@ -2,7 +2,9 @@
 
 namespace Tests\Helpers;
 
+use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\User;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -57,6 +59,18 @@ trait Helpers
         /** @var User $user */
         $user = $um->findUserByEmail('testuser@example.com');
         $client->request('GET', '/en/register/confirm/' . $user->getConfirmationToken());
+
+        // We need to give this user a certain balance in order to allow him launching instances
+        /** @var EntityManager $em */
+        $em = $container->get('doctrine.orm.entity_manager');
+
+        /** @var User $user */
+        $user = $um->findUserByEmail('testuser@example.com');
+
+        $accountMovement = AccountMovement::createDepositMovement($user, 100.0);
+        $accountMovement->setPaymentFinished(true);
+        $em->persist($accountMovement);
+        $em->flush();
 
         return $client;
     }

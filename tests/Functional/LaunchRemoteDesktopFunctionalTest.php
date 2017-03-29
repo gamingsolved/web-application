@@ -156,7 +156,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $accountMovementRepo = $em->getRepository(AccountMovement::class);
 
         $this->assertSame(
-            -1.99,
+            98.01,
             $accountMovementRepo->getAccountBalanceForUser($remoteDesktop->getUser())
         );
 
