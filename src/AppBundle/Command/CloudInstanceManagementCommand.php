@@ -15,6 +15,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+date_default_timezone_set('UTC');
+
 class CloudInstanceManagementCommand extends ContainerAwareCommand
 {
     const CLOUD_INSTANCE_CLASSES = [AwsCloudInstance::class];
