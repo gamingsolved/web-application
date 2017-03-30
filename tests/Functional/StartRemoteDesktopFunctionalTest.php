@@ -113,4 +113,37 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('Stop this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
     }
 
+    public function testCannotStartRemoteDesktopIfBalanceTooLow()
+    {
+        $client = (new StopRemoteDesktopFunctionalTest())->testStopRemoteDesktop();
+
+        $this->resetAccountBalanceForTestuser($client);
+
+        $crawler = $client->request('GET', '/en/remoteDesktops/');
+
+        $link = $crawler->selectLink('Start this remote desktop')->first()->link();
+
+        $crawler = $client->click($link);
+
+        $this->assertContains(
+            'Your account balance is too low to use this remote desktop.',
+            $crawler->filter('div.alert')->first()->text()
+        );
+
+        $this->assertContains(
+            'Running this remote desktop costs $1.99 per hour, but your current balance is',
+            $crawler->filter('div.alert')->first()->text()
+        );
+
+        $this->assertContains(
+            '$0.00.',
+            $crawler->filter('div.alert')->first()->text()
+        );
+
+        $this->assertContains(
+            'Click here to increase your balance now',
+            $crawler->filter('a.btn')->first()->text()
+        );
+    }
+
 }

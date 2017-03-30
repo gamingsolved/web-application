@@ -37,4 +37,17 @@ class ShowEmptyRemoteDesktopsOverviewFunctionalTest extends WebTestCase
         $this->assertContains('You do not yet have any remote desktops.', $crawler->filter('div.alert-info')->text());
     }
 
+    public function testAccountBalanceInfo()
+    {
+        $this->resetDatabase();
+
+        $client = $this->getClientThatRegisteredAndActivatedAUser();
+
+        $crawler = $client->request('GET', '/en/remoteDesktops/');
+
+        $this->assertContains('Your current account balance is $100.00.', $crawler->filter('div.accountbalanceinfobox')->text());
+
+        $this->assertContains('Click here to increase your balance', $crawler->filter('div.accountbalanceinfobox a.btn')->text());
+    }
+
 }
