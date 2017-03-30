@@ -152,18 +152,8 @@ class AwsCloudInstance extends CloudInstance
             $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
         }
 
-        // ...and stop as soon as they can't use it anymore.
-        // We make this extra sure, i.e., we always log this event
-        // for all stop and terminate cases, e.g. because an instance
-        // can suddenly switch from running to stopped if the user
-        // shuts down an instance from within the instance itself
-        if (   $runstatus === self::RUNSTATUS_SCHEDULED_FOR_STOP
-            || $runstatus === self::RUNSTATUS_STOPPING
-            || $runstatus === self::RUNSTATUS_STOPPED
-            || $runstatus === self::RUNSTATUS_SCHEDULED_FOR_TERMINATION
-            || $runstatus === self::RUNSTATUS_TERMINATING
-            || $runstatus === self::RUNSTATUS_TERMINATING
-        ) {
+        // ...and stop as soon as they don't want it anymore
+        if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_STOP) {
             $remoteDesktopEvent = new RemoteDesktopEvent(
                 $this->remoteDesktop,
                 RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,

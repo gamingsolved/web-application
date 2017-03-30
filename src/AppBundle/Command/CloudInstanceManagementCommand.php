@@ -8,6 +8,8 @@ use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -79,6 +81,8 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
             /** @var CloudInstance $cloudInstance */
             foreach ($cloudInstancesInUse as $cloudInstance) {
 
+                $stoppedOrTerminated = false;
+
                 // We need a coordinator per instance bc e.g. AWS uses different API endpoints per region
                 $cloudInstanceCoordinator = $this->getCloudInstanceCoordinatorForCloudInstance(
                     $cloudInstance,
@@ -120,7 +124,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPED);
                             $em->persist($cloudInstance);
                             $em->flush();
-                            $output->writeln('Action result: success');
+                            $stoppedOrTerminated = true;
                         }
 
                         // Is it terminated?
@@ -129,7 +133,20 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);
                             $em->persist($cloudInstance);
                             $em->flush();
-                            $output->writeln('Action result: success');
+                            $stoppedOrTerminated = true;
+                        }
+
+                        if ($stoppedOrTerminated) {
+                            $output->writeln('Action: Also logging for the billing logic that the desktop became unavailable');
+                            $remoteDesktop = $cloudInstance->getRemoteDesktop();
+                            $remoteDesktopEvent = new RemoteDesktopEvent(
+                                $remoteDesktop,
+                                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+                                DateTimeUtility::createDateTime('now')
+                            );
+                            $remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+                            $em->persist($remoteDesktop);
+                            $em->flush();
                         }
                     }
                 }
