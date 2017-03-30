@@ -38,6 +38,11 @@ remotedesktops.sgx_files:
     defaults: { _controller: AppBundle:RemoteDesktop:serveSgxFile }
     methods:  [GET]
 
+remotedesktops.sgx_files:
+    path:     /remoteDesktops/{remoteDesktop}/updatettl/{tag}
+    defaults: { _controller: AppBundle:RemoteDesktop:serveSgxFile }
+    methods:  [GET]
+
 cloudinstances.new:
     path:     /remoteDesktops/{remoteDesktop}/cloudInstances/new
     defaults: { _controller: AppBundle:CloudInstance:new }
