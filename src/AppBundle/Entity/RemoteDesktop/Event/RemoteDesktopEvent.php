@@ -12,8 +12,8 @@ use Ramsey\Uuid\Uuid;
  */
 class RemoteDesktopEvent
 {
-    const EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING = 0;
-    const EVENT_TYPE_DESKTOP_BEGAN_STOPPING  = 1;
+    const EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER = 0;
+    const EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER  = 1;
 
     /**
      * @var string
@@ -50,7 +50,7 @@ class RemoteDesktopEvent
 
         $this->remoteDesktop = $remoteDesktop;
 
-        if ($eventType < self::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING || $eventType > self::EVENT_TYPE_DESKTOP_BEGAN_STOPPING) {
+        if ($eventType < self::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER || $eventType > self::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER) {
             throw new \Exception('Event type ' . $eventType . ' is invalid');
         }
         $this->eventType = $eventType;

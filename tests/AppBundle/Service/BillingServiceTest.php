@@ -65,7 +65,7 @@ class BillingServiceTest extends TestCase
 
         $event = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
@@ -108,25 +108,25 @@ class BillingServiceTest extends TestCase
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
         $beganStoppingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:39:01')
         );
 
         $finishedLaunchingEvent2 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:20:00')
         );
 
         $beganStoppingEvent2 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:30:00')
         );
 
@@ -169,25 +169,25 @@ class BillingServiceTest extends TestCase
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
         $beganStoppingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:39:01')
         );
 
         $finishedLaunchingEvent2 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:20:00')
         );
 
         $beganStoppingEvent2 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 20:37:01') // Within next-next usage hour
         );
 
@@ -229,13 +229,13 @@ class BillingServiceTest extends TestCase
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
         $beganStoppingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-27 00:37:01')
         );
 
@@ -281,13 +281,13 @@ class BillingServiceTest extends TestCase
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
         $beganStoppingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-27 00:37:01')
         );
 
@@ -337,13 +337,13 @@ class BillingServiceTest extends TestCase
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
         $beganStoppingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-27 00:37:01')
         );
 
@@ -388,13 +388,13 @@ class BillingServiceTest extends TestCase
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
         $beganStoppingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-27 00:37:01')
         );
 
@@ -437,7 +437,7 @@ class BillingServiceTest extends TestCase
 
         $event = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
@@ -478,13 +478,13 @@ class BillingServiceTest extends TestCase
 
         $finishedLaunchingEvent = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
         $beganStoppingEvent = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:37:00') // This is still considered as within the first usage hour
         );
 
@@ -524,13 +524,13 @@ class BillingServiceTest extends TestCase
 
         $finishedLaunchingEvent = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
         $beganStoppingEvent = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:37:01') // This counts as the next usage hour, because the end date is exclusive
         );
 
@@ -571,13 +571,13 @@ class BillingServiceTest extends TestCase
 
         $finishedLaunchingEvent = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
         $beganStoppingEvent = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:50:01') // This counts as the next usage hour, because the end date is exclusive
         );
 
@@ -629,25 +629,25 @@ class BillingServiceTest extends TestCase
 
         $finishedLaunchingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
         $beganStoppingEvent1 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:20:01')
         );
 
         $finishedLaunchingEvent2 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-29 21:15:00')
         );
 
         $beganStoppingEvent2 = new RemoteDesktopEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-29 22:10:05')
         );
 

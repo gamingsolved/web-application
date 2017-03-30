@@ -49,7 +49,7 @@ class BillingService
             if (sizeof($remoteDesktopEventsInTimewindow) !== 0) {
                 /** @var RemoteDesktopEvent $lastRemoteDesktopEventInTimeWindow */
                 $lastRemoteDesktopEventInTimeWindow = $remoteDesktopEventsInTimewindow[sizeof($remoteDesktopEventsInTimewindow) - 1];
-                if ($lastRemoteDesktopEventInTimeWindow->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING) {
+                if ($lastRemoteDesktopEventInTimeWindow->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER) {
                     $beganStoppingFound = true;
                 }
             }
@@ -140,7 +140,7 @@ class BillingService
                         || (is_null($newestBillableItem))
                     ) {
 
-                        if ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING) {
+                        if ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER) {
 
                             // Is this launch already covered by a billable item?
 

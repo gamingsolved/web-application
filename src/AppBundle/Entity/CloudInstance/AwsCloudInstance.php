@@ -138,7 +138,7 @@ class AwsCloudInstance extends CloudInstance
 
     public function setRunstatus(int $runstatus)
     {
-        if ($runstatus < self::RUNSTATUS_SCHEDULED_FOR_LAUNCH || $runstatus > self::RUNSTATUS_SCHEDULED_TERMINATED) {
+        if ($runstatus < self::RUNSTATUS_SCHEDULED_FOR_LAUNCH || $runstatus > self::RUNSTATUS_TERMINATED) {
             throw new \Exception('Runstatus ' . $runstatus . ' is invalid');
         }
 
@@ -146,17 +146,27 @@ class AwsCloudInstance extends CloudInstance
         if ($runstatus === self::RUNSTATUS_RUNNING) {
             $remoteDesktopEvent = new RemoteDesktopEvent(
                 $this->remoteDesktop,
-                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
                 DateTimeUtility::createDateTime('now')
             );
             $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
         }
 
-        // ...and stop as soon as they don't want it anymore
-        if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_STOP) {
+        // ...and stop as soon as they can't use it anymore.
+        // We make this extra sure, i.e., we always log this event
+        // for all stop and terminate cases, e.g. because an instance
+        // can suddenly switch from running to stopped if the user
+        // shuts down an instance from within the instance itself
+        if (   $runstatus === self::RUNSTATUS_SCHEDULED_FOR_STOP
+            || $runstatus === self::RUNSTATUS_STOPPING
+            || $runstatus === self::RUNSTATUS_STOPPED
+            || $runstatus === self::RUNSTATUS_SCHEDULED_FOR_TERMINATION
+            || $runstatus === self::RUNSTATUS_TERMINATING
+            || $runstatus === self::RUNSTATUS_TERMINATING
+        ) {
             $remoteDesktopEvent = new RemoteDesktopEvent(
                 $this->remoteDesktop,
-                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
                 DateTimeUtility::createDateTime('now')
             );
             $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);

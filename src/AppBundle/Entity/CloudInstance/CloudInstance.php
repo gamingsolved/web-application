@@ -55,8 +55,8 @@ abstract class CloudInstance implements CloudInstanceInterface
     const RUNSTATUS_SCHEDULED_FOR_START = 6;
     const RUNSTATUS_STARTING = 7;
     const RUNSTATUS_SCHEDULED_FOR_TERMINATION = 8;
-    const RUNSTATUS_SCHEDULED_TERMINATING = 9;
-    const RUNSTATUS_SCHEDULED_TERMINATED = 10;
+    const RUNSTATUS_TERMINATING = 9;
+    const RUNSTATUS_TERMINATED = 10;
 
     const ADMIN_PASSWORD_ENCRYPTION_KEY = '06c528c143c3f5c73ae200048782bd422a4f1b90';
 
@@ -101,10 +101,10 @@ abstract class CloudInstance implements CloudInstanceInterface
             case self::RUNSTATUS_SCHEDULED_FOR_TERMINATION:
                 return 'scheduled for termination';
                 break;
-            case self::RUNSTATUS_SCHEDULED_TERMINATING:
+            case self::RUNSTATUS_TERMINATING:
                 return 'terminating';
                 break;
-            case self::RUNSTATUS_SCHEDULED_TERMINATED:
+            case self::RUNSTATUS_TERMINATED:
                 return 'terminated';
                 break;
 

@@ -230,10 +230,10 @@ class RemoteDesktop
                     $status = self::STATUS_STOPPED;
                     break;
                 case CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION:
-                case CloudInstance::RUNSTATUS_SCHEDULED_TERMINATING:
+                case CloudInstance::RUNSTATUS_TERMINATING:
                     $status = self::STATUS_TERMINATING;
                     break;
-                case CloudInstance::RUNSTATUS_SCHEDULED_TERMINATED:
+                case CloudInstance::RUNSTATUS_TERMINATED:
                     $status = self::STATUS_TERMINATED;
                     break;
                 default:

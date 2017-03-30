@@ -90,14 +90,14 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
         $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
         $this->assertEquals(
-            3, // Two, because there is one from the launch and one from the stop on which we build
+            5, // because there is one from the launch and three from the stop on which we build
             sizeof($remoteDesktopEvents)
         );
         /** @var RemoteDesktopEvent $remoteDesktopEvent */
         $remoteDesktopEvent = $remoteDesktopEvents[0];
         $this->assertEquals(
             $remoteDesktopEvent->getEventType(),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
         );
 
         $link = $crawler->selectLink('Refresh status')->first()->link();

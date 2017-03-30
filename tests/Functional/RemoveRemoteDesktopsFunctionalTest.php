@@ -68,7 +68,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
         /** @var CloudInstance $cloudInstance */
         $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
-        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_TERMINATING);
+        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATING);
         $em->persist($cloudInstance);
         $em->flush();
 
@@ -80,7 +80,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
         /** @var CloudInstance $cloudInstance */
         $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
-        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_TERMINATED);
+        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);
         $em->persist($cloudInstance);
         $em->flush();
 

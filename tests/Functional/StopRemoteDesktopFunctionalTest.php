@@ -69,7 +69,7 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
         $remoteDesktopEvent = $remoteDesktopEvents[1];
         $this->assertEquals(
             $remoteDesktopEvent->getEventType(),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BEGAN_STOPPING
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
         );
 
         $this->verifyDektopStatusStopping($client, $crawler);

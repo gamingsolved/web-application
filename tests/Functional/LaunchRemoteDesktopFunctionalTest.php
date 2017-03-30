@@ -117,7 +117,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $remoteDesktopEvent = $remoteDesktopEvents[0];
         $this->assertEquals(
             $remoteDesktopEvent->getEventType(),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_FINISHED_LAUNCHING
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
         );
 
         $link = $crawler->selectLink('Refresh status')->first()->link();
