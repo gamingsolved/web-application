@@ -37,11 +37,11 @@
 
 {% block body %}
 
-    <div class="full-row middle">
+    <div class="full-row bang">
     </div>
 
 
-    <div class="full-row middle">
+    <div class="full-row bang">
 
         <div class="container">
             <div class="row">
@@ -55,10 +55,12 @@
                 <div class="col-xs-6">
 
                     <div class="well">
-                        Our advanced streaming technology
-                        makes it possible to fluidly interact
-                        with remote Windows desktop systems,
-                        even if complex 3D graphics are involved.
+                        <p>
+                            Our advanced streaming technology
+                            makes it possible to fluidly interact
+                            with remote Windows desktop systems,
+                            even if complex and fast 3D graphics are involved.
+                        </p>
                     </div>
 
                 </div>
@@ -70,7 +72,7 @@
     </div>
 
 
-    <div class="full-row bang">
+    <div class="full-row middle">
 
         <div class="container">
             <div class="row">
@@ -78,16 +80,24 @@
                 <div class="col-xs-6">
 
                     <div class="well">
-                        Play games or work with CAD programs from
-                        everywhere. Your local computers doesn't
-                        need dedicated graphics hardware.
+                        <p>
+                            Your computer is lacking a powerful GPU? No problem!
+                        </p>
+                        <p>
+                            You can still play the latest 3D games or work with demanding
+                            CAD programs from wherever you are.
+                        </p>
+                        <p>
+                            Our cloud systems have powerful graphic cards and stream
+                            their video and audio output to your local computer.
+                        </p>
                     </div>
 
                 </div>
 
                 <div class="col-xs-6">
                     <h3>
-                        The computing power lives in the cloud.
+                        Your GPU powered desktop in the cloud.
                     </h3>
                 </div>
 
@@ -95,6 +105,23 @@
 
         </div>
 
+    </div>
+
+
+    <div class="full-row dark">
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-xs-12 text-center">
+
+                    <a class="btn btn-primary" href="{{ path('fos_user_registration_register') }}">
+                        {{ "_navigation.register"|trans }}
+                    </a>
+
+            </div>
+
+        </div>
 
     </div>
 
