@@ -77,9 +77,15 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ]);
 
             if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'running') {
-                $cloudInstance->setPublicAddress(
-                    $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'][0]['Association']['PublicIp']
-                );
+
+                $ip = $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'][0]['Association']['PublicIp'];
+
+                if (is_null($ip)) {
+                    $this->output->writeln('IP address is in other field...');
+                    $ip = $result['Reservations'][0]['Instances'][0]['PublicIpAddress'];
+                }
+
+                $cloudInstance->setPublicAddress($ip);
                 return true;
             } else {
                 return false;
