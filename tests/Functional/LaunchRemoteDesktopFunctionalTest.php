@@ -141,6 +141,11 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('Password:', $crawler->filter('li.list-group-item')->eq(2)->text());
         $this->assertContains('foo', $crawler->filter('li.list-group-item')->eq(2)->text());
 
+        $this->assertContains('Connect now', $crawler->filter('li.list-group-item')->eq(3)->filter('a.btn')->text());
+        $this->assertContains('You need to have the client program installed.', $crawler->filter('li.list-group-item')->eq(3)->filter('span.label')->text());
+
+        $this->assertContains('Download the Windows client', $crawler->filter('li.list-group-item')->eq(4)->filter('a.btn')->eq(0)->text());
+        $this->assertContains('Download the Mac client', $crawler->filter('li.list-group-item')->eq(4)->filter('a.btn')->eq(1)->text());
 
         // Check that billing worked
         $kernel = static::createClient()->getKernel();
