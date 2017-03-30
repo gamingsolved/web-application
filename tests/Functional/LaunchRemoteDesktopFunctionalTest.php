@@ -147,6 +147,18 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('Download the Windows client', $crawler->filter('li.list-group-item')->eq(4)->filter('a.btn')->eq(0)->text());
         $this->assertContains('Download the Mac client', $crawler->filter('li.list-group-item')->eq(4)->filter('a.btn')->eq(1)->text());
 
+        // Check that the CGX launcher URI works
+
+        $launcherUri = $crawler->filter('li.list-group-item')->eq(3)->filter('a.btn')->attr('href');
+        $this->assertStringStartsWith(
+            'sgxportal://'
+                . $client->getRequest()->getHttpHost()
+                . ':'
+                . $client->getRequest()->getPort()
+                . '/en/remoteDesktop/',
+            $launcherUri
+        );
+
         // Check that billing worked
         $kernel = static::createClient()->getKernel();
         $kernel->boot();
