@@ -19,3 +19,6 @@ monolog:
             level: debug
         console:
             type:  console
+
+jms_payment_paypal:
+    debug: false # true = Use the Sandbox

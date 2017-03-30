@@ -156,8 +156,6 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertEquals(
             'sgxportal://'
                 . $client->getRequest()->getHttpHost()
-                . ':'
-                . $client->getRequest()->getPort()
                 . '/en/remoteDesktop/'
                 . $remoteDesktop->getId()
                 . '?protocol='

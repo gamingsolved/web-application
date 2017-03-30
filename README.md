@@ -60,8 +60,11 @@ If you want to present a datetime to the user, please convert at the last moment
     
     sudo -u www-data php bin/console --env=preprod doctrine:migrations:migrate
     
-    php bin/console --env=preprod app:cloudinstancemanagement `echo /etc/ubiqmachine/webapp/secrets/aws-api-key.txt` `echo /etc/ubiqmachine/webapp/secrets/aws-api-secret.txt` /etc/ubiqmachine/webapp/secrets/aws-keypair-private-key.pem
+    watch -n5 'cd /opt/ubiqmachine-webapp/preprod && /usr/bin/php bin/console -v --env=preprod app:generatebillableitems'
     
+    watch -n5 'cd /opt/ubiqmachine-webapp/preprod && /usr/bin/php bin/console --env=preprod app:cloudinstancemanagement $(cat /etc/ubiqmachine-webapp/secrets/preprod/aws-api-key.txt) $(cat /etc/ubiqmachine-webapp/secrets/preprod/aws-api-secret.txt) /etc/ubiqmachine-webapp/secrets/preprod/aws-keypair-private-key.pem'
+    
+
 
     rsync -avc --exclude app/config/parameters.yml --exclude .git --exclude var/cache/dev --exclude var/cache/test --exclude var/logs/dev.log --exclude var/logs/test.log ~/Dropbox/Projects/cloudgaming/ubiqmachine-webapp/ www-data@5.45.99.8:/opt/ubiqmachine-webapp/prod/
 
@@ -69,6 +72,10 @@ If you want to present a datetime to the user, please convert at the last moment
     sudo -u www-data php bin/console --env=prod cache:clear
     
     sudo -u www-data php bin/console --env=prod doctrine:migrations:migrate
+    
+    watch -n5 'cd /opt/ubiqmachine-webapp/prod && /usr/bin/php bin/console -v --env=prod app:generatebillableitems'
+        
+    watch -n5 'cd /opt/ubiqmachine-webapp/prod && /usr/bin/php bin/console --env=prod app:cloudinstancemanagement $(cat /etc/ubiqmachine-webapp/secrets/prod/aws-api-key.txt) $(cat /etc/ubiqmachine-webapp/secrets/prod/aws-api-secret.txt) /etc/ubiqmachine-webapp/secrets/prod/aws-keypair-private-key.pem'
     
 
 
