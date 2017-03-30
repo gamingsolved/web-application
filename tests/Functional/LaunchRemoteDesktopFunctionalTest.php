@@ -147,17 +147,31 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('Download the Windows client', $crawler->filter('li.list-group-item')->eq(4)->filter('a.btn')->eq(0)->text());
         $this->assertContains('Download the Mac client', $crawler->filter('li.list-group-item')->eq(4)->filter('a.btn')->eq(1)->text());
 
-        // Check that the CGX launcher URI works
+
+        // Check that the CGX launcher URI is correct and its target SGX file URI works
+
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
 
         $launcherUri = $crawler->filter('li.list-group-item')->eq(3)->filter('a.btn')->attr('href');
-        $this->assertStringStartsWith(
+        $this->assertEquals(
             'sgxportal://'
                 . $client->getRequest()->getHttpHost()
                 . ':'
                 . $client->getRequest()->getPort()
-                . '/en/remoteDesktop/',
+                . '/en/remoteDesktop/'
+                . $remoteDesktop->getId()
+                . '?protocol='
+                . $client->getRequest()->getScheme()
+                . '&version=1_8#'
+                . $remoteDesktop->getId(),
             $launcherUri
         );
+
+        // /remoteDesktops/{remoteDesktop}/sgx_files/{tag}.sgx
+        $client->request('GET', '/en/remoteDesktops/' . $remoteDesktop->getId() . '/sgx_files/' . $remoteDesktop->getId() . '.sgx');
+
+        $this->assertContains('ip: 121.122.123.124', $client->getResponse()->getContent());
+        $this->assertContains('key: ' . $remoteDesktop->getId(), $client->getResponse()->getContent());
 
         // Check that billing worked
         $kernel = static::createClient()->getKernel();
