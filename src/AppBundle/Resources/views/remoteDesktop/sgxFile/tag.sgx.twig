@@ -1,15 +1,23 @@
 #SCGX1.1
 ip: {{ ip }}
 key: {{ key }}
-bitRate: 15
-audioOn: on
-logLevel: SGXLOG_INFO
-mouseLocal: off
-mouseRemote: on
-forceSoftwareDecode: off
-height: 1280
-width: 720
-performanceSetting: latency
-networkGameMode: on
-networkIsWifi: off
-useEncryption: off
+video-port: 40000
+input-port: 40001
+audio-port: 40002
+config-port: 40003
+audio-in-port: 40006
+usb-port: 40010
+bitrate: 15
+audio: on
+loglevel: SGXLOG_ERROR
+client-type: CloudGaming
+mouse-local: off
+mouse-remote: on
+force-software-decode: off
+performance-setting: latency
+width: 1280
+height: 720
+user: Administrator
+password: {{ password }}
+network-game-mode: on
+use-encryption: off

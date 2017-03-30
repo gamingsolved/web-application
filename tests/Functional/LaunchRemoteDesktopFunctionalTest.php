@@ -160,7 +160,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
                 . $remoteDesktop->getId()
                 . '?protocol='
                 . $client->getRequest()->getScheme()
-                . '&version=1_8#'
+                . '&version=1_8_0#'
                 . $remoteDesktop->getId(),
             $launcherUri
         );

@@ -145,7 +145,8 @@ class RemoteDesktopController extends Controller
             'AppBundle:remoteDesktop:sgxFile/tag.sgx.twig',
             [
                 'ip'  => $remoteDesktop->getPublicAddress(),
-                'key' => $remoteDesktop->getId()
+                'key' => $remoteDesktop->getId(),
+                'password' => $remoteDesktop->getAdminPassword()
             ]
         );
 
