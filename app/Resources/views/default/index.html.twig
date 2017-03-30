@@ -5,8 +5,37 @@
     {{ parent() }}
 
     <style>
+        h3 {
+            color: #fff;
+            text-align: left;
+            line-height: 140%;
+        }
+
+        span.headline {
+
+        }
+
         div.full-row {
             padding: 48px;
+        }
+
+        div.full-row.first {
+            background-image: url("{{ asset('bdundles/app/images/start-large-right-1.png') }}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: right;
+        }
+
+        div.full-row.second {
+            background-image: url("{{ asset('budndles/app/images/start-large-left-1.png') }}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: left;
+        }
+
+        div.white {
+            color: #333;
+            background-color: #fff;
         }
 
         div.bang {
@@ -29,7 +58,8 @@
         }
 
         body {
-            padding-top: 0;
+            padding-top: 48px;
+            background-color: #4442C2;
         }
     </style>
 
@@ -37,11 +67,7 @@
 
 {% block body %}
 
-    <div class="full-row bang">
-    </div>
-
-
-    <div class="full-row bang">
+    <div class="full-row bang first">
 
         <div class="container">
             <div class="row">
@@ -56,10 +82,8 @@
 
                     <div class="well">
                         <p>
-                            Our advanced streaming technology
-                            makes it possible to fluidly interact
-                            with remote Windows desktop systems,
-                            even if complex and fast 3D graphics are involved.
+                            Use the Microsoft Windows® desktop of a GPU-powered
+                            on-demand cloud computer at Full HD and 60 fps.
                         </p>
                     </div>
 
@@ -72,33 +96,39 @@
     </div>
 
 
-    <div class="full-row middle">
+    <div class="full-row middle second">
 
         <div class="container">
             <div class="row">
 
                 <div class="col-xs-6">
-
-                    <div class="well">
-                        <p>
-                            Your computer is lacking a powerful GPU? No problem!
-                        </p>
-                        <p>
-                            You can still play the latest 3D games or work with demanding
-                            CAD programs from wherever you are.
-                        </p>
-                        <p>
-                            Our cloud systems have powerful graphic cards and stream
-                            their video and audio output to your local computer.
-                        </p>
-                    </div>
-
+                    <h3>
+                        Your <span style="background-color: #2BBE83; padding-left: 4px; padding-right: 4px;">ubiqMachine</span> is your GPU powered desktop in the cloud.
+                    </h3>
                 </div>
 
                 <div class="col-xs-6">
-                    <h3>
-                        Your GPU powered desktop in the cloud.
-                    </h3>
+
+                    <div class="well">
+                        <p>
+                            Is your own computer lacking a powerful processor and a dedicated GPU?
+                        </p>
+                        <p>
+                            With ubiqMachine, you can still play the latest 3D games or work with demanding
+                            CAD programs.
+                        </p>
+                        <p>
+                            Our cloud systems have powerful graphics cards and stream
+                            their video and audio output to your local computer using our
+                            highly optimized encoding technology.
+                        </p>
+                        <p>
+                            All you need is an internet connection with a bandwith of 25&nbsp;Mbit/s
+                            or more - we take care of the rest.
+                        </p>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -113,11 +143,36 @@
         <div class="container">
             <div class="row">
 
-                <div class="col-xs-12 text-center">
+                <div class="col-xs-6">
+                    <h3>
+                        Strictly pay-per-use.
+                    </h3>
+                    <p>
+                        <a class="btn btn-primary btn-lg" href="{{ path('fos_user_registration_register') }}">
+                            Sign up now
+                            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                        </a>
+                    </p>
+                    <p class="small">
+                        Prices start as low as $1.99 per usage hour.
+                        <br>
+                        No recurring fees, prepay only.
+                    </p>
+                </div>
 
-                    <a class="btn btn-primary" href="{{ path('fos_user_registration_register') }}">
-                        {{ "_navigation.register"|trans }}
-                    </a>
+                <div class="col-xs-6">
+
+                    <div class="well">
+                        <p>
+                            Skip investing in expensive hardware.
+                        </p>
+                        <p>
+                            You pay for your ubiqMachine by the hour, and when you are
+                            not using it, you are not paying anything. It's that simple.
+                        </p>
+                    </div>
+
+                </div>
 
             </div>
 
@@ -126,5 +181,44 @@
     </div>
 
 
+    <div class="full-row dark">
+
+        <hr>
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-xs-12 text-center">
+
+                    <p>
+                        &copy;2017 The ubiqMachine Team.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="full-row dark">
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-xs-12 text-center">
+
+                    <p class="small">
+                        Microsoft® and Windows® are either registered trademarks or trademarks of Microsoft Corporation in the United States and/or other countries.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 {% endblock %}
