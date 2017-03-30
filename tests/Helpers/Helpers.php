@@ -3,8 +3,16 @@
 namespace Tests\Helpers;
 
 use AppBundle\Entity\Billing\AccountMovement;
+use AppBundle\Entity\Billing\BillableItem;
+use AppBundle\Entity\CloudInstance\AwsCloudInstance;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
+use JMS\Payment\CoreBundle\Entity\Credit;
+use JMS\Payment\CoreBundle\Entity\FinancialTransaction;
+use JMS\Payment\CoreBundle\Entity\Payment;
+use JMS\Payment\CoreBundle\Entity\PaymentInstruction;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -25,11 +33,32 @@ trait Helpers
         $application = new Application($kernel);
         $application->setAutoExit(false);
 
-        $input = new ArgvInput(['', 'doctrine:database:drop', '--no-interaction', '--force', '-q']);
-        $application->run($input);
+        $container = $client->getContainer();
+        /** @var EntityManager $em */
+        $em = $container->get('doctrine.orm.entity_manager');
+        $connection = $em->getConnection();
+        $dbPlatform = $connection->getDatabasePlatform();
 
-        $input = new ArgvInput(['', 'doctrine:database:create', '--no-interaction', '--force', '-q']);
-        $application->run($input);
+        $entityClasses = [
+            AccountMovement::class,
+            AwsCloudInstance::class,
+            BillableItem::class,
+            Credit::class,
+            FinancialTransaction::class,
+            PaymentInstruction::class,
+            Payment::class,
+            RemoteDesktopEvent::class,
+            RemoteDesktop::class,
+            User::class
+        ];
+
+        foreach ($entityClasses as $entityClass) {
+            $cmd = $em->getClassMetadata($entityClass);
+            $connection->query('SET FOREIGN_KEY_CHECKS=0;');
+            $q = $dbPlatform->getTruncateTableSql($cmd->getTableName());
+            $connection->executeUpdate($q);
+            $connection->query('SET FOREIGN_KEY_CHECKS=1;');
+        }
 
         $output = new ConsoleOutput();
         $input = new ArgvInput(['', 'doctrine:migrations:migrate', '--no-interaction', '-q']);
