@@ -15,14 +15,14 @@ class LogoutFunctionalTest extends WebTestCase
         $this->resetDatabase();
 
         $client = $this->getClientThatRegisteredAndActivatedAUser();
-        $client->request('GET', '/de/logout');
+        $client->request('GET', '/en/logout');
 
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
-        $this->assertEquals('http://localhost/de/logout-successful', $client->getResponse()->headers->get('location'));
+        $this->assertEquals('http://localhost/en/logout-successful', $client->getResponse()->headers->get('location'));
 
         $crawler = $client->followRedirect();
 
-        $this->assertContains('Sie haben sich erfolgreich ausgeloggt.', $crawler->filter('div.alert-success')->text());
+        $this->assertContains('You are now logged out.', $crawler->filter('div.alert-success')->text());
     }
 
 }

@@ -20,7 +20,7 @@ class DefaultController extends Controller
             return $this->render('default/notfound.html.twig');
         }
 
-        $preferred = $request->getPreferredLanguage(['fr', 'de', 'en']);
+        $preferred = $request->getPreferredLanguage(['en']);
 
         $redirectTo = '/' .$preferred . $request->getRequestUri();
 

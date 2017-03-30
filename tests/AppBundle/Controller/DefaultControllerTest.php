@@ -13,6 +13,6 @@ class DefaultControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/en/');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('Welcome to your new 3D computer in the cloud.', $crawler->filter('h1')->text());
+        $this->assertContains('The future of remote computing is here.', $crawler->filter('body')->text());
     }
 }
