@@ -111,13 +111,15 @@
                                         </li>
 
                                         <li class="list-group-item">
-                                            <a href="sgxportal://{{ launcherHostname }}:{{ launcherPort }}/en/remoteDesktop/{{ remoteDesktop.id }}?protocol={{ launcherProtocol }}&version=1_8#{{ remoteDesktop.id }}"
+                                            <a href="sgxportal://{{ launcherHostname }}/en/remoteDesktop/{{ remoteDesktop.id }}?protocol={{ launcherProtocol }}&version=1_8#{{ remoteDesktop.id }}"
                                                type="button"
                                                class="btn btn-success btn-sm"
                                             >
                                                 <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
                                                 {{ "remoteDesktop.index.connect_now"|trans }}
                                             </a>
+                                            &nbsp;
+                                            <span class="label label-default">{{ "remoteDesktop.index.connect_now_client_info"|trans }}</span>
                                         </li>
 
                                         <li class="list-group-item">
