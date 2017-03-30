@@ -164,4 +164,46 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         return $client;
     }
 
+    public function testCannotLaunchRemoteDesktopIfBalanceTooLow()
+    {
+        $client = (new CreateRemoteDesktopFunctionalTest())->testCreateRemoteDesktop();
+
+        $this->resetAccountBalanceForTestuser($client);
+
+        $crawler = $client->request('GET', '/en/remoteDesktops/');
+
+        $link = $crawler->selectLink('Launch this remote desktop')->first()->link();
+
+        $crawler = $client->click($link);
+
+        $this->assertContains('Launch your remote desktop', $crawler->filter('h1')->first()->text());
+
+        $buttonNode = $crawler->selectButton('Launch now');
+        $form = $buttonNode->form();
+
+        $crawler = $client->submit($form, [
+            'form[region]' => 'eu-central-1',
+        ]);
+
+        $this->assertContains(
+            'Your account balance is too low to use this remote desktop.',
+            $crawler->filter('div.alert')->first()->text()
+        );
+
+        $this->assertContains(
+            'Running this remote desktop costs $1.99 per hour, but your current balance is',
+            $crawler->filter('div.alert')->first()->text()
+        );
+
+        $this->assertContains(
+            '$0.00.',
+            $crawler->filter('div.alert')->first()->text()
+        );
+
+        $this->assertContains(
+            'Click here to increase your balance now',
+            $crawler->filter('a.btn')->first()->text()
+        );
+    }
+
 }

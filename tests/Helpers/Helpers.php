@@ -3,11 +3,13 @@
 namespace Tests\Helpers;
 
 use AppBundle\Entity\Billing\AccountMovement;
+use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Entity\User;
+use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityManager;
 use JMS\Payment\CoreBundle\Entity\Credit;
 use JMS\Payment\CoreBundle\Entity\FinancialTransaction;
@@ -102,6 +104,25 @@ trait Helpers
         $em->flush();
 
         return $client;
+    }
+
+    protected function resetAccountBalanceForTestuser(Client $client) {
+        $container = $client->getContainer();
+        $um = $container->get('fos_user.user_manager');
+
+        /** @var EntityManager $em */
+        $em = $container->get('doctrine.orm.entity_manager');
+
+        /** @var User $user */
+        $user = $um->findUserByEmail('testuser@example.com');
+
+        /** @var AccountMovementRepository $accountMovementRepository */
+        $accountMovementRepository = $em->getRepository(AccountMovement::class);
+        $accountMovements = $accountMovementRepository->findBy(['user' => $user]);
+        foreach ($accountMovements as $accountMovement) {
+            $em->remove($accountMovement);
+        }
+        $em->flush();
     }
 
 }
