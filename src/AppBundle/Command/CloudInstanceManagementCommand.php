@@ -111,6 +111,26 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                     if ($accountBalance < 0.0) {
                         $output->writeln('Action: Scheduling stop, because at ' . $accountBalance . ', owner balance is below $0.00!');
                         $cloudInstance->getRemoteDesktop()->scheduleForStop();
+                    } else {
+                        $output->writeln('Action: We think the instance is running, but we verify this');
+
+                        // Is it stopped?
+                        if ($cloudInstanceCoordinator->cloudInstanceHasFinishedStopping($cloudInstance)) {
+                            $output->writeln('Action result: other than we thought the instance is stopped, we mark as stopped too');
+                            $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPED);
+                            $em->persist($cloudInstance);
+                            $em->flush();
+                            $output->writeln('Action result: success');
+                        }
+
+                        // Is it terminated?
+                        if ($cloudInstanceCoordinator->cloudInstanceHasFinishedTerminating($cloudInstance)) {
+                            $output->writeln('Action result: other than we thought the instance is terminated, we mark as terminated too');
+                            $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_TERMINATED);
+                            $em->persist($cloudInstance);
+                            $em->flush();
+                            $output->writeln('Action result: success');
+                        }
                     }
                 }
 
