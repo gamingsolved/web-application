@@ -38,7 +38,7 @@ remotedesktops.sgx_files:
     defaults: { _controller: AppBundle:RemoteDesktop:serveSgxFile }
     methods:  [GET]
 
-remotedesktops.sgx_files:
+remotedesktops.updatettl:
     path:     /remoteDesktops/{remoteDesktop}/updatettl/{tag}
     defaults: { _controller: AppBundle:RemoteDesktop:serveSgxFile }
     methods:  [GET]
