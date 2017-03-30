@@ -6,31 +6,8 @@
             <div class="col-xs-12">
                 <h1>{{ "cloudInstance.new.form.headline"|trans }}</h1>
 
-                {% if insufficientBalance %}
-                    <div class="alert alert-danger">
-                        <p>
-                            <strong>
-                                {{ "cloudInstance.new.insufficient_balance_message_one"|trans }}
-                            </strong>
-                        </p>
-                        <p>
-                            {{
-                            "cloudInstance.new.insufficient_balance_message_two"
-                            |trans(
-                            {
-                                "%hourlyCosts%": hourlyCosts|number_format(2, '.', ',')
-                            }
-                            )
-                            }}
-                            {% if currentBalance < 0.0 %}
-                                <strong>-${{ currentBalanceAbsolute|number_format(2, '.', ',') }}</strong>.
-                            {% else %}
-                                <strong>${{ currentBalance|number_format(2, '.', ',') }}</strong>.
-                            {% endif %}
-                        </p>
-                        <hr>
-                        <a class="btn btn-primary" href="{{ path('accountmovements.new') }}">{{ "cloudInstance.new.click_here_to_increase_your_balance"|trans }}</a>
-                    </div>
+                {% if insufficientAccountBalance %}
+                    {{ include('AppBundle:_reusable:insufficientAccountBalance.html.twig') }}
                 {% endif %}
 
                 <div class="well">

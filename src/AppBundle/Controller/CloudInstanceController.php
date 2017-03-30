@@ -75,9 +75,9 @@ class CloudInstanceController extends Controller
                 return $this->render(
                     'AppBundle:cloudInstance:new.html.twig',
                     [
-                        'insufficientBalance' => true,
-                        'currentBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
-                        'currentBalanceAbsolute' => abs($accountMovementRepository->getAccountBalanceForUser($user)),
+                        'insufficientAccountBalance' => true,
+                        'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
+                        'currentAccountBalanceAbsolute' => abs($accountMovementRepository->getAccountBalanceForUser($user)),
                         'hourlyCosts' => $hourlyCosts,
                         'form' => $form->createView()
                     ]
@@ -96,8 +96,9 @@ class CloudInstanceController extends Controller
             return $this->render(
                 'AppBundle:cloudInstance:new.html.twig',
                 [
-                    'insufficientBalance' => false,
-                    'currentBalance' => null,
+                    'insufficientAccountBalance' => false,
+                    'currentAccountBalance' => null,
+                    'currentAccountBalanceAbsolute' => null,
                     'hourlyCosts' => null,
                     'form' => $form->createView()
                 ]

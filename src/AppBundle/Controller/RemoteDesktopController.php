@@ -95,11 +95,11 @@ class RemoteDesktopController extends Controller
 
         if ($remoteDesktop->getHourlyCosts() > $accountMovementRepository->getAccountBalanceForUser($user)) {
             return $this->render(
-                'AppBundle:remoteDesktop:insufficientBalance.html.twig',
+                'AppBundle:remoteDesktop:insufficientAccountBalance.html.twig',
                 [
                     'hourlyCosts' => $remoteDesktop->getHourlyCosts(),
-                    'currentBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
-                    'currentBalanceAbsolute' => abs($accountMovementRepository->getAccountBalanceForUser($user))
+                    'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
+                    'currentAccountBalanceAbsolute' => abs($accountMovementRepository->getAccountBalanceForUser($user))
                 ]
             );
         }
