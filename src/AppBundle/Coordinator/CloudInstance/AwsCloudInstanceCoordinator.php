@@ -10,8 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
 {
-    const KEYPAIR_NAME = 'gaming-vm-keypair';
-    const SECURITY_GROUP_NAME = 'gaming-vm-all-open';
+    const KEYPAIR_NAME = 'ubiqmachine-default';
+    const SECURITY_GROUP_NAME = 'ubiqmachine-cgxclient-default';
 
     protected $keypairPrivateKey;
     protected $ec2Client;

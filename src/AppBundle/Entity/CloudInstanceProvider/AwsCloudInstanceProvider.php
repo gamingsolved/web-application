@@ -27,11 +27,15 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         $this->images = [
             new Image($this, 'ami-efc87b9c', 'AMI efc87b9c'),
             new Image($this, 'ami-f2fde69e', 'AMI f2fde69e'),
-            new Image($this, 'ami-b0c7f2da', 'AMI b0c7f2da')
+            new Image($this, 'ami-b0c7f2da', 'AMI b0c7f2da'),
+            new Image($this, 'ami-10334270', 'Scalable Graphics Windows Server 2012, us-west-1')
         ];
 
         $this->regions = [
-            new Region($this, 'eu-central-1', 'cloudprovider.aws.region.eu-central-1')
+            new Region($this, 'eu-west-1', 'cloudprovider.aws.region.eu-west-1'),
+            new Region($this, 'eu-central-1', 'cloudprovider.aws.region.eu-central-1'),
+            new Region($this, 'us-east-1', 'cloudprovider.aws.region.us-east-1'),
+            new Region($this, 'us-west-1', 'cloudprovider.aws.region.us-west-1')
         ];
     }
 
@@ -78,6 +82,9 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
                     break;
                 case 'us-east-1':
                     $amiInternalName = 'ami-b0c7f2da';
+                    break;
+                case 'us-west-1':
+                    $amiInternalName = 'ami-10334270';
                     break;
                 default:
                     throw new \Exception('Cannot match region ' . $region->getInternalName() . ' to an AMI.');

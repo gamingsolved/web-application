@@ -71,6 +71,7 @@ cloudprovider:
             eu-west-1: Ireland
             eu-central-1: Germany
             us-east-1: US East
+            us-west-1: US West
 
 payment:
     new:
