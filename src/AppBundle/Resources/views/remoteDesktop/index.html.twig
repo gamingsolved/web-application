@@ -1,8 +1,8 @@
 {% extends '::base.html.twig' %}
 
 {% set clientDownloadButtonsAlreadyShown = false %}
-{% set clientDownloadUriWin = 'https://s3-eu-west-1.amazonaws.com/sgx.aws.cgx-client-1.8/Windows/cgxClient-Scalable+Graphics-CGX.1.8.0.12.exe' %}
-{% set clientDownloadUriMac = 'https://s3-eu-west-1.amazonaws.com/sgx.aws.cgx-client-1.8/OSX/CGX_1.8.0.11.dmg' %}
+{% set clientDownloadUriWin = 'http://www.scalablegraphics.com/software/cgx-1-8-0/client/win32/cgxClient-Scalable%20Graphics-CGX%20Portal.1.8.0.13.exe' %}
+{% set clientDownloadUriMac = 'http://www.scalablegraphics.com/software/cgx-1-8-0/client/osx/CGX_1.8.0.11.dmg' %}
 
 {% block body %}
     <div class="container">
@@ -92,6 +92,8 @@
                                     <h3>
                                         <span class="label label-success">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.ready_to_use"|trans }}</span>
                                     </h3>
+
+                                    <a class="btn btn-success" href="sgxportal://{{ launcherHostname }}:{{ launcherPort }}/en/remoteDesktop/{{ remoteDesktop.id }}/launch?protocol={{ launcherProtocol }}&version=1_8#{{ remoteDesktop.id }}">Connect now</a>
 
                                     <ul class="list-group">
                                         <li class="list-group-item">

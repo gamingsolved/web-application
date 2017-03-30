@@ -15,7 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class RemoteDesktopController extends Controller
 {
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $user = $this->getUser();
 
@@ -31,6 +31,9 @@ class RemoteDesktopController extends Controller
         return $this->render(
             'AppBundle:remoteDesktop:index.html.twig',
             [
+                'launcherHostname' => $request->getHost(),
+                'launcherPort' => $request->getPort(),
+                'launcherProtocol' => $request->getScheme(),
                 'remoteDesktops' => $remoteDesktops,
                 'currentAccountBalance' => $accountMovementRepo->getAccountBalanceForUser($user),
                 'currentAccountBalanceAbsolute' => abs($accountMovementRepo->getAccountBalanceForUser($user))
