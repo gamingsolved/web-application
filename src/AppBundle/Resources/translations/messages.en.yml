@@ -28,8 +28,8 @@ remoteDesktop:
         stop_button: Stop this remote desktop
         start_button: Start this remote desktop
         terminate_button: Remove this remote desktop
-        info_launching: Booting a remote desktop can take between 30 seconds and 15 minutes.
-        info_stopping: Stopping a remote desktop can take up to 5 minutes.
+        info_launching: Booting a remote desktop can take between 30 seconds and 15 minutes. You are only billed once the desktop is fully available.
+        info_stopping: Stopping a remote desktop can take up to 5 minutes. You are no longer billed now.
         publicaddress_label: IP address:
         username_label: Username:
         password_label: Password:
