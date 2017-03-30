@@ -5,37 +5,99 @@
     {{ parent() }}
 
     <style>
+        div.full-row {
+            padding: 48px;
+        }
+
+        div.bang {
+            color: #fff;
+            background-color: #2BBE83;
+        }
+
+        div.middle {
+            color: #fff;
+            background-color: #337BB7;
+        }
+
+        div.well {
+            color: #444;
+        }
+
+        div.dark {
+            color: #fff;
+            background-color: #4442C2;
+        }
+
         body {
             padding-top: 0;
         }
     </style>
+
 {% endblock %}
 
 {% block body %}
-    <div class="jumbotron">
-        <section class="container">
-            <h1>Welcome to your new 3D computer in the cloud.</h1>
-            <p class="lead">
-                Want to play demanding computer games or work on complex 3D CAD designs, but don't have a capable enough computer system?
-            </p>
-            <p>
-                <strong>Instead of buying expensive hardware</strong>, use ubiqMachine to work from your current setup, without sacrifying graphics quality or
-                performance. Our best-in-class encoding technology renders all graphics on a powerful remote desktop running in the cloud, and
-                <strong>streams the live image to your local computer in real-time</strong>, in Full HD with 60 frames per second.
-            </p>
-            <p>
-                All our remote desktop systems are powered by latest generation GPUs, allowing you to handle even the most demanding 3D
-                workloads, even if you are working from a local system which doesn't have a dedicated graphics card.
-            </p>
-            <p>
-                Plus: you are only billed for actual usage, starting as low as $2.49 per usage hour.
-            </p>
-            <hr>
-            <p class="text-center">
-                <a href="{{ path('fos_user_registration_register') }}" type="button" class="btn btn-success btn-lg">
-                    Sign up now and boot your high performance machine.
-                </a>
-            </p>
-        </section>
+
+    <div class="full-row middle">
     </div>
+
+
+    <div class="full-row middle">
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-xs-6">
+                    <h3>
+                        The future of remote computing is here.
+                    </h3>
+                </div>
+
+                <div class="col-xs-6">
+
+                    <div class="well">
+                        Our advanced streaming technology
+                        makes it possible to fluidly interact
+                        with remote Windows desktop systems,
+                        even if complex 3D graphics are involved.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="full-row bang">
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-xs-6">
+
+                    <div class="well">
+                        Play games or work with CAD programs from
+                        everywhere. Your local computers doesn't
+                        need dedicated graphics hardware.
+                    </div>
+
+                </div>
+
+                <div class="col-xs-6">
+                    <h3>
+                        The computing power lives in the cloud.
+                    </h3>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
 {% endblock %}
