@@ -33,6 +33,11 @@ remotedesktops.terminate:
     defaults: { _controller: AppBundle:RemoteDesktop:terminate }
     methods:  [GET]
 
+remotedesktops.sgx_files:
+    path:     /remoteDesktops/{remoteDesktop}/sgx_files/{tag}.sgx
+    defaults: { _controller: AppBundle:RemoteDesktop:serveSgxFile }
+    methods:  [GET]
+
 cloudinstances.new:
     path:     /remoteDesktops/{remoteDesktop}/cloudInstances/new
     defaults: { _controller: AppBundle:CloudInstance:new }

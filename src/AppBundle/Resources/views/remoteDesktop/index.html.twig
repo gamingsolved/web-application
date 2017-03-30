@@ -93,44 +93,52 @@
                                         <span class="label label-success">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.ready_to_use"|trans }}</span>
                                     </h3>
 
-                                    <a class="btn btn-success" href="sgxportal://{{ launcherHostname }}:{{ launcherPort }}/en/remoteDesktop/{{ remoteDesktop.id }}/launch?protocol={{ launcherProtocol }}&version=1_8#{{ remoteDesktop.id }}">Connect now</a>
-
                                     <ul class="list-group">
+
                                         <li class="list-group-item">
                                             {{ "remoteDesktop.index.publicaddress_label"|trans }}
                                             <label>{{ remoteDesktop.publicAddress }}</label>
                                         </li>
+
                                         <li class="list-group-item">
                                             {{ "remoteDesktop.index.username_label"|trans }}
                                             <label>Administrator</label>
                                         </li>
+
                                         <li class="list-group-item">
                                             {{ "remoteDesktop.index.password_label"|trans }}
                                             <label>{{ remoteDesktop.adminPassword }}</label>
                                         </li>
-                                        <li class="list-group-item">
-                                            <p>
-                                                <strong>{{ "remoteDesktop.index.connect_now_using_clients"|trans }}</strong>
-                                            </p>
-                                            <p>
-                                                <a href="{{ clientDownloadUriWin }}"
-                                                   type="button"
-                                                   class="btn btn-default btn-sm"
-                                                >
-                                                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
-                                                    {{ "remoteDesktop.index.download_client_windows"|trans }}
-                                                </a>
 
-                                                <a href="{{ clientDownloadUriMac }}"
-                                                   type="button"
-                                                   class="btn btn-default btn-sm"
-                                                >
-                                                    <span class="glyphicon glyphicon-apple" aria-hidden="true"></span>
-                                                    {{ "remoteDesktop.index.download_client_mac"|trans }}
-                                                </a>
-                                            </p>
+                                        <li class="list-group-item">
+                                            <a href="sgxportal://{{ launcherHostname }}:{{ launcherPort }}/en/remoteDesktop/{{ remoteDesktop.id }}?protocol={{ launcherProtocol }}&version=1_8#{{ remoteDesktop.id }}"
+                                               type="button"
+                                               class="btn btn-success btn-sm"
+                                            >
+                                                <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.index.connect_now"|trans }}
+                                            </a>
+                                        </li>
+
+                                        <li class="list-group-item">
+                                            <a href="{{ clientDownloadUriWin }}"
+                                               type="button"
+                                               class="btn btn-default btn-sm"
+                                            >
+                                                <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.index.download_client_windows"|trans }}
+                                            </a>
+
+                                            <a href="{{ clientDownloadUriMac }}"
+                                               type="button"
+                                               class="btn btn-default btn-sm"
+                                            >
+                                                <span class="glyphicon glyphicon-apple" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.index.download_client_mac"|trans }}
+                                            </a>
                                             {% set clientDownloadButtonsAlreadyShown = true %}
                                         </li>
+
                                     </ul>
                                 {% endif %}
 

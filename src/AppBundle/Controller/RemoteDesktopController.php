@@ -135,4 +135,22 @@ class RemoteDesktopController extends Controller
 
         return $this->redirectToRoute('remotedesktops.index');
     }
+
+    /**
+     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     */
+    public function serveSgxFileAction(RemoteDesktop $remoteDesktop)
+    {
+        $response = $this->render(
+            'AppBundle:remoteDesktop:sgxFile/tag.sgx.twig',
+            [
+                'ip'  => $remoteDesktop->getPublicAddress(),
+                'key' => $remoteDesktop->getId()
+            ]
+        );
+
+        $response->headers->set('Content-Type', 'text/plain');
+
+        return $response;
+    }
 }

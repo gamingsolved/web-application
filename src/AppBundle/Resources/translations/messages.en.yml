@@ -33,7 +33,7 @@ remoteDesktop:
         publicaddress_label: IP address:
         username_label: Username:
         password_label: Password:
-        connect_now_using_clients: Connect to your remote desktop now using one of our clients:
+        connect_now: Connect now
     new:
         form:
             headline: Create a new remote desktop
