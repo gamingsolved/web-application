@@ -3,8 +3,16 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block fos_user_content %}
-    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</p>
-    {% if targetUrl %}
-    <p><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></p>
-    {% endif %}
+    <h1>{{ 'registration.submit'|trans }}</h1>
+    <div class="well">
+        <p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</p>
+
+        {% trans_default_domain '' %}
+        <p>
+            <a class="btn btn-primary" href="{{ path('remotedesktops.new') }}">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                {{ '_navigation.create_new_remote_desktop'|trans({}, 'messages') }}
+            </a>
+        </p>
+    </div>
 {% endblock fos_user_content %}

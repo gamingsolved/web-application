@@ -1,10 +1,14 @@
 body {
     padding-top: 88px;
-    background-color: #fff;
-    color: #444;
+    background-color: #4442C2;
+    color: #000;
     white-space: normal;
     font-weight: 300;
     font-family: 'Nunito';
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #fff;
 }
 
 /* Custom page header */
@@ -111,7 +115,6 @@ section:empty {
 .messages {
     margin-bottom: -20px;
     padding-top: 0;
-    background-color: #fff;
 }
 
 #loggedin-info {
