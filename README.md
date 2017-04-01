@@ -19,20 +19,20 @@
 
     php composer.phar install
 
-        database_host: 127.0.0.1
-        database_port: 
-        database_name: ubiqmachine_webapp
-        database_user: root
-        database_password: secret
-        mailer_transport: smtp
-        mailer_host: 127.0.0.1
-        mailer_user: 
-        mailer_password: 
+        database_host (ub_db): 127.0.0.1
+        database_port (null):
+        database_name (symfony): ubiqmachine_webapp
+        database_user (root):
+        database_password (root): secret
+        mailer_transport (smtp):
+        mailer_host (127.0.0.1):
+        mailer_user (null):
+        mailer_password (null):
         secret (ThisTokenIsNotSoSecretChangeIt):
-        paypal_api_username: manuel-facilitator_api1.kiessling.net
-        paypal_api_password: HRCA69R59KW66GFC
-        paypal_api_signature: AFcWxV21C7fd0v3bYYYRCpSSRl31AoDTxAHRx.0l91OkuS5M0NqyxtQv
-        jms_payment_core_encryption_secret: def00000195a17f4515bcdbdbc271b343f07ecc53cb64d7e9ccdbdb3c10f7a74d31cbc51a1af971a0231f87976d506351213ee791c6cf8e74dc2c91e3198943eb7b7be88
+        paypal_api_username (foo): manuel-facilitator_api1.kiessling.net
+        paypal_api_password (bar): HRCA69R59KW66GFC
+        paypal_api_signature (baz): AFcWxV21C7fd0v3bYYYRCpSSRl31AoDTxAHRx.0l91OkuS5M0NqyxtQv
+        jms_payment_core_encryption_secret (ThisTokenIsNotSoSecretChangeIt): def00000195a17f4515bcdbdbc271b343f07ecc53cb64d7e9ccdbdb3c10f7a74d31cbc51a1af971a0231f87976d506351213ee791c6cf8e74dc2c91e3198943eb7b7be88
 
     php bin/console --env=dev doctrine:migrations:migrate
     
