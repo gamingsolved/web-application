@@ -4,11 +4,12 @@
 
 ### If you want to use Docker for MySQL, but work with the app and PHP loacally
 
+#### Prerequisites
+
 * Docker for Mac (https://docs.docker.com/docker-for-mac/install/)
 * PHP 7.1
 
-#### Prerequisites
-
+#### Steps
 
     docker run --name ubiqmachine-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mysql:5.7
 
@@ -35,10 +36,13 @@
 
     php bin/console --env=dev doctrine:migrations:migrate
 
+Now open [http://127.0.0.1:8000]
+
 
 ### If you want to use Docker for everything
 
-#### Prerequisite 
+#### Prerequisites
+
 * docker-engine >= 1.12 (https://docs.docker.com/engine/installation/)
 * docker-compose >= 1.9 (https://docs.docker.com/compose/install/)
 * for mac: docker-machine (https://docs.docker.com/machine/install-machine/)

@@ -16,3 +16,4 @@
 /web/bundles/
 /docker-compose.yml
 /.composer
+.idea/
