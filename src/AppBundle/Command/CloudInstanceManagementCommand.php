@@ -117,7 +117,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                         $output->writeln('Action: Scheduling stop, because at ' . $accountBalance . ', owner balance is below $0.00!');
                         $cloudInstance->getRemoteDesktop()->scheduleForStop();
                     } else {
-                        $output->writeln('Action: We think the instance is running, but we verify this');
+                        $output->writeln('Action: We think the instance is running, but we verify this, and check for auto stop');
 
                         // Is it stopped?
                         if ($cloudInstanceCoordinator->cloudInstanceHasFinishedStopping($cloudInstance)) {
@@ -148,6 +148,17 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                             $remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
                             $em->persist($remoteDesktop);
                             $em->flush();
+                        } else {
+                            // Is auto stop time reached?
+                            $output->writeln('Action: Checking if auto stop time has been reached');
+                            $output->writeln('It is now ' . DateTimeUtility::createDateTime()->format('Y-m-d H:i:s') . ', scheduled for stop is at ' . $cloudInstance->getScheduleForStopAt()->format('Y-m-d H:i:s'));
+                            if ($cloudInstance->getScheduleForStopAt() <= DateTimeUtility::createDateTime()) {
+                                $output->writeln('Action result: auto stop time reached!');
+                                $output->writeln('Action: Scheduling for stop');
+                                $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_STOP);
+                                $em->persist($cloudInstance);
+                                $em->flush();
+                            }
                         }
                     }
                 }

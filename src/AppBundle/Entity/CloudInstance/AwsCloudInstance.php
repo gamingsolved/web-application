@@ -157,8 +157,8 @@ class AwsCloudInstance extends CloudInstance
             );
             $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
 
-            // Auto schedule for stop in 3 hours and 59 minutes
-            $this->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT14340S')));
+            // Auto schedule for stop in 3 hours and 59 minutes (14340 seconds)
+            $this->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT60S')));
         }
 
         // ...and stop as soon as they don't want it anymore
