@@ -2,7 +2,7 @@
 
 ## Dev setup
 
-### If you want to use Docker for MySQL, but work with the app and PHP loacally
+### If you want to use Docker for MySQL, but work with the app and PHP locally
 
 #### Prerequisites
 
