@@ -42,11 +42,65 @@
             <a href="/de/">DE</a>
         </div>
 
-        {{ include('_messages.html.twig') }}
-
         <main>
+
+            {{ include('_messages.html.twig') }}
+
             {% block body %}{% endblock %}
+
         </main>
+
+        <div id="footer" class="full-row dark">
+
+            <div class="container">
+
+                <hr>
+
+                <div class="row">
+
+                    <div class="col-xs-12 text-center">
+
+                        <p>
+                            <strong>&copy;2017 The ubiqMachine Team.</strong>
+                        </p>
+                        <p>
+                            Made with ❤ in France and Germany
+                            &nbsp;·&nbsp;
+                            <a style="color: #fff;" href="mailto:info@ubiqmachine.com">Get in touch</a>
+                            &nbsp;·&nbsp;
+                            <a style="color: #fff;" href="http://manuel.kiessling.net/imprint-impressum-datenschutz-haftung">Imprint</a>
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="container">&nbsp;</div>
+            <div class="container">&nbsp;</div>
+            <div class="container">&nbsp;</div>
+
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-xs-12 text-center">
+
+                        <p class="small">
+                            Microsoft® and Windows® are either registered trademarks
+                            <br>
+                            or trademarks of Microsoft Corporation in the United States and/or other countries.
+                            <br>
+                            This service is neither affiliated with nor endorsed by Microsoft Corporation.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
 
         {% block javascripts %}
             <script src="{{ asset('bundles/app/vendor/jquery/dist/jquery.min.js') }}"></script>
