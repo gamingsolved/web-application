@@ -1,0 +1,18 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>{{ "about.howbillingworks.headline"|trans }}</h1>
+
+                <img src="{{ asset('bundles/app/images/billing-diagram-1-hour.png') }}" width="100%">
+
+                <hr>
+
+                <img src="{{ asset('bundles/app/images/billing-diagram-2-hours.png') }}" width="100%">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

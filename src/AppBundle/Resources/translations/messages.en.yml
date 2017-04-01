@@ -8,6 +8,14 @@ _navigation:
 logoutSuccessful:
     message: You are now logged out.
 
+about:
+    howbillingworks:
+        headline: How billing works
+        introduction_one: When running your remote desktop, ubiqMachine charges you for usage hours.
+        introduction_two: But what exactly does that mean? The following diagrams explain the system.
+        one_hour: Using a remote desktop for one hour
+        two_hours: Using a remote desktop for two hours
+
 remoteDesktop:
     index:
         negative_account_balance: Negative account balance!
