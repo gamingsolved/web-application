@@ -61,280 +61,276 @@
 
                     {% for remoteDesktop in remoteDesktops %}
 
-                        <a name="{{ remoteDesktop.id }}"></a>
+                        {% if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATED') %}
 
-                        <div class="panel panel-default remotedesktop-panel">
-                            <div class="panel-heading">
-                                <h2 class="panel-title">
-                                    <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
-                                    {{ remoteDesktop.title }}
-                                </h2>
+                            <a name="{{ remoteDesktop.id }}"></a>
 
-                                <div class="remotedesktop-infobox">
-                                    {%
-                                    if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED')
-                                    and remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATED')
-                                    %}
-                                        <span class="label label-default">{{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}</span>
+                            <div class="panel panel-default remotedesktop-panel">
+                                <div class="panel-heading">
+                                    <h2 class="panel-title">
+                                        <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
+                                        {{ remoteDesktop.title }}
+                                    </h2>
+
+                                    <div class="remotedesktop-infobox">
+                                        {% if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
+                                            <span class="label label-default">{{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}</span>
+                                            &nbsp;
+                                            <span class="label label-default">{{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}</span>
+                                        {% endif %}
+
                                         &nbsp;
-                                        <span class="label label-default">{{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}</span>
+                                        <span class="label label-default">{{ remoteDesktop.kind|trans }}</span>
+                                    </div>
+
+                                </div>
+
+                                <div class="panel-body">
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
+                                        <h3>
+                                            <span class="label label-default">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.never_launched"|trans }}</span>
+                                        </h3>
+                                    {% else %}
+                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
+                                            <div class="well well-sm pull-right hourlycostsbox">
+                                                <small>
+                                                    {{ "remoteDesktop.index.current_costs_per_hour"|trans }}
+                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts|number_format(2, '.', ',') }}
+                                                </small>
+                                            </div>
+                                        {% else %}
+                                            <div class="well well-sm pull-right hourlycostsbox">
+                                                <small>
+                                                    {{ "remoteDesktop.index.costs_per_hour"|trans }}
+                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts|number_format(2, '.', ',') }}
+                                                </small>
+                                            </div>
+                                        {% endif %}
+                                        <hr>
                                     {% endif %}
 
-                                    &nbsp;
-                                    <span class="label label-default">{{ remoteDesktop.kind|trans }}</span>
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_BOOTING') %}
+                                        <h3>
+                                            <span class="label label-success label-pulsating">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.booting"|trans }}</span>
+                                        </h3>
+
+                                        <hr>
+
+                                        <div class="alert alert-info small" role="alert">
+                                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.info_launching"|trans }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
+                                        <h3>
+                                            <span class="label label-success">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.ready_to_use"|trans }}</span>
+                                        </h3>
+
+                                        <ul class="list-group">
+
+                                            <li class="list-group-item">
+                                                {{ "remoteDesktop.index.publicaddress_label"|trans }}
+                                                <label>{{ remoteDesktop.publicAddress }}</label>
+                                            </li>
+
+                                            <li class="list-group-item">
+                                                {{ "remoteDesktop.index.username_label"|trans }}
+                                                <label>Administrator</label>
+                                            </li>
+
+                                            <li class="list-group-item">
+                                                {{ "remoteDesktop.index.password_label"|trans }}
+                                                <label>{{ remoteDesktop.adminPassword }}</label>
+                                            </li>
+
+                                            <li class="list-group-item">
+
+                                                <script>
+                                                    resolutionFunctions['{{ remoteDesktop.id }}'] = function(width, height) {
+                                                        jQuery('#launch-link-{{ remoteDesktop.id }}')
+                                                            .attr('href', 'sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/' + width + '/' + height + '?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}');
+                                                    }
+                                                </script>
+
+                                                <p>
+                                                    {{ "remoteDesktop.index.choose_resolution"|trans }}
+                                                </p>
+                                                <div class="well well-sm screenresolutionsbox">
+                                                    <div class="alert alert-danger small pull-right">
+                                                        {{ "remoteDesktop.index.resolution_warning"|trans }}
+                                                    </div>
+                                                    <form>
+                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1024x768" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1024, 768)">
+                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1024x768">1024 x 768</label>
+                                                        <br>
+
+                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1280x720" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1280, 720)">
+                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1280x720">1280 x 720</label>
+                                                        <br>
+
+                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1280x800" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1280, 800)">
+                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1280x800">1280 x 800</label>
+                                                        <br>
+
+                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1536x1152" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1536, 1152)">
+                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1536x1152">1536 x 1152</label>
+                                                        <br>
+
+                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1920x1080" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1920, 1080)">
+                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1920x1080">1920 x 1080</label>
+                                                        <br>
+
+                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1920x1200" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1920, 1200)" checked>
+                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1920x1200">1920 x 1200</label>
+                                                        <br>
+
+                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-2048x1536" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](2048, 1536)">
+                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-2048x1536">2048 x 1536</label>
+                                                        <br>
+
+                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-2560x1440" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](2560, 1440)">
+                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-2560x1440">2560 x 1440</label>
+                                                        <br>
+                                                    </form>
+                                                </div>
+
+                                                <a id="launch-link-{{ remoteDesktop.id }}" href="sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/1280/800?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}"
+                                                   type="button"
+                                                   class="btn btn-success btn-sm"
+                                                >
+                                                    <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
+                                                    {{ "remoteDesktop.index.connect_now"|trans }}
+                                                </a>
+                                                &nbsp;
+                                                <span class="label label-default">{{ "remoteDesktop.index.connect_now_client_info"|trans }}</span>
+                                            </li>
+
+                                            <li class="list-group-item">
+                                                <a href="{{ clientDownloadUriWin }}"
+                                                   type="button"
+                                                   class="btn btn-default btn-sm"
+                                                >
+                                                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+                                                    {{ "remoteDesktop.index.download_client_windows"|trans }}
+                                                </a>
+
+                                                <a href="{{ clientDownloadUriMac }}"
+                                                   type="button"
+                                                   class="btn btn-default btn-sm"
+                                                >
+                                                    <span class="glyphicon glyphicon-apple" aria-hidden="true"></span>
+                                                    {{ "remoteDesktop.index.download_client_mac"|trans }}
+                                                </a>
+                                                {% set clientDownloadButtonsAlreadyShown = true %}
+                                            </li>
+
+                                        </ul>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING') %}
+                                        <h3>
+                                            <span class="label label-default label-pulsating">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.stopping"|trans }}</span>
+                                        </h3>
+
+                                        <hr>
+
+                                        <div class="alert alert-info small" role="alert">
+                                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.info_stopping"|trans }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
+                                        <h3>
+                                            <span class="label label-default">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.stopped"|trans }}</span>
+                                        </h3>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATING') %}
+                                        <h3>
+                                            <span class="label label-default label-pulsating">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.terminating"|trans }}</span>
+                                        </h3>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
+                                        <hr>
+                                        <div class="pull-right text-right">
+                                            {% if remoteDesktop.scheduledForStopAt != null %}
+                                                <p>
+                                                    {{ "remoteDesktop.index.auto_stop_info"|trans }}
+
+                                                    {% if app.request.cookies.has('ubiqmachine_timezone') %}
+                                                        {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }} ({{ app.request.cookies.get('ubiqmachine_timezone') }})
+                                                    {% else %}
+                                                        {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', 'UTC') }} (UTC)
+                                                    {% endif %}
+                                                </p>
+                                            {% endif %}
+                                            {{ "remoteDesktop.index.auto_stop_in"|trans }}
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="panel-footer">
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
+                                        <a href="{{ path('cloudinstances.new', { 'remoteDesktop': remoteDesktop.id }) }}"
+                                           class="btn btn-default remotedesktop-action-button">
+                                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.launch_button"|trans }}
+                                        </a>
+                                    {% endif %}
+
+                                    {%
+                                        if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_BOOTING')
+                                        or remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING')
+                                        or remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATING')
+                                    %}
+                                        <a href="{{ path('remotedesktops.index') }}?{{ random() }}#{{ remoteDesktop.id }}" class="btn btn-default remotedesktop-action-button">
+                                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.refresh_button"|trans }}
+                                        </a>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
+                                        <a href="{{ path('remotedesktops.stop', { 'remoteDesktop': remoteDesktop.id }) }}"
+                                           class="btn btn-default remotedesktop-action-button">
+                                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.stop_button"|trans }}
+                                        </a>
+
+                                        <span class="pull-right">
+                                            <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 1800 }) }}">{{ "remoteDesktop.index.auto_stop_in_30_minutes"|trans }}</a>
+                                            &nbsp;
+                                            <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_1_hour"|trans }}</a>
+                                            &nbsp;
+                                            <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_2_hours"|trans }}</a>
+                                        </span>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
+                                        <a href="{{ path('remotedesktops.start', { 'remoteDesktop': remoteDesktop.id }) }}"
+                                           class="btn btn-primary remotedesktop-action-button">
+                                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.start_button"|trans }}
+                                        </a>
+                                        <a href="{{ path('remotedesktops.terminate', { 'remoteDesktop': remoteDesktop.id }) }}"
+                                           class="btn btn-default remotedesktop-action-button">
+                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.terminate_button"|trans }}
+                                        </a>
+                                    {% endif %}
+
                                 </div>
 
                             </div>
 
-                            <div class="panel-body">
+                        {% endif %}
 
-                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
-                                    <h3>
-                                        <span class="label label-default">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.never_launched"|trans }}</span>
-                                    </h3>
-                                {% else %}
-                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
-                                        <div class="well well-sm pull-right hourlycostsbox">
-                                            <small>
-                                                {{ "remoteDesktop.index.current_costs_per_hour"|trans }}
-                                                ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts|number_format(2, '.', ',') }}
-                                            </small>
-                                        </div>
-                                    {% else %}
-                                        <div class="well well-sm pull-right hourlycostsbox">
-                                            <small>
-                                                {{ "remoteDesktop.index.costs_per_hour"|trans }}
-                                                ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts|number_format(2, '.', ',') }}
-                                            </small>
-                                        </div>
-                                    {% endif %}
-                                    <hr>
-                                {% endif %}
-
-                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_BOOTING') %}
-                                    <h3>
-                                        <span class="label label-success label-pulsating">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.booting"|trans }}</span>
-                                    </h3>
-
-                                    <hr>
-
-                                    <div class="alert alert-info small" role="alert">
-                                        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                                        {{ "remoteDesktop.index.info_launching"|trans }}
-                                    </div>
-                                {% endif %}
-
-                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
-                                    <h3>
-                                        <span class="label label-success">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.ready_to_use"|trans }}</span>
-                                    </h3>
-
-                                    <ul class="list-group">
-
-                                        <li class="list-group-item">
-                                            {{ "remoteDesktop.index.publicaddress_label"|trans }}
-                                            <label>{{ remoteDesktop.publicAddress }}</label>
-                                        </li>
-
-                                        <li class="list-group-item">
-                                            {{ "remoteDesktop.index.username_label"|trans }}
-                                            <label>Administrator</label>
-                                        </li>
-
-                                        <li class="list-group-item">
-                                            {{ "remoteDesktop.index.password_label"|trans }}
-                                            <label>{{ remoteDesktop.adminPassword }}</label>
-                                        </li>
-
-                                        <li class="list-group-item">
-
-                                            <script>
-                                                resolutionFunctions['{{ remoteDesktop.id }}'] = function(width, height) {
-                                                    jQuery('#launch-link-{{ remoteDesktop.id }}')
-                                                        .attr('href', 'sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/' + width + '/' + height + '?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}');
-                                                }
-                                            </script>
-
-                                            <p>
-                                                {{ "remoteDesktop.index.choose_resolution"|trans }}
-                                            </p>
-                                            <div class="well well-sm screenresolutionsbox">
-                                                <div class="alert alert-danger small pull-right">
-                                                    {{ "remoteDesktop.index.resolution_warning"|trans }}
-                                                </div>
-                                                <form>
-                                                    <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1024x768" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1024, 768)">
-                                                    &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1024x768">1024 x 768</label>
-                                                    <br>
-
-                                                    <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1280x720" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1280, 720)">
-                                                    &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1280x720">1280 x 720</label>
-                                                    <br>
-
-                                                    <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1280x800" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1280, 800)">
-                                                    &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1280x800">1280 x 800</label>
-                                                    <br>
-
-                                                    <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1536x1152" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1536, 1152)">
-                                                    &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1536x1152">1536 x 1152</label>
-                                                    <br>
-
-                                                    <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1920x1080" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1920, 1080)">
-                                                    &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1920x1080">1920 x 1080</label>
-                                                    <br>
-
-                                                    <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1920x1200" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1920, 1200)" checked>
-                                                    &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1920x1200">1920 x 1200</label>
-                                                    <br>
-
-                                                    <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-2048x1536" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](2048, 1536)">
-                                                    &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-2048x1536">2048 x 1536</label>
-                                                    <br>
-
-                                                    <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-2560x1440" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](2560, 1440)">
-                                                    &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-2560x1440">2560 x 1440</label>
-                                                    <br>
-                                                </form>
-                                            </div>
-
-                                            <a id="launch-link-{{ remoteDesktop.id }}" href="sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/1280/800?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}"
-                                               type="button"
-                                               class="btn btn-success btn-sm"
-                                            >
-                                                <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
-                                                {{ "remoteDesktop.index.connect_now"|trans }}
-                                            </a>
-                                            &nbsp;
-                                            <span class="label label-default">{{ "remoteDesktop.index.connect_now_client_info"|trans }}</span>
-                                        </li>
-
-                                        <li class="list-group-item">
-                                            <a href="{{ clientDownloadUriWin }}"
-                                               type="button"
-                                               class="btn btn-default btn-sm"
-                                            >
-                                                <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
-                                                {{ "remoteDesktop.index.download_client_windows"|trans }}
-                                            </a>
-
-                                            <a href="{{ clientDownloadUriMac }}"
-                                               type="button"
-                                               class="btn btn-default btn-sm"
-                                            >
-                                                <span class="glyphicon glyphicon-apple" aria-hidden="true"></span>
-                                                {{ "remoteDesktop.index.download_client_mac"|trans }}
-                                            </a>
-                                            {% set clientDownloadButtonsAlreadyShown = true %}
-                                        </li>
-
-                                    </ul>
-                                {% endif %}
-
-                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING') %}
-                                    <h3>
-                                        <span class="label label-default label-pulsating">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.stopping"|trans }}</span>
-                                    </h3>
-
-                                    <hr>
-
-                                    <div class="alert alert-info small" role="alert">
-                                        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                                        {{ "remoteDesktop.index.info_stopping"|trans }}
-                                    </div>
-                                {% endif %}
-
-                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
-                                    <h3>
-                                        <span class="label label-default">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.stopped"|trans }}</span>
-                                    </h3>
-                                {% endif %}
-
-                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATING') %}
-                                    <h3>
-                                        <span class="label label-default label-pulsating">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.terminating"|trans }}</span>
-                                    </h3>
-                                {% endif %}
-
-                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATED') %}
-                                    <h3>
-                                        <span class="label label-default">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.terminated"|trans }}</span>
-                                    </h3>
-                                {% endif %}
-
-                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
-                                    <hr>
-                                    <div class="pull-right text-right">
-                                        {% if remoteDesktop.scheduledForStopAt != null %}
-                                            <p>
-                                                {{ "remoteDesktop.index.auto_stop_info"|trans }}
-
-                                                {% if app.request.cookies.has('ubiqmachine_timezone') %}
-                                                    {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }} ({{ app.request.cookies.get('ubiqmachine_timezone') }})
-                                                {% else %}
-                                                    {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', 'UTC') }} (UTC)
-                                                {% endif %}
-                                            </p>
-                                        {% endif %}
-                                        {{ "remoteDesktop.index.auto_stop_in"|trans }}
-                                    </div>
-                                {% endif %}
-
-                            </div>
-
-
-                            <div class="panel-footer">
-
-                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
-                                    <a href="{{ path('cloudinstances.new', { 'remoteDesktop': remoteDesktop.id }) }}"
-                                       class="btn btn-default remotedesktop-action-button">
-                                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                                        {{ "remoteDesktop.index.launch_button"|trans }}
-                                    </a>
-                                {% endif %}
-
-                                {%
-                                    if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_BOOTING')
-                                    or remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING')
-                                    or remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATING')
-                                %}
-                                    <a href="{{ path('remotedesktops.index') }}?{{ random() }}#{{ remoteDesktop.id }}" class="btn btn-default remotedesktop-action-button">
-                                        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                                        {{ "remoteDesktop.index.refresh_button"|trans }}
-                                    </a>
-                                {% endif %}
-
-                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
-                                    <a href="{{ path('remotedesktops.stop', { 'remoteDesktop': remoteDesktop.id }) }}"
-                                       class="btn btn-default remotedesktop-action-button">
-                                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                                        {{ "remoteDesktop.index.stop_button"|trans }}
-                                    </a>
-
-                                    <span class="pull-right">
-                                        <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 1800 }) }}">{{ "remoteDesktop.index.auto_stop_in_30_minutes"|trans }}</a>
-                                        &nbsp;
-                                        <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_1_hour"|trans }}</a>
-                                        &nbsp;
-                                        <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_2_hours"|trans }}</a>
-                                    </span>
-                                {% endif %}
-
-                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
-                                    <a href="{{ path('remotedesktops.start', { 'remoteDesktop': remoteDesktop.id }) }}"
-                                       class="btn btn-primary remotedesktop-action-button">
-                                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-                                        {{ "remoteDesktop.index.start_button"|trans }}
-                                    </a>
-                                    <a href="{{ path('remotedesktops.terminate', { 'remoteDesktop': remoteDesktop.id }) }}"
-                                       class="btn btn-default remotedesktop-action-button">
-                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                        {{ "remoteDesktop.index.terminate_button"|trans }}
-                                    </a>
-                                {% endif %}
-
-                            </div>
-
-                        </div>
                     {% endfor %}
 
                 {% else %}
