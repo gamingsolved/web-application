@@ -12,6 +12,7 @@ use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\User;
+use AppBundle\Utility\DateTimeUtility;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -279,6 +280,11 @@ class RemoteDesktop
         } else {
             throw new \Exception('Cannot schedule a cloud instance for stopping that is not running');
         }
+    }
+
+    public function scheduleForStopInSeconds(int $duration)
+    {
+        $this->getActiveCloudInstance()->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT' . $duration . 'S')));
     }
 
     public function scheduleForStart()

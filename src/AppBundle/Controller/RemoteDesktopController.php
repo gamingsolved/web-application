@@ -139,6 +139,26 @@ class RemoteDesktopController extends Controller
     /**
      * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
      */
+    public function updateScheduleForStopAtAction(RemoteDesktop $remoteDesktop, int $duration)
+    {
+        $user = $this->getUser();
+
+        if ($remoteDesktop->getUser()->getId() !== $user->getId()) {
+            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
+        }
+
+        $remoteDesktop->scheduleForStopInSeconds($duration);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($remoteDesktop);
+        $em->flush();
+
+        return $this->redirectToRoute('remotedesktops.index');
+    }
+
+    /**
+     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     */
     public function serveSgxFileAction(RemoteDesktop $remoteDesktop, string $width, string $height)
     {
         $response = $this->render(

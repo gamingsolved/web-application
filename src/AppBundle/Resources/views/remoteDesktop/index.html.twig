@@ -69,6 +69,21 @@
                                     <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
                                     {{ remoteDesktop.title }}
                                 </h2>
+
+                                <div class="remotedesktop-infobox">
+                                    {%
+                                    if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED')
+                                    and remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATED')
+                                    %}
+                                        <span class="label label-default">{{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}</span>
+                                        &nbsp;
+                                        <span class="label label-default">{{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}</span>
+                                    {% endif %}
+
+                                    &nbsp;
+                                    <span class="label label-default">{{ remoteDesktop.kind|trans }}</span>
+                                </div>
+
                             </div>
 
                             <div class="panel-body">
@@ -83,12 +98,6 @@
                                             <small>
                                                 {{ "remoteDesktop.index.current_costs_per_hour"|trans }}
                                                 ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts|number_format(2, '.', ',') }}
-
-                                                {% if remoteDesktop.scheduledForStopAt != null %}
-                                                    <br>
-                                                    {{ remoteDesktop.scheduledForStopAt|date("Y:m:d H:i:s") }} UTC
-
-                                                {% endif %}
                                             </small>
                                         </div>
                                     {% else %}
@@ -252,19 +261,19 @@
                                     </h3>
                                 {% endif %}
 
-                                <div class="well well-sm remotedesktop-infobox">
-                                    {%
-                                        if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED')
-                                        and remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATED')
-                                    %}
-                                        <span class="label label-default">{{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}</span>
-                                        &nbsp;
-                                        <span class="label label-default">{{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}</span>
-                                    {% endif %}
+                                {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
+                                    <hr>
+                                    <div class="pull-right text-right">
+                                        {% if remoteDesktop.scheduledForStopAt != null %}
+                                            <p>
+                                                {{ "remoteDesktop.index.auto_stop_info"|trans }}
+                                                {{ remoteDesktop.scheduledForStopAt|date }} UTC
+                                            </p>
+                                        {% endif %}
+                                        {{ "remoteDesktop.index.auto_stop_in"|trans }}
+                                    </div>
+                                {% endif %}
 
-                                    &nbsp;
-                                    <span class="label label-default">{{ remoteDesktop.kind|trans }}</span>
-                                </div>
                             </div>
 
 
@@ -295,6 +304,14 @@
                                         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                                         {{ "remoteDesktop.index.stop_button"|trans }}
                                     </a>
+
+                                    <span class="pull-right">
+                                        <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 1800 }) }}">{{ "remoteDesktop.index.auto_stop_in_30_minutes"|trans }}</a>
+                                        &nbsp;
+                                        <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_1_hour"|trans }}</a>
+                                        &nbsp;
+                                        <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_2_hours"|trans }}</a>
+                                    </span>
                                 {% endif %}
 
                                 {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}

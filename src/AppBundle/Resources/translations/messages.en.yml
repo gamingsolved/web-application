@@ -31,6 +31,11 @@ remoteDesktop:
         headline: Your remote desktops
         no_remote_desktops_yet: You do not yet have any remote desktops.
         costs_per_hour: Costs per hour
+        auto_stop_info: "Cost protection: This instance will automatically stop on"
+        auto_stop_in: "Update the protection to schedule a stop in:"
+        auto_stop_in_30_minutes: 30 minutes
+        auto_stop_in_1_hour: 1 hour
+        auto_stop_in_2_hours: 2 hours
         only_in_status: only in status
         current_costs_per_hour: Current hourly costs
         while_in_status: while in status
