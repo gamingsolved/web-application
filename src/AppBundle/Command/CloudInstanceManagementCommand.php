@@ -93,6 +93,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 $output->writeln('Found cloud instance ' . $cloudInstance->getId());
                 $output->writeln('Owner: ' . $cloudInstance->getRemoteDesktop()->getUser()->getUsername());
                 $output->writeln('Current run status: ' . CloudInstance::getRunstatusName($cloudInstance->getRunstatus()));
+                $output->writeln('Provider instance ID: ' . $cloudInstance->getProviderInstanceId());
                 $output->writeln('Flavor: ' . $cloudInstance->getFlavor()->getInternalName());
                 $output->writeln('Image: ' . $cloudInstance->getImage()->getInternalName());
                 $output->writeln('Region: ' . $cloudInstance->getRegion()->getInternalName());

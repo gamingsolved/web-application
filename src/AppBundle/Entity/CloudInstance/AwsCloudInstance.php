@@ -232,6 +232,11 @@ class AwsCloudInstance extends CloudInstance
         }
     }
 
+    public function getProviderInstanceId() : string
+    {
+        return $this->getEc2InstanceId();
+    }
+
 
     // The following are AWS specific
 

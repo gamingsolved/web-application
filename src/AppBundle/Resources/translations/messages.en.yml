@@ -56,8 +56,9 @@ remoteDesktop:
             kind_label: What do you want to use this remote desktop for?
             submit_label: Continue
     kind:
-        games: "Gaming: Preinstalled with Steam and UPlay"
-        cad: "CAD work: Preinstalled Autodesk AutoCAD® 2017"
+        gamingpro: "Gaming: Preinstalled with Steam, UPlay, GOG and Origin"
+        cadpro: "CAD Pro: Preinstalled Autodesk AutoCAD® 2017 and Revit 2017 (very good computing power)"
+        cadultra: "CAD Ultra: Preinstalled Autodesk AutoCAD® 2017 and Revit 2017 (extreme computing power)"
     status:
         label: Current status:
         never_launched: Not running

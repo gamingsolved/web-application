@@ -6,7 +6,7 @@ use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
-use AppBundle\Entity\RemoteDesktop\RemoteDesktopGamingKind;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktopGamingProKind;
 use AppBundle\Service\BillingService;
 use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityRepository;
@@ -21,7 +21,7 @@ class BillingServiceTest extends TestCase
         $remoteDesktop = new RemoteDesktop();
         $remoteDesktop->setCloudInstanceProvider(new AwsCloudInstanceProvider());
         $remoteDesktop->setId('r1');
-        $remoteDesktop->setKind(new RemoteDesktopGamingKind());
+        $remoteDesktop->setKind(new RemoteDesktopGamingProKind());
         $awsCloudInstanceProvider = new AwsCloudInstanceProvider();
         $remoteDesktop->addCloudInstance(
             $awsCloudInstanceProvider->createInstanceForRemoteDesktopAndRegion(

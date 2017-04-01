@@ -20,8 +20,9 @@ class RemoteDesktopType extends AbstractType
                 ChoiceType::class,
                 [
                     'choices' => [
-                        'remoteDesktop.kind.games' => RemoteDesktopKind::GAMING,
-                        'remoteDesktop.kind.cad' => RemoteDesktopKind::CAD
+                        'remoteDesktop.kind.gamingpro' => RemoteDesktopKind::GAMING_PRO,
+                        'remoteDesktop.kind.cadpro' => RemoteDesktopKind::CAD_PRO,
+                        'remoteDesktop.kind.cadultra' => RemoteDesktopKind::CAD_ULTRA,
                     ],
                     'expanded' => true,
                     'multiple' => false,

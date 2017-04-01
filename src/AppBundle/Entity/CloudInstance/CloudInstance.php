@@ -39,6 +39,8 @@ interface CloudInstanceInterface
 
     public function setPublicAddress(string $addr);
     public function getPublicAddress() : string;
+
+    public function getProviderInstanceId() : string;
 }
 
 abstract class CloudInstance implements CloudInstanceInterface
