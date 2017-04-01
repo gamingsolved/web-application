@@ -269,9 +269,9 @@
                                                 {{ "remoteDesktop.index.auto_stop_info"|trans }}
 
                                                 {% if app.request.cookies.has('ubiqmachine_timezone') %}
-                                                    {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i', app.request.cookies.get('ubiqmachine_timezone')) }} ({{ app.request.cookies.get('ubiqmachine_timezone') }})
+                                                    {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }} ({{ app.request.cookies.get('ubiqmachine_timezone') }})
                                                 {% else %}
-                                                    {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i', 'UTC') }} (UTC)
+                                                    {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', 'UTC') }} (UTC)
                                                 {% endif %}
                                             </p>
                                         {% endif %}
