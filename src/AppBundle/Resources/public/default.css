@@ -170,6 +170,10 @@ section:empty {
     margin-bottom: 2px;
 }
 
+div.well.screenresolutionsbox label {
+    font-weight: normal;
+}
+
 div.alert hr {
     margin-top: 10px;
     margin-bottom: 10px;

@@ -39,7 +39,7 @@ remotedesktops.terminate:
     methods:  [GET]
 
 remotedesktops.sgx_files:
-    path:     /remoteDesktops/{remoteDesktop}/sgx_files/{tag}.sgx
+    path:     /remoteDesktops/{remoteDesktop}/{width}/{height}/sgx_files/{tag}.sgx
     defaults: { _controller: AppBundle:RemoteDesktop:serveSgxFile }
     methods:  [GET]
 

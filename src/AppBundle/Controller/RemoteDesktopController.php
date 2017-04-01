@@ -139,13 +139,15 @@ class RemoteDesktopController extends Controller
     /**
      * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
      */
-    public function serveSgxFileAction(RemoteDesktop $remoteDesktop)
+    public function serveSgxFileAction(RemoteDesktop $remoteDesktop, string $width, string $height)
     {
         $response = $this->render(
             'AppBundle:remoteDesktop:sgxFile/tag.sgx.twig',
             [
-                'ip'  => $remoteDesktop->getPublicAddress(),
-                'key' => $remoteDesktop->getId(),
+                'ip'       => $remoteDesktop->getPublicAddress(),
+                'width'    => $width,
+                'height'   => $height,
+                'key'      => $remoteDesktop->getId(),
                 'password' => $remoteDesktop->getAdminPassword()
             ]
         );
