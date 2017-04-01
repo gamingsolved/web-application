@@ -1,0 +1,239 @@
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito Regular'), local('Nunito-Regular'), url(./fonts/nunito-400-vietnamese.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+1EA0-1EF9, U+20AB;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito Regular'), local('Nunito-Regular'), url(./fonts/nunito-400-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito Regular'), local('Nunito-Regular'), url(./fonts/nunito-400-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito Bold'), local('Nunito-Bold'), url(./fonts/nunito-700-vietnamese.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+1EA0-1EF9, U+20AB;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito Bold'), local('Nunito-Bold'), url(./fonts/nunito-700-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito Bold'), local('Nunito-Bold'), url(./fonts/nunito-700-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+body {
+  background-color: #337bb7;
+  color: #000;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 300;
+  padding-top: 88px;
+  white-space: normal;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #fff;
+}
+
+/* Custom page header */
+header nav {
+  background-color: #444;
+  margin-bottom: 0;
+}
+
+header .wrapper {
+  border-bottom: 1px solid #444;
+}
+
+header a {
+  color: #fff;
+}
+
+header a.brand {
+  font-weight: bolder;
+}
+
+header a.brand:hover,
+header a.brand:focus {
+  color: #fff;
+  text-shadow: 0 0 5px #fff;
+}
+
+.navbar {
+  border-color: #777;
+  margin: 0;
+  padding-top: 6px;
+}
+
+.navbar-toggle {
+  margin-top: 12px;
+}
+
+.navbar-toggle {
+  background-color: #444;
+  border-color: #444;
+}
+
+.navbar-toggle {
+  background-color: #777;
+}
+
+.icon-bar {
+  background-color: #444;
+}
+
+#langnav {
+  background-color: #444;
+  bottom: 0px;
+  color: #777;
+  display: none;
+  left: 0px;
+  padding: 16px;
+  position: fixed;
+  z-index: 99999999;
+}
+
+#langnav a {
+  color: #777;
+}
+
+header + main {
+  margin-top: 40px;
+}
+
+main {
+  min-height: 400px;
+  padding: 0 0 48px;
+}
+
+.container {
+  max-width: 960px;
+}
+
+section {
+  padding: 40px 0;
+}
+
+section:empty {
+  display: none;
+}
+
+/* Make the masthead heading the same height as the navigation */
+.brandname {
+  color: #fff;
+  font-size: 23px;
+  font-weight: 100;
+  line-height: 20px;
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+
+.brandname .glyphicon {
+  top: 3px;
+}
+
+.brandname .right-word {
+  margin-left: -4px;
+}
+
+.messages {
+  margin-bottom: -20px;
+  padding-top: 0;
+}
+
+#loggedin-info {
+  background-color: #ddd;
+  color: #444;
+  font-weight: 300;
+  padding: 0 4px 1px 7px;
+  position: fixed;
+  right: 0;
+  top: 58px;
+  z-index: 1031;
+}
+
+#navbar.collapsing #loggedin-info {
+  display: none;
+}
+
+#navbar.in #loggedin-info {
+  top: 204px;
+}
+
+.jumbotron {
+  color: #000;
+}
+
+.jumbotron a {
+  color: #fff;
+  font-weight: bold;
+}
+
+.label {
+  font-weight: 400;
+}
+
+.label-default {
+  background-color: #ddd;
+  color: #444
+}
+
+.remotedesktop-panel {
+  margin-bottom: 72px;
+}
+
+.remotedesktop-infobox {
+  margin-bottom: 0;
+  margin-top: 36px;
+}
+
+.remotedesktop-infobox .label {
+  display: inline-block;
+  margin-bottom: 2px;
+  margin-top: 2px;
+  padding: 4px 0.6em;
+}
+
+div.well.screenresolutionsbox label {
+  font-weight: normal;
+}
+
+div.alert hr {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}

@@ -1,0 +1,31 @@
+{
+  "name": "ubiqmachine-webapp",
+  "version": "0.0.1",
+  "description": "## Dev setup",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/ubiqmachine/ubiqmachine-webapp.git"
+  },
+  "author": "Manuel Kiessling, Delf Tonder, Jannis Hell",
+  "license": "UNLICENSED",
+  "homepage": "https://bitbucket.org/ubiqmachine/ubiqmachine-webapp#readme",
+  "devDependencies": {
+    "gulp": "3.9.1",
+    "gulp-autoprefixer": "3.1.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-group-css-media-queries": "1.2.0",
+    "gulp-insert": "0.5.0",
+    "gulp-sass": "3.1.0",
+    "gulp-sass-lint": "1.3.2",
+    "gulp-shell": "0.6.3",
+    "run-sequence": "1.2.2",
+    "sassdoc": "2.2.2"
+  }
+}
