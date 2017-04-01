@@ -43,16 +43,20 @@ If you want to present a datetime to the user, please convert at the last moment
 
 ## Scratchpad
 
+### dev
+
     docker run --name sew-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mysql:5.7
     docker exec -ti sew-mysql mysql -psecret -e "CREATE DATABASE sgew_dev;"
     php bin/console --env=dev doctrine:migrations:migrate
 
     php bin/console assets:install --symlink
 
-    php bin/console --env=dev app:cloudinstancemanagement "AKI..." "QA8..." ~/Dropbox/cloudgaming/gaming-vm-keypair.pem
+    php bin/console --env=dev app:cloudinstancemanagement `cat ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-api-key.txt` `cat ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-api-secret.txt` ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-keypair-private-key.pem
+    Attempting to handle cloud instances of class: AppBundle\Entity\CloudInstance\AwsCloudInstance
 
 
-    
+### preprod
+
     rsync -avc --exclude app/config/parameters.yml --exclude .git --exclude var/cache/dev --exclude var/cache/test --exclude var/logs/dev.log --exclude var/logs/test.log ~/Dropbox/Projects/cloudgaming/ubiqmachine-webapp/ www-data@5.45.99.8:/opt/ubiqmachine-webapp/preprod/
 
     
@@ -63,8 +67,9 @@ If you want to present a datetime to the user, please convert at the last moment
     watch -n5 'cd /opt/ubiqmachine-webapp/preprod && /usr/bin/php bin/console -v --env=preprod app:generatebillableitems'
     
     watch -n5 'cd /opt/ubiqmachine-webapp/preprod && /usr/bin/php bin/console --env=preprod app:cloudinstancemanagement $(cat /etc/ubiqmachine-webapp/secrets/preprod/aws-api-key.txt) $(cat /etc/ubiqmachine-webapp/secrets/preprod/aws-api-secret.txt) /etc/ubiqmachine-webapp/secrets/preprod/aws-keypair-private-key.pem'
-    
 
+
+### prod
 
     rsync -avc --exclude app/config/parameters.yml --exclude .git --exclude var/cache/dev --exclude var/cache/test --exclude var/logs/dev.log --exclude var/logs/test.log ~/Dropbox/Projects/cloudgaming/ubiqmachine-webapp/ www-data@5.45.99.8:/opt/ubiqmachine-webapp/prod/
 

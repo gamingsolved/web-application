@@ -4,6 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 rsync \
     -avc \
+    --delete \
     --exclude app/config/parameters.yml \
     --exclude .git \
     --exclude .idea \
