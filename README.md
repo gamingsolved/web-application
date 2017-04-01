@@ -35,6 +35,8 @@
         jms_payment_core_encryption_secret: def00000195a17f4515bcdbdbc271b343f07ecc53cb64d7e9ccdbdb3c10f7a74d31cbc51a1af971a0231f87976d506351213ee791c6cf8e74dc2c91e3198943eb7b7be88
 
     php bin/console --env=dev doctrine:migrations:migrate
+    
+    php bin/console server:start
 
 Now open [http://127.0.0.1:8000]
 
