@@ -2,7 +2,8 @@
 
 ## Setup
 
-Prerequisite: 
+Prerequisite:
+
 * docker-engine >= 1.12 (https://docs.docker.com/engine/installation/)
 * docker-compose >= 1.9 (https://docs.docker.com/compose/install/)
 * for mac: docker-machine (https://docs.docker.com/machine/install-machine/)
