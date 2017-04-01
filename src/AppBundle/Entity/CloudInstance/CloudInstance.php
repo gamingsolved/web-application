@@ -40,6 +40,9 @@ interface CloudInstanceInterface
     public function setPublicAddress(string $addr);
     public function getPublicAddress() : string;
 
+    public function setScheduleForStopAt(\DateTime $dateTime);
+    public function getScheduleForStopAt() : \DateTime;
+
     public function getProviderInstanceId() : string;
 }
 

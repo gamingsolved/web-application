@@ -98,7 +98,7 @@ class AwsCloudInstance extends CloudInstance
         $this->setStatus(self::STATUS_IN_USE);
     }
 
-    public function getId() : string
+    public function getId(): string
     {
         return $this->id;
     }
@@ -113,7 +113,7 @@ class AwsCloudInstance extends CloudInstance
         return $this->remoteDesktop;
     }
 
-    public function getCloudInstanceProvider() : CloudInstanceProviderInterface
+    public function getCloudInstanceProvider(): CloudInstanceProviderInterface
     {
         return new AwsCloudInstanceProvider();
     }
@@ -137,7 +137,7 @@ class AwsCloudInstance extends CloudInstance
         $this->status = $status;
     }
 
-    public function getStatus() : int
+    public function getStatus(): int
     {
         return $this->status;
     }
@@ -156,6 +156,9 @@ class AwsCloudInstance extends CloudInstance
                 DateTimeUtility::createDateTime('now')
             );
             $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+
+            // Auto schedule for stop in 3 hours and 59 minutes
+            $this->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT14340S')));
         }
 
         // ...and stop as soon as they don't want it anymore
@@ -171,7 +174,7 @@ class AwsCloudInstance extends CloudInstance
         $this->runstatus = $runstatus;
     }
 
-    public function getRunstatus() : int
+    public function getRunstatus(): int
     {
         return $this->runstatus;
     }
@@ -181,7 +184,7 @@ class AwsCloudInstance extends CloudInstance
         $this->flavorInternalName = $flavor->getInternalName();
     }
 
-    public function getFlavor() : Flavor
+    public function getFlavor(): Flavor
     {
         return $this->getCloudInstanceProvider()->getFlavorByInternalName($this->flavorInternalName);
     }
@@ -191,7 +194,7 @@ class AwsCloudInstance extends CloudInstance
         $this->imageInternalName = $image->getInternalName();
     }
 
-    public function getImage() : Image
+    public function getImage(): Image
     {
         return $this->getCloudInstanceProvider()->getImageByInternalName($this->imageInternalName);
     }
@@ -201,7 +204,7 @@ class AwsCloudInstance extends CloudInstance
         $this->regionInternalName = $region->getInternalName();
     }
 
-    public function getRegion() : Region
+    public function getRegion(): Region
     {
         return $this->getCloudInstanceProvider()->getRegionByInternalName($this->regionInternalName);
     }
@@ -211,7 +214,7 @@ class AwsCloudInstance extends CloudInstance
         $this->publicAddress = $addr;
     }
 
-    public function getPublicAddress() : string
+    public function getPublicAddress(): string
     {
         return (string)$this->publicAddress;
     }
@@ -225,7 +228,7 @@ class AwsCloudInstance extends CloudInstance
         );
     }
 
-    public function getAdminPassword() : string
+    public function getAdminPassword(): string
     {
         if ($this->adminPassword != '') {
             $cryptor = new Cryptor();
@@ -236,6 +239,22 @@ class AwsCloudInstance extends CloudInstance
         } else {
             return '';
         }
+    }
+
+    public function setScheduleForStopAt(\DateTime $dateTime)
+    {
+        if ($dateTime->getTimezone()->getName() !== 'UTC') {
+            throw new \Exception('Provided time zone is not UTC.');
+        }
+        $this->setScheduleForStopAt($dateTime);
+    }
+
+    public function getScheduleForStopAt() : \DateTime
+    {
+        if ($this->scheduleForStopAt->getTimezone()->getName() !== 'UTC') {
+            throw new \Exception('Stored time zone is not UTC, but ' . $this->scheduleForStopAt->getTimezone()->getName());
+        }
+        return clone($this->scheduleForStopAt);
     }
 
     public function getProviderInstanceId() : string
