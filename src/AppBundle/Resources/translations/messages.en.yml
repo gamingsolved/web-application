@@ -12,9 +12,15 @@ about:
     howbillingworks:
         headline: How billing works
         introduction_one: When running your remote desktop, ubiqMachine charges you for usage hours.
-        introduction_two: But what exactly does that mean? The following diagrams explain the system.
-        one_hour: Using a remote desktop for one hour
-        two_hours: Using a remote desktop for two hours
+                          A new usage hour begins as soon as your remote desktop finished booting and
+                          is therefore available for use. Within this running usage hour, you can stop
+                          and start your remote desktop as ofent as you wish, without any effect on
+                          billing.
+        introduction_two: In case your remote desktop is still running at the end of the
+                          usage hour, another usage hour begins, and you are charged for it.
+        introduction_three: The diagrams below visualize this mechanism.
+        headline_one_hour: Using a remote desktop for one hour
+        headline_two_hours: Using a remote desktop for two consecutive hours
 
 remoteDesktop:
     index:
