@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -32,8 +33,11 @@ class CloudInstanceController extends Controller
         $regions = $cloudInstanceProvider->getRegions();
         $regionChoices = [];
 
+        /** @var Region $region */
         foreach ($regions as $region) {
-            $regionChoices[$region->getHumanName()] = $region->getInternalName();
+            if ($region->getIsCurrentlyChoosable()) {
+                $regionChoices[$region->getHumanName()] = $region->getInternalName();
+            }
         }
 
         /** @var Form $form */

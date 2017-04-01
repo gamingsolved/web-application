@@ -9,17 +9,14 @@ abstract class ProviderElement
     protected $cloudInstanceProvider;
     protected $internalName;
     protected $humanName;
+    protected $isCurrentlyChoosable;
 
-    /**
-     * @param CloudInstanceProviderInterface $cloudInstanceProvider
-     * @param string $internalName
-     * @param string $humanName
-     */
-    public function __construct(CloudInstanceProviderInterface $cloudInstanceProvider, string $internalName, string $humanName)
+    public function __construct(CloudInstanceProviderInterface $cloudInstanceProvider, string $internalName, string $humanName, bool $isCurrentlyChoosable = true)
     {
         $this->cloudInstanceProvider = $cloudInstanceProvider;
         $this->internalName = $internalName;
         $this->humanName = $humanName;
+        $this->isCurrentlyChoosable = $isCurrentlyChoosable;
     }
 
     public function getInternalName() : string
@@ -30,5 +27,10 @@ abstract class ProviderElement
     public function getHumanName() : string
     {
         return $this->humanName;
+    }
+
+    public function getIsCurrentlyChoosable() : bool
+    {
+        return $this->isCurrentlyChoosable;
     }
 }
