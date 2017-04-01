@@ -21,7 +21,7 @@
 
         database_host: 127.0.0.1
         database_port: 
-        database_name: ubiqmachine_webapp_dev
+        database_name: ubiqmachine_webapp
         database_user: root
         database_password: secret
         mailer_transport: smtp
