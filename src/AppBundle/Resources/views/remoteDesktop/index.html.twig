@@ -144,6 +144,9 @@
                                                 {{ "remoteDesktop.index.choose_resolution"|trans }}
                                             </p>
                                             <div class="well well-sm screenresolutionsbox">
+                                                <div class="alert alert-danger small pull-right">
+                                                    {{ "remoteDesktop.index.resolution_warning"|trans }}
+                                                </div>
                                                 <form>
                                                     <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1024x768" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1024, 768)">
                                                     &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1024x768">1024x768</label>

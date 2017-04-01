@@ -48,6 +48,7 @@ remoteDesktop:
         username_label: Username:
         password_label: Password:
         choose_resolution: Choose your screen resolution:
+        resolution_warning: Never change the resolution within the Windows® desktop!
         connect_now: Connect now
         connect_now_client_info: You need to have the client program installed.
     new:
