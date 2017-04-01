@@ -158,7 +158,7 @@ class AwsCloudInstance extends CloudInstance
             $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
 
             // Auto schedule for stop in 3 hours and 59 minutes (14340 seconds)
-            $this->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT60S')));
+            $this->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT120S')));
         }
 
         // ...and stop as soon as they don't want it anymore
@@ -246,15 +246,23 @@ class AwsCloudInstance extends CloudInstance
         if ($dateTime->getTimezone()->getName() !== 'UTC') {
             throw new \Exception('Provided time zone is not UTC.');
         }
-        $this->setScheduleForStopAt($dateTime);
+        $this->scheduleForStopAt = $dateTime;
     }
 
-    public function getScheduleForStopAt() : \DateTime
+    /**
+     * @return null|\DateTime
+     * @throws \Exception
+     */
+    public function getScheduleForStopAt()
     {
-        if ($this->scheduleForStopAt->getTimezone()->getName() !== 'UTC') {
-            throw new \Exception('Stored time zone is not UTC, but ' . $this->scheduleForStopAt->getTimezone()->getName());
+        if (!is_null($this->scheduleForStopAt)) {
+            if ($this->scheduleForStopAt->getTimezone()->getName() !== 'UTC') {
+                throw new \Exception('Stored time zone is not UTC, but ' . $this->scheduleForStopAt->getTimezone()->getName());
+            }
+            return clone($this->scheduleForStopAt);
+        } else {
+            return null;
         }
-        return clone($this->scheduleForStopAt);
     }
 
     public function getProviderInstanceId() : string

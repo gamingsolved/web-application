@@ -83,6 +83,12 @@
                                             <small>
                                                 {{ "remoteDesktop.index.current_costs_per_hour"|trans }}
                                                 ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts|number_format(2, '.', ',') }}
+
+                                                {% if remoteDesktop.scheduledForStopAt != null %}
+                                                    <br>
+                                                    {{ remoteDesktop.scheduledForStopAt|date("Y:m:d H:i:s") }} UTC
+
+                                                {% endif %}
                                             </small>
                                         </div>
                                     {% else %}

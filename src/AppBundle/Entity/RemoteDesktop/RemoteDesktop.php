@@ -308,6 +308,11 @@ class RemoteDesktop
         return $this->getActiveCloudInstance()->getHourlyCosts();
     }
 
+    public function getScheduledForStopAt()
+    {
+        return $this->getActiveCloudInstance()->getScheduleForStopAt();
+    }
+
     /**
      * @throws \Exception
      */

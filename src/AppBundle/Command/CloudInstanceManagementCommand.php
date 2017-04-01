@@ -18,6 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 date_default_timezone_set('UTC');
+ini_set('memory_limit', '1024M');
 
 class CloudInstanceManagementCommand extends ContainerAwareCommand
 {
@@ -148,16 +149,18 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                             $remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
                             $em->persist($remoteDesktop);
                             $em->flush();
+
                         } else {
                             // Is auto stop time reached?
                             $output->writeln('Action: Checking if auto stop time has been reached');
                             $output->writeln('It is now ' . DateTimeUtility::createDateTime()->format('Y-m-d H:i:s') . ', scheduled for stop is at ' . $cloudInstance->getScheduleForStopAt()->format('Y-m-d H:i:s'));
-                            if ($cloudInstance->getScheduleForStopAt() <= DateTimeUtility::createDateTime()) {
+                            if (!is_null($cloudInstance->getScheduleForStopAt()) && ($cloudInstance->getScheduleForStopAt() <= DateTimeUtility::createDateTime())) {
                                 $output->writeln('Action result: auto stop time reached!');
                                 $output->writeln('Action: Scheduling for stop');
                                 $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_STOP);
                                 $em->persist($cloudInstance);
                                 $em->flush();
+                                $output->writeln('Action result: done');
                             }
                         }
                     }
