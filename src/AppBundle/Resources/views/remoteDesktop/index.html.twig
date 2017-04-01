@@ -267,7 +267,12 @@
                                         {% if remoteDesktop.scheduledForStopAt != null %}
                                             <p>
                                                 {{ "remoteDesktop.index.auto_stop_info"|trans }}
-                                                {{ remoteDesktop.scheduledForStopAt|date }} UTC
+
+                                                {% if app.request.cookies.has('ubiqmachine_timezone') %}
+                                                    {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i', app.request.cookies.get('ubiqmachine_timezone')) }} ({{ app.request.cookies.get('ubiqmachine_timezone') }})
+                                                {% else %}
+                                                    {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i', 'UTC') }} (UTC)
+                                                {% endif %}
                                             </p>
                                         {% endif %}
                                         {{ "remoteDesktop.index.auto_stop_in"|trans }}

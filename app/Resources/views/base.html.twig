@@ -51,6 +51,17 @@
         {% block javascripts %}
             <script src="{{ asset('bundles/app/vendor/jquery/dist/jquery.min.js') }}"></script>
             <script src="{{ asset('bundles/app/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('bundles/app/vendor/jstimezonedetect/jstz.js') }}"></script>
+            <script src="{{ asset('bundles/app/vendor/js-cookie/src/js.cookie.js') }}"></script>
+
+            <script>
+                jQuery('document').ready(function () {
+                    jQuery(function() {
+                        var tz = jstz.determine();
+                        Cookies.set('ubiqmachine_timezone', tz.name());
+                    });
+                });
+            </script>
         {% endblock %}
 
     </body>
