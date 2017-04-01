@@ -39,7 +39,10 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             new Image($this, 'ami-70c0101f', '[CURRENT] CAD for eu-central-1'),
             new Image($this, 'ami-5c39063a', '[CURRENT] CAD for eu-west-1'),
             new Image($this, 'ami-f2fde69e', '[LEGACY] Gaming for eu-central-1'),
+            new Image($this, 'ami-10334270', '[LEGACY] Gaming for us-east-1'),
+            new Image($this, 'ami-b0c7f2da', '[LEGACY] Gaming for us-west-1')
         ];
+
 
         $this->regions = [
             new Region($this, 'eu-central-1', 'cloudprovider.aws.region.eu-central-1'),
