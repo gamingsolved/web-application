@@ -1,13 +1,49 @@
 # ubiqmachine-webapp
 
-## Setup
+## Dev setup
 
-Prerequisite: 
+### If you want to use Docker for MySQL, but work with the app and PHP loacally
+
+* Docker for Mac (https://docs.docker.com/docker-for-mac/install/)
+* PHP 7.1
+
+#### Prerequisites
+
+
+    docker run --name ubiqmachine-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mysql:5.7
+
+    // Wait a moment for MySQL to start
+
+    docker exec -ti ubiqmachine-mysql mysql -psecret -e "CREATE DATABASE ubiqmachine_webapp_dev;"
+
+    php composer.phar install
+
+        database_host: 127.0.0.1
+        database_port: 
+        database_name: ubiqmachine_webapp_dev
+        database_user: root
+        database_password: secret
+        mailer_transport: smtp
+        mailer_host: 127.0.0.1
+        mailer_user: 
+        mailer_password: 
+        secret (ThisTokenIsNotSoSecretChangeIt):
+        paypal_api_username: manuel-facilitator_api1.kiessling.net
+        paypal_api_password: HRCA69R59KW66GFC
+        paypal_api_signature: AFcWxV21C7fd0v3bYYYRCpSSRl31AoDTxAHRx.0l91OkuS5M0NqyxtQv
+        jms_payment_core_encryption_secret: def00000195a17f4515bcdbdbc271b343f07ecc53cb64d7e9ccdbdb3c10f7a74d31cbc51a1af971a0231f87976d506351213ee791c6cf8e74dc2c91e3198943eb7b7be88
+
+    php bin/console --env=dev doctrine:migrations:migrate
+
+
+### If you want to use Docker for everything
+
+#### Prerequisite 
 * docker-engine >= 1.12 (https://docs.docker.com/engine/installation/)
 * docker-compose >= 1.9 (https://docs.docker.com/compose/install/)
 * for mac: docker-machine (https://docs.docker.com/machine/install-machine/)
 
-### Linux 
+#### Linux 
 
     docker-compose build
     docker-compose run --rm ub_phpfpm composer install --prefer-dist
@@ -16,7 +52,7 @@ Prerequisite:
     bin/docker-console doc:data:create
     bin/console-docker doc:sch:up --force
 
-### Mac OS (docker-machine)
+#### Mac OS (docker-machine)
 
     docker-machine start ubiqmachine
     eval $(docker-machine env ubiqmachine)
@@ -45,8 +81,11 @@ If you want to present a datetime to the user, please convert at the last moment
 
 ### dev
 
-    docker run --name sew-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mysql:5.7
-    docker exec -ti sew-mysql mysql -psecret -e "CREATE DATABASE sgew_dev;"
+    docker run --name ubiqmachine-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mysql:5.7
+    docker exec -ti ubiqmachine-mysql mysql -psecret -e "CREATE DATABASE ubiqmachine_webapp_dev;"
+    
+    php composer.phar install
+    
     php bin/console --env=dev doctrine:migrations:migrate
 
     php bin/console assets:install --symlink
