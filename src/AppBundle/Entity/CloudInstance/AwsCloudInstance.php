@@ -77,11 +77,11 @@ class AwsCloudInstance extends CloudInstance
     protected $adminPassword;
 
     /**
-     * @var \DateTime $sheduleForStopAt
+     * @var \DateTime $scheduleForStopAt
      *
      * @ORM\Column(name="schedule_for_stop_at", type="datetime", nullable=true)
      */
-    protected $datetimeOccured;
+    protected $scheduleForStopAt;
 
     // The following fields are AWS specific
 
