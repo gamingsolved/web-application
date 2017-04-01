@@ -31,7 +31,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
 
-        $this->assertContains('Booting...', $crawler->filter('span.label')->first()->text());
+        $this->assertContains('Booting...', $crawler->filter('.remotedesktopstatus')->first()->text());
 
         $this->assertContains('Refresh status', $crawler->filter('.panel-footer a.btn')->first()->text());
         $this->assertEquals(
@@ -129,7 +129,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('(while in status Ready to use): $1.99', $crawler->filter('div.hourlycostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
-        $this->assertContains('Ready to use', $crawler->filter('span.label')->first()->text());
+        $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());
         $this->assertContains('Stop this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
 
         $this->assertContains('IP address:', $crawler->filter('li.list-group-item')->eq(0)->text());
@@ -158,15 +158,15 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
                 . $client->getRequest()->getHttpHost()
                 . '/en/remoteDesktops/'
                 . $remoteDesktop->getId()
-                . '?protocol='
+                . '/1280/800?protocol='
                 . $client->getRequest()->getScheme()
-                . '&version=1_8_0#'
+                . '&version=1_10_0#'
                 . $remoteDesktop->getId(),
             $launcherUri
         );
 
-        // /remoteDesktops/{remoteDesktop}/sgx_files/{tag}.sgx
-        $client->request('GET', '/en/remoteDesktops/' . $remoteDesktop->getId() . '/sgx_files/' . $remoteDesktop->getId() . '.sgx');
+        // /remoteDesktops/{remoteDesktop}/{width}/{height}/sgx_files/{tag}.sgx
+        $client->request('GET', '/en/remoteDesktops/' . $remoteDesktop->getId() . '/1280/800/sgx_files/' . $remoteDesktop->getId() . '.sgx');
 
         $this->assertContains('ip: 121.122.123.124', $client->getResponse()->getContent());
         $this->assertContains('key: ' . $remoteDesktop->getId(), $client->getResponse()->getContent());

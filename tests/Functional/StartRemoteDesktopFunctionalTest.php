@@ -23,7 +23,7 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
-        $this->assertContains('Booting...', $crawler->filter('span.label')->first()->text());
+        $this->assertContains('Booting...', $crawler->filter('.remotedesktopstatus')->first()->text());
 
         $this->assertEquals(
             0,
@@ -109,7 +109,7 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('(while in status Ready to use): $1.99', $crawler->filter('div.hourlycostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
-        $this->assertContains('Ready to use', $crawler->filter('span.label')->first()->text());
+        $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());
         $this->assertContains('Stop this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
     }
 

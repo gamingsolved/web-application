@@ -25,7 +25,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         $this->assertContains('(only in status Ready to use): $1.99', $crawler->filter('div.hourlycostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
-        $this->assertContains('Removing...', $crawler->filter('span.label')->first()->text());
+        $this->assertContains('Removing...', $crawler->filter('.remotedesktopstatus')->first()->text());
 
         $this->assertContains('Refresh status', $crawler->filter('.panel-footer a.btn')->first()->text());
         $this->assertEquals(
@@ -87,13 +87,10 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         $link = $crawler->selectLink('Refresh status')->first()->link();
         $crawler = $client->click($link);
 
-        $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
-
-        $this->assertContains('Costs per hour', $crawler->filter('div.hourlycostsbox')->first()->text());
-        $this->assertContains('(only in status Ready to use): $1.99', $crawler->filter('div.hourlycostsbox')->first()->text());
-
-        $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
-        $this->assertContains('Removed', $crawler->filter('span.label')->first()->text());
+        $this->assertEmpty($crawler->filter('h2'));
+        $this->assertEmpty($crawler->filter('div.hourlycostsbox'));
+        $this->assertEmpty($crawler->filter('h3'));
+        $this->assertEmpty($crawler->filter('.remotedesktopstatus'));
 
         $this->assertEquals(
             0,

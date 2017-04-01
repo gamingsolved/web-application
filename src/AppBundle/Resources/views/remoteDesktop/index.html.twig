@@ -89,7 +89,7 @@
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
                                         <h3>
-                                            <span class="label label-default">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.never_launched"|trans }}</span>
+                                            <span class="label label-default remotedesktopstatus">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.never_launched"|trans }}</span>
                                         </h3>
                                     {% else %}
                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
@@ -112,7 +112,7 @@
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_BOOTING') %}
                                         <h3>
-                                            <span class="label label-success label-pulsating">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.booting"|trans }}</span>
+                                            <span class="label label-success label-pulsating remotedesktopstatus">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.booting"|trans }}</span>
                                         </h3>
 
                                         <hr>
@@ -125,7 +125,7 @@
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
                                         <h3>
-                                            <span class="label label-success">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.ready_to_use"|trans }}</span>
+                                            <span class="label label-success remotedesktopstatus">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.ready_to_use"|trans }}</span>
                                         </h3>
 
                                         <ul class="list-group">
@@ -231,7 +231,7 @@
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING') %}
                                         <h3>
-                                            <span class="label label-default label-pulsating">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.stopping"|trans }}</span>
+                                            <span class="label label-default label-pulsating remotedesktopstatus">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.stopping"|trans }}</span>
                                         </h3>
 
                                         <hr>
@@ -244,13 +244,13 @@
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
                                         <h3>
-                                            <span class="label label-default">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.stopped"|trans }}</span>
+                                            <span class="label label-default remotedesktopstatus">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.stopped"|trans }}</span>
                                         </h3>
                                     {% endif %}
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATING') %}
                                         <h3>
-                                            <span class="label label-default label-pulsating">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.terminating"|trans }}</span>
+                                            <span class="label label-default label-pulsating remotedesktopstatus">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.terminating"|trans }}</span>
                                         </h3>
                                     {% endif %}
 
