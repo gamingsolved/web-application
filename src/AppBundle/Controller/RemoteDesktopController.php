@@ -25,6 +25,22 @@ class RemoteDesktopController extends Controller
 
         $remoteDesktops = $remoteDesktopRepo->findBy(['user' => $user]);
 
+        $remoteDesktopsSorted = [];
+
+        /** @var RemoteDesktop $remoteDesktop */
+        foreach ($remoteDesktops as $remoteDesktop) {
+            if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_READY_TO_USE) {
+                $remoteDesktopsSorted[] = $remoteDesktop;
+            }
+        }
+
+        /** @var RemoteDesktop $remoteDesktop */
+        foreach ($remoteDesktops as $remoteDesktop) {
+            if ($remoteDesktop->getStatus() !== RemoteDesktop::STATUS_READY_TO_USE) {
+                $remoteDesktopsSorted[] = $remoteDesktop;
+            }
+        }
+
         /** @var AccountMovementRepository $accountMovementRepo */
         $accountMovementRepo = $em->getRepository(AccountMovement::class);
 
@@ -34,7 +50,7 @@ class RemoteDesktopController extends Controller
                 'launcherHostname' => $request->getHost(),
                 'launcherPort' => $request->getPort(),
                 'launcherProtocol' => $request->getScheme(),
-                'remoteDesktops' => $remoteDesktops,
+                'remoteDesktops' => $remoteDesktopsSorted,
                 'currentAccountBalance' => $accountMovementRepo->getAccountBalanceForUser($user),
                 'currentAccountBalanceAbsolute' => abs($accountMovementRepo->getAccountBalanceForUser($user))
             ]
