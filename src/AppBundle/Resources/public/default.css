@@ -179,7 +179,14 @@ div.dark {
 }
 
 .remotedesktop-panel {
+    margin-top: 36px;
     margin-bottom: 72px;
+    box-shadow: 3px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.remotedesktop-panel .panel-title {
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .remotedesktop-infobox {
