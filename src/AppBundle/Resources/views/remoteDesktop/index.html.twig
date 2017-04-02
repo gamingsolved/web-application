@@ -157,7 +157,7 @@
                                                 <p>
                                                     {{ "remoteDesktop.index.choose_resolution"|trans }}
                                                 </p>
-                                                <div class="well well-sm screenresolutionsbox">
+                                                <div class="well well-sm resolutionsbox">
                                                     {% set resolutions = [['1024','768'],
                                                                           ['1280','720'],
                                                                           ['1280','800'],
@@ -171,7 +171,15 @@
                                                         <thead>
                                                             <tr>
                                                                 {% for resolution in resolutions %}
-                                                                    <td class="small text-center">
+                                                                    <td class="text-center">
+                                                                        <input
+                                                                            type="radio"
+                                                                            class="resolution-radio"
+                                                                            name="resolution-{{ remoteDesktop.id }}"
+                                                                            id="resolution-{{ remoteDesktop.id }}-{{ resolution[0] }}x{{ resolution[1] }}"
+                                                                            onclick="resolutionFunctions['{{ remoteDesktop.id }}']({{ resolution[0] }}, {{ resolution[1] }})"
+                                                                            {% if loop.index0 == 2 %}checked{% endif %}
+                                                                        >
                                                                         <label class="small resolution-label" for="resolution-{{ remoteDesktop.id }}-{{ resolution[0] }}x{{ resolution[1] }}">
                                                                             {{ resolution[0] }}<br>x{{ resolution[1] }}
                                                                         </label>
@@ -179,21 +187,6 @@
                                                                 {% endfor %}
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                {% for resolution in resolutions %}
-                                                                    <td class="text-center">
-                                                                        <input
-                                                                            type="radio"
-                                                                            name="resolution-{{ remoteDesktop.id }}"
-                                                                            id="resolution-{{ remoteDesktop.id }}-{{ resolution[0] }}x{{ resolution[1] }}"
-                                                                            onclick="resolutionFunctions['{{ remoteDesktop.id }}']({{ resolution[0] }}, {{ resolution[1] }})"
-                                                                            {% if loop.index0 == 2 %}checked{% endif %}
-                                                                        >
-                                                                    </td>
-                                                                {% endfor %}
-                                                            </tr>
-                                                        </tbody>
                                                     </table>
 
                                                 </div>
@@ -306,11 +299,14 @@
                                         </a>
 
                                         <span class="pull-right">
-                                            <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 1800 }) }}">{{ "remoteDesktop.index.auto_stop_in_30_minutes"|trans }}</a>
+                                            <a class="btn btn-default btn"
+                                               href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 1800 }) }}">{{ "remoteDesktop.index.auto_stop_in_30_minutes"|trans }}</a>
                                             &nbsp;
-                                            <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_1_hour"|trans }}</a>
+                                            <a class="btn btn-default btn"
+                                               href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_1_hour"|trans }}</a>
                                             &nbsp;
-                                            <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_2_hours"|trans }}</a>
+                                            <a class="btn btn-default btn"
+                                               href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_2_hours"|trans }}</a>
                                         </span>
                                     {% endif %}
 

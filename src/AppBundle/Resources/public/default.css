@@ -201,13 +201,30 @@ div.dark {
     margin-bottom: 2px;
 }
 
-div.well.screenresolutionsbox label.resolution-label {
-    font-weight: normal;
-    line-height: 90%;
+.resolutionsbox {
+    padding: 0;
 }
 
 table.resolutions-table {
     margin-bottom: 0;
+}
+
+input.resolution-radio {
+    display: none;
+}
+
+label.resolution-label {
+    font-weight: normal;
+    line-height: 90%;
+    margin-bottom: -7px;
+    margin-top: -6px;
+    padding: 10px;
+}
+
+input.resolution-radio:checked + label.resolution-label {
+    color: #fff;
+    background-color: #5cb85c;
+    padding: 10px;
 }
 
 div.alert hr {
