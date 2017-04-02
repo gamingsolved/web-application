@@ -208,6 +208,12 @@ div.alert hr {
     margin-bottom: 10px;
 }
 
+div.well.image {
+    background-color: #337bb7;
+    padding: 0;
+    text-align: center;
+}
+
 /* vietnamese */
 @font-face {
     font-family: 'Nunito';
