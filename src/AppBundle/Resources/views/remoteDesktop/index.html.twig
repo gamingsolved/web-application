@@ -158,42 +158,44 @@
                                                     {{ "remoteDesktop.index.choose_resolution"|trans }}
                                                 </p>
                                                 <div class="well well-sm screenresolutionsbox">
-                                                    <div class="alert alert-danger small pull-right">
-                                                        {{ "remoteDesktop.index.resolution_warning"|trans }}
-                                                    </div>
-                                                    <form>
-                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1024x768" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1024, 768)">
-                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1024x768">1024 x 768</label>
-                                                        <br>
+                                                    {% set resolutions = [['1024','768'],
+                                                                          ['1280','720'],
+                                                                          ['1280','800'],
+                                                                          ['1536','1152'],
+                                                                          ['1920','1080'],
+                                                                          ['1920','1200'],
+                                                                          ['2048','1536'],
+                                                                          ['2560','1440']]
+                                                    %}
+                                                    <table class="table table-condensed resolutions-table">
+                                                        <thead>
+                                                            <tr>
+                                                                {% for resolution in resolutions %}
+                                                                    <td class="small text-center">
+                                                                        <label class="small resolution-label" for="resolution-{{ remoteDesktop.id }}-{{ resolution[0] }}x{{ resolution[1] }}">
+                                                                            {{ resolution[0] }}<br>x{{ resolution[1] }}
+                                                                        </label>
+                                                                    </td>
+                                                                {% endfor %}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                {% for resolution in resolutions %}
+                                                                    <td class="text-center">
+                                                                        <input
+                                                                            type="radio"
+                                                                            name="resolution-{{ remoteDesktop.id }}"
+                                                                            id="resolution-{{ remoteDesktop.id }}-{{ resolution[0] }}x{{ resolution[1] }}"
+                                                                            onclick="resolutionFunctions['{{ remoteDesktop.id }}']({{ resolution[0] }}, {{ resolution[1] }})"
+                                                                            {% if loop.index0 == 2 %}checked{% endif %}
+                                                                        >
+                                                                    </td>
+                                                                {% endfor %}
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
 
-                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1280x720" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1280, 720)">
-                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1280x720">1280 x 720</label>
-                                                        <br>
-
-                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1280x800" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1280, 800)">
-                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1280x800">1280 x 800</label>
-                                                        <br>
-
-                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1536x1152" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1536, 1152)">
-                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1536x1152">1536 x 1152</label>
-                                                        <br>
-
-                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1920x1080" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1920, 1080)">
-                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1920x1080">1920 x 1080</label>
-                                                        <br>
-
-                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-1920x1200" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](1920, 1200)" checked>
-                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-1920x1200">1920 x 1200</label>
-                                                        <br>
-
-                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-2048x1536" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](2048, 1536)">
-                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-2048x1536">2048 x 1536</label>
-                                                        <br>
-
-                                                        <input type="radio" name="resolution-{{ remoteDesktop.id }}" id="resolution-{{ remoteDesktop.id }}-2560x1440" onclick="resolutionFunctions['{{ remoteDesktop.id }}'](2560, 1440)">
-                                                        &nbsp;<label class="small" for="resolution-{{ remoteDesktop.id }}-2560x1440">2560 x 1440</label>
-                                                        <br>
-                                                    </form>
                                                 </div>
 
                                                 <a id="launch-link-{{ remoteDesktop.id }}" href="sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/1280/800?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}"

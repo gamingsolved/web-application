@@ -194,8 +194,13 @@ div.dark {
     margin-bottom: 2px;
 }
 
-div.well.screenresolutionsbox label {
+div.well.screenresolutionsbox label.resolution-label {
     font-weight: normal;
+    line-height: 90%;
+}
+
+table.resolutions-table {
+    margin-bottom: 0;
 }
 
 div.alert hr {
