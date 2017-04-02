@@ -224,6 +224,7 @@ label.resolution-label {
 input.resolution-radio:checked + label.resolution-label {
     color: #fff;
     background-color: #5cb85c;
+    box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.1);
     padding: 10px;
 }
 
