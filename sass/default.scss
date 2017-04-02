@@ -1,18 +1,12 @@
 body {
-  background-color: #337bb7;
+  background-color: #4442c2;
   color: #000;
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
-  padding-top: 88px;
   white-space: normal;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   color: #fff;
 }
 
@@ -83,8 +77,9 @@ header + main {
 }
 
 main {
-  min-height: 400px;
-  padding: 0 0 48px;
+  background-color: #337bb7;
+  padding-bottom: 88px;
+  padding-top: 100px;
 }
 
 .container {
@@ -141,6 +136,30 @@ section:empty {
   top: 204px;
 }
 
+div.full-row {
+  padding: 48px;
+}
+
+div.white {
+  background-color: #fff;
+  color: #333;
+}
+
+div.bang {
+  background-color: #2bbe83;
+  color: #fff;
+}
+
+div.middle {
+  background-color: #337bb7;
+  color: #fff;
+}
+
+div.dark {
+  background-color: #4442c2;
+  color: #fff;
+}
+
 .jumbotron {
   color: #000;
 }
@@ -165,7 +184,7 @@ section:empty {
 
 .remotedesktop-infobox {
   margin-bottom: 0;
-  margin-top: 36px;
+  margin-top: 8px;
 }
 
 .remotedesktop-infobox .label {
@@ -175,8 +194,13 @@ section:empty {
   padding: 4px 0.6em;
 }
 
-div.well.screenresolutionsbox label {
+div.well.screenresolutionsbox label.resolution-label {
   font-weight: normal;
+  line-height: 90%;
+}
+
+table.resolutions-table {
+  margin-bottom: 0;
 }
 
 div.alert hr {
