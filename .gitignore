@@ -19,3 +19,4 @@
 .idea/
 /node_modules
 /sassdoc
+/sass/vendor/

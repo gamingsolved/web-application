@@ -19,7 +19,7 @@
   "devDependencies": {
     "gulp": "3.9.1",
     "gulp-autoprefixer": "3.1.1",
-    "gulp-cssnano": "^2.1.2",
+    "gulp-cssnano": "2.1.2",
     "gulp-group-css-media-queries": "1.2.0",
     "gulp-insert": "0.5.0",
     "gulp-sass": "3.1.0",
@@ -27,5 +27,10 @@
     "gulp-shell": "0.6.3",
     "run-sequence": "1.2.2",
     "sassdoc": "2.2.2"
+  },
+  "dependencies": {
+    "bootstrap": "3.3.7",
+    "bootstrap-material-design": "0.5.10",
+    "jquery": "3.2.1"
   }
 }

@@ -5,7 +5,9 @@
         <title>{% block title %}ubiqMachine{% endblock %}</title>
 
         {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('bundles/app/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/bootstrap.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/bootstrap-material-design.min.css') }}">
+            <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/ripples.min.css') }}">
             <link rel="stylesheet" href="{{ asset('bundles/app/default.css') }}">
         {% endblock %}
 
@@ -103,8 +105,11 @@
         </div>
 
         {% block javascripts %}
-            <script src="{{ asset('bundles/app/vendor/jquery/dist/jquery.min.js') }}"></script>
-            <script src="{{ asset('bundles/app/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+          <script src="{{ asset('bundles/app/vendor/js/jquery.min.js') }}"></script>
+          <script src="{{ asset('bundles/app/vendor/js/bootstrap.min.js') }}"></script>
+          <script src="{{ asset('bundles/app/vendor/js/material.min.js') }}"></script>
+          <script src="{{ asset('bundles/app/vendor/js/ripples.min.js') }}"></script>
+          <script src="{{ asset('bundles/app/scripts.js') }}"></script>
             <script src="{{ asset('bundles/app/vendor/jstimezonedetect/jstz.js') }}"></script>
             <script src="{{ asset('bundles/app/vendor/js-cookie/src/js.cookie.js') }}"></script>
 
