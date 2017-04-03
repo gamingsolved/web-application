@@ -7,6 +7,7 @@ use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
+use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -181,6 +182,21 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertSame(
             98.01,
             $accountMovementRepo->getAccountBalanceForUser($remoteDesktop->getUser())
+        );
+
+        $crawler = $client->click($crawler->filter('.accountbalancehistorylink')->link());
+        $this->assertContains(DateTimeUtility::createDateTime()->format('F j, Y H:i'), $crawler->filter('tr td')->eq(0)->text());
+        $this->assertContains(
+            'The amount of $100.00 was deposited onto your account.',
+            $crawler->filter('tr td')->eq(1)->text()
+        );
+        $this->assertContains(
+            'The amount of $1.99 was debited from your account.The new account balance at this point in time is $98.01.',
+            $crawler->filter('tr td')->eq(1)->text()
+        );
+        $this->assertContains(
+            "The remote desktop 'My first remote desktop' became available.",
+            $crawler->filter('tr td')->eq(1)->text()
         );
 
         // We want to build on this in other tests

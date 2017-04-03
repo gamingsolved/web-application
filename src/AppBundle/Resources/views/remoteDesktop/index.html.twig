@@ -44,6 +44,12 @@
                 {% endif %}
 
                     <hr>
+
+                    <a
+                        class="accountbalancehistorylink pull-right"
+                        href="{{ path('accountmovements.index') }}"
+                    >{{ "remoteDesktop.index.see_account_balance_history"|trans }}</a>
+
                     <a
                         class="btn btn-default btn-sm"
                         href="{{ path('accountmovements.new') }}"
