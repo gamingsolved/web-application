@@ -16,6 +16,7 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
     const GAMING_PRO = 0;
     const CAD_PRO = 1;
     const CAD_ULTRA = 2;
+    const THREED_MEDIA_PRO = 3;
 
     /**
      * @throws \Exception
@@ -32,6 +33,10 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
 
         if ($kind === self::CAD_ULTRA) {
             return new RemoteDesktopCadUltraKind();
+        }
+
+        if ($kind === self::THREED_MEDIA_PRO) {
+            return new RemoteDesktop3dMediaProKind();
         }
 
         throw new \Exception('Unknown remote desktop kind ' . $kind);

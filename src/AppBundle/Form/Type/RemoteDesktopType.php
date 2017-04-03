@@ -23,6 +23,7 @@ class RemoteDesktopType extends AbstractType
                         'remoteDesktop.kind.gamingpro' => RemoteDesktopKind::GAMING_PRO,
                         'remoteDesktop.kind.cadpro' => RemoteDesktopKind::CAD_PRO,
                         'remoteDesktop.kind.cadultra' => RemoteDesktopKind::CAD_ULTRA,
+                        'remoteDesktop.kind.3dmediapro' => RemoteDesktopKind::THREED_MEDIA_PRO,
                     ],
                     'expanded' => true,
                     'multiple' => false,

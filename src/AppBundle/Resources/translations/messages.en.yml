@@ -64,8 +64,9 @@ remoteDesktop:
             submit_label: Continue
     kind:
         gamingpro: "Gaming: Preinstalled with Steam, UPlay, GOG and Origin"
-        cadpro: "CAD Pro: Preinstalled Autodesk AutoCAD® 2017 and Revit 2017 (very good computing power)"
-        cadultra: "CAD Ultra: Preinstalled Autodesk AutoCAD® 2017 and Revit 2017 (extreme computing power)"
+        cadpro: "CAD Pro: Preinstalled Autodesk AutoCAD® 2017 and Revit® 2017 (very good computing power)"
+        cadultra: "CAD Ultra: Preinstalled Autodesk AutoCAD® 2017 and Revit® 2017 (extreme computing power)"
+        3dmediapro: "3D Media Pro: Preinstalled Autodesk Maya® 2017 and 3ds Max® 2017 (very good computing power)"
     status:
         label: Current status:
         never_launched: Not running

@@ -38,6 +38,8 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             new Image($this, 'ami-a2437cc4', '[CURRENT] Gaming for eu-west-1'),
             new Image($this, 'ami-70c0101f', '[CURRENT] CAD for eu-central-1'),
             new Image($this, 'ami-5c39063a', '[CURRENT] CAD for eu-west-1'),
+            new Image($this, 'ami-71c0101e', '[CURRENT] 3D Media for eu-central-1'),
+            new Image($this, 'ami-ff2a1599', '[CURRENT] 3D Media for eu-west-1'),
             new Image($this, 'ami-f2fde69e', '[LEGACY] Gaming for eu-central-1'),
             new Image($this, 'ami-10334270', '[LEGACY] Gaming for us-east-1'),
             new Image($this, 'ami-b0c7f2da', '[LEGACY] Gaming for us-west-1')
@@ -54,7 +56,8 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         $this->kindToFlavor = [
             RemoteDesktopKind::GAMING_PRO => $flavorG22xlarge,
             RemoteDesktopKind::CAD_PRO => $flavorG22xlarge,
-            RemoteDesktopKind::CAD_ULTRA => $flavorG28xlarge
+            RemoteDesktopKind::CAD_ULTRA => $flavorG28xlarge,
+            RemoteDesktopKind::THREED_MEDIA_PRO => $flavorG22xlarge,
         ];
 
         $this->kindToRegionToImage = [
@@ -69,6 +72,10 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             RemoteDesktopKind::CAD_ULTRA => [
                 'eu-central-1' => $this->getImageByInternalName('ami-70c0101f'),
                 'eu-west-1' => $this->getImageByInternalName('ami-5c39063a'),
+            ],
+            RemoteDesktopKind::THREED_MEDIA_PRO => [
+                'eu-central-1' => $this->getImageByInternalName('ami-71c0101e'),
+                'eu-west-1' => $this->getImageByInternalName('ami-ff2a1599'),
             ]
         ];
     }
