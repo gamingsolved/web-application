@@ -82,8 +82,6 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
             /** @var CloudInstance $cloudInstance */
             foreach ($cloudInstancesInUse as $cloudInstance) {
 
-                $stoppedOrTerminated = false;
-
                 // We need a coordinator per instance bc e.g. AWS uses different API endpoints per region
                 $cloudInstanceCoordinator = $this->getCloudInstanceCoordinatorForCloudInstance(
                     $cloudInstance,
@@ -105,6 +103,9 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 // Running
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_RUNNING) {
+
+                    $stoppedOrTerminated = false;
+
                     $accountBalance = $accountMovementRepository
                         ->getAccountBalanceForUser(
                             $cloudInstance->getRemoteDesktop()->getUser()
