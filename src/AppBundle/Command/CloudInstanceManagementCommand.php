@@ -104,7 +104,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_RUNNING) {
 
-                    $stoppedOrTerminated = false;
+                    $stoppedOrTerminatedWhileRunning = false;
 
                     $accountBalance = $accountMovementRepository
                         ->getAccountBalanceForUser(
@@ -127,7 +127,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPED);
                             $em->persist($cloudInstance);
                             $em->flush();
-                            $stoppedOrTerminated = true;
+                            $stoppedOrTerminatedWhileRunning = true;
                         }
 
                         // Is it terminated?
@@ -136,10 +136,10 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);
                             $em->persist($cloudInstance);
                             $em->flush();
-                            $stoppedOrTerminated = true;
+                            $stoppedOrTerminatedWhileRunning = true;
                         }
 
-                        if ($stoppedOrTerminated) {
+                        if ($stoppedOrTerminatedWhileRunning) {
                             $output->writeln('Action: Also logging for the billing logic that the desktop became unavailable');
                             $remoteDesktop = $cloudInstance->getRemoteDesktop();
                             $remoteDesktopEvent = new RemoteDesktopEvent(
