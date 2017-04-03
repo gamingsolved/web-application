@@ -7,22 +7,37 @@
                 <h1>{{ "accountMovement.index.headline"|trans }}</h1>
                 <div class="well">
 
-                    {% for event in events %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                    <th>{{ "accountMovement.index.thead_occurred_at"|trans }}</th>
+                                <th>{{ "accountMovement.index.thead_events"|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                        <p>
-                            <strong>{{ event.occuredAt|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}</strong>
-                            <br>
-                            {% for oneEvent in event.events %}
-                                {{ oneEvent.description|trans({
-                                    '%moneyValue1%': oneEvent.moneyValue1|number_format(2, '.', ','),
-                                    '%moneyValue2%': oneEvent.moneyValue2|number_format(2, '.', ','),
-                                    '%stringValue%': oneEvent.stringValue})
-                                }}
-                                <br>
+                            {% for event in events %}
+
+                                <tr>
+                                    <td>{{ event.occuredAt|date('F j, Y H:i', app.request.cookies.get('ubiqmachine_timezone')) }}</td>
+
+                                    <td>
+                                        {% for oneEvent in event.events %}
+                                            {{ oneEvent.description|trans({
+                                                '%moneyValue1%': oneEvent.moneyValue1|number_format(2, '.', ','),
+                                                '%moneyValue2%': oneEvent.moneyValue2|number_format(2, '.', ','),
+                                                '%stringValue%': oneEvent.stringValue})|replace({'[br]': '<br>'})|raw
+                                            }}
+                                            <br>
+                                            <br>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+
                             {% endfor %}
-                        </p>
 
-                    {% endfor %}
+                        </tbody>
+                    </table>
 
                 </div>
             </div>

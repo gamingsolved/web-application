@@ -18,7 +18,7 @@ class AccountMovementController extends Controller
 {
     protected function addEventAt(array &$events, \DateTime $at, string $description, float $moneyValue1, float $moneyValue2, string $stringValue)
     {
-        $key = $at->format('Y-m-d H:i:s');
+        $key = $at->format('Y-m-d H:i');
         if (array_key_exists($key, $events)) {
             $events[$key]['events'][] = [
                 'description' => $description,
