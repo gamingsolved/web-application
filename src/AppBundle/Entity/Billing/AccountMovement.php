@@ -95,7 +95,7 @@ class AccountMovement
         $accountMovement = new AccountMovement();
 
         $accountMovement->user = $user;
-        $accountMovement->movementType = self::MOVEMENT_TYPE_DEBIT;
+        $accountMovement->movementType = self::MOVEMENT_TYPE_DEPOSIT;
         $accountMovement->paymentFinished = false;
         $accountMovement->amount = (float)$amount;
         $accountMovement->datetimeOccured = DateTimeUtility::createDateTime();
@@ -116,6 +116,16 @@ class AccountMovement
     public function getAmount() : float
     {
         return $this->amount;
+    }
+
+    public function getMovementType() : int
+    {
+        return $this->movementType;
+    }
+
+    public function getDatetimeOccured(): \DateTime
+    {
+        return $this->datetimeOccured;
     }
 
     public function setPaymentInstruction(PaymentInstruction $paymentInstruction)

@@ -58,6 +58,11 @@ cloudinstances.new:
     defaults: { _controller: AppBundle:CloudInstance:new }
     methods:  [GET, POST]
 
+accountmovements.index:
+    path:     /accountMovements/
+    defaults: { _controller: AppBundle:AccountMovement:index }
+    methods:  [GET]
+
 accountmovements.new:
     path:     /accountMovements/newDeposit
     defaults: { _controller: AppBundle:AccountMovement:newDeposit }

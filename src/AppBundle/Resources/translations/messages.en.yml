@@ -112,6 +112,12 @@ payment:
         back_to_remotedesktops: Back to your remote desktops
 
 accountMovement:
+    index:
+        account_movement_deposit_description: The amount of $%moneyValue1% was deposited onto your account. The new account balance at this point in time is $%moneyValue2%.
+        account_movement_debit_description: The amount of $%moneyValue1% was debited from your account. The new account balance at this point in time is $%moneyValue2%.
+        remote_desktop_event_became_available: The remote desktop '%stringValue%' became available.
+        remote_desktop_event_became_unavailable: The remote desktop '%stringValue%' became unavailable.
+
     newDeposit:
         form:
             headline: Increase your balance

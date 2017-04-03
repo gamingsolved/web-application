@@ -97,7 +97,8 @@ If you want to present a datetime to the user, please convert at the last moment
     php bin/console assets:install --symlink
 
     php bin/console --env=dev app:cloudinstancemanagement `cat ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-api-key.txt` `cat ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-api-secret.txt` ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-keypair-private-key.pem
-    Attempting to handle cloud instances of class: AppBundle\Entity\CloudInstance\AwsCloudInstance
+
+    php bin/console -v --env=dev app:generatebillableitems
 
 
 ### preprod

@@ -1,0 +1,31 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>{{ "accountMovement.index.headline"|trans }}</h1>
+                <div class="well">
+
+                    {% for event in events %}
+
+                        <p>
+                            <strong>{{ event.occuredAt|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}</strong>
+                            <br>
+                            {% for oneEvent in event.events %}
+                                {{ oneEvent.description|trans({
+                                    '%moneyValue1%': oneEvent.moneyValue1|number_format(2, '.', ','),
+                                    '%moneyValue2%': oneEvent.moneyValue2|number_format(2, '.', ','),
+                                    '%stringValue%': oneEvent.stringValue})
+                                }}
+                                <br>
+                            {% endfor %}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
