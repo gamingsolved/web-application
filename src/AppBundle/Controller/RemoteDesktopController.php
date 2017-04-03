@@ -182,8 +182,12 @@ class RemoteDesktopController extends Controller
     /**
      * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
      */
-    public function serveSgxFileAction(RemoteDesktop $remoteDesktop, string $width, string $height)
+    public function serveSgxFileAction(RemoteDesktop $remoteDesktop, string $remoteDesktopIdHash, string $width, string $height)
     {
+        if ($remoteDesktop->getIdHash() !== $remoteDesktopIdHash) {
+            return $this->redirectToRoute('homepage', [], Response::HTTP_FORBIDDEN);
+        }
+
         $response = $this->render(
             'AppBundle:remoteDesktop:sgxFile/tag.sgx.twig',
             [

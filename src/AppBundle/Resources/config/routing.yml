@@ -44,12 +44,12 @@ remotedesktops.updateScheduleForStopAt:
     methods:  [GET]
 
 remotedesktops.sgx_files:
-    path:     /remoteDesktops/{remoteDesktop}/{width}/{height}/sgx_files/{tag}.sgx
+    path:     /remoteDesktops/{remoteDesktop}/{remoteDesktopIdHash}/{width}/{height}/sgx_files/{tag}.sgx
     defaults: { _controller: AppBundle:RemoteDesktop:serveSgxFile }
     methods:  [GET]
 
 remotedesktops.updatettl:
-    path:     /remoteDesktops/{remoteDesktop}/updatettl/{tag}
+    path:     /remoteDesktops/{remoteDesktop}/{remoteDesktopIdHash}/{width}/{height}/updatettl/{tag}
     defaults: { _controller: AppBundle:RemoteDesktop:serveSgxFile }
     methods:  [GET]
 

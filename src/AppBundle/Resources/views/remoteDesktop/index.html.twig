@@ -141,7 +141,7 @@
                                                 <script>
                                                     resolutionFunctions['{{ remoteDesktop.id }}'] = function(width, height) {
                                                         jQuery('#launch-link-{{ remoteDesktop.id }}')
-                                                            .attr('href', 'sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/' + width + '/' + height + '?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}');
+                                                            .attr('href', 'sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/{{ remoteDesktop.idHash }}/' + width + '/' + height + '?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}');
                                                     }
                                                 </script>
 
@@ -182,7 +182,7 @@
 
                                                 </div>
 
-                                                <a id="launch-link-{{ remoteDesktop.id }}" href="sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/1280/800?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}"
+                                                <a id="launch-link-{{ remoteDesktop.id }}" href="sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/{{ remoteDesktop.idHash }}/1280/800?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}"
                                                    type="button"
                                                    class="btn btn-success btn-sm"
                                                 >

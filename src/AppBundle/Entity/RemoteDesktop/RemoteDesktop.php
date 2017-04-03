@@ -38,6 +38,8 @@ class RemoteDesktop
     const STATUS_TERMINATING = 5;
     const STATUS_TERMINATED = 6;
 
+    const HASH_SECRET = '>"13!V{_:E7 KQ3*ttV,\n|^2,a""k~Q';
+
     /**
      * @var string
      * @ORM\GeneratedValue(strategy="UUID")
@@ -331,6 +333,11 @@ class RemoteDesktop
             }
         }
         throw new \Exception('Could not find the active instance for remote desktop ' . $this->getId());
+    }
+
+    public function getIdHash() : string
+    {
+        return sha1(self::HASH_SECRET . $this->getId());
     }
 
 }

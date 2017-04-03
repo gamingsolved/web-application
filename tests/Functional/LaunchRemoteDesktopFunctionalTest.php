@@ -153,6 +153,8 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
                 . $client->getRequest()->getHttpHost()
                 . '/en/remoteDesktops/'
                 . $remoteDesktop->getId()
+                . '/'
+                . $remoteDesktop->getIdHash()
                 . '/1280/800?protocol='
                 . $client->getRequest()->getScheme()
                 . '&version=1_10_0#'
@@ -161,7 +163,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         );
 
         // /remoteDesktops/{remoteDesktop}/{width}/{height}/sgx_files/{tag}.sgx
-        $client->request('GET', '/en/remoteDesktops/' . $remoteDesktop->getId() . '/1280/800/sgx_files/' . $remoteDesktop->getId() . '.sgx');
+        $client->request('GET', '/en/remoteDesktops/' . $remoteDesktop->getId() . '/' . $remoteDesktop->getIdHash() . '/1280/800/sgx_files/' . $remoteDesktop->getId() . '.sgx');
 
         $this->assertContains('ip: 121.122.123.124', $client->getResponse()->getContent());
         $this->assertContains('key: ' . $remoteDesktop->getId(), $client->getResponse()->getContent());
