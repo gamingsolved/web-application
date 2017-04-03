@@ -6,22 +6,16 @@
     </p>
     <p>
 
-
         {{
         "insufficientAccountBalance.message_two"
         |trans(
         {
-            "%hourlyCosts%": hourlyCosts|number_format(2, '.', ',')
+            "%hourlyCosts%": hourlyCosts|localizedcurrency('USD')
         }
         )
         }}
 
-
-        {% if currentAccountBalance < 0.0 %}
-            <strong>-${{ currentAccountBalanceAbsolute|number_format(2, '.', ',') }}</strong>.
-        {% else %}
-            <strong>${{ currentAccountBalance|number_format(2, '.', ',') }}</strong>.
-        {% endif %}
+        <strong>${{ currentAccountBalance|localizedcurrency('USD') }}</strong>.
     </p>
     <hr>
     <a class="btn btn-primary" href="{{ path('accountmovements.new') }}">{{ "insufficientAccountBalance.click_here_to_increase_your_balance"|trans }}</a>

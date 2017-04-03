@@ -60,8 +60,7 @@ class RemoteDesktopController extends Controller
                 'launcherPort' => $request->getPort(),
                 'launcherProtocol' => $request->getScheme(),
                 'remoteDesktops' => $remoteDesktopsSorted,
-                'currentAccountBalance' => $accountMovementRepo->getAccountBalanceForUser($user),
-                'currentAccountBalanceAbsolute' => abs($accountMovementRepo->getAccountBalanceForUser($user))
+                'currentAccountBalance' => $accountMovementRepo->getAccountBalanceForUser($user)
             ]
         );
     }
@@ -126,8 +125,7 @@ class RemoteDesktopController extends Controller
                 'AppBundle:remoteDesktop:insufficientAccountBalance.html.twig',
                 [
                     'hourlyCosts' => $remoteDesktop->getHourlyCosts(),
-                    'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
-                    'currentAccountBalanceAbsolute' => abs($accountMovementRepository->getAccountBalanceForUser($user))
+                    'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user)
                 ]
             );
         }

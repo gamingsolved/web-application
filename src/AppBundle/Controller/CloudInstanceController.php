@@ -81,7 +81,6 @@ class CloudInstanceController extends Controller
                     [
                         'insufficientAccountBalance' => true,
                         'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
-                        'currentAccountBalanceAbsolute' => abs($accountMovementRepository->getAccountBalanceForUser($user)),
                         'hourlyCosts' => $hourlyCosts,
                         'form' => $form->createView()
                     ]
@@ -102,7 +101,6 @@ class CloudInstanceController extends Controller
                 [
                     'insufficientAccountBalance' => false,
                     'currentAccountBalance' => null,
-                    'currentAccountBalanceAbsolute' => null,
                     'hourlyCosts' => null,
                     'form' => $form->createView()
                 ]

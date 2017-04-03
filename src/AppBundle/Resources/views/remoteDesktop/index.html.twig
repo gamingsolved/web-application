@@ -27,19 +27,19 @@
                 {% if currentAccountBalance < 0.0 %}
                     <div class="alert alert-danger accountbalanceinfobox" role="alert">
                         <strong>{{ "remoteDesktop.index.negative_account_balance"|trans }}</strong>
-                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>-${{ currentAccountBalanceAbsolute|number_format(2, '.', ',') }}</strong>.
+                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>{{ currentAccountBalance|localizedcurrency('USD') }}</strong>.
 
                 {% elseif currentAccountBalance < 5.0 %}
                     <div class="alert alert-warning accountbalanceinfobox" role="alert">
-                        {{ "remoteDesktop.index.your_current_account_balance_is_only"|trans }} <strong>${{ currentAccountBalance|number_format(2, '.', ',') }}</strong>.
+                        {{ "remoteDesktop.index.your_current_account_balance_is_only"|trans }} <strong>{{ currentAccountBalance|localizedcurrency('USD') }}</strong>.
 
                 {% elseif currentAccountBalance == 0.0 %}
                     <div class="alert alert-warning accountbalanceinfobox" role="alert">
-                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>${{ currentAccountBalance|number_format(2, '.', ',') }}</strong>.
+                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>{{ currentAccountBalance|localizedcurrency('USD') }}</strong>.
 
                 {% else %}
                     <div class="alert alert-success accountbalanceinfobox" role="alert">
-                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>${{ currentAccountBalance|number_format(2, '.', ',') }}</strong>.
+                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>{{ currentAccountBalance|localizedcurrency('USD') }}</strong>.
 
                 {% endif %}
 
@@ -96,14 +96,14 @@
                                             <div class="well well-sm pull-right hourlycostsbox">
                                                 <small>
                                                     {{ "remoteDesktop.index.current_costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts|number_format(2, '.', ',') }}
+                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyCosts|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% else %}
                                             <div class="well well-sm pull-right hourlycostsbox">
                                                 <small>
                                                     {{ "remoteDesktop.index.costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts|number_format(2, '.', ',') }}
+                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyCosts|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% endif %}
