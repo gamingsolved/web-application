@@ -24,8 +24,8 @@
                                     <td>
                                         {% for oneEvent in event.events %}
                                             {{ oneEvent.description|trans({
-                                                '%moneyValue1%': oneEvent.moneyValue1|number_format(2, '.', ','),
-                                                '%moneyValue2%': oneEvent.moneyValue2|number_format(2, '.', ','),
+                                                '%moneyValue1%': oneEvent.moneyValue1|localizedcurrency('USD'),
+                                                '%moneyValue2%': oneEvent.moneyValue2|localizedcurrency('USD'),
                                                 '%stringValue%': oneEvent.stringValue})|replace({'[br]': '<br>'})|raw
                                             }}
                                             <br>

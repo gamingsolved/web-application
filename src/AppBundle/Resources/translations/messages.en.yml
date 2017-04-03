@@ -116,8 +116,8 @@ accountMovement:
         headline: Your account balance history
         thead_occurred_at: Date and time
         thead_events: Account event(s)
-        account_movement_deposit_description: The amount of $%moneyValue1% was deposited onto your account.[br]Your new account balance at this point in time is $%moneyValue2%.
-        account_movement_debit_description: The amount of $%moneyValue1% was debited from your account.[br]The new account balance at this point in time is $%moneyValue2%.
+        account_movement_deposit_description: The amount of %moneyValue1% was deposited onto your account.[br]Your new account balance at this point in time is %moneyValue2%.
+        account_movement_debit_description: The amount of %moneyValue1% was debited from your account.[br]The new account balance at this point in time is %moneyValue2%.
         remote_desktop_event_became_available: The remote desktop '%stringValue%' became available.
         remote_desktop_event_became_unavailable: The remote desktop '%stringValue%' became unavailable.
 
