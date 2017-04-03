@@ -27,6 +27,14 @@ class RemoteDesktopController extends Controller
 
         $remoteDesktopsSorted = [];
 
+        // List Ready to use and booting instances first
+        /** @var RemoteDesktop $remoteDesktop */
+        foreach ($remoteDesktops as $remoteDesktop) {
+            if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_BOOTING) {
+                $remoteDesktopsSorted[] = $remoteDesktop;
+            }
+        }
+
         /** @var RemoteDesktop $remoteDesktop */
         foreach ($remoteDesktops as $remoteDesktop) {
             if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_READY_TO_USE) {
@@ -36,7 +44,8 @@ class RemoteDesktopController extends Controller
 
         /** @var RemoteDesktop $remoteDesktop */
         foreach ($remoteDesktops as $remoteDesktop) {
-            if ($remoteDesktop->getStatus() !== RemoteDesktop::STATUS_READY_TO_USE) {
+            if (   $remoteDesktop->getStatus() !== RemoteDesktop::STATUS_BOOTING
+                && $remoteDesktop->getStatus() !== RemoteDesktop::STATUS_READY_TO_USE) {
                 $remoteDesktopsSorted[] = $remoteDesktop;
             }
         }
