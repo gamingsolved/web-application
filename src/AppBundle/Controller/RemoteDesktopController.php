@@ -82,7 +82,6 @@ class RemoteDesktopController extends Controller
         } else {
             return $this->render('AppBundle:remoteDesktop:new.html.twig', ['form' => $form->createView()]);
         }
-
     }
 
     /**
