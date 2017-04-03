@@ -153,7 +153,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                         } else {
                             // Is auto stop time reached?
                             $output->writeln('Action: Checking if auto stop time has been reached');
-                            $output->writeln('It is now ' . DateTimeUtility::createDateTime()->format('Y-m-d H:i:s') . ', scheduled for stop is at ' . $cloudInstance->getScheduleForStopAt()->format('Y-m-d H:i:s'));
+                            $output->writeln('It is now ' . DateTimeUtility::createDateTime()->format('Y-m-d H:i:s') . ' UTC, scheduled for stop is at ' . $cloudInstance->getScheduleForStopAt()->format('Y-m-d H:i:s') . ' UTC');
                             if (!is_null($cloudInstance->getScheduleForStopAt()) && ($cloudInstance->getScheduleForStopAt() <= DateTimeUtility::createDateTime())) {
                                 $output->writeln('Action result: auto stop time reached!');
                                 $output->writeln('Action: Scheduling for stop');
