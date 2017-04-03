@@ -189,6 +189,10 @@ div.dark {
     font-weight: bold;
 }
 
+.remotedesktop-panel h3 {
+    margin-top: 4px;
+}
+
 .remotedesktop-infobox {
     margin-top: 8px;
     margin-bottom: 0;
