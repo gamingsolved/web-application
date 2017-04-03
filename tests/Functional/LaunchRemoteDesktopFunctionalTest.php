@@ -132,27 +132,21 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());
         $this->assertContains('Stop this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
 
-        $this->assertContains('IP address:', $crawler->filter('li.list-group-item')->eq(0)->text());
-        $this->assertContains('121.122.123.124', $crawler->filter('li.list-group-item')->eq(0)->text());
+        $this->assertContains('121.122.123.124 | foo', $crawler->filter('.clientinfolabel')->first()->attr('title'));
 
-        $this->assertContains('Username:', $crawler->filter('li.list-group-item')->eq(1)->text());
-        $this->assertContains('Administrator', $crawler->filter('li.list-group-item')->eq(1)->text());
+        $this->assertContains('Connect now', $crawler->filter('li.list-group-item')->eq(0)->filter('a.btn')->text());
+        $this->assertContains('You need to have the client program installed.', $crawler->filter('.clientinfolabel')->first()->text());
+        $this->assertContains('121.122.123.124 | foo', $crawler->filter('.clientinfolabel')->first()->attr('title'));
 
-        $this->assertContains('Password:', $crawler->filter('li.list-group-item')->eq(2)->text());
-        $this->assertContains('foo', $crawler->filter('li.list-group-item')->eq(2)->text());
-
-        $this->assertContains('Connect now', $crawler->filter('li.list-group-item')->eq(3)->filter('a.btn')->text());
-        $this->assertContains('You need to have the client program installed.', $crawler->filter('li.list-group-item')->eq(3)->filter('span.label')->text());
-
-        $this->assertContains('Download the Windows client', $crawler->filter('li.list-group-item')->eq(4)->filter('a.btn')->eq(0)->text());
-        $this->assertContains('Download the Mac client', $crawler->filter('li.list-group-item')->eq(4)->filter('a.btn')->eq(1)->text());
+        $this->assertContains('Download the Windows client', $crawler->filter('li.list-group-item')->eq(1)->filter('a.btn')->eq(0)->text());
+        $this->assertContains('Download the Mac client', $crawler->filter('li.list-group-item')->eq(1)->filter('a.btn')->eq(1)->text());
 
 
         // Check that the CGX launcher URI is correct and its target SGX file URI works
 
         $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
 
-        $launcherUri = $crawler->filter('li.list-group-item')->eq(3)->filter('a.btn')->attr('href');
+        $launcherUri = $crawler->filter('li.list-group-item')->eq(0)->filter('a.btn')->attr('href');
         $this->assertEquals(
             'sgxportal://'
                 . $client->getRequest()->getHttpHost()

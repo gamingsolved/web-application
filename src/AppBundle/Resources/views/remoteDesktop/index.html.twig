@@ -131,21 +131,6 @@
                                         <ul class="list-group">
 
                                             <li class="list-group-item">
-                                                {{ "remoteDesktop.index.publicaddress_label"|trans }}
-                                                <label>{{ remoteDesktop.publicAddress }}</label>
-                                            </li>
-
-                                            <li class="list-group-item">
-                                                {{ "remoteDesktop.index.username_label"|trans }}
-                                                <label>Administrator</label>
-                                            </li>
-
-                                            <li class="list-group-item">
-                                                {{ "remoteDesktop.index.password_label"|trans }}
-                                                <label>{{ remoteDesktop.adminPassword }}</label>
-                                            </li>
-
-                                            <li class="list-group-item">
 
                                                 <script>
                                                     resolutionFunctions['{{ remoteDesktop.id }}'] = function(width, height) {
@@ -199,7 +184,7 @@
                                                     {{ "remoteDesktop.index.connect_now"|trans }}
                                                 </a>
                                                 &nbsp;
-                                                <span class="label label-default">{{ "remoteDesktop.index.connect_now_client_info"|trans }}</span>
+                                                <span class="label label-default clientinfolabel" title="{{ remoteDesktop.publicAddress }} | {{ remoteDesktop.adminPassword }}">{{ "remoteDesktop.index.connect_now_client_info"|trans }}</span>
                                             </li>
 
                                             <li class="list-group-item">
