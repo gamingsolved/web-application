@@ -15,7 +15,7 @@
         )
         }}
 
-        <strong>${{ currentAccountBalance|localizedcurrency('USD') }}</strong>.
+        <strong>{{ currentAccountBalance|localizedcurrency('USD') }}</strong>.
     </p>
     <hr>
     <a class="btn btn-primary" href="{{ path('accountmovements.new') }}">{{ "insufficientAccountBalance.click_here_to_increase_your_balance"|trans }}</a>
