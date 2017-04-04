@@ -60,6 +60,7 @@ remoteDesktop:
         countdownbox:
             checking_again_in: Checking again in
             not_yet_available: The remote desktop is not yet available.
+            now_available: The remote desktop is available! Click to show connection info.
     new:
         form:
             headline: Create a new remote desktop

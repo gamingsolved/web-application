@@ -127,17 +127,24 @@
                                             {{ "remoteDesktop.index.countdownbox.checking_again_in"|trans }} <span id="countdownvalue-{{ remoteDesktop.id }}">10</span>...
                                         </label>
 
-                                        &nbsp;
-
-                                        <label id="notyetavailablebox-{{ remoteDesktop.id }}" class="label label-default" style="display: none;">
+                                        <label id="notyetavailablebox-{{ remoteDesktop.id }}" class="label label-default" style="display: none; margin-left: 8px;">
                                             {{ "remoteDesktop.index.countdownbox.not_yet_available"|trans }}
                                         </label>
+
+                                        <a id="nowavailablebox-{{ remoteDesktop.id }}"
+                                           href="{{ path('remotedesktops.index') }}?{{ random() }}#{{ remoteDesktop.id }}"
+                                           class="btn btn-default" style="display: none;"
+                                        >
+                                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.countdownbox.now_available"|trans }}
+                                        </a>
 
                                         <script>
                                             checkStatusFunctions['{{ remoteDesktop.id }}'] = function () {
                                                 jQuery.getJSON('{{ path('remotedesktops.status', {'remoteDesktop': remoteDesktop.id}) }}', null, function (status) {
                                                     if (status == {{ constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') }}) {
-
+                                                        jQuery('#countdownbox-{{ remoteDesktop.id }}').hide();
+                                                        jQuery('#nowavailablebox-{{ remoteDesktop.id }}').fadeIn(200);
                                                     } else {
                                                         jQuery('#countdownvalue-{{ remoteDesktop.id }}').html(10);
                                                         jQuery('#notyetavailablebox-{{ remoteDesktop.id }}').fadeIn(200);
