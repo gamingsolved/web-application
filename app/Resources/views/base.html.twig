@@ -9,6 +9,11 @@
             <link rel="stylesheet" href="{{ asset('bundles/app/default.css') }}">
         {% endblock %}
 
+        <script src="{{ asset('bundles/app/vendor/jquery/dist/jquery.min.js') }}"></script>
+        <script src="{{ asset('bundles/app/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('bundles/app/vendor/jstimezonedetect/jstz.js') }}"></script>
+        <script src="{{ asset('bundles/app/vendor/js-cookie/src/js.cookie.js') }}"></script>
+
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
@@ -103,11 +108,6 @@
         </div>
 
         {% block javascripts %}
-            <script src="{{ asset('bundles/app/vendor/jquery/dist/jquery.min.js') }}"></script>
-            <script src="{{ asset('bundles/app/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-            <script src="{{ asset('bundles/app/vendor/jstimezonedetect/jstz.js') }}"></script>
-            <script src="{{ asset('bundles/app/vendor/js-cookie/src/js.cookie.js') }}"></script>
-
             <script>
                 jQuery('document').ready(function () {
                     jQuery(function() {

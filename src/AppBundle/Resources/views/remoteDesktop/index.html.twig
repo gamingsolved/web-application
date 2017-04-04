@@ -63,6 +63,8 @@
 
                         <script>
                             var resolutionFunctions = [];
+                            var checkStatusFunctions = [];
+                            var lowerCountdownFunctions = [];
                         </script>
 
                     {% for remoteDesktop in remoteDesktops %}
@@ -120,6 +122,47 @@
                                         <h3>
                                             <span class="label label-success label-pulsating remotedesktopstatus">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.booting"|trans }}</span>
                                         </h3>
+
+                                        <label id="countdownbox-{{ remoteDesktop.id }}" class="label label-default">
+                                            {{ "remoteDesktop.index.countdownbox.checking_again_in"|trans }} <span id="countdownvalue-{{ remoteDesktop.id }}">10</span>...
+                                        </label>
+
+                                        &nbsp;
+
+                                        <label id="notyetavailablebox-{{ remoteDesktop.id }}" class="label label-default" style="display: none;">
+                                            {{ "remoteDesktop.index.countdownbox.not_yet_available"|trans }}
+                                        </label>
+
+                                        <script>
+                                            checkStatusFunctions['{{ remoteDesktop.id }}'] = function () {
+                                                jQuery.getJSON('{{ path('remotedesktops.status', {'remoteDesktop': remoteDesktop.id}) }}', null, function (status) {
+                                                    if (status == {{ constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') }}) {
+
+                                                    } else {
+                                                        jQuery('#countdownvalue-{{ remoteDesktop.id }}').html(10);
+                                                        jQuery('#notyetavailablebox-{{ remoteDesktop.id }}').fadeIn(200);
+                                                        jQuery('#notyetavailablebox-{{ remoteDesktop.id }}').fadeOut(6000);
+                                                        lowerCountdownFunctions['{{ remoteDesktop.id }}']();
+                                                    }
+                                                });
+                                            };
+
+                                            lowerCountdownFunctions['{{ remoteDesktop.id }}'] = function () {
+                                                var current = parseInt(jQuery('#countdownvalue-{{ remoteDesktop.id }}').text());
+                                                var updated = 0;
+                                                if (current > 0) {
+                                                    updated = current - 1;
+                                                    jQuery('#countdownvalue-{{ remoteDesktop.id }}').html(updated);
+                                                    window.setTimeout(lowerCountdownFunctions['{{ remoteDesktop.id }}'], 1000);
+                                                } else {
+                                                    checkStatusFunctions['{{ remoteDesktop.id }}']();
+                                                }
+                                            };
+
+                                            jQuery('document').ready(function () {
+                                                lowerCountdownFunctions['{{ remoteDesktop.id }}']();
+                                            });
+                                        </script>
 
                                         <hr>
 

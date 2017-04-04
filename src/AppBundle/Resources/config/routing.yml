@@ -23,6 +23,11 @@ remotedesktops.new:
     defaults: { _controller: AppBundle:RemoteDesktop:new }
     methods:  [GET, POST]
 
+remotedesktops.status:
+    path:     /remoteDesktops/{remoteDesktop}/status
+    defaults: { _controller: AppBundle:RemoteDesktop:status }
+    methods:  [GET]
+
 remotedesktops.stop:
     path:     /remoteDesktops/{remoteDesktop}/stop
     defaults: { _controller: AppBundle:RemoteDesktop:stop }

@@ -57,6 +57,9 @@ remoteDesktop:
         resolution_warning: Never change the resolution within the Windows® desktop!
         connect_now: Connect now
         connect_now_client_info: You need to have the client program installed.
+        countdownbox:
+            checking_again_in: Checking again in
+            not_yet_available: The remote desktop is not yet available.
     new:
         form:
             headline: Create a new remote desktop

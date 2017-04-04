@@ -87,6 +87,20 @@ class RemoteDesktopController extends Controller
     /**
      * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
      */
+    public function statusAction(RemoteDesktop $remoteDesktop, Request $request)
+    {
+        $user = $this->getUser();
+
+        if ($remoteDesktop->getUser()->getId() !== $user->getId()) {
+            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
+        }
+
+        return $this->json($remoteDesktop->getStatus());
+    }
+
+    /**
+     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     */
     public function stopAction(RemoteDesktop $remoteDesktop, Request $request)
     {
         $user = $this->getUser();
