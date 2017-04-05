@@ -175,7 +175,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $application = new Application($kernel);
         $application->setAutoExit(false);
 
-        $input = new ArgvInput(['', 'app:generatebillableitems', '--no-interaction', '--force', '-q']);
+        $input = new ArgvInput(['', 'app:generatebillableitems', '--no-interaction', '-q']);
         $application->run($input);
 
         /** @var AccountMovementRepository $accountMovementRepo */
