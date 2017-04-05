@@ -34,6 +34,7 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
             '/api/cloudInstances/remainingTtl?cloudInstanceProvider=aws&providerInstanceId=i-1234abc'
         );
 
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
         $this->assertSame('14340', $client->getResponse()->getContent());
 
         $client->request(
