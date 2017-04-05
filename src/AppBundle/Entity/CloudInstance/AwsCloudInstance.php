@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="aws_cloud_instances")
+ * @ORM\Table(name="aws_cloud_instances",indexes={@ORM\Index(name="ec2_instance_id_index", columns={"ec2_instance_id"})})
  */
 class AwsCloudInstance extends CloudInstance
 {

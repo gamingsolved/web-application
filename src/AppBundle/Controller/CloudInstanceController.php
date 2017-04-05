@@ -4,9 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
+use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
+use AppBundle\Utility\DateTimeUtility;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -105,6 +108,44 @@ class CloudInstanceController extends Controller
                     'form' => $form->createView()
                 ]
             );
+        }
+    }
+
+    public function remainingTtlApiAction(Request $request)
+    {
+        $cloudInstanceProvider = (string)$request->query->get('cloudInstanceProvider');
+        $providerInstanceId = (string)$request->query->get('providerInstanceId');
+
+        if ($cloudInstanceProvider === 'aws') {
+
+            $em = $this->getDoctrine()->getManager();
+            /** @var EntityRepository $awsCloudInstanceRepository */
+            $awsCloudInstanceRepository = $em->getRepository(AwsCloudInstance::class);
+            /** @var AwsCloudInstance $awsCloudInstance */
+            $awsCloudInstance = $awsCloudInstanceRepository->findOneBy(['ec2InstanceId' => $providerInstanceId]);
+
+            if (is_null($awsCloudInstance)) {
+                return $this->json(
+                    'No instance with id ' . $providerInstanceId . ' for provider ' . $cloudInstanceProvider . ' found',
+                    Response::HTTP_NOT_FOUND
+                );
+            } else {
+                /** @var \DateTime $scheduleForStopAt */
+                $scheduleForStopAt = $awsCloudInstance->getScheduleForStopAt();
+                if (is_null($scheduleForStopAt)) {
+                    return $this->json(
+                        'No remaining ttl available for instance ' . $providerInstanceId,
+                        Response::HTTP_NOT_FOUND
+                    );
+                }
+
+                $now = DateTimeUtility::createDateTime();
+
+                return $this->json((int)($scheduleForStopAt->getTimestamp() - $now->getTimestamp()));
+            }
+
+        } else {
+            return $this->json('Unknown provider ' . $cloudInstanceProvider, Response::HTTP_BAD_REQUEST);
         }
     }
 }

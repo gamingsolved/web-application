@@ -63,6 +63,11 @@ cloudinstances.new:
     defaults: { _controller: AppBundle:CloudInstance:new }
     methods:  [GET, POST]
 
+cloudinstances.remainingTtl:
+    path:     /cloudInstances/remainingTtl
+    defaults: { _controller: AppBundle:CloudInstance:remainingTtl }
+    methods:  [GET]
+
 accountmovements.index:
     path:     /accountMovements/
     defaults: { _controller: AppBundle:AccountMovement:index }

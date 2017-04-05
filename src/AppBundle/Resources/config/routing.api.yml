@@ -1,0 +1,4 @@
+cloudinstances.remainingTtl:
+    path:     /cloudInstances/remainingTtl
+    defaults: { _controller: AppBundle:CloudInstance:remainingTtlApi }
+    methods:  [GET]
