@@ -46,5 +46,14 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertSame(404, $client->getResponse()->getStatusCode());
         $this->assertSame('application/json', $client->getResponse()->headers->get('Content-Type'));
         $this->assertSame('"No instance with id i-nonexistant for provider aws found"', $client->getResponse()->getContent());
+
+        $client->request(
+            'GET',
+            '/api/cloudInstances/remainingTtl?cloudInstanceProvider=wrong&providerInstanceId=i-1234abc'
+        );
+
+        $this->assertSame(400, $client->getResponse()->getStatusCode());
+        $this->assertSame('application/json', $client->getResponse()->headers->get('Content-Type'));
+        $this->assertSame('"Unknown provider wrong"', $client->getResponse()->getContent());
     }
 }
