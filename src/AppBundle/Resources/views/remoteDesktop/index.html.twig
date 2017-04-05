@@ -17,7 +17,7 @@
 
 {% set clientDownloadButtonsAlreadyShown = false %}
 {% set clientDownloadUriWin = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/win32/cgxClient-Scalable%20Graphics-CGX%20Portal.1.10.0.7.exe' %}
-{% set clientDownloadUriMac = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/osx/CGX_1.10.0.4.dmg' %}
+{% set clientDownloadUriMac = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/osx/CGX_1.10.0.5.dmg' %}
 
 {% block body %}
     <div class="container">
@@ -124,7 +124,7 @@
                                         </h3>
 
                                         <label id="countdownbox-{{ remoteDesktop.id }}" class="label label-default">
-                                            {{ "remoteDesktop.index.countdownbox.checking_again_in"|trans }} <span id="countdownvalue-{{ remoteDesktop.id }}">10</span>...
+                                            {{ "remoteDesktop.index.countdownbox.checking_again_in"|trans }} <span id="countdownvalue-{{ remoteDesktop.id }}">30</span>...
                                         </label>
 
                                         <label id="notyetavailablebox-{{ remoteDesktop.id }}" class="label label-default" style="display: none; margin-left: 8px;">
@@ -146,7 +146,7 @@
                                                         jQuery('#countdownbox-{{ remoteDesktop.id }}').hide();
                                                         jQuery('#nowavailablebox-{{ remoteDesktop.id }}').fadeIn(200);
                                                     } else {
-                                                        jQuery('#countdownvalue-{{ remoteDesktop.id }}').html(10);
+                                                        jQuery('#countdownvalue-{{ remoteDesktop.id }}').html(30);
                                                         jQuery('#notyetavailablebox-{{ remoteDesktop.id }}').fadeIn(200);
                                                         jQuery('#notyetavailablebox-{{ remoteDesktop.id }}').fadeOut(6000);
                                                         lowerCountdownFunctions['{{ remoteDesktop.id }}']();
