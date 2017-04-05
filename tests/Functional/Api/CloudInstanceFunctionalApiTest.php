@@ -35,6 +35,7 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
         );
 
         $this->assertSame(200, $client->getResponse()->getStatusCode());
+        $this->assertSame('application/json', $client->getResponse()->headers->get('Content-Type'));
         $this->assertSame('14340', $client->getResponse()->getContent());
 
         $client->request(
@@ -42,6 +43,8 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
             '/api/cloudInstances/remainingTtl?cloudInstanceProvider=aws&providerInstanceId=i-nonexistant'
         );
 
+        $this->assertSame(404, $client->getResponse()->getStatusCode());
+        $this->assertSame('application/json', $client->getResponse()->headers->get('Content-Type'));
         $this->assertSame('"No instance with id i-nonexistant for provider aws found"', $client->getResponse()->getContent());
     }
 }
