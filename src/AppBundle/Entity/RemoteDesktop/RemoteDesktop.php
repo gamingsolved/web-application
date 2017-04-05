@@ -324,7 +324,7 @@ class RemoteDesktop
     /**
      * @throws \Exception
      */
-    protected function getActiveCloudInstance() : CloudInstanceInterface {
+    public function getActiveCloudInstance() : CloudInstanceInterface {
         $cloudInstances = $this->getCloudInstances();
         /** @var CloudInstance $cloudInstance */
         foreach ($cloudInstances as $cloudInstance) {
