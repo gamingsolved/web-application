@@ -4,6 +4,7 @@ namespace AppBundle\Entity\RemoteDesktop;
 
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 
 class RemoteDesktopCadProKind extends RemoteDesktopKind {
 
@@ -20,5 +21,9 @@ class RemoteDesktopCadProKind extends RemoteDesktopKind {
     public function getCloudInstanceProvider() : CloudInstanceProvider
     {
         return new AwsCloudInstanceProvider();
+    }
+
+    public function getFlavor(): Flavor {
+        return $this->getCloudInstanceProvider()->getFlavorByInternalName('g2.8xlarge');
     }
 }

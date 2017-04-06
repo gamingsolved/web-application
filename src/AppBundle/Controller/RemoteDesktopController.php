@@ -5,10 +5,15 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktopKind;
 use AppBundle\Factory\RemoteDesktopFactory;
-use AppBundle\Form\Type\RemoteDesktopType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -69,7 +74,37 @@ class RemoteDesktopController extends Controller
     {
         $user = $this->getUser();
 
-        $form = $this->createForm(RemoteDesktopType::class);
+        /** @var Translator $t */
+        $t = $this->get('translator');
+
+        $choices = [];
+
+        $availableRemoteDesktopKinds = RemoteDesktopKind::getAvailableKinds();
+        /** @var RemoteDesktopKind $remoteDesktopKind */
+        foreach ($availableRemoteDesktopKinds as $remoteDesktopKind) {
+            $choices[
+                $t->trans((string)$remoteDesktopKind)
+                . ' — ' . $remoteDesktopKind->getFlavor()->getHumanName()
+                . ' — $' . $remoteDesktopKind->getMaximumHourlyCosts()
+                . '/h'
+            ] = $remoteDesktopKind->getIdentifier();
+        }
+
+        $form = $this->createFormBuilder()->getForm();
+        $form
+            ->add('title', TextType::class, ['label' => 'remoteDesktop.new.form.title_label'])
+            ->add(
+                'kind',
+                ChoiceType::class,
+                [
+                    'choices' => $choices,
+                    'expanded' => true,
+                    'multiple' => false,
+                    'label' => 'remoteDesktop.new.form.kind_label'
+                ]
+            )
+            ->add('send', SubmitType::class, ['label' => 'remoteDesktop.new.form.submit_label', 'attr' => ['class' => 'btn-primary']]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {

@@ -58,6 +58,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             RemoteDesktopKind::CAD_PRO => $flavorG22xlarge,
             RemoteDesktopKind::CAD_ULTRA => $flavorG28xlarge,
             RemoteDesktopKind::THREED_MEDIA_PRO => $flavorG22xlarge,
+            RemoteDesktopKind::THREED_MEDIA_ULTRA => $flavorG28xlarge,
         ];
 
         $this->kindToRegionToImage = [
@@ -74,6 +75,10 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
                 'eu-west-1' => $this->getImageByInternalName('ami-5c39063a'),
             ],
             RemoteDesktopKind::THREED_MEDIA_PRO => [
+                'eu-central-1' => $this->getImageByInternalName('ami-71c0101e'),
+                'eu-west-1' => $this->getImageByInternalName('ami-ff2a1599'),
+            ],
+            RemoteDesktopKind::THREED_MEDIA_ULTRA => [
                 'eu-central-1' => $this->getImageByInternalName('ami-71c0101e'),
                 'eu-west-1' => $this->getImageByInternalName('ami-ff2a1599'),
             ]
@@ -107,9 +112,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstance
     {
         $instance = new AwsCloudInstance();
-        if (array_key_exists($remoteDesktop->getKind()->getIdentifier(), $this->kindToFlavor)) {
-            $instance->setFlavor($this->kindToFlavor[$remoteDesktop->getKind()->getIdentifier()]);
-        }
+        $instance->setFlavor($remoteDesktop->getKind()->getFlavor());
 
         if (array_key_exists($remoteDesktop->getKind()->getIdentifier(), $this->kindToRegionToImage)) {
             if (array_key_exists($region->getInternalName(), $this->kindToRegionToImage[$remoteDesktop->getKind()->getIdentifier()])) {
@@ -148,5 +151,18 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
                 . $region->getInternalName()
             );
         }
+    }
+
+    public function getMaximumHourlyCostsForFlavor(Flavor $flavor) : float
+    {
+        if ($flavor->getInternalName() === 'g2.2xlarge') {
+            return 1.99;
+        }
+
+        if ($flavor->getInternalName() === 'g2.8xlarge') {
+            return 5.99;
+        }
+
+        throw new \Exception('Unknown flavor ' . $flavor->getInternalName());
     }
 }

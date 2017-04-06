@@ -38,8 +38,8 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
         $form = $buttonNode->form();
 
         $client->submit($form, [
-            'remote_desktop[title]' => 'My first remote desktop',
-            'remote_desktop[kind]' => '0' // "Gaming"
+            'form[title]' => 'My first remote desktop',
+            'form[kind]' => '0' // "Gaming"
         ]);
 
         $crawler = $client->followRedirect();
