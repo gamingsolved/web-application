@@ -8,6 +8,7 @@ use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 interface RemoteDesktopKindInterface
 {
     public function __toString() : string;
+    public function getName() : string;
     public function getCloudInstanceProvider() : CloudInstanceProvider;
     public function getIdentifier() : int;
     public function getFlavor(): Flavor;
@@ -63,7 +64,12 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
         ];
     }
 
-    public function getMaximumHourlyCosts(): float
+    public function getName() : string
+    {
+        return (string)$this;
+    }
+
+    public function getMaximumHourlyCosts() : float
     {
         return $this->getCloudInstanceProvider()->getMaximumHourlyCostsForFlavor($this->getFlavor());
     }

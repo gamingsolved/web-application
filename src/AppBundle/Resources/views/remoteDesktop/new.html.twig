@@ -7,9 +7,35 @@
                 <h1>{{ "remoteDesktop.new.form.headline"|trans }}</h1>
                 <div class="well">
                     {{ form_start(form) }}
-                    {{ form_errors(form) }}
-                    {{ form_widget(form) }}
-                    {{ form_end(form) }}
+                    {{ form_row(form.title) }}
+
+                    <div class="form-group">
+                        <label class="control-label required">{{ "remoteDesktop.new.form.kind_label"|trans }}</label>
+                        <div>
+
+                            {% for remoteDesktopKind in remoteDesktopKinds %}
+
+                                <div class="radio">
+                                    <input id="remotedesktopkind-{{ remoteDesktopKind.identifier }}" class="remotedesktopkind-radio" name="form[kind]" required="required" value="{{ remoteDesktopKind.identifier }}" type="radio">
+                                    <label for="remotedesktopkind-{{ remoteDesktopKind.identifier }}" class="required well remotedesktopkind-label">
+                                        {{ remoteDesktopKind.name|trans }}
+                                        <br>
+                                        <span class="label label-default">{{ remoteDesktopKind.flavor.humanName|trans }}</span>
+                                        <span class="pull-right remotedesktopkind-hourlycosts">
+                                            <strong>{{ remoteDesktopKind.maximumHourlyCosts|localizedcurrency('USD') }}</strong>
+                                            {{ "remoteDesktop.new.form.per_usage_hour"|trans }}
+                                        </span>
+                                    </label>
+                                </div>
+
+                            {% endfor %}
+
+
+                        </div>
+                    </div>
+
+                    {{ form_row(form.send) }}
+                    {{ form_end(form, {'render_rest': false}) }}
                 </div>
             </div>
         </div>

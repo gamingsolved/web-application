@@ -115,7 +115,13 @@ class RemoteDesktopController extends Controller
 
             return $this->redirectToRoute('cloudinstances.new', ['remoteDesktop' => $remoteDesktop->getId()]);
         } else {
-            return $this->render('AppBundle:remoteDesktop:new.html.twig', ['form' => $form->createView()]);
+            return $this->render(
+                'AppBundle:remoteDesktop:new.html.twig',
+                [
+                    'remoteDesktopKinds' => $availableRemoteDesktopKinds,
+                    'form' => $form->createView()
+                ]
+            );
         }
     }
 

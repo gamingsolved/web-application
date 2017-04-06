@@ -232,6 +232,23 @@ input.resolution-radio:checked + label.resolution-label {
     padding: 10px;
 }
 
+input.remotedesktopkind-radio {
+    visibility: hidden;
+}
+
+label.remotedesktopkind-label {
+    display: block;
+    background-color: #fff;
+}
+
+input.remotedesktopkind-radio:checked + label.remotedesktopkind-label {
+    background-color: #337ab7;
+    color: #fff;
+}
+
+.remotedesktopkind-hourlycosts {
+}
+
 div.alert hr {
     margin-top: 10px;
     margin-bottom: 10px;

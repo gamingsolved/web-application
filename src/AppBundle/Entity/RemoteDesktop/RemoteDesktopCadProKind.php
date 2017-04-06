@@ -24,6 +24,6 @@ class RemoteDesktopCadProKind extends RemoteDesktopKind {
     }
 
     public function getFlavor(): Flavor {
-        return $this->getCloudInstanceProvider()->getFlavorByInternalName('g2.8xlarge');
+        return $this->getCloudInstanceProvider()->getFlavorByInternalName('g2.2xlarge');
     }
 }
