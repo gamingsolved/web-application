@@ -106,7 +106,7 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Current hourly costs', $crawler->filter('div.hourlycostsbox')->first()->text());
-        $this->assertContains('(while in status Ready to use): $1.99', $crawler->filter('div.hourlycostsbox')->first()->text());
+        $this->assertContains('(while in status Ready to use): $1.49', $crawler->filter('div.hourlycostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());
@@ -131,7 +131,7 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         );
 
         $this->assertContains(
-            'Running this remote desktop costs $1.99 per hour, but your current balance is',
+            'Running this remote desktop costs $1.49 per hour, but your current balance is',
             $crawler->filter('div.alert')->first()->text()
         );
 

@@ -16,7 +16,6 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     protected $images = [];
     protected $regions = [];
 
-    protected $kindToFlavor = [];
     protected $kindToRegionToImage = [];
 
     public function __construct()
@@ -51,14 +50,6 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             new Region($this, 'eu-west-1', 'cloudprovider.aws.region.eu-west-1'),
             new Region($this, 'us-east-1', 'cloudprovider.aws.region.eu-east-1', false),
             new Region($this, 'us-west-1', 'cloudprovider.aws.region.eu-west-1', false)
-        ];
-
-        $this->kindToFlavor = [
-            RemoteDesktopKind::GAMING_PRO => $flavorG22xlarge,
-            RemoteDesktopKind::CAD_PRO => $flavorG22xlarge,
-            RemoteDesktopKind::CAD_ULTRA => $flavorG28xlarge,
-            RemoteDesktopKind::THREED_MEDIA_PRO => $flavorG22xlarge,
-            RemoteDesktopKind::THREED_MEDIA_ULTRA => $flavorG28xlarge,
         ];
 
         $this->kindToRegionToImage = [
@@ -137,30 +128,21 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
      */
     public function getHourlyCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float
     {
-        if ($flavor->getInternalName() === 'g2.2xlarge') {
-            return '1.99';
-        } elseif($flavor->getInternalName() === 'g2.8xlarge') {
-            return '5.99';
-        } else {
-            throw new \Exception(
-                'Could not get hourly costs for flavor '
-                . $flavor->getInternalName()
-                . ', image '
-                . $image->getInternalName()
-                . ', region'
-                . $region->getInternalName()
-            );
-        }
+        return $this->getMaximumHourlyCostsForFlavor($flavor);
     }
 
     public function getMaximumHourlyCostsForFlavor(Flavor $flavor) : float
     {
         if ($flavor->getInternalName() === 'g2.2xlarge') {
-            return 1.99;
+            return 1.49;
+        }
+
+        if ($flavor->getInternalName() === 'c4.4xlarge') {
+            return 1.49;
         }
 
         if ($flavor->getInternalName() === 'g2.8xlarge') {
-            return 5.99;
+            return 4.29;
         }
 
         throw new \Exception('Unknown flavor ' . $flavor->getInternalName());

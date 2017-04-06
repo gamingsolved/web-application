@@ -22,7 +22,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Costs per hour', $crawler->filter('div.hourlycostsbox')->first()->text());
-        $this->assertContains('(only in status Ready to use): $1.99', $crawler->filter('div.hourlycostsbox')->first()->text());
+        $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlycostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Removing...', $crawler->filter('.remotedesktopstatus')->first()->text());
