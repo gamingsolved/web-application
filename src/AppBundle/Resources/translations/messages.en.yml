@@ -46,8 +46,10 @@ remoteDesktop:
         launch_button: Launch this remote desktop
         refresh_button: Refresh status
         stop_button: Stop this remote desktop
+        stop_data_safe_info: Your data is safe - everything is kept in place when you stop your remote desktop
         start_button: Start this remote desktop
         terminate_button: Remove this remote desktop
+        terminate_data_lost_info: All your remote desktop data will be lost upon removal!
         info_launching: Booting a remote desktop can take between 30 seconds and 15 minutes. You are only billed once the desktop is fully available.
         info_stopping: Stopping a remote desktop can take up to 5 minutes. You are no longer billed now.
         publicaddress_label: IP address:
