@@ -24,12 +24,10 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         // Never remove remove a flavor, image or region, because there might still be users
         // who have old desktops with this flavor/image/region
 
-        $flavorG22xlarge = new Flavor($this, 'g2.2xlarge', '8 vCPUs, 15 GB RAM, 1 GPU');
-        $flavorG28xlarge = new Flavor($this, 'g2.8xlarge', '32 vCPUs, 60 GB RAM, 4 GPUs');
-
         $this->flavors = [
-            $flavorG22xlarge,
-            $flavorG28xlarge
+            new Flavor($this, 'g2.2xlarge', '8 vCPUs, 15 GB RAM, 1 GPU'),
+            new Flavor($this, 'g2.8xlarge', '32 vCPUs, 60 GB RAM, 4 GPUs'),
+            new Flavor($this, 'c4.4xlarge', '16 vCPUs, 30 GB RAM')
         ];
 
         $this->images = [

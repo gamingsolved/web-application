@@ -18,7 +18,7 @@
                                 <div class="radio">
                                     <input id="remotedesktopkind-{{ remoteDesktopKind.identifier }}" class="remotedesktopkind-radio" name="form[kind]" required="required" value="{{ remoteDesktopKind.identifier }}" type="radio">
                                     <label for="remotedesktopkind-{{ remoteDesktopKind.identifier }}" class="required well remotedesktopkind-label">
-                                        {{ remoteDesktopKind.name|trans }}
+                                        <span class="remotedesktopkind-name">{{ remoteDesktopKind.name|trans }}</span>
                                         <br>
                                         <span class="label label-default">{{ remoteDesktopKind.flavor.humanName|trans }}</span>
                                         <span class="pull-right remotedesktopkind-hourlycosts">

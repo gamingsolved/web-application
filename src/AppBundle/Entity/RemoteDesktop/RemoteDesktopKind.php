@@ -24,6 +24,7 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
     const CAD_ULTRA = 2;
     const THREED_MEDIA_PRO = 3;
     const THREED_MEDIA_ULTRA = 4;
+    const UNITY_PRO = 5;
 
     /**
      * @throws \Exception
@@ -50,6 +51,10 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
             return new RemoteDesktop3dMediaUltraKind();
         }
 
+        if ($kind === self::UNITY_PRO) {
+            return new RemoteDesktopUnityProKind();
+        }
+
         throw new \Exception('Unknown remote desktop kind ' . $kind);
     }
 
@@ -60,7 +65,8 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
             self::createRemoteDesktopKind(self::CAD_PRO),
             self::createRemoteDesktopKind(self::CAD_ULTRA),
             self::createRemoteDesktopKind(self::THREED_MEDIA_PRO),
-            self::createRemoteDesktopKind(self::THREED_MEDIA_ULTRA)
+            self::createRemoteDesktopKind(self::THREED_MEDIA_ULTRA),
+            self::createRemoteDesktopKind(self::UNITY_PRO)
         ];
     }
 

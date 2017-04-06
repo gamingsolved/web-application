@@ -249,6 +249,12 @@ input.remotedesktopkind-radio:checked + label.remotedesktopkind-label {
 .remotedesktopkind-hourlycosts {
 }
 
+.remotedesktopkind-name {
+    display: inline-block;
+    font-size: 120%;
+    margin-bottom: 8px;
+}
+
 div.alert hr {
     margin-top: 10px;
     margin-bottom: 10px;
