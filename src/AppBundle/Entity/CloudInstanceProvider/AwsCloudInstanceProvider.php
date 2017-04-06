@@ -37,6 +37,8 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             new Image($this, 'ami-5c39063a', '[CURRENT] CAD for eu-west-1'),
             new Image($this, 'ami-71c0101e', '[CURRENT] 3D Media for eu-central-1'),
             new Image($this, 'ami-ff2a1599', '[CURRENT] 3D Media for eu-west-1'),
+            new Image($this, 'ami-51c2123e', '[CURRENT] Unity for eu-central-1'),
+            new Image($this, 'ami-ef3b0489', '[CURRENT] Unity for eu-west-1'),
             new Image($this, 'ami-f2fde69e', '[LEGACY] Gaming for eu-central-1'),
             new Image($this, 'ami-10334270', '[LEGACY] Gaming for us-east-1'),
             new Image($this, 'ami-b0c7f2da', '[LEGACY] Gaming for us-west-1')
@@ -70,6 +72,10 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             RemoteDesktopKind::THREED_MEDIA_ULTRA => [
                 'eu-central-1' => $this->getImageByInternalName('ami-71c0101e'),
                 'eu-west-1' => $this->getImageByInternalName('ami-ff2a1599'),
+            ],
+            RemoteDesktopKind::UNITY_PRO => [
+                'eu-central-1' => $this->getImageByInternalName('ami-51c2123e'),
+                'eu-west-1' => $this->getImageByInternalName('ami-ef3b0489'),
             ]
         ];
     }
