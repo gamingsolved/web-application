@@ -112,6 +112,8 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Stopped', $crawler->filter('.remotedesktopstatus')->first()->text());
         $this->assertContains('Start this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
+        $this->assertContains('Remove this remote desktop', $crawler->filter('a.remotedesktop-action-button')->eq(1)->text());
+        $this->assertContains('All your remote desktop data will be lost upon removal!', $crawler->filter('.datainfolabel')->first()->text());
 
 
         // We want to build on this in other tests

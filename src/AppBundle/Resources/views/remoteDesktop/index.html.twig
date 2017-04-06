@@ -350,7 +350,7 @@
                                             {{ "remoteDesktop.index.stop_button"|trans }}
                                         </a>
                                         <br>
-                                        <span class="label label-default">{{ "remoteDesktop.index.stop_data_safe_info"|trans }}</span>
+                                        <span class="label label-default datainfolabel">{{ "remoteDesktop.index.stop_data_safe_info"|trans }}</span>
                                     {% endif %}
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
@@ -363,7 +363,7 @@
                                            class="btn btn-default remotedesktop-action-button">
                                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.terminate_button"|trans }}
-                                        </a>&nbsp;<span class="label label-default">{{ "remoteDesktop.index.terminate_data_lost_info"|trans }}</span>
+                                        </a>&nbsp;<span class="label label-default datainfolabel">{{ "remoteDesktop.index.terminate_data_lost_info"|trans }}</span>
                                     {% endif %}
 
                                 </div>
