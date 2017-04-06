@@ -28,14 +28,27 @@ class RemoteDesktopController extends Controller
         /** @var EntityRepository $remoteDesktopRepo */
         $remoteDesktopRepo = $em->getRepository(RemoteDesktop::class);
 
-        $remoteDesktops = $remoteDesktopRepo->findBy(['user' => $user]);
+        $remoteDesktops = $remoteDesktopRepo->findBy(['user' => $user], ['title' => 'ASC']);
 
         $remoteDesktopsSorted = [];
 
-        // List Ready to use and booting instances first
         /** @var RemoteDesktop $remoteDesktop */
         foreach ($remoteDesktops as $remoteDesktop) {
             if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_BOOTING) {
+                $remoteDesktopsSorted[] = $remoteDesktop;
+            }
+        }
+
+        /** @var RemoteDesktop $remoteDesktop */
+        foreach ($remoteDesktops as $remoteDesktop) {
+            if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_STOPPING) {
+                $remoteDesktopsSorted[] = $remoteDesktop;
+            }
+        }
+
+        /** @var RemoteDesktop $remoteDesktop */
+        foreach ($remoteDesktops as $remoteDesktop) {
+            if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_TERMINATING) {
                 $remoteDesktopsSorted[] = $remoteDesktop;
             }
         }
@@ -49,11 +62,25 @@ class RemoteDesktopController extends Controller
 
         /** @var RemoteDesktop $remoteDesktop */
         foreach ($remoteDesktops as $remoteDesktop) {
-            if (   $remoteDesktop->getStatus() !== RemoteDesktop::STATUS_BOOTING
-                && $remoteDesktop->getStatus() !== RemoteDesktop::STATUS_READY_TO_USE) {
+            if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_NEVER_LAUNCHED) {
                 $remoteDesktopsSorted[] = $remoteDesktop;
             }
         }
+
+        /** @var RemoteDesktop $remoteDesktop */
+        foreach ($remoteDesktops as $remoteDesktop) {
+            if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_STOPPED) {
+                $remoteDesktopsSorted[] = $remoteDesktop;
+            }
+        }
+
+        /** @var RemoteDesktop $remoteDesktop */
+        foreach ($remoteDesktops as $remoteDesktop) {
+            if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_TERMINATED) {
+                $remoteDesktopsSorted[] = $remoteDesktop;
+            }
+        }
+
 
         /** @var AccountMovementRepository $accountMovementRepo */
         $accountMovementRepo = $em->getRepository(AccountMovement::class);
