@@ -13,10 +13,10 @@ rsync \
     --exclude var/cache/test \
     --exclude var/logs/dev.log \
     --exclude var/logs/test.log \
-    $DIR/../ www-data@5.45.99.8:/opt/ubiqmachine-webapp/preprod/
+    $DIR/../ www-data@185.162.248.214:/opt/ubiqmachine-webapp/preprod/
 
-ssh root@ubiqmachine.com 'cd /opt/ubiqmachine-webapp/preprod/ && sudo -u www-data php composer.phar install'
+ssh root@185.162.248.214 'cd /opt/ubiqmachine-webapp/preprod/ && sudo -u www-data php composer.phar install'
 
-ssh root@ubiqmachine.com 'sudo -u www-data php /opt/ubiqmachine-webapp/preprod/bin/console --env=preprod doctrine:migrations:migrate --no-interaction'
+ssh root@185.162.248.214 'sudo -u www-data php /opt/ubiqmachine-webapp/preprod/bin/console --env=preprod doctrine:migrations:migrate --no-interaction'
 
-ssh root@ubiqmachine.com 'sudo -u www-data php /opt/ubiqmachine-webapp/preprod/bin/console --env=preprod cache:clear --no-interaction'
+ssh root@185.162.248.214 'sudo -u www-data php /opt/ubiqmachine-webapp/preprod/bin/console --env=preprod cache:clear --no-interaction'
