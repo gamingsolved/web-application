@@ -84,11 +84,11 @@
                                         {% if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %}
                                             <span class="label label-default">{{ remoteDesktop.getRegionOfActiveCloudInstance.humanName|trans }}</span>
                                             &nbsp;
-                                            <span class="label label-default">{{ remoteDesktop.getFlavorOfActiveCloudInstance.humanName }}</span>
-                                            &nbsp;
                                         {% endif %}
-
                                         <span class="label label-default">{{ remoteDesktop.kind|trans }}</span>
+                                        &nbsp;
+                                        <span class="label label-default">{{ remoteDesktop.kind.flavor.humanName|trans }}</span>
+                                        &nbsp;
                                     </div>
 
                                 </div>
