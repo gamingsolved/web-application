@@ -70,19 +70,23 @@ class AccountMovementController extends Controller
 
         /** @var AccountMovement $accountMovement */
         foreach ($accountMovements as $accountMovement) {
-            if ($accountMovement->getMovementType() === AccountMovement::MOVEMENT_TYPE_DEPOSIT) {
-                $description = 'accountMovement.index.account_movement_deposit_description';
-            } else {
-                $description = 'accountMovement.index.account_movement_debit_description';
+            if (    $accountMovement->getMovementType() === AccountMovement::MOVEMENT_TYPE_DEBIT
+                || ($accountMovement->getMovementType() === AccountMovement::MOVEMENT_TYPE_DEPOSIT && $accountMovement->getPaymentFinished()) ) {
+
+                if ($accountMovement->getMovementType() === AccountMovement::MOVEMENT_TYPE_DEPOSIT) {
+                    $description = 'accountMovement.index.account_movement_deposit_description';
+                } else {
+                    $description = 'accountMovement.index.account_movement_debit_description';
+                }
+                $this->addEventAt(
+                    $events,
+                    $accountMovement->getDatetimeOccured(),
+                    $description,
+                    abs($accountMovement->getAmount()),
+                    $accountMovementRepository->getAccountBalanceForUserUpUntil($user, $accountMovement->getDatetimeOccured()),
+                    ''
+                );
             }
-            $this->addEventAt(
-                $events,
-                $accountMovement->getDatetimeOccured(),
-                $description,
-                abs($accountMovement->getAmount()),
-                $accountMovementRepository->getAccountBalanceForUserUpUntil($user, $accountMovement->getDatetimeOccured()),
-                ''
-            );
         }
 
         /** @var RemoteDesktopEvent $remoteDesktopEvent */

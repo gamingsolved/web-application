@@ -135,7 +135,18 @@ class AccountMovement
 
     public function setPaymentFinished(bool $paymentFinished)
     {
+        if ($this->getMovementType() !== self::MOVEMENT_TYPE_DEPOSIT) {
+            throw new \Exception('No sense to set payment status for non-deposit account movement');
+        }
         $this->paymentFinished = $paymentFinished;
+    }
+
+    public function getPaymentFinished() : bool
+    {
+        if ($this->getMovementType() !== self::MOVEMENT_TYPE_DEPOSIT) {
+            throw new \Exception('No sense to get payment status for non-deposit account movement');
+        }
+        return $this->paymentFinished;
     }
 
     public function getPaymentInstruction(): PaymentInstruction
