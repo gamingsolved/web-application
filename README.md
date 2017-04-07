@@ -110,9 +110,9 @@ If you want to present a datetime to the user, please convert at the last moment
     
     sudo -u www-data php bin/console --env=preprod doctrine:migrations:migrate
     
-    watch -n5 'cd /opt/ubiqmachine-webapp/preprod && /usr/bin/php bin/console -v --env=preprod app:generatebillableitems >> /var/tmp/ubiqmachine-webapp.preprod.generatebillableitems.`date +%Y-%m-%d`.log 2>&1'
+    screen -d -m bash -c "sudo -u www-data watch -n5 'cd /opt/ubiqmachine-webapp/preprod && /usr/bin/php bin/console -v --env=preprod app:generatebillableitems >> /var/tmp/ubiqmachine-webapp.preprod.generatebillableitems.`date +%Y-%m-%d`.log 2>&1'"
     
-    watch -n5 'cd /opt/ubiqmachine-webapp/preprod && /usr/bin/php bin/console --env=preprod app:cloudinstancemanagement $(cat /etc/ubiqmachine-webapp/secrets/preprod/aws-api-key.txt) $(cat /etc/ubiqmachine-webapp/secrets/preprod/aws-api-secret.txt) /etc/ubiqmachine-webapp/secrets/preprod/aws-keypair-private-key.pem >> /var/tmp/ubiqmachine-webapp.preprod.cloudinstancemanagement.`date +%Y-%m-%d`.log 2>&1'
+    screen -d -m bash -c "sudo -u www-data watch -n5 'cd /opt/ubiqmachine-webapp/preprod && /usr/bin/php bin/console --env=preprod app:cloudinstancemanagement $(cat /etc/ubiqmachine-webapp/secrets/preprod/aws-api-key.txt) $(cat /etc/ubiqmachine-webapp/secrets/preprod/aws-api-secret.txt) /etc/ubiqmachine-webapp/secrets/preprod/aws-keypair-private-key.pem >> /var/tmp/ubiqmachine-webapp.preprod.cloudinstancemanagement.`date +%Y-%m-%d`.log 2>&1'"
 
 
 ### prod
@@ -124,9 +124,9 @@ If you want to present a datetime to the user, please convert at the last moment
     
     sudo -u www-data php bin/console --env=prod doctrine:migrations:migrate
     
-    watch -n5 'cd /opt/ubiqmachine-webapp/prod && /usr/bin/php bin/console -v --env=prod app:generatebillableitems >> /var/tmp/ubiqmachine-webapp.prod.generatebillableitems.`date +%Y-%m-%d`.log 2>&1'
+    screen -d -m bash -c "sudo -u www-data watch -n5 'cd /opt/ubiqmachine-webapp/prod && /usr/bin/php bin/console -v --env=prod app:generatebillableitems >> /var/tmp/ubiqmachine-webapp.prod.generatebillableitems.`date +%Y-%m-%d`.log 2>&1'"
         
-    watch -n5 'cd /opt/ubiqmachine-webapp/prod && /usr/bin/php bin/console --env=prod app:cloudinstancemanagement $(cat /etc/ubiqmachine-webapp/secrets/prod/aws-api-key.txt) $(cat /etc/ubiqmachine-webapp/secrets/prod/aws-api-secret.txt) /etc/ubiqmachine-webapp/secrets/prod/aws-keypair-private-key.pem >> /var/tmp/ubiqmachine-webapp.prod.cloudinstancemanagement.`date +%Y-%m-%d`.log 2>&1'
+    screen -d -m bash -c "sudo -u www-data watch -n5 'cd /opt/ubiqmachine-webapp/prod && /usr/bin/php bin/console --env=prod app:cloudinstancemanagement $(cat /etc/ubiqmachine-webapp/secrets/prod/aws-api-key.txt) $(cat /etc/ubiqmachine-webapp/secrets/prod/aws-api-secret.txt) /etc/ubiqmachine-webapp/secrets/prod/aws-keypair-private-key.pem >> /var/tmp/ubiqmachine-webapp.prod.cloudinstancemanagement.`date +%Y-%m-%d`.log 2>&1'"
     
 
 
