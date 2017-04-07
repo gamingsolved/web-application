@@ -16,7 +16,6 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     protected $images = [];
     protected $regions = [];
 
-    protected $kindToFlavor = [];
     protected $kindToRegionToImage = [];
 
     public function __construct()
@@ -25,12 +24,10 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         // Never remove remove a flavor, image or region, because there might still be users
         // who have old desktops with this flavor/image/region
 
-        $flavorG22xlarge = new Flavor($this, 'g2.2xlarge', '8 vCPUs, 15 GB RAM, 1 GPU');
-        $flavorG28xlarge = new Flavor($this, 'g2.8xlarge', '32 vCPUs, 60 GB RAM, 4 GPUs');
-
         $this->flavors = [
-            $flavorG22xlarge,
-            $flavorG28xlarge
+            new Flavor($this, 'g2.2xlarge', '8 vCPUs, 15 GB RAM, 1 GPU'),
+            new Flavor($this, 'g2.8xlarge', '32 vCPUs, 60 GB RAM, 4 GPUs'),
+            new Flavor($this, 'c4.4xlarge', '16 vCPUs, 30 GB RAM')
         ];
 
         $this->images = [
@@ -38,6 +35,10 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             new Image($this, 'ami-a2437cc4', '[CURRENT] Gaming for eu-west-1'),
             new Image($this, 'ami-70c0101f', '[CURRENT] CAD for eu-central-1'),
             new Image($this, 'ami-5c39063a', '[CURRENT] CAD for eu-west-1'),
+            new Image($this, 'ami-71c0101e', '[CURRENT] 3D Media for eu-central-1'),
+            new Image($this, 'ami-ff2a1599', '[CURRENT] 3D Media for eu-west-1'),
+            new Image($this, 'ami-51c2123e', '[CURRENT] Unity for eu-central-1'),
+            new Image($this, 'ami-ef3b0489', '[CURRENT] Unity for eu-west-1'),
             new Image($this, 'ami-f2fde69e', '[LEGACY] Gaming for eu-central-1'),
             new Image($this, 'ami-10334270', '[LEGACY] Gaming for us-east-1'),
             new Image($this, 'ami-b0c7f2da', '[LEGACY] Gaming for us-west-1')
@@ -49,12 +50,6 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             new Region($this, 'eu-west-1', 'cloudprovider.aws.region.eu-west-1'),
             new Region($this, 'us-east-1', 'cloudprovider.aws.region.eu-east-1', false),
             new Region($this, 'us-west-1', 'cloudprovider.aws.region.eu-west-1', false)
-        ];
-
-        $this->kindToFlavor = [
-            RemoteDesktopKind::GAMING_PRO => $flavorG22xlarge,
-            RemoteDesktopKind::CAD_PRO => $flavorG22xlarge,
-            RemoteDesktopKind::CAD_ULTRA => $flavorG28xlarge
         ];
 
         $this->kindToRegionToImage = [
@@ -69,6 +64,18 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             RemoteDesktopKind::CAD_ULTRA => [
                 'eu-central-1' => $this->getImageByInternalName('ami-70c0101f'),
                 'eu-west-1' => $this->getImageByInternalName('ami-5c39063a'),
+            ],
+            RemoteDesktopKind::THREED_MEDIA_PRO => [
+                'eu-central-1' => $this->getImageByInternalName('ami-71c0101e'),
+                'eu-west-1' => $this->getImageByInternalName('ami-ff2a1599'),
+            ],
+            RemoteDesktopKind::THREED_MEDIA_ULTRA => [
+                'eu-central-1' => $this->getImageByInternalName('ami-71c0101e'),
+                'eu-west-1' => $this->getImageByInternalName('ami-ff2a1599'),
+            ],
+            RemoteDesktopKind::UNITY_PRO => [
+                'eu-central-1' => $this->getImageByInternalName('ami-51c2123e'),
+                'eu-west-1' => $this->getImageByInternalName('ami-ef3b0489'),
             ]
         ];
     }
@@ -100,9 +107,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstance
     {
         $instance = new AwsCloudInstance();
-        if (array_key_exists($remoteDesktop->getKind()->getIdentifier(), $this->kindToFlavor)) {
-            $instance->setFlavor($this->kindToFlavor[$remoteDesktop->getKind()->getIdentifier()]);
-        }
+        $instance->setFlavor($remoteDesktop->getKind()->getFlavor());
 
         if (array_key_exists($remoteDesktop->getKind()->getIdentifier(), $this->kindToRegionToImage)) {
             if (array_key_exists($region->getInternalName(), $this->kindToRegionToImage[$remoteDesktop->getKind()->getIdentifier()])) {
@@ -127,19 +132,23 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
      */
     public function getHourlyCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float
     {
+        return $this->getMaximumHourlyCostsForFlavor($flavor);
+    }
+
+    public function getMaximumHourlyCostsForFlavor(Flavor $flavor) : float
+    {
         if ($flavor->getInternalName() === 'g2.2xlarge') {
-            return '1.99';
-        } elseif($flavor->getInternalName() === 'g2.8xlarge') {
-            return '5.99';
-        } else {
-            throw new \Exception(
-                'Could not get hourly costs for flavor '
-                . $flavor->getInternalName()
-                . ', image '
-                . $image->getInternalName()
-                . ', region'
-                . $region->getInternalName()
-            );
+            return 1.49;
         }
+
+        if ($flavor->getInternalName() === 'c4.4xlarge') {
+            return 1.49;
+        }
+
+        if ($flavor->getInternalName() === 'g2.8xlarge') {
+            return 4.29;
+        }
+
+        throw new \Exception('Unknown flavor ' . $flavor->getInternalName());
     }
 }

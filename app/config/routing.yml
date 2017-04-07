@@ -4,6 +4,10 @@ app:
     requirements:
         _locale: en|fr|de
 
+api:
+    resource: "@AppBundle/Resources/config/routing.api.yml"
+    prefix: /api
+
 fos_user_all:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
     prefix: /{_locale}

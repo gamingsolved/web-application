@@ -15,6 +15,8 @@ rsync \
     --exclude var/logs/test.log \
     $DIR/../ www-data@5.45.99.8:/opt/ubiqmachine-webapp/prod/
 
+ssh root@ubiqmachine.com 'cd /opt/ubiqmachine-webapp/prod/ && sudo -u www-data php composer.phar install'
+
 ssh root@ubiqmachine.com 'sudo -u www-data php /opt/ubiqmachine-webapp/prod/bin/console --env=prod doctrine:migrations:migrate --no-interaction'
 
 ssh root@ubiqmachine.com 'sudo -u www-data php /opt/ubiqmachine-webapp/prod/bin/console --env=prod cache:clear --no-interaction'

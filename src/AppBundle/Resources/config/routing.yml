@@ -23,6 +23,11 @@ remotedesktops.new:
     defaults: { _controller: AppBundle:RemoteDesktop:new }
     methods:  [GET, POST]
 
+remotedesktops.status:
+    path:     /remoteDesktops/{remoteDesktop}/status
+    defaults: { _controller: AppBundle:RemoteDesktop:status }
+    methods:  [GET]
+
 remotedesktops.stop:
     path:     /remoteDesktops/{remoteDesktop}/stop
     defaults: { _controller: AppBundle:RemoteDesktop:stop }
@@ -44,12 +49,12 @@ remotedesktops.updateScheduleForStopAt:
     methods:  [GET]
 
 remotedesktops.sgx_files:
-    path:     /remoteDesktops/{remoteDesktop}/{width}/{height}/sgx_files/{tag}.sgx
+    path:     /remoteDesktops/{remoteDesktop}/{remoteDesktopIdHash}/{width}/{height}/sgx_files/{tag}.sgx
     defaults: { _controller: AppBundle:RemoteDesktop:serveSgxFile }
     methods:  [GET]
 
 remotedesktops.updatettl:
-    path:     /remoteDesktops/{remoteDesktop}/updatettl/{tag}
+    path:     /remoteDesktops/{remoteDesktop}/{remoteDesktopIdHash}/{width}/{height}/updatettl/{tag}
     defaults: { _controller: AppBundle:RemoteDesktop:serveSgxFile }
     methods:  [GET]
 
@@ -57,6 +62,16 @@ cloudinstances.new:
     path:     /remoteDesktops/{remoteDesktop}/cloudInstances/new
     defaults: { _controller: AppBundle:CloudInstance:new }
     methods:  [GET, POST]
+
+cloudinstances.remainingTtl:
+    path:     /cloudInstances/remainingTtl
+    defaults: { _controller: AppBundle:CloudInstance:remainingTtl }
+    methods:  [GET]
+
+accountmovements.index:
+    path:     /accountMovements/
+    defaults: { _controller: AppBundle:AccountMovement:index }
+    methods:  [GET]
 
 accountmovements.new:
     path:     /accountMovements/newDeposit

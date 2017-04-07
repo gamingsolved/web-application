@@ -95,7 +95,7 @@ class AccountMovement
         $accountMovement = new AccountMovement();
 
         $accountMovement->user = $user;
-        $accountMovement->movementType = self::MOVEMENT_TYPE_DEBIT;
+        $accountMovement->movementType = self::MOVEMENT_TYPE_DEPOSIT;
         $accountMovement->paymentFinished = false;
         $accountMovement->amount = (float)$amount;
         $accountMovement->datetimeOccured = DateTimeUtility::createDateTime();
@@ -118,6 +118,16 @@ class AccountMovement
         return $this->amount;
     }
 
+    public function getMovementType() : int
+    {
+        return $this->movementType;
+    }
+
+    public function getDatetimeOccured(): \DateTime
+    {
+        return $this->datetimeOccured;
+    }
+
     public function setPaymentInstruction(PaymentInstruction $paymentInstruction)
     {
         $this->paymentInstruction = $paymentInstruction;
@@ -125,7 +135,18 @@ class AccountMovement
 
     public function setPaymentFinished(bool $paymentFinished)
     {
+        if ($this->getMovementType() !== self::MOVEMENT_TYPE_DEPOSIT) {
+            throw new \Exception('No sense to set payment status for non-deposit account movement');
+        }
         $this->paymentFinished = $paymentFinished;
+    }
+
+    public function getPaymentFinished() : bool
+    {
+        if ($this->getMovementType() !== self::MOVEMENT_TYPE_DEPOSIT) {
+            throw new \Exception('No sense to get payment status for non-deposit account movement');
+        }
+        return $this->paymentFinished;
     }
 
     public function getPaymentInstruction(): PaymentInstruction

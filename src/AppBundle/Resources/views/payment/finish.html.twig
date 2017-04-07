@@ -13,15 +13,15 @@
 
                     {% if success %}
                         <div class="alert alert-success">
-                            <strong>{{ "payment.finish.success_message"|trans({"%amount%": amount|number_format(2, '.', ',')}) }}</strong>
+                            <strong>{{ "payment.finish.success_message"|trans({"%amount%": amount|localizedcurrency('USD')}) }}</strong>
                             <hr>
-                            {{ "payment.finish.current_balance"|trans({"%balance%": balance|number_format(2, '.', ',')}) }}
+                            {{ "payment.finish.current_balance"|trans({"%balance%": balance|localizedcurrency('USD')}) }}
                         </div>
                     {% else %}
                         <div class="alert alert-warning">
-                            <strong>{{ "payment.finish.cancel_message"|trans({"%amount%": amount|number_format(2, '.', ',')}) }}</strong>
+                            <strong>{{ "payment.finish.cancel_message"|trans({"%amount%": amount|localizedcurrency('USD')}) }}</strong>
                             <hr>
-                            {{ "payment.finish.current_balance"|trans({"%balance%": balance|number_format(2, '.', ',')}) }}
+                            {{ "payment.finish.current_balance"|trans({"%balance%": balance|localizedcurrency('USD')}) }}
                         </div>
                     {% endif %}
 

@@ -4,6 +4,8 @@ namespace AppBundle\Entity\RemoteDesktop;
 
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
+use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 
 class RemoteDesktopGamingProKind extends RemoteDesktopKind {
 
@@ -21,4 +23,9 @@ class RemoteDesktopGamingProKind extends RemoteDesktopKind {
     {
         return new AwsCloudInstanceProvider();
     }
+
+    public function getFlavor(): Flavor {
+        return $this->getCloudInstanceProvider()->getFlavorByInternalName('g2.2xlarge');
+    }
+
 }

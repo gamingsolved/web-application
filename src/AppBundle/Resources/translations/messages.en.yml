@@ -27,6 +27,7 @@ remoteDesktop:
         negative_account_balance: Negative account balance!
         your_current_account_balance_is: Your current account balance is
         your_current_account_balance_is_only: Your current account balance is only
+        see_account_balance_history: See your account balance history
         click_here_to_increase_your_balance: Click here to increase your balance
         headline: Your remote desktops
         no_remote_desktops_yet: You do not yet have any remote desktops.
@@ -45,8 +46,10 @@ remoteDesktop:
         launch_button: Launch this remote desktop
         refresh_button: Refresh status
         stop_button: Stop this remote desktop
+        stop_data_safe_info: Your data is safe - everything is kept in place when you stop your remote desktop
         start_button: Start this remote desktop
         terminate_button: Remove this remote desktop
+        terminate_data_lost_info: All your remote desktop data will be lost upon removal!
         info_launching: Booting a remote desktop can take between 30 seconds and 15 minutes. You are only billed once the desktop is fully available.
         info_stopping: Stopping a remote desktop can take up to 5 minutes. You are no longer billed now.
         publicaddress_label: IP address:
@@ -56,16 +59,24 @@ remoteDesktop:
         resolution_warning: Never change the resolution within the Windows® desktop!
         connect_now: Connect now
         connect_now_client_info: You need to have the client program installed.
+        countdownbox:
+            checking_again_in: Checking again in
+            not_yet_available: The remote desktop is not yet available.
+            now_available: The remote desktop is available! Click to show connection info.
     new:
         form:
             headline: Create a new remote desktop
             title_label: Title for this remote desktop:
-            kind_label: What do you want to use this remote desktop for?
+            kind_label: What kind of remote desktop do you want to create?
+            per_usage_hour: per usage hour
             submit_label: Continue
     kind:
         gamingpro: "Gaming: Preinstalled with Steam, UPlay, GOG and Origin"
-        cadpro: "CAD Pro: Preinstalled Autodesk AutoCAD® 2017 and Revit 2017 (very good computing power)"
-        cadultra: "CAD Ultra: Preinstalled Autodesk AutoCAD® 2017 and Revit 2017 (extreme computing power)"
+        cadpro: "CAD Pro: Preinstalled Autodesk AutoCAD® 2017 and Revit® 2017"
+        cadultra: "CAD Ultra: Preinstalled Autodesk AutoCAD® 2017 and Revit® 2017"
+        3dmediapro: "3D Media Pro: Preinstalled Autodesk Maya® 2017 and 3ds Max® 2017"
+        3dmediaultra: "3D Media Ultra: Preinstalled Autodesk Maya® 2017 and 3ds Max® 2017"
+        unitypro: "Unity Pro: Preinstalled Unity® 5.6"
     status:
         label: Current status:
         never_launched: Not running
@@ -100,26 +111,35 @@ payment:
         form:
             headline: Initiate payment transaction
             description_one: In order to successfully increase your balance, you need to pay via PayPal.
-            description_two: When you return from the PayPal site, the amount of $%amount% is immediately added to your balance.
+            description_two: When you return from the PayPal site, the amount of %amount% is immediately added to your balance.
             submit_label: Open the PayPal website now
 
     finish:
-        success_message: The amount of $%amount% has been added to your balance.
-        cancel_message: The transaction was canceled, and the amount of $%amount% has NOT been added to your balance!
-        current_balance: Your current balance is $%balance%.
+        success_message: The amount of %amount% has been added to your balance.
+        cancel_message: The transaction was canceled, and the amount of %amount% has NOT been added to your balance!
+        current_balance: Your current balance is %balance%.
         accessDenied_message: You are not allowed to access this page.
         back_to_remotedesktops: Back to your remote desktops
 
 accountMovement:
+    index:
+        headline: Your account balance history
+        thead_occurred_at: Date and time
+        thead_events: Account event(s)
+        account_movement_deposit_description: An amount of %moneyValue1% was deposited onto your account.[br]Your new account balance at this point in time is %moneyValue2%.
+        account_movement_debit_description: An amount of %moneyValue1% was debited from your account.[br]Your new account balance at this point in time is %moneyValue2%.
+        remote_desktop_event_became_available: The remote desktop '%stringValue%' became available.
+        remote_desktop_event_became_unavailable: The remote desktop '%stringValue%' became unavailable.
+
     newDeposit:
         form:
             headline: Increase your balance
             amount_label: Please choose the amount to use for increasing your balance:
             submit_label: Continue to payment
-        current_balance: Your current balance is $%balance%.
+        current_balance: Your current balance is %balance%.
         back_to_remotedesktops: Back to your remote desktops
 
 insufficientAccountBalance:
     message_one: Your account balance is too low to use this remote desktop.
-    message_two: Running this remote desktop costs $%hourlyCosts% per hour, but your current balance is
+    message_two: Running this remote desktop costs %hourlyCosts% per hour, but your current balance is
     click_here_to_increase_your_balance: Click here to increase your balance now

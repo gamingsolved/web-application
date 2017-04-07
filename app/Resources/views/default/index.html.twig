@@ -24,6 +24,10 @@
             padding-top: 48px;
             background-color: #4442C2;
         }
+
+        main {
+            padding-top: 0;
+        }
     </style>
 
 {% endblock %}
@@ -212,7 +216,7 @@
                         </a>
                     </p>
                     <p class="small">
-                        Prices start as low as $1.99 per usage hour.
+                        Prices start as low as $1.49 per usage hour.
                         <br>
                         No recurring fees, no hidden costs, no nonsense.
                     </p>
@@ -262,7 +266,9 @@
                             explanation and visualization.
                         </p>
                     </div>
-                    <a href="{{ path('about.howBillingWorks') }}"><img src="{{ asset('bundles/app/images/billing-diagram-1-hour-small.png') }}" width="320"></a>
+                    <div class="well image">
+                        <a href="{{ path('about.howBillingWorks') }}"><img src="{{ asset('bundles/app/images/billing-diagram-1-hour-small.png') }}" width="95%"></a>
+                    </div>
 
                 </div>
 

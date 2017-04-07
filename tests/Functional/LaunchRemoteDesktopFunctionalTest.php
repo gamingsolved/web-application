@@ -7,6 +7,7 @@ use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
+use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -27,7 +28,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Costs per hour', $crawler->filter('div.hourlycostsbox')->first()->text());
-        $this->assertContains('(only in status Ready to use): $1.99', $crawler->filter('div.hourlycostsbox')->first()->text());
+        $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlycostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
 
@@ -126,38 +127,35 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Current hourly costs', $crawler->filter('div.hourlycostsbox')->first()->text());
-        $this->assertContains('(while in status Ready to use): $1.99', $crawler->filter('div.hourlycostsbox')->first()->text());
+        $this->assertContains('(while in status Ready to use): $1.49', $crawler->filter('div.hourlycostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());
         $this->assertContains('Stop this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
+        $this->assertContains('Your data is safe - everything is kept in place when you stop your remote desktop', $crawler->filter('.datainfolabel')->first()->text());
 
-        $this->assertContains('IP address:', $crawler->filter('li.list-group-item')->eq(0)->text());
-        $this->assertContains('121.122.123.124', $crawler->filter('li.list-group-item')->eq(0)->text());
+        $this->assertContains('121.122.123.124 | foo', $crawler->filter('.clientinfolabel')->first()->attr('title'));
 
-        $this->assertContains('Username:', $crawler->filter('li.list-group-item')->eq(1)->text());
-        $this->assertContains('Administrator', $crawler->filter('li.list-group-item')->eq(1)->text());
+        $this->assertContains('Connect now', $crawler->filter('li.list-group-item')->eq(0)->filter('a.btn')->text());
+        $this->assertContains('You need to have the client program installed.', $crawler->filter('.clientinfolabel')->first()->text());
+        $this->assertContains('121.122.123.124 | foo', $crawler->filter('.clientinfolabel')->first()->attr('title'));
 
-        $this->assertContains('Password:', $crawler->filter('li.list-group-item')->eq(2)->text());
-        $this->assertContains('foo', $crawler->filter('li.list-group-item')->eq(2)->text());
-
-        $this->assertContains('Connect now', $crawler->filter('li.list-group-item')->eq(3)->filter('a.btn')->text());
-        $this->assertContains('You need to have the client program installed.', $crawler->filter('li.list-group-item')->eq(3)->filter('span.label')->text());
-
-        $this->assertContains('Download the Windows client', $crawler->filter('li.list-group-item')->eq(4)->filter('a.btn')->eq(0)->text());
-        $this->assertContains('Download the Mac client', $crawler->filter('li.list-group-item')->eq(4)->filter('a.btn')->eq(1)->text());
+        $this->assertContains('Download the Windows client', $crawler->filter('li.list-group-item')->eq(1)->filter('a.btn')->eq(0)->text());
+        $this->assertContains('Download the Mac client', $crawler->filter('li.list-group-item')->eq(1)->filter('a.btn')->eq(1)->text());
 
 
         // Check that the CGX launcher URI is correct and its target SGX file URI works
 
         $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
 
-        $launcherUri = $crawler->filter('li.list-group-item')->eq(3)->filter('a.btn')->attr('href');
+        $launcherUri = $crawler->filter('li.list-group-item')->eq(0)->filter('a.btn')->attr('href');
         $this->assertEquals(
             'sgxportal://'
                 . $client->getRequest()->getHttpHost()
                 . '/en/remoteDesktops/'
                 . $remoteDesktop->getId()
+                . '/'
+                . $remoteDesktop->getIdHash()
                 . '/1280/800?protocol='
                 . $client->getRequest()->getScheme()
                 . '&version=1_10_0#'
@@ -166,7 +164,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         );
 
         // /remoteDesktops/{remoteDesktop}/{width}/{height}/sgx_files/{tag}.sgx
-        $client->request('GET', '/en/remoteDesktops/' . $remoteDesktop->getId() . '/1280/800/sgx_files/' . $remoteDesktop->getId() . '.sgx');
+        $client->request('GET', '/en/remoteDesktops/' . $remoteDesktop->getId() . '/' . $remoteDesktop->getIdHash() . '/1280/800/sgx_files/' . $remoteDesktop->getId() . '.sgx');
 
         $this->assertContains('ip: 121.122.123.124', $client->getResponse()->getContent());
         $this->assertContains('key: ' . $remoteDesktop->getId(), $client->getResponse()->getContent());
@@ -178,15 +176,30 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $application = new Application($kernel);
         $application->setAutoExit(false);
 
-        $input = new ArgvInput(['', 'app:generatebillableitems', '--no-interaction', '--force', '-q']);
+        $input = new ArgvInput(['', 'app:generatebillableitems', '--no-interaction', '-q']);
         $application->run($input);
 
         /** @var AccountMovementRepository $accountMovementRepo */
         $accountMovementRepo = $em->getRepository(AccountMovement::class);
 
         $this->assertSame(
-            98.01,
+            98.51,
             $accountMovementRepo->getAccountBalanceForUser($remoteDesktop->getUser())
+        );
+
+        $crawler = $client->click($crawler->filter('.accountbalancehistorylink')->link());
+        $this->assertContains(DateTimeUtility::createDateTime()->format('F j, Y H:i'), $crawler->filter('tr td')->eq(0)->text());
+        $this->assertContains(
+            'An amount of $100.00 was deposited onto your account.',
+            $crawler->filter('tr td')->eq(1)->text()
+        );
+        $this->assertContains(
+            'An amount of $1.49 was debited from your account.Your new account balance at this point in time is $98.51.',
+            $crawler->filter('tr td')->eq(1)->text()
+        );
+        $this->assertContains(
+            "The remote desktop 'My first remote desktop' became available.",
+            $crawler->filter('tr td')->eq(1)->text()
         );
 
         // We want to build on this in other tests
@@ -220,7 +233,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         );
 
         $this->assertContains(
-            'Running this remote desktop costs $1.99 per hour, but your current balance is',
+            'Running this remote desktop costs $1.49 per hour, but your current balance is',
             $crawler->filter('div.alert')->first()->text()
         );
 

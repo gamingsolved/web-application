@@ -82,8 +82,6 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
             /** @var CloudInstance $cloudInstance */
             foreach ($cloudInstancesInUse as $cloudInstance) {
 
-                $stoppedOrTerminated = false;
-
                 // We need a coordinator per instance bc e.g. AWS uses different API endpoints per region
                 $cloudInstanceCoordinator = $this->getCloudInstanceCoordinatorForCloudInstance(
                     $cloudInstance,
@@ -105,6 +103,9 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 // Running
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_RUNNING) {
+
+                    $stoppedOrTerminatedWhileRunning = false;
+
                     $accountBalance = $accountMovementRepository
                         ->getAccountBalanceForUser(
                             $cloudInstance->getRemoteDesktop()->getUser()
@@ -126,7 +127,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPED);
                             $em->persist($cloudInstance);
                             $em->flush();
-                            $stoppedOrTerminated = true;
+                            $stoppedOrTerminatedWhileRunning = true;
                         }
 
                         // Is it terminated?
@@ -135,10 +136,10 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);
                             $em->persist($cloudInstance);
                             $em->flush();
-                            $stoppedOrTerminated = true;
+                            $stoppedOrTerminatedWhileRunning = true;
                         }
 
-                        if ($stoppedOrTerminated) {
+                        if ($stoppedOrTerminatedWhileRunning) {
                             $output->writeln('Action: Also logging for the billing logic that the desktop became unavailable');
                             $remoteDesktop = $cloudInstance->getRemoteDesktop();
                             $remoteDesktopEvent = new RemoteDesktopEvent(
@@ -153,7 +154,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                         } else {
                             // Is auto stop time reached?
                             $output->writeln('Action: Checking if auto stop time has been reached');
-                            $output->writeln('It is now ' . DateTimeUtility::createDateTime()->format('Y-m-d H:i:s') . ', scheduled for stop is at ' . $cloudInstance->getScheduleForStopAt()->format('Y-m-d H:i:s'));
+                            $output->writeln('It is now ' . DateTimeUtility::createDateTime()->format('Y-m-d H:i:s') . ' UTC, scheduled for stop is at ' . $cloudInstance->getScheduleForStopAt()->format('Y-m-d H:i:s') . ' UTC');
                             if (!is_null($cloudInstance->getScheduleForStopAt()) && ($cloudInstance->getScheduleForStopAt() <= DateTimeUtility::createDateTime())) {
                                 $output->writeln('Action result: auto stop time reached!');
                                 $output->writeln('Action: Scheduling for stop');

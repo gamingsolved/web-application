@@ -66,6 +66,11 @@ class RemoteDesktopEvent
         return $this->id;
     }
 
+    public function getRemoteDesktop() : RemoteDesktop
+    {
+        return $this->remoteDesktop;
+    }
+
     public function getEventType() : int
     {
         return $this->eventType;

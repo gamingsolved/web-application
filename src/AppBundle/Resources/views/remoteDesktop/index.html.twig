@@ -17,7 +17,7 @@
 
 {% set clientDownloadButtonsAlreadyShown = false %}
 {% set clientDownloadUriWin = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/win32/cgxClient-Scalable%20Graphics-CGX%20Portal.1.10.0.7.exe' %}
-{% set clientDownloadUriMac = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/osx/CGX_1.10.0.4.dmg' %}
+{% set clientDownloadUriMac = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/osx/CGX_1.10.0.6.dmg' %}
 
 {% block body %}
     <div class="container">
@@ -27,23 +27,29 @@
                 {% if currentAccountBalance < 0.0 %}
                     <div class="alert alert-danger accountbalanceinfobox" role="alert">
                         <strong>{{ "remoteDesktop.index.negative_account_balance"|trans }}</strong>
-                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>-${{ currentAccountBalanceAbsolute|number_format(2, '.', ',') }}</strong>.
+                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>{{ currentAccountBalance|localizedcurrency('USD') }}</strong>.
 
                 {% elseif currentAccountBalance < 5.0 %}
                     <div class="alert alert-warning accountbalanceinfobox" role="alert">
-                        {{ "remoteDesktop.index.your_current_account_balance_is_only"|trans }} <strong>${{ currentAccountBalance|number_format(2, '.', ',') }}</strong>.
+                        {{ "remoteDesktop.index.your_current_account_balance_is_only"|trans }} <strong>{{ currentAccountBalance|localizedcurrency('USD') }}</strong>.
 
                 {% elseif currentAccountBalance == 0.0 %}
                     <div class="alert alert-warning accountbalanceinfobox" role="alert">
-                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>${{ currentAccountBalance|number_format(2, '.', ',') }}</strong>.
+                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>{{ currentAccountBalance|localizedcurrency('USD') }}</strong>.
 
                 {% else %}
                     <div class="alert alert-success accountbalanceinfobox" role="alert">
-                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>${{ currentAccountBalance|number_format(2, '.', ',') }}</strong>.
+                        {{ "remoteDesktop.index.your_current_account_balance_is"|trans }} <strong>{{ currentAccountBalance|localizedcurrency('USD') }}</strong>.
 
                 {% endif %}
 
                     <hr>
+
+                    <a
+                        class="accountbalancehistorylink pull-right"
+                        href="{{ path('accountmovements.index') }}"
+                    >{{ "remoteDesktop.index.see_account_balance_history"|trans }}</a>
+
                     <a
                         class="btn btn-default btn-sm"
                         href="{{ path('accountmovements.new') }}"
@@ -57,6 +63,8 @@
 
                         <script>
                             var resolutionFunctions = [];
+                            var checkStatusFunctions = [];
+                            var lowerCountdownFunctions = [];
                         </script>
 
                     {% for remoteDesktop in remoteDesktops %}
@@ -96,14 +104,14 @@
                                             <div class="well well-sm pull-right hourlycostsbox">
                                                 <small>
                                                     {{ "remoteDesktop.index.current_costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts|number_format(2, '.', ',') }}
+                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyCosts|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% else %}
                                             <div class="well well-sm pull-right hourlycostsbox">
                                                 <small>
                                                     {{ "remoteDesktop.index.costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): ${{ remoteDesktop.hourlyCosts|number_format(2, '.', ',') }}
+                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyCosts|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% endif %}
@@ -114,6 +122,54 @@
                                         <h3>
                                             <span class="label label-success label-pulsating remotedesktopstatus">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.booting"|trans }}</span>
                                         </h3>
+
+                                        <label id="countdownbox-{{ remoteDesktop.id }}" class="label label-default">
+                                            {{ "remoteDesktop.index.countdownbox.checking_again_in"|trans }} <span id="countdownvalue-{{ remoteDesktop.id }}">30</span>...
+                                        </label>
+
+                                        <label id="notyetavailablebox-{{ remoteDesktop.id }}" class="label label-default" style="display: none; margin-left: 8px;">
+                                            {{ "remoteDesktop.index.countdownbox.not_yet_available"|trans }}
+                                        </label>
+
+                                        <a id="nowavailablebox-{{ remoteDesktop.id }}"
+                                           href="{{ path('remotedesktops.index') }}?{{ random() }}#{{ remoteDesktop.id }}"
+                                           class="btn btn-default" style="display: none;"
+                                        >
+                                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.countdownbox.now_available"|trans }}
+                                        </a>
+
+                                        <script>
+                                            checkStatusFunctions['{{ remoteDesktop.id }}'] = function () {
+                                                jQuery.getJSON('{{ path('remotedesktops.status', {'remoteDesktop': remoteDesktop.id}) }}', null, function (status) {
+                                                    if (status == {{ constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') }}) {
+                                                        jQuery('#countdownbox-{{ remoteDesktop.id }}').hide();
+                                                        jQuery('#nowavailablebox-{{ remoteDesktop.id }}').fadeIn(200);
+                                                    } else {
+                                                        jQuery('#countdownvalue-{{ remoteDesktop.id }}').html(30);
+                                                        jQuery('#notyetavailablebox-{{ remoteDesktop.id }}').fadeIn(200);
+                                                        jQuery('#notyetavailablebox-{{ remoteDesktop.id }}').fadeOut(6000);
+                                                        lowerCountdownFunctions['{{ remoteDesktop.id }}']();
+                                                    }
+                                                });
+                                            };
+
+                                            lowerCountdownFunctions['{{ remoteDesktop.id }}'] = function () {
+                                                var current = parseInt(jQuery('#countdownvalue-{{ remoteDesktop.id }}').text());
+                                                var updated = 0;
+                                                if (current > 0) {
+                                                    updated = current - 1;
+                                                    jQuery('#countdownvalue-{{ remoteDesktop.id }}').html(updated);
+                                                    window.setTimeout(lowerCountdownFunctions['{{ remoteDesktop.id }}'], 1000);
+                                                } else {
+                                                    checkStatusFunctions['{{ remoteDesktop.id }}']();
+                                                }
+                                            };
+
+                                            jQuery('document').ready(function () {
+                                                lowerCountdownFunctions['{{ remoteDesktop.id }}']();
+                                            });
+                                        </script>
 
                                         <hr>
 
@@ -131,33 +187,18 @@
                                         <ul class="list-group">
 
                                             <li class="list-group-item">
-                                                {{ "remoteDesktop.index.publicaddress_label"|trans }}
-                                                <label>{{ remoteDesktop.publicAddress }}</label>
-                                            </li>
-
-                                            <li class="list-group-item">
-                                                {{ "remoteDesktop.index.username_label"|trans }}
-                                                <label>Administrator</label>
-                                            </li>
-
-                                            <li class="list-group-item">
-                                                {{ "remoteDesktop.index.password_label"|trans }}
-                                                <label>{{ remoteDesktop.adminPassword }}</label>
-                                            </li>
-
-                                            <li class="list-group-item">
 
                                                 <script>
                                                     resolutionFunctions['{{ remoteDesktop.id }}'] = function(width, height) {
                                                         jQuery('#launch-link-{{ remoteDesktop.id }}')
-                                                            .attr('href', 'sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/' + width + '/' + height + '?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}');
+                                                            .attr('href', 'sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/{{ remoteDesktop.idHash }}/' + width + '/' + height + '?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}');
                                                     }
                                                 </script>
 
                                                 <p>
                                                     {{ "remoteDesktop.index.choose_resolution"|trans }}
                                                 </p>
-                                                <div class="well well-sm screenresolutionsbox">
+                                                <div class="well well-sm resolutionsbox">
                                                     {% set resolutions = [['1024','768'],
                                                                           ['1280','720'],
                                                                           ['1280','800'],
@@ -171,7 +212,15 @@
                                                         <thead>
                                                             <tr>
                                                                 {% for resolution in resolutions %}
-                                                                    <td class="small text-center">
+                                                                    <td class="text-center">
+                                                                        <input
+                                                                            type="radio"
+                                                                            class="resolution-radio"
+                                                                            name="resolution-{{ remoteDesktop.id }}"
+                                                                            id="resolution-{{ remoteDesktop.id }}-{{ resolution[0] }}x{{ resolution[1] }}"
+                                                                            onclick="resolutionFunctions['{{ remoteDesktop.id }}']({{ resolution[0] }}, {{ resolution[1] }})"
+                                                                            {% if loop.index0 == 2 %}checked{% endif %}
+                                                                        >
                                                                         <label class="small resolution-label" for="resolution-{{ remoteDesktop.id }}-{{ resolution[0] }}x{{ resolution[1] }}">
                                                                             {{ resolution[0] }}<br>x{{ resolution[1] }}
                                                                         </label>
@@ -179,26 +228,11 @@
                                                                 {% endfor %}
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                {% for resolution in resolutions %}
-                                                                    <td class="text-center">
-                                                                        <input
-                                                                            type="radio"
-                                                                            name="resolution-{{ remoteDesktop.id }}"
-                                                                            id="resolution-{{ remoteDesktop.id }}-{{ resolution[0] }}x{{ resolution[1] }}"
-                                                                            onclick="resolutionFunctions['{{ remoteDesktop.id }}']({{ resolution[0] }}, {{ resolution[1] }})"
-                                                                            {% if loop.index0 == 2 %}checked{% endif %}
-                                                                        >
-                                                                    </td>
-                                                                {% endfor %}
-                                                            </tr>
-                                                        </tbody>
                                                     </table>
 
                                                 </div>
 
-                                                <a id="launch-link-{{ remoteDesktop.id }}" href="sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/1280/800?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}"
+                                                <a id="launch-link-{{ remoteDesktop.id }}" href="sgxportal://{{ launcherHostname }}/en/remoteDesktops/{{ remoteDesktop.id }}/{{ remoteDesktop.idHash }}/1280/800?protocol={{ launcherProtocol }}&version=1_10_0#{{ remoteDesktop.id }}"
                                                    type="button"
                                                    class="btn btn-success btn-sm"
                                                 >
@@ -206,7 +240,7 @@
                                                     {{ "remoteDesktop.index.connect_now"|trans }}
                                                 </a>
                                                 &nbsp;
-                                                <span class="label label-default">{{ "remoteDesktop.index.connect_now_client_info"|trans }}</span>
+                                                <span class="label label-default clientinfolabel" title="{{ remoteDesktop.publicAddress }} | {{ remoteDesktop.adminPassword }}">{{ "remoteDesktop.index.connect_now_client_info"|trans }}</span>
                                             </li>
 
                                             <li class="list-group-item">
@@ -299,19 +333,24 @@
                                     {% endif %}
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
+                                        <span class="pull-right">
+                                            <a class="btn btn-default btn"
+                                               href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 1800 }) }}">{{ "remoteDesktop.index.auto_stop_in_30_minutes"|trans }}</a>
+                                            &nbsp;
+                                            <a class="btn btn-default btn"
+                                               href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_1_hour"|trans }}</a>
+                                            &nbsp;
+                                            <a class="btn btn-default btn"
+                                               href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_2_hours"|trans }}</a>
+                                        </span>
+
                                         <a href="{{ path('remotedesktops.stop', { 'remoteDesktop': remoteDesktop.id }) }}"
                                            class="btn btn-default remotedesktop-action-button">
                                             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.stop_button"|trans }}
                                         </a>
-
-                                        <span class="pull-right">
-                                            <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 1800 }) }}">{{ "remoteDesktop.index.auto_stop_in_30_minutes"|trans }}</a>
-                                            &nbsp;
-                                            <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_1_hour"|trans }}</a>
-                                            &nbsp;
-                                            <a class="btn btn-default btn" href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_2_hours"|trans }}</a>
-                                        </span>
+                                        <br>
+                                        <span class="label label-default datainfolabel">{{ "remoteDesktop.index.stop_data_safe_info"|trans }}</span>
                                     {% endif %}
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
@@ -324,7 +363,7 @@
                                            class="btn btn-default remotedesktop-action-button">
                                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.terminate_button"|trans }}
-                                        </a>
+                                        </a>&nbsp;<span class="label label-default datainfolabel">{{ "remoteDesktop.index.terminate_data_lost_info"|trans }}</span>
                                     {% endif %}
 
                                 </div>
