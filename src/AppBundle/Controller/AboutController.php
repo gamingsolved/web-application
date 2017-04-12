@@ -10,4 +10,9 @@ class AboutController extends Controller
     {
         return $this->render('AppBundle:about:how-billing-works.html.twig');
     }
+
+    public function privacyPolicyAction()
+    {
+        return $this->render('AppBundle:about:privacy-policy.html.twig');
+    }
 }

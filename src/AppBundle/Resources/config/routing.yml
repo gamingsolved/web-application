@@ -8,6 +8,11 @@ about.howBillingWorks:
     defaults: { _controller: AppBundle:About:howBillingWorks }
     methods:  [GET]
 
+about.privacyPolicy:
+    path:     /about/privacy-policy
+    defaults: { _controller: AppBundle:About:privacyPolicy }
+    methods:  [GET]
+
 logout_successful:
     path:     /logout-successful
     defaults: { _controller: AppBundle:Default:logoutSuccessful }
