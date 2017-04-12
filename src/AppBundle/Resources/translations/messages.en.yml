@@ -25,128 +25,90 @@ about:
       headline_primary: Our Privacy Policy
       text_primary: >
           <p>
-            This privacy policy has been compiled to better serve those who are concerned with how their 'Personally Identifiable Information' (PII) is being used online. PII, as described in US privacy law and information security, is information that can be used on its own or with other information to identify, contact, or locate a single person, or to identify an individual in context. Please read our privacy policy carefully to get a clear understanding of how we collect, use, protect or otherwise handle your Personally Identifiable Information in accordance with our website.
-          </p>
-          <h4>What personal information do we collect from the people that visit our website?</h4>
-          <p>
-            When registering on our site, as appropriate, you may be asked to enter your name, email address or other details to help you with your experience.
-          </p>
-          <h4>When do we collect information?</h4>
-          <p>
-            We collect information from you when you register on our site or enter information on our site. In addition, when visiting our site we inquire from your web browser your current time zone in order to show you date and time information correctly for the time zone you are in.
-          </p>
-          <h4>How do we use your information?</h4>
-          <p>
-            We may use the information we collect from you when you register and surf the website, or use certain other site features in the following ways:
-            To personalize your experience so that you can manage your personal set of remote desktops.
-          </p>
-          <h4>How do we protect your information?</h4>
-          <p>
-            We do not use vulnerability scanning and/or scanning to PCI standards.
-            We do not use Malware Scanning.
+            Die deutschsprachige Version unserer Datenschutzerklärung finden Sie weiter unten auf der Seite.
           </p>
           <p>
-            Your personal information is contained behind secured networks and is only accessible by a limited number of persons who have special access rights to such systems, and are required to keep the information confidential. In addition, all information you supply is encrypted via TLS/SSL technology.
+            Current as of: 12.04.2017
           </p>
           <p>
-            We implement a variety of security measures to maintain the safety of your personal information.
+            Your trust in us is important to us! This is why we guarantee a maximum of safety and security for all your personal data. Our privacy policy is in accordance with German law, especially the Federal Data Protection Act (BDSG) and the Tele Media Act (TMG).
+          </p>
+          <h4>ubiqMachine Privacy Policy</h4>
+          <p>
+             We store and use your personal data only for contacting you and for providing and managing your personal user account.
           </p>
           <p>
-            All financial transactions are processed through a gateway provider and are not stored or processed on our servers.
+            Please note that all personal data which you enter and store on your remote desktop instances which we provide to you are stored out of our reach and out of our control on the system instances at Amazon Web Services, operated by Amazon Web Services, Inc., 410 Terry Avenue North, Seattle WA 98109, United States. Depending on your choice of a remote desktop launch location, your instances are potentially operated outside of Germany and the EU, for example in the USA.
           </p>
-          <h4>Do we use 'cookies'?</h4>
-          <p>
-            Yes. Cookies are small files that a site or its service provider transfers to your computer's hard drive through your Web browser (if you allow) that enables the site's or service provider's systems to recognize your browser and capture and remember certain information. For instance, we use cookies to help us remember your login status and your current time zone. They are also used to help us understand your preferences based on previous or current site activity, which enables us to provide you with improved services. We also use cookies to help us compile aggregate data about site traffic and site interaction so that we can offer better site experiences and tools in the future.
-          </p>
-          <p>
-            You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off all cookies. You do this through your browser settings. Since every browser is a little different, look at your browser's Help Menu to learn the correct way to modify your cookies.
-          </p>
-          <h4>If users disable cookies in their browser:</h4>
-          <p>
-            If you turn cookies off, several features that make your site experience more efficient may not function properly. You will not be able to log in to your registered account if you do not allow us to set
-            cookies.
-          </p>
-          <h4>Third-party disclosure</h4>
-          <p>
-            We do not sell, trade, or otherwise transfer to outside parties your Personally Identifiable Information unless we provide users with advance notice. This does not include website hosting partners and other parties who assist us in operating our website, conducting our business, or serving our users, so long as those parties agree to keep this information confidential. We may also release information when it's release is appropriate to comply with the law, enforce our site policies, or protect ours or others' rights, property or safety.
-          </p>
-          <p>
-             However, non-personally identifiable visitor information may be provided to other parties for marketing, advertising, or other uses.
-          </p>
-          <h4>Third-party links</h4>
-          <p>
-            We do not include or offer third-party products or services on our website.
-          </p>
-          <h4>Google</h4>
-          <p>
-            We, along with third-party vendors such as Google use first-party cookies (such as the Google Analytics cookies) and third-party cookies (such as the DoubleClick cookie) or other third-party identifiers together to compile data regarding user interactions with ad impressions and other ad service functions as they relate to our website.
-          </p>
-          <h4>Opting out:</h4>
-          <p>
-             Users can set preferences for how Google advertises to you using the Google Ad Settings page. Alternatively, you can opt out by visiting the Network Advertising Initiative Opt Out page or by using the Google Analytics Opt Out Browser add on.
-          </p>
-          <h4>California Online Privacy Protection Act</h4>
-          <p>
-            CalOPPA is the first state law in the nation to require commercial websites and online services to post a privacy policy. The law's reach stretches well beyond California to require any person or company in the United States (and conceivably the world) that operates websites collecting Personally Identifiable Information from California consumers to post a conspicuous privacy policy on its website stating exactly the information being collected and those individuals or companies with whom it is being shared. - See more at: <a href="http://consumercal.org/california-online-privacy-protection-act-caloppa/#sthash.0FdRbT51.dpuf">http://consumercal.org/california-online-privacy-protection-act-caloppa/#sthash.0FdRbT51.dpuf</a>
-          </p>
-          <h4>According to CalOPPA, we agree to the following:</h4>
-          <p>
-            Users can visit our site anonymously.
-            <br>
-            Once this privacy policy is created, we will add a link to it on our home page or as a minimum, on the first significant page after entering our website.
-            <br>
-            Our Privacy Policy link includes the word 'Privacy' and can easily be found on the page specified above.
-            <br>
-            You will be notified of any Privacy Policy changes on our Privacy Policy Page.
-            <br>
-            You can change your personal information by emailing us at <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>.
-          </p>
-          <h4>How does our site handle Do Not Track signals?</h4>
-          <p>
-            We honor Do Not Track signals and Do Not Track, plant cookies, or use advertising when a Do Not Track (DNT) browser mechanism is in place.
-          </p>
-          <h4>Does our site allow third-party behavioral tracking?</h4>
-          <p>
-            It's also important to note that we do not allow third-party behavioral tracking.
-          </p>
-          <h4>Contacting Us</h4>
-          <p>
-            If there are any questions regarding this privacy policy, you may contact us using the information below.
-          </p>
-          <p>
-            ubiqmachine.com
-            <br>
-            Manuel Kiessling
-            <br>
-            Freiherrenstrasse 32
-            <br>
-            Grevenbroich, NRW 41515
-            <br>
-            Germany
-            <br>
-            info@ubiqmachine.com
-            <br>
-            Phone: 0049-2181-7838778
-          </p>
-          <h4></h4>
+          <h4>We do not share your personal data with third parties</h4>
           <p>
 
+            We do not make your personal available to third parties. We only store your data for your registration and to make your personal user account available to you.
+            We do not store credit card information or other payment information. However, your payment information are stored and handled by PayPal or other payment providers which are handling your payments to us.
           </p>
-          <h4></h4>
+          <h4>Cookies</h4>
+          <p>
+            We use cookies at different places of our web site. They are only needed in order to allow you to use your personal user account.
+            Additionally, we use an internal function of your browser in order to detect your current time zone, and store this information in a cookie.
+          </p>
+          <p>
+            We guarantee that in this context, no personal information like name or address are collected or stores. Technically, it neither possible to spy on data on your computer through the means of cookies, nor is your privacy at risk by our use of cookies.
+          </p>
+          <h4>Web analytics services</h4>
+          <p>
+            This web site uses Google Analytics, a web analytics service from Google Inc. ("Google"). Google Analytics too uses cookies, small text files which are stored on your computer and allow to analyse how you are using the web site.
+            The information generated through these cookies with information on your web site usage are transferred to servers from Google operated in the USA, and stored there.
+            In case of activation of IP anonymization on this web site, your IP address will be truncated by Google before being stored. This applies to all traffic originating from member states of the EU or other members of the EEA contract.
+          </p>
           <p>
 
+            Google will use this information to analyze your usage of this web site in order to generate reports about web site activity and other information for us. Your browser's IP address which is transferred to Google Analytics in this context are not linked with other data from Google.
           </p>
-          <h4></h4>
           <p>
-
+            You can deny the storage of cookies through settings/preferences in your browser. Please note that in this case, some of the features of our web site may not be available to you.
+            Additionally, you can avert collection and storage of Google Analytics information by downloading and installing the browser plugin available at <a href="http://tools.google.com/dlpage/gaoptout?hl=de">http://tools.google.com/dlpage/gaoptout?hl=de</a>.
           </p>
-          <h4></h4>
           <p>
-
+            Please note that this web site uses the Google Analytics extension "_anonymizeIp()", which results in truncated IP addresses being collected and stored, which avoids a direct mapping to persons of the collected information.
           </p>
-          <h4></h4>
+          <h4> Disclosure, amendment, blocking and deletion of your information</h4>
           <p>
-
+            According to the Federal Data Protection Act you have a right to disclose, amend, block or delete your saved information.
+          </p>
+          <p>
+            According to § 15 of the Tele Media Act (TMG) you as a web site visitor have the right to opt-out of storage of the anonymously collected visitor data for the future.
+          </p>
+          <p>
+            You can at any time opt-out of the usage of your personal data for the future. In this case, please contact:
+          </p>
+          <p>
+            ubiqMachine<br>
+            Manuel Kiessling<br>
+            Freiherrenstr. 32<br>
+            41515 Grevenbroich<br>
+          </p>
+          <p>
+            or via e-mail to <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>.
+          </p>
+          <h4>External links on our web site</h4>
+          <p>
+            On our web site you will find links which refer to web sites of third parties. We do not have any influence on content and structure of web sites from others. Our privacy policy does not apply on these sites.
+          </p>
+          <h4>Changes to the privacy policy</h4>
+          <p>
+            We may change this privacy policy at any time without prior notice. Please inform yourself about the currently valid privacy policy whenever you use "ubiqmachine.com".
+          </p>
+          <h4>Contect person for privacy-related issues</h4>
+          <p>
+            For all issues regarding privacy, please contact:
+          </p>
+          <p>
+            Manuel Kiessling<br>
+            Freiherrenstr. 32<br>
+            41515 Grevenbroich<br>
+          </p>
+          <p>
+            e-mail: <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>.
           </p>
       headline_secondary: Unsere Datenschutzerklärung
       text_secondary: >
@@ -158,7 +120,7 @@ about:
           </p>
           <h4>ubiqMachine Datenschutzerklärung</h4>
           <p>
-             Wir speichern und verwenden Ihre personenbezogenen Daten nur für die Kontaktaufnahme mit Ihnen.
+             Wir speichern und verwenden Ihre personenbezogenen Daten nur für die Kontaktaufnahme mit Ihnen sowie für die Bereitstellung und Verwaltung Ihres persönlichen Benutzerkontos.
           </p>
           <p>
             Beachten Sie, dass jegliche auch personenbezogene Daten, welche Sie auf durch uns für Sie bereitgestellten Remote-Desktops hinterlegen, außerhalb unseres Zugriffs und unserer Kontrolle auf den für Sie betriebenen Systeminstanzen bei Amazon Web Services, betrieben durch Amazon Web Services, Inc., 410 Terry Avenue North, Seattle WA 98109, United States, gespeichert werden. Abhängig von Ihrer Wahl des Betriebsstandorts Ihrer Remote-Desktops werden diese Instanzen potenziell außerhalb Deutschlands und der EU betrieben, zum Beispiel in den Vereinigten Staaten von Amerika.
