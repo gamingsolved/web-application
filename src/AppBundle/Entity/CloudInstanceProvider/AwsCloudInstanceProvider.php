@@ -56,8 +56,8 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         $this->regions = [
             new Region($this, 'eu-central-1', 'cloudprovider.aws.region.eu-central-1'),
             new Region($this, 'eu-west-1', 'cloudprovider.aws.region.eu-west-1'),
-            new Region($this, 'us-east-1', 'cloudprovider.aws.region.eu-east-1'),
-            new Region($this, 'us-west-1', 'cloudprovider.aws.region.eu-west-1')
+            new Region($this, 'us-east-1', 'cloudprovider.aws.region.us-east-1'),
+            new Region($this, 'us-west-1', 'cloudprovider.aws.region.us-west-1')
         ];
 
         $this->kindToRegionToImage = [
