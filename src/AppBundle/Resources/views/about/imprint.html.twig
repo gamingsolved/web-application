@@ -1,0 +1,32 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    <style>
+        h4 {
+            margin-top: 32px;
+            color: #000;
+        }
+    </style>
+
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>{{ "about.imprint.headline_primary"|trans }}</h1>
+                <div class="well">
+                    {{ "about.imprint.text_primary"|trans|raw }}
+                </div>
+
+                <h1>{{ "about.imprint.headline_secondary"|trans }}</h1>
+                <div class="well">
+                    {{ "about.imprint.text_secondary"|trans|raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

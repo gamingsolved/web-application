@@ -191,6 +191,45 @@ about:
           <p>
             E-Mail: <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>.
           </p>
+    imprint:
+      headline_primary: Imprint
+      text_primary: >
+          <p>
+            Die deutschsprachige Version unseres Impressums finden Sie weiter unten auf der Seite.
+          </p>
+          <p>ubiqmachine.com is realized by Manuel Kiessling and Scalable Graphics SAS.</p>
+          <p>Responsible for ubiqmachine.com: Manuel Kiessling.</p>
+          <h4>Contact</h4>
+          <p>
+            ubiqmachine.com<br>
+            Manuel Kiessling<br>
+            Freiherrenstr. 32<br>
+            41515 Grevenbroich<br>
+            Germany<br>
+          </p>
+          <p>
+            Phone: +49-2181-7838778<br>
+            Fax: +49-2181-7838778<br>
+            e-mail: <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>
+          </p>
+
+      headline_secondary: Impressum
+      text_secondary: >
+          <p>Die Realisation von ubiqmachine.com erfolgt durch Manuel Kiessling und Scalable Graphics SAS.</p>
+          <p>Verantwortlich für ubiqmachine.com ist Herr Manuel Kiessling.</p>
+          <h4>Kontakt</h4>
+          <p>
+            ubiqmachine.com<br>
+            Manuel Kiessling<br>
+            Freiherrenstr. 32<br>
+            41515 Grevenbroich<br>
+            Deutschland<br>
+          </p>
+          <p>
+            Telefon: +49-2181-7838778<br>
+            Fax: +49-2181-7838778<br>
+            E-Mail: <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>
+          </p>
 
 remoteDesktop:
     index:

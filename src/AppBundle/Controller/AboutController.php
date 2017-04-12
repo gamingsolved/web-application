@@ -15,4 +15,9 @@ class AboutController extends Controller
     {
         return $this->render('AppBundle:about:privacy-policy.html.twig');
     }
+
+    public function imprintAction()
+    {
+        return $this->render('AppBundle:about:imprint.html.twig');
+    }
 }

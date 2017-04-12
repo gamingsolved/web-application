@@ -13,6 +13,11 @@ about.privacyPolicy:
     defaults: { _controller: AppBundle:About:privacyPolicy }
     methods:  [GET]
 
+about.imprint:
+    path:     /about/imprint
+    defaults: { _controller: AppBundle:About:imprint }
+    methods:  [GET]
+
 logout_successful:
     path:     /logout-successful
     defaults: { _controller: AppBundle:Default:logoutSuccessful }
