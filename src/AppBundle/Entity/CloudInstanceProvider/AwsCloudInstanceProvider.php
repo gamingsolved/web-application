@@ -141,7 +141,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             throw new \Exception('Cannot match kind ' . get_class($remoteDesktop->getKind()) . ' to an AMI.');
         }
 
-        // We use this indirection because it ensures we get only persist a valid region
+        // We use this indirection because it ensures we work with a valid region
         $instance->setRegion($this->getRegionByInternalName($region->getInternalName()));
 
         return $instance;
