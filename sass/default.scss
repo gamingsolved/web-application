@@ -16,6 +16,9 @@ h1, h2, h3, h4, h5, h6 {
   top: 16px;
   left: 26px;
   margin-top: -5px;
+  @media only screen and (max-width : 768px) {
+    top: 20px;
+  }
 }
 
 .logo-box {
