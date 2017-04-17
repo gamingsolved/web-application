@@ -14,7 +14,7 @@ interface CloudInstanceCoordinator
 
     public function cloudInstanceHasFinishedLaunchingOrStarting(CloudInstance $cloudInstance) : bool;
 
-    public function cloudInstanceAdminPasswordCouldBeRetrieved(CloudInstance $cloudInstance, string $encryptionKey) : bool;
+    public function cloudInstanceAdminPasswordCouldBeRetrieved(CloudInstance $cloudInstance) : bool;
 
     public function cloudInstanceWasAskedToStop(CloudInstance $cloudInstance) : bool;
 

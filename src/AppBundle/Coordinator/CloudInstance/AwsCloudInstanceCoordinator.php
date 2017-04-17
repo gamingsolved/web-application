@@ -102,7 +102,7 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * @param AwsCloudInstance $cloudInstance
      * @return bool
      */
-    public function cloudInstanceAdminPasswordCouldBeRetrieved(CloudInstance $cloudInstance, string $encryptionKey) : bool
+    public function cloudInstanceAdminPasswordCouldBeRetrieved(CloudInstance $cloudInstance) : bool
     {
         try {
             $result = $this->ec2Client->getPasswordData([

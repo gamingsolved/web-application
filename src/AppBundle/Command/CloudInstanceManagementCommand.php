@@ -179,10 +179,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                         $output->writeln('Action result: success');
 
                         $output->writeln('Action: trying to retrieve Windows admin password');
-                        if ($cloudInstanceCoordinator->cloudInstanceAdminPasswordCouldBeRetrieved(
-                            $cloudInstance,
-                            $this->getContainer()->getParameter('secret'))
-                        ) {
+                        if ($cloudInstanceCoordinator->cloudInstanceAdminPasswordCouldBeRetrieved($cloudInstance)) {
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
                             $em->persist($cloudInstance);
                             $em->flush();
