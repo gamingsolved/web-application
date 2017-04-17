@@ -215,7 +215,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
 
                         try {
                             $cloudInstanceCoordinator->triggerLaunchOfCloudInstance($cloudInstance);
-                            $cloudInstanceCoordinator->updateCloudInstanceAfterLaunchWasTriggered($cloudInstance);
+                            $cloudInstanceCoordinator->updateCloudInstanceWithCoordinatorSpecificInfoAfterLaunchWasTriggered($cloudInstance);
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_LAUNCHING);
                             $em->persist($cloudInstance);
                             $em->flush();

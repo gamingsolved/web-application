@@ -17,6 +17,8 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
     protected $ec2Client;
     protected $output;
 
+    protected $cloudInstanceIds2Ec2InstanceIds = [];
+
     public function __construct(array $credentials, Region $region, OutputInterface $output)
     {
         $this->keypairPrivateKey = $credentials['keypairPrivateKey'];
@@ -38,9 +40,8 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * param type differs intentionally
      *
      * @param AwsCloudInstance $cloudInstance
-     * @return bool
      */
-    public function cloudInstanceWasLaunched(CloudInstance $cloudInstance) : bool
+    public function triggerLaunchOfCloudInstance(CloudInstance $cloudInstance) : void
     {
         try {
             $result = $this->ec2Client->runInstances([
@@ -52,15 +53,20 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
                 'SecurityGroups' => [self::SECURITY_GROUP_NAME]
             ]);
 
-            $instanceId = $result['Instances'][0]['InstanceId'];
-
-            $cloudInstance->setEc2InstanceId($instanceId);
+            $this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()] = $result['Instances'][0]['InstanceId'];
         } catch (\Exception $e) {
             $this->output->writeln($e->getMessage());
-            return false;
         }
+    }
 
-        return true;
+    /**
+     * param type differs intentionally
+     *
+     * @param AwsCloudInstance $cloudInstance
+     */
+    public function updateCloudInstanceWithCoordinatorSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void
+    {
+        $cloudInstance->setEc2InstanceId($this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()]);
     }
 
     /**
@@ -77,15 +83,6 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ]);
 
             if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'running') {
-
-                $ip = $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'][0]['Association']['PublicIp'];
-
-                if (is_null($ip)) {
-                    $this->output->writeln('IP address is in other field...');
-                    $ip = $result['Reservations'][0]['Instances'][0]['PublicIpAddress'];
-                }
-
-                $cloudInstance->setPublicAddress($ip);
                 return true;
             } else {
                 return false;
@@ -100,9 +97,37 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * param type differs intentionally
      *
      * @param AwsCloudInstance $cloudInstance
-     * @return bool
      */
-    public function cloudInstanceAdminPasswordCouldBeRetrieved(CloudInstance $cloudInstance) : bool
+    public function getPublicAddressOfRunningCloudInstance(CloudInstance $cloudInstance) : string
+    {
+        try {
+            $result = $this->ec2Client->describeInstances([
+                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+            ]);
+
+            if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'running') {
+                $ip = $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'][0]['Association']['PublicIp'];
+
+                if (is_null($ip)) {
+                    $this->output->writeln('IP address is in other field...');
+                    $ip = $result['Reservations'][0]['Instances'][0]['PublicIpAddress'];
+                }
+                return $ip;
+            } else {
+                return null;
+            }
+        } catch (\Exception $e) {
+            $this->output->writeln($e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * param type differs intentionally
+     *
+     * @param AwsCloudInstance $cloudInstance
+     */
+    public function getAdminPasswordForCloudInstance(CloudInstance $cloudInstance) : string
     {
         try {
             $result = $this->ec2Client->getPasswordData([
@@ -117,17 +142,16 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
                 $keypairPrivateKeyResource = openssl_get_privatekey($this->keypairPrivateKey);
 
                 if (openssl_private_decrypt($encryptedPwd, $cleartextPwd, $keypairPrivateKeyResource)) {
-                    $cloudInstance->setAdminPassword($cleartextPwd);
-                    return true;
+                    return $cleartextPwd;
                 } else {
-                    return false;
+                    throw new \Exception('Could not decrypt admin password');
                 }
             } else {
-                return false;
+                return null;
             }
         } catch (\Exception $e) {
             $this->output->writeln($e->getMessage());
-            return false;
+            return null;
         }
     }
 
