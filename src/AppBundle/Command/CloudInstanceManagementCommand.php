@@ -174,7 +174,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 if (   $cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING
                     || $cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STARTING) {
                     $output->writeln('Action: probing if launch or start is complete');
-                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunchingOrStarting($cloudInstance)) {
+                    if ($cloudInstanceCoordinator->cloudInstanceIsRunning($cloudInstance)) {
                         $output->writeln('Action result: success');
 
                         $output->writeln('Action: Trying to get public address and Windows admin password');

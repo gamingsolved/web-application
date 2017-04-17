@@ -71,7 +71,7 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * @param AwsCloudInstance $cloudInstance
      * @return bool
      */
-    public function cloudInstanceHasFinishedLaunchingOrStarting(CloudInstance $cloudInstance) : bool
+    public function cloudInstanceIsRunning(CloudInstance $cloudInstance) : bool
     {
         try {
             $result = $this->ec2Client->describeInstances([

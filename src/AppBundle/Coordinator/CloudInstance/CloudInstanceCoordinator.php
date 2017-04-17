@@ -14,7 +14,7 @@ interface CloudInstanceCoordinator
 
     public function updateCloudInstanceWithCoordinatorSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void;
 
-    public function cloudInstanceHasFinishedLaunchingOrStarting(CloudInstance $cloudInstance) : bool;
+    public function cloudInstanceIsRunning(CloudInstance $cloudInstance) : bool;
 
     public function getPublicAddressOfRunningCloudInstance(CloudInstance $cloudInstance) : string;
 
