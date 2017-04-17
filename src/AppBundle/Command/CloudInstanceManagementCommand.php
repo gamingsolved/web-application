@@ -172,14 +172,18 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
 
                 if (   $cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING
                     || $cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STARTING) {
-                    $output->writeln('Action: probing if launch or start is complete, retrieve info');
+                    $output->writeln('Action: probing if launch or start is complete');
                     if ($cloudInstanceCoordinator->cloudInstanceHasFinishedLaunchingOrStarting($cloudInstance)) {
-                        $em->persist($cloudInstance);
-                        $em->flush();
                         $output->writeln('Action result: success');
 
-                        $output->writeln('Action: trying to retrieve Windows admin password');
-                        if ($cloudInstanceCoordinator->cloudInstanceAdminPasswordCouldBeRetrieved($cloudInstance)) {
+                        $output->writeln('Action: Trying to get public address and Windows admin password');
+
+                        $publicAddress = $cloudInstanceCoordinator->getPublicAddressOfRunningCloudInstance($cloudInstance);
+                        $adminPassword = $cloudInstanceCoordinator->getAdminPasswordForCloudInstance($cloudInstance);
+
+                        if (!is_null($publicAddress) && !is_null($adminPassword)) {
+                            $cloudInstance->setPublicAddress($publicAddress);
+                            $cloudInstance->setAdminPassword($adminPassword);
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
                             $em->persist($cloudInstance);
                             $em->flush();
@@ -208,13 +212,17 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                         $output->writeln('Hourly costs would be ' . $hourlyCosts . ', balance is only ' . $accountBalance);
                     } else {
                         $output->writeln('Action: launching the cloud instance');
-                        if ($cloudInstanceCoordinator->cloudInstanceWasLaunched($cloudInstance)) {
+
+                        try {
+                            $cloudInstanceCoordinator->triggerLaunchOfCloudInstance($cloudInstance);
+                            $cloudInstanceCoordinator->updateCloudInstanceAfterLaunchWasTriggered($cloudInstance);
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_LAUNCHING);
                             $em->persist($cloudInstance);
                             $em->flush();
                             $output->writeln('Action result: success');
-                        } else {
-                            $output->writeln('Action result: failure');
+                        } catch (\Exception $e) {
+                            $output->writeln('Action result: failure, exception output follows');
+                            $output->writeln($e->getMessage());
                         }
                     }
                 }
