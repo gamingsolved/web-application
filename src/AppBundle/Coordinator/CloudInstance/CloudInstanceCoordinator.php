@@ -20,9 +20,9 @@ interface CloudInstanceCoordinator
 
     public function getAdminPasswordForCloudInstance(CloudInstance $cloudInstance) : string;
 
-    public function cloudInstanceWasAskedToStop(CloudInstance $cloudInstance) : bool;
+    public function triggerStopOfCloudInstance(CloudInstance $cloudInstance) : void;
 
-    public function cloudInstanceHasFinishedStopping(CloudInstance $cloudInstance) : bool;
+    public function cloudInstanceIsStopped(CloudInstance $cloudInstance) : bool;
 
     public function cloudInstanceWasAskedToStart(CloudInstance $cloudInstance) : bool;
 

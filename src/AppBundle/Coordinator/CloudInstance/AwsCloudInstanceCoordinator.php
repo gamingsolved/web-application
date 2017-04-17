@@ -43,20 +43,16 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      */
     public function triggerLaunchOfCloudInstance(CloudInstance $cloudInstance) : void
     {
-        try {
-            $result = $this->ec2Client->runInstances([
-                'ImageId' => $cloudInstance->getImage()->getInternalName(),
-                'MinCount' => 1,
-                'MaxCount' => 1,
-                'InstanceType' => $cloudInstance->getFlavor()->getInternalName(),
-                'KeyName' => self::KEYPAIR_NAME,
-                'SecurityGroups' => [self::SECURITY_GROUP_NAME]
-            ]);
+        $result = $this->ec2Client->runInstances([
+            'ImageId' => $cloudInstance->getImage()->getInternalName(),
+            'MinCount' => 1,
+            'MaxCount' => 1,
+            'InstanceType' => $cloudInstance->getFlavor()->getInternalName(),
+            'KeyName' => self::KEYPAIR_NAME,
+            'SecurityGroups' => [self::SECURITY_GROUP_NAME]
+        ]);
 
-            $this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()] = $result['Instances'][0]['InstanceId'];
-        } catch (\Exception $e) {
-            $this->output->writeln($e->getMessage());
-        }
+        $this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()] = $result['Instances'][0]['InstanceId'];
     }
 
     /**
@@ -108,8 +104,8 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'running') {
                 $ip = $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'][0]['Association']['PublicIp'];
 
+                // IP address is in other field...
                 if (is_null($ip)) {
-                    $this->output->writeln('IP address is in other field...');
                     $ip = $result['Reservations'][0]['Instances'][0]['PublicIpAddress'];
                 }
                 return $ip;
@@ -157,27 +153,19 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
 
     /**
      * @param AwsCloudInstance $cloudInstance param type differs intentionally
-     * @return bool
      */
-    public function cloudInstanceWasAskedToStop(CloudInstance $cloudInstance) : bool
+    public function triggerStopOfCloudInstance(CloudInstance $cloudInstance) : void
     {
-        try {
-            $this->ec2Client->stopInstances([
-                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-            ]);
-        } catch (\Exception $e) {
-            $this->output->writeln($e->getMessage());
-            return false;
-        }
-
-        return true;
+        $this->ec2Client->stopInstances([
+            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+        ]);
     }
 
     /**
      * @param AwsCloudInstance $cloudInstance param type differs intentionally
      * @return bool
      */
-    public function cloudInstanceHasFinishedStopping(CloudInstance $cloudInstance) : bool
+    public function cloudInstanceIsStopped(CloudInstance $cloudInstance) : bool
     {
         try {
             $result = $this->ec2Client->describeInstances([
@@ -185,7 +173,6 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ]);
 
             if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'stopped') {
-                $cloudInstance->setPublicAddress('');
                 return true;
             } else {
                 return false;

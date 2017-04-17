@@ -122,8 +122,9 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                         $output->writeln('Action: We think the instance is running, but we verify this, and check for auto stop');
 
                         // Is it stopped?
-                        if ($cloudInstanceCoordinator->cloudInstanceHasFinishedStopping($cloudInstance)) {
+                        if ($cloudInstanceCoordinator->cloudInstanceIsStopped($cloudInstance)) {
                             $output->writeln('Action result: other than we thought the instance is stopped, we mark as stopped too');
+                            $cloudInstance->setPublicAddress('');
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPED);
                             $em->persist($cloudInstance);
                             $em->flush();
@@ -232,19 +233,22 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_STOP) {
                     $output->writeln('Action: asking the cloud instance to stop');
-                    if ($cloudInstanceCoordinator->cloudInstanceWasAskedToStop($cloudInstance)) {
+                    try {
+                        $cloudInstanceCoordinator->triggerStopOfCloudInstance($cloudInstance);
                         $output->writeln('Action result: success');
                         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPING);
                         $em->persist($cloudInstance);
                         $em->flush();
-                    } else {
-                        $output->writeln('Action result: failure');
+                    } catch (\Exception $e) {
+                        $output->writeln('Action result: failure, exception output follows');
+                        $output->writeln($e->getMessage());
                     }
                 }
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STOPPING) {
                     $output->writeln('Action: probing if stop is complete, retrieve info');
-                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedStopping($cloudInstance)) {
+                    if ($cloudInstanceCoordinator->cloudInstanceIsStopped($cloudInstance)) {
+                        $cloudInstance->setPublicAddress('');
                         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPED);
                         $em->persist($cloudInstance);
                         $em->flush();
