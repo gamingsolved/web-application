@@ -12,7 +12,7 @@ interface CloudInstanceCoordinator
 
     public function triggerLaunchOfCloudInstance(CloudInstance $cloudInstance) : void;
 
-    public function updateCloudInstanceWithCoordinatorSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void;
+    public function updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void;
 
     public function triggerStartOfCloudInstance(CloudInstance $cloudInstance) : void;
 

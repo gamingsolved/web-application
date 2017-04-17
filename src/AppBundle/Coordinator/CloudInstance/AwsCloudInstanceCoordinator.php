@@ -60,9 +60,19 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      *
      * @param AwsCloudInstance $cloudInstance
      */
-    public function updateCloudInstanceWithCoordinatorSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void
+    public function updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void
     {
         $cloudInstance->setEc2InstanceId($this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()]);
+    }
+
+    /**
+     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     */
+    public function triggerStartOfCloudInstance(CloudInstance $cloudInstance) : void
+    {
+        $this->ec2Client->startInstances([
+            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+        ]);
     }
 
     /**
@@ -181,16 +191,6 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             $this->output->writeln($e->getMessage());
             return false;
         }
-    }
-
-    /**
-     * @param AwsCloudInstance $cloudInstance param type differs intentionally
-     */
-    public function triggerStartOfCloudInstance(CloudInstance $cloudInstance) : void
-    {
-        $this->ec2Client->startInstances([
-            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-        ]);
     }
 
     /**
