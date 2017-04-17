@@ -132,7 +132,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                         }
 
                         // Is it terminated?
-                        if ($cloudInstanceCoordinator->cloudInstanceHasFinishedTerminating($cloudInstance)) {
+                        if ($cloudInstanceCoordinator->cloudInstanceIsTerminated($cloudInstance)) {
                             $output->writeln('Action result: other than we thought the instance is terminated, we mark as terminated too');
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);
                             $em->persist($cloudInstance);
@@ -274,13 +274,15 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                         $output->writeln('Hourly costs would be ' . $hourlyCosts . ', balance is only ' . $accountBalance);
                     } else {
                         $output->writeln('Action: asking the cloud instance to start');
-                        if ($cloudInstanceCoordinator->cloudInstanceWasAskedToStart($cloudInstance)) {
+                        try {
+                            $cloudInstanceCoordinator->triggerStartOfCloudInstance($cloudInstance);
                             $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STARTING);
                             $em->persist($cloudInstance);
                             $em->flush();
                             $output->writeln('Action result: success');
-                        } else {
-                            $output->writeln('Action result: failure');
+                        } catch (\Exception $e) {
+                            $output->writeln('Action result: failure, exception output follows');
+                            $output->writeln($e->getMessage());
                         }
                     }
                 }
@@ -290,19 +292,22 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION) {
                     $output->writeln('Action: asking the cloud instance to terminate');
-                    if ($cloudInstanceCoordinator->cloudInstanceWasAskedToTerminate($cloudInstance)) {
+                    try {
+                        $cloudInstanceCoordinator->triggerTerminationOfCloudInstance($cloudInstance);
                         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATING);
                         $em->persist($cloudInstance);
                         $em->flush();
                         $output->writeln('Action result: success');
-                    } else {
-                        $output->writeln('Action result: failure');
+                    } catch (\Exception $e) {
+                        $output->writeln('Action result: failure, exception output follows');
+                        $output->writeln($e->getMessage());
                     }
                 }
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_TERMINATING) {
                     $output->writeln('Action: probing if termination is complete, retrieve info');
-                    if ($cloudInstanceCoordinator->cloudInstanceHasFinishedTerminating($cloudInstance)) {
+                    if ($cloudInstanceCoordinator->cloudInstanceIsTerminated($cloudInstance)) {
+                        $cloudInstance->setPublicAddress('');
                         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);
                         $em->persist($cloudInstance);
                         $em->flush();

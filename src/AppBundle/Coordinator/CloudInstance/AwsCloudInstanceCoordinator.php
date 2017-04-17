@@ -185,45 +185,29 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
 
     /**
      * @param AwsCloudInstance $cloudInstance param type differs intentionally
-     * @return bool
      */
-    public function cloudInstanceWasAskedToStart(CloudInstance $cloudInstance) : bool
+    public function triggerStartOfCloudInstance(CloudInstance $cloudInstance) : void
     {
-        try {
-            $this->ec2Client->startInstances([
-                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-            ]);
-        } catch (\Exception $e) {
-            $this->output->writeln($e->getMessage());
-            return false;
-        }
+        $this->ec2Client->startInstances([
+            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+        ]);
+    }
 
-        return true;
+    /**
+     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     */
+    public function triggerTerminationOfCloudInstance(CloudInstance $cloudInstance) : void
+    {
+        $this->ec2Client->terminateInstances([
+            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+        ]);
     }
 
     /**
      * @param AwsCloudInstance $cloudInstance param type differs intentionally
      * @return bool
      */
-    public function cloudInstanceWasAskedToTerminate(CloudInstance $cloudInstance) : bool
-    {
-        try {
-            $this->ec2Client->terminateInstances([
-                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-            ]);
-        } catch (\Exception $e) {
-            $this->output->writeln($e->getMessage());
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param AwsCloudInstance $cloudInstance param type differs intentionally
-     * @return bool
-     */
-    public function cloudInstanceHasFinishedTerminating(CloudInstance $cloudInstance) : bool
+    public function cloudInstanceIsTerminated(CloudInstance $cloudInstance) : bool
     {
         try {
             $result = $this->ec2Client->describeInstances([
@@ -231,7 +215,6 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ]);
 
             if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'terminated') {
-                $cloudInstance->setPublicAddress('');
                 return true;
             } else {
                 return false;

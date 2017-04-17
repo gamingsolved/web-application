@@ -14,6 +14,8 @@ interface CloudInstanceCoordinator
 
     public function updateCloudInstanceWithCoordinatorSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void;
 
+    public function triggerStartOfCloudInstance(CloudInstance $cloudInstance) : void;
+
     public function cloudInstanceIsRunning(CloudInstance $cloudInstance) : bool;
 
     public function getPublicAddressOfRunningCloudInstance(CloudInstance $cloudInstance) : string;
@@ -24,9 +26,7 @@ interface CloudInstanceCoordinator
 
     public function cloudInstanceIsStopped(CloudInstance $cloudInstance) : bool;
 
-    public function cloudInstanceWasAskedToStart(CloudInstance $cloudInstance) : bool;
+    public function triggerTerminationOfCloudInstance(CloudInstance $cloudInstance) : void;
 
-    public function cloudInstanceWasAskedToTerminate(CloudInstance $cloudInstance) : bool;
-
-    public function cloudInstanceHasFinishedTerminating(CloudInstance $cloudInstance) : bool;
+    public function cloudInstanceIsTerminated(CloudInstance $cloudInstance) : bool;
 }
