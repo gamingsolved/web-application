@@ -246,7 +246,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 }
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STOPPING) {
-                    $output->writeln('Action: probing if stop is complete, retrieve info');
+                    $output->writeln('Action: probing if stop is complete');
                     if ($cloudInstanceCoordinator->cloudInstanceIsStopped($cloudInstance)) {
                         $cloudInstance->setPublicAddress('');
                         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPED);
@@ -305,7 +305,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 }
 
                 if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_TERMINATING) {
-                    $output->writeln('Action: probing if termination is complete, retrieve info');
+                    $output->writeln('Action: probing if termination is complete');
                     if ($cloudInstanceCoordinator->cloudInstanceIsTerminated($cloudInstance)) {
                         $cloudInstance->setPublicAddress('');
                         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);
