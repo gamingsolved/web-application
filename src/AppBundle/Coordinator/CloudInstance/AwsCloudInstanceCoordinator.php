@@ -123,7 +123,7 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      *
      * @param AwsCloudInstance $cloudInstance
      */
-    public function getAdminPasswordForCloudInstance(CloudInstance $cloudInstance) : string
+    public function getAdminPasswordOfRunningCloudInstance(CloudInstance $cloudInstance) : string
     {
         try {
             $result = $this->ec2Client->getPasswordData([

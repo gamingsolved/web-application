@@ -180,7 +180,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                         $output->writeln('Action: Trying to get public address and Windows admin password');
 
                         $publicAddress = $cloudInstanceCoordinator->getPublicAddressOfRunningCloudInstance($cloudInstance);
-                        $adminPassword = $cloudInstanceCoordinator->getAdminPasswordForCloudInstance($cloudInstance);
+                        $adminPassword = $cloudInstanceCoordinator->getAdminPasswordOfRunningCloudInstance($cloudInstance);
 
                         if (!is_null($publicAddress) && !is_null($adminPassword)) {
                             $cloudInstance->setPublicAddress($publicAddress);
