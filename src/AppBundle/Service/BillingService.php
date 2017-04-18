@@ -88,7 +88,7 @@ class BillingService
         // No events means there is nothing billable
         if (sizeof($remoteDesktopEvents) !== 0) {
 
-            /* We first need to find out if the newest known billable items needs to be "prolonged"
+            /* We first need to find out if the newest known billable items need to be "prolonged"
              * (i.e., it needs to be seamlessly followed by a new item because during the last existing
              * item, the desktop has not been stopped and is therefore still running, like this:
              *
