@@ -3,7 +3,6 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Billing\BillableItem;
-use AppBundle\Entity\Billing\BillableItemRepository;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityRepository;
@@ -12,7 +11,7 @@ class BillingService
 {
     protected $remoteDesktopEventRepository;
 
-    /** @var BillableItemRepository $billableItemRepository */
+    /** @var EntityRepository $billableItemRepository */
     protected $billableItemRepository;
 
     public function __construct(EntityRepository $remoteDesktopEventRepository, EntityRepository $billableItemRepository)
