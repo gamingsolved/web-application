@@ -56,8 +56,8 @@ class CloudInstanceManagementService
 
         $output->writeln('Found cloud instance ' . $cloudInstance->getId());
         $output->writeln('Owner: ' . $cloudInstance->getRemoteDesktop()->getUser()->getUsername());
-        $output->writeln('Belongs to desktop "' . $cloudInstance->getRemoteDesktop()->getTitle() . '" (' . $cloudInstance->getRemoteDesktop()->getId() . ')');
-        $output->writeln('Current run status: ' . CloudInstance::getRunstatusName($cloudInstance->getRunstatus()));
+        $output->writeln('Belongs to desktop: "' . $cloudInstance->getRemoteDesktop()->getTitle() . '" (' . $cloudInstance->getRemoteDesktop()->getId() . ')');
+        $output->writeln('Current run status: ' . $cloudInstance->getRunstatus() . ' (' . CloudInstance::getRunstatusName($cloudInstance->getRunstatus()) . ')');
         $output->writeln('Provider instance ID: ' . $cloudInstance->getProviderInstanceId());
         $output->writeln('Flavor: ' . $cloudInstance->getFlavor()->getInternalName());
         $output->writeln('Image: ' . $cloudInstance->getImage()->getInternalName());
