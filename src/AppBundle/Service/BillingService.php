@@ -117,7 +117,7 @@ class BillingService
 
 
             // Now we need to find out if there is a completely new item we need to create.
-            // This is the case even if prolongations were created, but they then the desktop
+            // This is the case even if prolongations were created, but then the desktop
             // was off for a longer period.
 
             /*
