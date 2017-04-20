@@ -12,7 +12,6 @@ use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 
-
 class BillingServiceTest extends TestCase
 {
 
