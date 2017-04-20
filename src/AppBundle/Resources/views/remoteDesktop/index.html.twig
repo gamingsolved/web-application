@@ -280,24 +280,30 @@
                                                     </strong>
                                                 </p>
                                                 <p>
-                                                    <table class="table table-condensed autostop-table">
-                                                        <thead>
-                                                        <tr>
-                                                            {% for optimalHourlyAutostopTime in remoteDesktop.optimalHourlyAutostopTimes %}
-                                                                <td class="text-center small">
-                                                                    {% if app.request.cookies.has('ubiqmachine_timezone') %}
-                                                                        {{ optimalHourlyAutostopTime|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}
-                                                                    {% else %}
-                                                                        {{ optimalHourlyAutostopTime|date('F j, Y H:i:s', 'UTC') }} (UTC)
-                                                                    {% endif %}
-                                                                </td>
-                                                            {% endfor %}
-                                                        </tr>
-                                                        </thead>
-                                                    </table>
+                                                    Change the cost protection:
+                                                </p>
+                                                <p>
+                                                    Automatically stop this desktop at the end of the
+                                                    {% for key,optimalHourlyAutostopTime in remoteDesktop.optimalHourlyAutostopTimes %}
+                                                        <a
+                                                            class="btn btn-sm btn-default"
+                                                            title="This would stop the desktop at {% if app.request.cookies.has('ubiqmachine_timezone') %}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}{% else %}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', 'UTC') }} (UTC){% endif %}.">
+                                                        {% if key == 0 %}current{% endif %}
+                                                        {% if key == 1 %}2nd{% endif %}
+                                                        {% if key == 2 %}3rd{% endif %}
+                                                        {% if key == 3 %}4th{% endif %}
+                                                        {% if key == 4 %}5th{% endif %}
+                                                        {% if key == 5 %}6th{% endif %}
+                                                        {% if key == 6 %}7th{% endif %}
+                                                        {% if key == 7 %}8th{% endif %}
+                                                        </a>
+                                                    {% endfor %}
+                                                    usage hour.
+                                                </p>
+                                                <p>
+                                                    {{ "remoteDesktop.index.stop_data_safe_info"|trans }}
                                                 </p>
                                             {% endif %}
-                                            {{ "remoteDesktop.index.auto_stop_in"|trans }}
                                         </div>
                                     {% endif %}
 
@@ -348,27 +354,6 @@
                                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                                             {{ "remoteDesktop.index.refresh_button"|trans }}
                                         </a>
-                                    {% endif %}
-
-                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
-                                        <span class="pull-right">
-                                            <a class="btn btn-default btn"
-                                               href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 1800 }) }}">{{ "remoteDesktop.index.auto_stop_in_30_minutes"|trans }}</a>
-                                            &nbsp;
-                                            <a class="btn btn-default btn"
-                                               href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_1_hour"|trans }}</a>
-                                            &nbsp;
-                                            <a class="btn btn-default btn"
-                                               href="{{ path('remotedesktops.updateScheduleForStopAt', { 'remoteDesktop': remoteDesktop.id, duration: 3600 }) }}">{{ "remoteDesktop.index.auto_stop_in_2_hours"|trans }}</a>
-                                        </span>
-
-                                        <a href="{{ path('remotedesktops.stop', { 'remoteDesktop': remoteDesktop.id }) }}"
-                                           class="btn btn-default remotedesktop-action-button">
-                                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                                            {{ "remoteDesktop.index.stop_button"|trans }}
-                                        </a>
-                                        <br>
-                                        <span class="label label-default datainfolabel">{{ "remoteDesktop.index.stop_data_safe_info"|trans }}</span>
                                     {% endif %}
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
