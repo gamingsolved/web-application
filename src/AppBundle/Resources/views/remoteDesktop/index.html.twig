@@ -268,24 +268,25 @@
                                         <div>
                                             {% if remoteDesktop.scheduledForStopAt != null %}
                                                 <p>
-                                                    {{ "remoteDesktop.index.auto_stop_info"|trans }}
+                                                    <strong>
+                                                        {{ "remoteDesktop.index.auto_stop_info"|trans }}
 
-                                                    {% if app.request.cookies.has('ubiqmachine_timezone') %}
-                                                        {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}
-                                                        ({{ app.request.cookies.get('ubiqmachine_timezone') }}).
-                                                    {% else %}
-                                                        {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', 'UTC') }} (UTC)
-                                                    {% endif %}
+                                                        {% if app.request.cookies.has('ubiqmachine_timezone') %}
+                                                            {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}
+                                                            ({{ app.request.cookies.get('ubiqmachine_timezone') }}).
+                                                        {% else %}
+                                                            {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', 'UTC') }} (UTC)
+                                                        {% endif %}
+                                                    </strong>
                                                 </p>
                                                 <p>
                                                     <table class="table table-condensed autostop-table">
                                                         <thead>
                                                         <tr>
                                                             {% for optimalHourlyAutostopTime in remoteDesktop.optimalHourlyAutostopTimes %}
-                                                                <td class="text-center">
+                                                                <td class="text-center small">
                                                                     {% if app.request.cookies.has('ubiqmachine_timezone') %}
                                                                         {{ optimalHourlyAutostopTime|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}
-                                                                        ({{ app.request.cookies.get('ubiqmachine_timezone') }}).
                                                                     {% else %}
                                                                         {{ optimalHourlyAutostopTime|date('F j, Y H:i:s', 'UTC') }} (UTC)
                                                                     {% endif %}

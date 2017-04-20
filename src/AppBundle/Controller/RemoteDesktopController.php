@@ -85,15 +85,16 @@ class RemoteDesktopController extends Controller
         }
 
         $rdas = new RemoteDesktopAutostopService();
-
         /** @var RemoteDesktop $remoteDesktop */
         foreach ($remoteDesktopsSorted as $remoteDesktop) {
-            $remoteDesktop->setOptimalHourlyAutostopTimes(
-                $rdas->getOptimalHourlyAutostopTimesForRemoteDestop(
-                    $remoteDesktop,
-                    $em->getRepository(RemoteDesktopEvent::class)
-                )
-            );
+            if ($remoteDesktop->getStatus() == RemoteDesktop::STATUS_READY_TO_USE) {
+                $remoteDesktop->setOptimalHourlyAutostopTimes(
+                    $rdas->getOptimalHourlyAutostopTimesForRemoteDesktop(
+                        $remoteDesktop,
+                        $em->getRepository(RemoteDesktopEvent::class)
+                    )
+                );
+            }
         }
 
         /** @var AccountMovementRepository $accountMovementRepo */
