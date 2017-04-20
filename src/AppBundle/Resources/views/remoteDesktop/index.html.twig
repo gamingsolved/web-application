@@ -263,6 +263,22 @@
                                             </li>
 
                                         </ul>
+
+                                        <hr>
+                                        <div class="pull-right text-right">
+                                            {% if remoteDesktop.scheduledForStopAt != null %}
+                                                <p>
+                                                    {{ "remoteDesktop.index.auto_stop_info"|trans }}
+
+                                                    {% if app.request.cookies.has('ubiqmachine_timezone') %}
+                                                        {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }} ({{ app.request.cookies.get('ubiqmachine_timezone') }})
+                                                    {% else %}
+                                                        {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', 'UTC') }} (UTC)
+                                                    {% endif %}
+                                                </p>
+                                            {% endif %}
+                                            {{ "remoteDesktop.index.auto_stop_in"|trans }}
+                                        </div>
                                     {% endif %}
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING') %}
@@ -288,24 +304,6 @@
                                         <h3>
                                             <span class="label label-default label-pulsating remotedesktopstatus">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.terminating"|trans }}</span>
                                         </h3>
-                                    {% endif %}
-
-                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
-                                        <hr>
-                                        <div class="pull-right text-right">
-                                            {% if remoteDesktop.scheduledForStopAt != null %}
-                                                <p>
-                                                    {{ "remoteDesktop.index.auto_stop_info"|trans }}
-
-                                                    {% if app.request.cookies.has('ubiqmachine_timezone') %}
-                                                        {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }} ({{ app.request.cookies.get('ubiqmachine_timezone') }})
-                                                    {% else %}
-                                                        {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', 'UTC') }} (UTC)
-                                                    {% endif %}
-                                                </p>
-                                            {% endif %}
-                                            {{ "remoteDesktop.index.auto_stop_in"|trans }}
-                                        </div>
                                     {% endif %}
 
                                 </div>
