@@ -97,6 +97,11 @@ class RemoteDesktop
      */
     private $remoteDesktopEvents;
 
+    /**
+     * @var array
+     */
+    private $optimalHourlyAutostopTimes;
+
     public function __construct() {
         $this->awsCloudInstances = new ArrayCollection();
         $this->billableItems = new ArrayCollection();
@@ -338,6 +343,16 @@ class RemoteDesktop
     public function getIdHash() : string
     {
         return sha1(self::HASH_SECRET . $this->getId());
+    }
+
+    public function setOptimalHourlyAutostopTimes(array $optimalHourlyAutostopTimes) : void
+    {
+        $this->optimalHourlyAutostopTimes = $optimalHourlyAutostopTimes;
+    }
+
+    public function getOptimalHourlyAutostopTimes() : array
+    {
+        return $this->optimalHourlyAutostopTimes;
     }
 
 }

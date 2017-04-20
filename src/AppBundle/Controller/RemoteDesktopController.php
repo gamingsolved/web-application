@@ -4,9 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktopKind;
 use AppBundle\Factory\RemoteDesktopFactory;
+use AppBundle\Service\RemoteDesktopAutostopService;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
@@ -81,6 +84,17 @@ class RemoteDesktopController extends Controller
             }
         }
 
+        $rdas = new RemoteDesktopAutostopService();
+
+        /** @var RemoteDesktop $remoteDesktop */
+        foreach ($remoteDesktopsSorted as $remoteDesktop) {
+            $remoteDesktop->setOptimalHourlyAutostopTimes(
+                $rdas->getOptimalHourlyAutostopTimesForRemoteDestop(
+                    $remoteDesktop,
+                    $em->getRepository(RemoteDesktopEvent::class)
+                )
+            );
+        }
 
         /** @var AccountMovementRepository $accountMovementRepo */
         $accountMovementRepo = $em->getRepository(AccountMovement::class);
@@ -253,6 +267,27 @@ class RemoteDesktopController extends Controller
 
         $remoteDesktop->scheduleForStopInSeconds($duration);
 
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($remoteDesktop);
+        $em->flush();
+
+        return $this->redirectToRoute('remotedesktops.index');
+    }
+
+    /**
+     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     */
+    public function scheduleForStopAtEndOfUsageHour(RemoteDesktop $remoteDesktop, int $usageHour)
+    {
+        $user = $this->getUser();
+
+        if ($remoteDesktop->getUser()->getId() !== $user->getId()) {
+            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
+        }
+
+        $remoteDesktop
+            ->getActiveCloudInstance()
+            ->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT' . $duration . 'S')));
         $em = $this->getDoctrine()->getManager();
         $em->persist($remoteDesktop);
         $em->flush();
