@@ -279,31 +279,25 @@
                                                         {% endif %}
                                                     </strong>
                                                 </p>
-                                                <p>
-                                                    Change the cost protection:
-                                                </p>
-                                                <p>
-                                                    Automatically stop this desktop at the end of the
-                                                    {% for key,optimalHourlyAutostopTime in remoteDesktop.optimalHourlyAutostopTimes %}
-                                                        <a
-                                                            class="btn btn-sm btn-default"
-                                                            title="This would stop the desktop at {% if app.request.cookies.has('ubiqmachine_timezone') %}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}{% else %}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', 'UTC') }} (UTC){% endif %}.">
-                                                        {% if key == 0 %}current{% endif %}
-                                                        {% if key == 1 %}2nd{% endif %}
-                                                        {% if key == 2 %}3rd{% endif %}
-                                                        {% if key == 3 %}4th{% endif %}
-                                                        {% if key == 4 %}5th{% endif %}
-                                                        {% if key == 5 %}6th{% endif %}
-                                                        {% if key == 6 %}7th{% endif %}
-                                                        {% if key == 7 %}8th{% endif %}
-                                                        </a>
-                                                    {% endfor %}
-                                                    usage hour.
-                                                </p>
-                                                <p>
-                                                    {{ "remoteDesktop.index.stop_data_safe_info"|trans }}
-                                                </p>
                                             {% endif %}
+
+                                            <p>
+                                                {{ "remoteDesktop.index.auto_stop_change"|trans }}
+                                            </p>
+                                            <p>
+                                                {{ "remoteDesktop.index.auto_stop_change_first"|trans }}
+                                                {% for key,optimalHourlyAutostopTime in remoteDesktop.optimalHourlyAutostopTimes %}
+                                                    <a
+                                                        class="btn btn-sm btn-default"
+                                                        title="{{ "remoteDesktop.index.auto_stop_change_btn_title"|trans }}{% if app.request.cookies.has('ubiqmachine_timezone') %}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}{% else %}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', 'UTC') }} (UTC){% endif %}.">
+                                                        {{ ("remoteDesktop.index.auto_stop_change_hour_" ~ key)|trans }}
+                                                    </a>
+                                                {% endfor %}
+                                                {{ "remoteDesktop.index.auto_stop_change_last"|trans }}
+                                            </p>
+                                            <p>
+                                                {{ "remoteDesktop.index.stop_data_safe_info"|trans }}
+                                            </p>
                                         </div>
                                     {% endif %}
 
