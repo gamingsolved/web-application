@@ -53,9 +53,9 @@ remotedesktops.terminate:
     defaults: { _controller: AppBundle:RemoteDesktop:terminate }
     methods:  [GET]
 
-remotedesktops.updateScheduleForStopAt:
-    path:     /remoteDesktops/{remoteDesktop}/updateScheduleForStopAt/{duration}
-    defaults: { _controller: AppBundle:RemoteDesktop:updateScheduleForStopAt }
+remotedesktops.scheduleForStopAtEndOfUsageHour:
+    path:     /remoteDesktops/{remoteDesktop}/scheduleForStopAtEndOfUsageHour/{usageHour}
+    defaults: { _controller: AppBundle:RemoteDesktop:scheduleForStopAtEndOfUsageHour }
     methods:  [GET]
 
 remotedesktops.sgx_files:

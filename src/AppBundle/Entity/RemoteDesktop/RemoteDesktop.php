@@ -289,9 +289,9 @@ class RemoteDesktop
         }
     }
 
-    public function scheduleForStopInSeconds(int $duration)
+    public function setScheduleForStopAt(\DateTime $dateTime)
     {
-        $this->getActiveCloudInstance()->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT' . $duration . 'S')));
+        $this->getActiveCloudInstance()->setScheduleForStopAt($dateTime);
     }
 
     public function scheduleForStart()

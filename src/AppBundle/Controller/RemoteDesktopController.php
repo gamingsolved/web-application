@@ -258,37 +258,34 @@ class RemoteDesktopController extends Controller
     /**
      * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
      */
-    public function updateScheduleForStopAtAction(RemoteDesktop $remoteDesktop, int $duration)
+    public function scheduleForStopAtEndOfUsageHourAction(RemoteDesktop $remoteDesktop, int $usageHour)
     {
+        if ($usageHour < 0 || $usageHour > 7 || $remoteDesktop->getStatus() !== RemoteDesktop::STATUS_READY_TO_USE) {
+            $this->createAccessDeniedException();
+        }
+
         $user = $this->getUser();
 
         if ($remoteDesktop->getUser()->getId() !== $user->getId()) {
-            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
+            $this->createAccessDeniedException();
         }
-
-        $remoteDesktop->scheduleForStopInSeconds($duration);
 
         $em = $this->getDoctrine()->getManager();
-        $em->persist($remoteDesktop);
-        $em->flush();
 
-        return $this->redirectToRoute('remotedesktops.index');
-    }
+        $rdas = new RemoteDesktopAutostopService();
+        $optimalHourlyAutostopTimes = $rdas->getOptimalHourlyAutostopTimesForRemoteDesktop(
+            $remoteDesktop,
+            $em->getRepository(RemoteDesktopEvent::class)
+        );
 
-    /**
-     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
-     */
-    public function scheduleForStopAtEndOfUsageHour(RemoteDesktop $remoteDesktop, int $usageHour)
-    {
-        $user = $this->getUser();
-
-        if ($remoteDesktop->getUser()->getId() !== $user->getId()) {
-            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
+        if (!is_array($optimalHourlyAutostopTimes) || sizeof($optimalHourlyAutostopTimes) !== 8) {
+            throw new \Exception(
+                'Expected 8 optimalHourlyAutostopTimes, got something else: ' .
+                print_r($optimalHourlyAutostopTimes, true)
+            );
         }
 
-        $remoteDesktop
-            ->getActiveCloudInstance()
-            ->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT' . $duration . 'S')));
+        $remoteDesktop->setScheduleForStopAt($optimalHourlyAutostopTimes[$usageHour]);
         $em = $this->getDoctrine()->getManager();
         $em->persist($remoteDesktop);
         $em->flush();
