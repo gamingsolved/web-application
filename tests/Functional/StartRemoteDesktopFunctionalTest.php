@@ -110,7 +110,6 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());
-        $this->assertContains('Stop this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
     }
 
     public function testCannotStartRemoteDesktopIfBalanceTooLow()

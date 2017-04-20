@@ -131,8 +131,8 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());
-        $this->assertContains('Stop this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
-        $this->assertContains('Your data is safe - everything is kept in place when you stop your remote desktop', $crawler->filter('.datainfolabel')->first()->text());
+        $this->assertContains('Cost protection', $crawler->filter('.costprotectionblock')->first()->text());
+        $this->assertContains('Your data is safe - everything is kept in place when your remote desktop is stopped.', $crawler->filter('.dataissafeinfo')->first()->text());
 
         $this->assertContains('121.122.123.124 | foo', $crawler->filter('.clientinfolabel')->first()->attr('title'));
 

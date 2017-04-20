@@ -39,26 +39,27 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
     {
         $client = (new LaunchRemoteDesktopFunctionalTest())->testLaunchRemoteDesktop();
 
-        $crawler = $client->request('GET', '/en/remoteDesktops/');
-
-        $link = $crawler->selectLink('Stop this remote desktop')->first()->link();
-
-        $client->click($link);
-
-        $crawler = $client->followRedirect();
-
-        // We want to be back in the overview
-        $this->assertEquals(
-            '/en/remoteDesktops/',
-            $client->getRequest()->getRequestUri()
-        );
-
-
-        // At this point, the instance is in "Scheduled for stop" state
-
         $container = $client->getContainer();
         /** @var EntityManager $em */
         $em = $container->get('doctrine.orm.entity_manager');
+
+        // Cannot directly stop an instance via the UI, only auto-stop.
+        // Therefore, we do this through the entities.
+
+        $remoteDesktopRepo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
+        /** @var RemoteDesktop $remoteDesktop */
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+        /** @var CloudInstance $cloudInstance */
+        $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
+        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_STOP);
+        $em->persist($cloudInstance);
+        $em->flush();
+
+        $crawler = $client->request('GET', '/en/remoteDesktops/');
+
+
+        // At this point, the instance must be in "Scheduled for stop" state on the UI
+
         $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
         $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
         $this->assertEquals(
@@ -77,7 +78,6 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
 
         // Switching to "Stopping" status, which must not change the desktop status
 
-        $container = $client->getContainer();
         /** @var EntityManager $em */
         $em = $container->get('doctrine.orm.entity_manager');
         $remoteDesktopRepo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
