@@ -242,8 +242,7 @@ remoteDesktop:
         no_remote_desktops_yet: You do not yet have any remote desktops.
         costs_per_hour: Costs per hour
         auto_stop_info: "Cost protection: This remote desktop will automatically stop on"
-        auto_stop_change: "Change the cost protection setting:"
-        auto_stop_change_first: "Automatically stop this desktop at the end of the"
+        auto_stop_change_first: "Set cost protection to stop this desktop at the end of the"
         auto_stop_change_last: "usage hour from now."
         auto_stop_change_btn_title: "This would stop the desktop on "
         auto_stop_change_hour_0: "current"

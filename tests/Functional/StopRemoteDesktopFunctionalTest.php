@@ -5,6 +5,7 @@ namespace Tests\Functional;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
+use AppBundle\Service\RemoteDesktopAutostopService;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -43,9 +44,31 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
         /** @var EntityManager $em */
         $em = $container->get('doctrine.orm.entity_manager');
 
+        $remoteDesktopRepo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
+        /** @var RemoteDesktop $remoteDesktop */
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+
+        $rdas = new RemoteDesktopAutostopService();
+        $optimalHourlyAutostopTimesForRemoteDesktop = $rdas->getOptimalHourlyAutostopTimesForRemoteDesktop(
+            $remoteDesktop,
+            $em->getRepository(RemoteDesktopEvent::class)
+        );
+
+        // Auto-stop / Cost protection test
+        $crawler = $client->request('GET', '/en/remoteDesktops/');
+
+        for ($i = 0; $i < 7; $i++) {
+            $link = $crawler->filter('.costprotectionblock a.btn')->eq($i)->link();
+            $client->click($link);
+            $crawler = $client->followRedirect();
+            $this->assertContains(
+                $optimalHourlyAutostopTimesForRemoteDesktop[$i]->format('F j, Y H:i:s') . ' (UTC)',
+                $crawler->filter('.costprotectionblock p')->first()->text()
+            );
+        }
+
         // Cannot directly stop an instance via the UI, only auto-stop.
         // Therefore, we do this through the entities.
-
         $remoteDesktopRepo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
         /** @var RemoteDesktop $remoteDesktop */
         $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
@@ -56,7 +79,6 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
         $em->flush();
 
         $crawler = $client->request('GET', '/en/remoteDesktops/');
-
 
         // At this point, the instance must be in "Scheduled for stop" state on the UI
 
