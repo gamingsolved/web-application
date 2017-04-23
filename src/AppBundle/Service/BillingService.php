@@ -84,21 +84,21 @@ class BillingService
             ['datetimeOccured' => 'ASC']
         );
 
-        $usageRemoteDesktopEvents = [];
+        $usageRelatedRemoteDesktopEvents = [];
 
         /** @var RemoteDesktopEvent $remoteDesktopEvent */
         foreach ($remoteDesktopEvents as $remoteDesktopEvent) {
             if (   $remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
                 || $remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER)
             {
-                $usageRemoteDesktopEvents[] = $remoteDesktopEvent;
+                $usageRelatedRemoteDesktopEvents[] = $remoteDesktopEvent;
             }
         }
 
         $generatedBillableItems = [];
 
         // No events means there is nothing billable
-        if (sizeof($usageRemoteDesktopEvents) !== 0) {
+        if (sizeof($usageRelatedRemoteDesktopEvents) !== 0) {
 
             /* We first need to find out if the newest known billable item needs to be "prolonged"
              * (i.e., it needs to be seamlessly followed by a new item because during the last existing
@@ -123,7 +123,7 @@ class BillingService
             );
 
             if (!is_null($newestBillableItem)) {
-                $this->generateProlongations($remoteDesktop, $usageRemoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
+                $this->generateProlongations($remoteDesktop, $usageRelatedRemoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
             }
 
 
@@ -143,7 +143,7 @@ class BillingService
 
 
             /** @var RemoteDesktopEvent $remoteDesktopEvent */
-            foreach ($usageRemoteDesktopEvents as $remoteDesktopEvent) {
+            foreach ($usageRelatedRemoteDesktopEvents as $remoteDesktopEvent) {
                 if ($remoteDesktopEvent->getDatetimeOccured() < $upto) {
 
                     // Only consider events which occured after the newest billable item we have, if any
@@ -190,7 +190,7 @@ class BillingService
                                  *  exists     prolongation  prolongation              to be created
                                  */
 
-                                $this->generateProlongations($remoteDesktop, $usageRemoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
+                                $this->generateProlongations($remoteDesktop, $usageRelatedRemoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
                             }
 
                         }
