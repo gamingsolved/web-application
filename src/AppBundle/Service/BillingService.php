@@ -77,7 +77,7 @@ class BillingService
      * @param \DateTime $upto Point in time up to which to consider events - exclusive!
      * @return array
      */
-    public function generateMissingBillableItems(RemoteDesktop $remoteDesktop, \DateTime $upto) : array
+    public function generateMissingBillableItemsForUsage(RemoteDesktop $remoteDesktop, \DateTime $upto) : array
     {
         $remoteDesktopEvents = $this->remoteDesktopEventRepository->findBy(
             ['remoteDesktop' => $remoteDesktop],

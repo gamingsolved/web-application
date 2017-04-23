@@ -59,7 +59,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('now'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('now'));
 
         $this->assertEmpty($billableItems);
     }
@@ -97,7 +97,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 18:40:00'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 18:40:00'));
 
         $this->assertCount(1, $billableItems);
 
@@ -171,7 +171,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 22:40:00'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 22:40:00'));
 
         $this->assertCount(1, $billableItems);
 
@@ -232,7 +232,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 22:40:00'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 22:40:00'));
 
         $this->assertCount(3, $billableItems);
 
@@ -280,7 +280,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
 
         $this->assertCount(7, $billableItems);
 
@@ -338,7 +338,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
 
         $this->assertCount(6, $billableItems);
 
@@ -395,7 +395,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
 
         $this->assertCount(1, $billableItems);
 
@@ -447,7 +447,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
 
         $this->assertCount(0, $billableItems);
     }
@@ -485,7 +485,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:40:00'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:40:00'));
 
         $this->assertCount(2, $billableItems);
 
@@ -532,7 +532,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:40:00'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:40:00'));
 
         $this->assertCount(1, $billableItems);
 
@@ -578,7 +578,7 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 23:40:00'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 23:40:00'));
 
         $this->assertCount(2, $billableItems);
 
@@ -627,7 +627,7 @@ class BillingServiceTest extends TestCase
 
         // We ask to only work up to a point in time that is not more than one hour away from the start event - thus
         // we expect to not learn about the prolongation
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:37:01'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:37:01'));
 
         $this->assertCount(1, $billableItems);
 
@@ -636,7 +636,7 @@ class BillingServiceTest extends TestCase
 
         // However, if we set up to to only one seconds into the hour that follows the hour from the beginning of the item
         // created by the start event, we expect to get the prolongation
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:37:02'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:37:02'));
 
         $this->assertCount(2, $billableItems);
 
@@ -697,7 +697,7 @@ class BillingServiceTest extends TestCase
 
         // We ask to only work up to a point in time that is not more than one hour away from the start event - thus
         // we expect to not learn about the prolongation
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-29 22:30:00'));
+        $billableItems = $bs->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('2017-03-29 22:30:00'));
 
         $this->assertCount(2, $billableItems);
 
