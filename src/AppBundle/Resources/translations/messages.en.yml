@@ -241,11 +241,18 @@ remoteDesktop:
         headline: Your remote desktops
         no_remote_desktops_yet: You do not yet have any remote desktops.
         costs_per_hour: Costs per hour
-        auto_stop_info: "Cost protection: This instance will automatically stop on"
-        auto_stop_in: "Update the cost protection to schedule a stop in:"
-        auto_stop_in_30_minutes: 30 minutes
-        auto_stop_in_1_hour: 1 hour
-        auto_stop_in_2_hours: 2 hours
+        auto_stop_info: "Cost protection: This remote desktop will automatically stop on"
+        auto_stop_change_first: "Set cost protection to stop this desktop at the end of the"
+        auto_stop_change_last: "usage hour from now."
+        auto_stop_change_btn_title: "This would stop the desktop on "
+        auto_stop_change_hour_0: "current"
+        auto_stop_change_hour_1: "2nd"
+        auto_stop_change_hour_2: "3rd"
+        auto_stop_change_hour_3: "4th"
+        auto_stop_change_hour_4: "5th"
+        auto_stop_change_hour_5: "6th"
+        auto_stop_change_hour_6: "7th"
+        auto_stop_change_hour_7: "8th"
         only_in_status: only in status
         current_costs_per_hour: Current hourly costs
         while_in_status: while in status
@@ -254,8 +261,7 @@ remoteDesktop:
         download_client_mac: Download the Mac client
         launch_button: Launch this remote desktop
         refresh_button: Refresh status
-        stop_button: Stop this remote desktop
-        stop_data_safe_info: Your data is safe - everything is kept in place when you stop your remote desktop
+        stop_data_safe_info: Your data is safe - everything is kept in place when your remote desktop is stopped.
         start_button: Start this remote desktop
         terminate_button: Remove this remote desktop
         terminate_data_lost_info: All your remote desktop data will be lost upon removal!

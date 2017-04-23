@@ -3,7 +3,6 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Billing\BillableItem;
-use AppBundle\Entity\Billing\BillableItemRepository;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityRepository;
@@ -12,7 +11,7 @@ class BillingService
 {
     protected $remoteDesktopEventRepository;
 
-    /** @var BillableItemRepository $billableItemRepository */
+    /** @var EntityRepository $billableItemRepository */
     protected $billableItemRepository;
 
     public function __construct(EntityRepository $remoteDesktopEventRepository, EntityRepository $billableItemRepository)
@@ -89,7 +88,7 @@ class BillingService
         // No events means there is nothing billable
         if (sizeof($remoteDesktopEvents) !== 0) {
 
-            /* We first need to find out if the newest known billable items needs to be "prolonged"
+            /* We first need to find out if the newest known billable item needs to be "prolonged"
              * (i.e., it needs to be seamlessly followed by a new item because during the last existing
              * item, the desktop has not been stopped and is therefore still running, like this:
              *
@@ -117,7 +116,7 @@ class BillingService
 
 
             // Now we need to find out if there is a completely new item we need to create.
-            // This is the case even if prolongations were created, but they then the desktop
+            // This is the case even if prolongations were created, but then the desktop
             // was off for a longer period.
 
             /*

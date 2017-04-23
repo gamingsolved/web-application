@@ -17,6 +17,8 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
     protected $ec2Client;
     protected $output;
 
+    protected $cloudInstanceIds2Ec2InstanceIds = [];
+
     public function __construct(array $credentials, Region $region, OutputInterface $output)
     {
         $this->keypairPrivateKey = $credentials['keypairPrivateKey'];
@@ -38,29 +40,39 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * param type differs intentionally
      *
      * @param AwsCloudInstance $cloudInstance
-     * @return bool
      */
-    public function cloudInstanceWasLaunched(CloudInstance $cloudInstance) : bool
+    public function triggerLaunchOfCloudInstance(CloudInstance $cloudInstance) : void
     {
-        try {
-            $result = $this->ec2Client->runInstances([
-                'ImageId' => $cloudInstance->getImage()->getInternalName(),
-                'MinCount' => 1,
-                'MaxCount' => 1,
-                'InstanceType' => $cloudInstance->getFlavor()->getInternalName(),
-                'KeyName' => self::KEYPAIR_NAME,
-                'SecurityGroups' => [self::SECURITY_GROUP_NAME]
-            ]);
+        $result = $this->ec2Client->runInstances([
+            'ImageId' => $cloudInstance->getImage()->getInternalName(),
+            'MinCount' => 1,
+            'MaxCount' => 1,
+            'InstanceType' => $cloudInstance->getFlavor()->getInternalName(),
+            'KeyName' => self::KEYPAIR_NAME,
+            'SecurityGroups' => [self::SECURITY_GROUP_NAME]
+        ]);
 
-            $instanceId = $result['Instances'][0]['InstanceId'];
+        $this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()] = $result['Instances'][0]['InstanceId'];
+    }
 
-            $cloudInstance->setEc2InstanceId($instanceId);
-        } catch (\Exception $e) {
-            $this->output->writeln($e->getMessage());
-            return false;
-        }
+    /**
+     * param type differs intentionally
+     *
+     * @param AwsCloudInstance $cloudInstance
+     */
+    public function updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void
+    {
+        $cloudInstance->setEc2InstanceId($this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()]);
+    }
 
-        return true;
+    /**
+     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     */
+    public function triggerStartOfCloudInstance(CloudInstance $cloudInstance) : void
+    {
+        $this->ec2Client->startInstances([
+            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+        ]);
     }
 
     /**
@@ -69,7 +81,7 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * @param AwsCloudInstance $cloudInstance
      * @return bool
      */
-    public function cloudInstanceHasFinishedLaunchingOrStarting(CloudInstance $cloudInstance) : bool
+    public function cloudInstanceIsRunning(CloudInstance $cloudInstance) : bool
     {
         try {
             $result = $this->ec2Client->describeInstances([
@@ -77,15 +89,6 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ]);
 
             if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'running') {
-
-                $ip = $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'][0]['Association']['PublicIp'];
-
-                if (is_null($ip)) {
-                    $this->output->writeln('IP address is in other field...');
-                    $ip = $result['Reservations'][0]['Instances'][0]['PublicIpAddress'];
-                }
-
-                $cloudInstance->setPublicAddress($ip);
                 return true;
             } else {
                 return false;
@@ -100,9 +103,37 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * param type differs intentionally
      *
      * @param AwsCloudInstance $cloudInstance
-     * @return bool
      */
-    public function cloudInstanceAdminPasswordCouldBeRetrieved(CloudInstance $cloudInstance, string $encryptionKey) : bool
+    public function getPublicAddressOfRunningCloudInstance(CloudInstance $cloudInstance) : string
+    {
+        try {
+            $result = $this->ec2Client->describeInstances([
+                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+            ]);
+
+            if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'running') {
+                $ip = $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'][0]['Association']['PublicIp'];
+
+                // IP address is in other field...
+                if (is_null($ip)) {
+                    $ip = $result['Reservations'][0]['Instances'][0]['PublicIpAddress'];
+                }
+                return $ip;
+            } else {
+                return null;
+            }
+        } catch (\Exception $e) {
+            $this->output->writeln($e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * param type differs intentionally
+     *
+     * @param AwsCloudInstance $cloudInstance
+     */
+    public function getAdminPasswordOfRunningCloudInstance(CloudInstance $cloudInstance) : string
     {
         try {
             $result = $this->ec2Client->getPasswordData([
@@ -117,43 +148,34 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
                 $keypairPrivateKeyResource = openssl_get_privatekey($this->keypairPrivateKey);
 
                 if (openssl_private_decrypt($encryptedPwd, $cleartextPwd, $keypairPrivateKeyResource)) {
-                    $cloudInstance->setAdminPassword($cleartextPwd);
-                    return true;
+                    return $cleartextPwd;
                 } else {
-                    return false;
+                    throw new \Exception('Could not decrypt admin password');
                 }
             } else {
-                return false;
+                return null;
             }
         } catch (\Exception $e) {
             $this->output->writeln($e->getMessage());
-            return false;
+            return null;
         }
     }
 
     /**
      * @param AwsCloudInstance $cloudInstance param type differs intentionally
-     * @return bool
      */
-    public function cloudInstanceWasAskedToStop(CloudInstance $cloudInstance) : bool
+    public function triggerStopOfCloudInstance(CloudInstance $cloudInstance) : void
     {
-        try {
-            $this->ec2Client->stopInstances([
-                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-            ]);
-        } catch (\Exception $e) {
-            $this->output->writeln($e->getMessage());
-            return false;
-        }
-
-        return true;
+        $this->ec2Client->stopInstances([
+            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+        ]);
     }
 
     /**
      * @param AwsCloudInstance $cloudInstance param type differs intentionally
      * @return bool
      */
-    public function cloudInstanceHasFinishedStopping(CloudInstance $cloudInstance) : bool
+    public function cloudInstanceIsStopped(CloudInstance $cloudInstance) : bool
     {
         try {
             $result = $this->ec2Client->describeInstances([
@@ -161,7 +183,6 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ]);
 
             if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'stopped') {
-                $cloudInstance->setPublicAddress('');
                 return true;
             } else {
                 return false;
@@ -174,45 +195,19 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
 
     /**
      * @param AwsCloudInstance $cloudInstance param type differs intentionally
-     * @return bool
      */
-    public function cloudInstanceWasAskedToStart(CloudInstance $cloudInstance) : bool
+    public function triggerTerminationOfCloudInstance(CloudInstance $cloudInstance) : void
     {
-        try {
-            $this->ec2Client->startInstances([
-                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-            ]);
-        } catch (\Exception $e) {
-            $this->output->writeln($e->getMessage());
-            return false;
-        }
-
-        return true;
+        $this->ec2Client->terminateInstances([
+            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+        ]);
     }
 
     /**
      * @param AwsCloudInstance $cloudInstance param type differs intentionally
      * @return bool
      */
-    public function cloudInstanceWasAskedToTerminate(CloudInstance $cloudInstance) : bool
-    {
-        try {
-            $this->ec2Client->terminateInstances([
-                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-            ]);
-        } catch (\Exception $e) {
-            $this->output->writeln($e->getMessage());
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param AwsCloudInstance $cloudInstance param type differs intentionally
-     * @return bool
-     */
-    public function cloudInstanceHasFinishedTerminating(CloudInstance $cloudInstance) : bool
+    public function cloudInstanceIsTerminated(CloudInstance $cloudInstance) : bool
     {
         try {
             $result = $this->ec2Client->describeInstances([
@@ -220,7 +215,6 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ]);
 
             if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'terminated') {
-                $cloudInstance->setPublicAddress('');
                 return true;
             } else {
                 return false;

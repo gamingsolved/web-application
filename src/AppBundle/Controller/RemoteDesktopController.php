@@ -4,9 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktopKind;
 use AppBundle\Factory\RemoteDesktopFactory;
+use AppBundle\Service\RemoteDesktopAutostopService;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
@@ -81,6 +84,18 @@ class RemoteDesktopController extends Controller
             }
         }
 
+        $rdas = new RemoteDesktopAutostopService();
+        /** @var RemoteDesktop $remoteDesktop */
+        foreach ($remoteDesktopsSorted as $remoteDesktop) {
+            if ($remoteDesktop->getStatus() == RemoteDesktop::STATUS_READY_TO_USE) {
+                $remoteDesktop->setOptimalHourlyAutostopTimes(
+                    $rdas->getOptimalHourlyAutostopTimesForRemoteDesktop(
+                        $remoteDesktop,
+                        $em->getRepository(RemoteDesktopEvent::class)
+                    )
+                );
+            }
+        }
 
         /** @var AccountMovementRepository $accountMovementRepo */
         $accountMovementRepo = $em->getRepository(AccountMovement::class);
@@ -243,16 +258,34 @@ class RemoteDesktopController extends Controller
     /**
      * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
      */
-    public function updateScheduleForStopAtAction(RemoteDesktop $remoteDesktop, int $duration)
+    public function scheduleForStopAtEndOfUsageHourAction(RemoteDesktop $remoteDesktop, int $usageHour)
     {
+        if ($usageHour < 0 || $usageHour > 7 || $remoteDesktop->getStatus() !== RemoteDesktop::STATUS_READY_TO_USE) {
+            $this->createAccessDeniedException();
+        }
+
         $user = $this->getUser();
 
         if ($remoteDesktop->getUser()->getId() !== $user->getId()) {
-            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
+            $this->createAccessDeniedException();
         }
 
-        $remoteDesktop->scheduleForStopInSeconds($duration);
+        $em = $this->getDoctrine()->getManager();
 
+        $rdas = new RemoteDesktopAutostopService();
+        $optimalHourlyAutostopTimes = $rdas->getOptimalHourlyAutostopTimesForRemoteDesktop(
+            $remoteDesktop,
+            $em->getRepository(RemoteDesktopEvent::class)
+        );
+
+        if (!is_array($optimalHourlyAutostopTimes) || sizeof($optimalHourlyAutostopTimes) !== 8) {
+            throw new \Exception(
+                'Expected 8 optimalHourlyAutostopTimes, got something else: ' .
+                print_r($optimalHourlyAutostopTimes, true)
+            );
+        }
+
+        $remoteDesktop->setScheduleForStopAt($optimalHourlyAutostopTimes[$usageHour]);
         $em = $this->getDoctrine()->getManager();
         $em->persist($remoteDesktop);
         $em->flush();

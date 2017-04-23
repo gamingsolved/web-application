@@ -10,19 +10,23 @@ interface CloudInstanceCoordinator
 {
     public function __construct(array $credentials, Region $region, OutputInterface $output);
 
-    public function cloudInstanceWasLaunched(CloudInstance $cloudInstance) : bool;
+    public function triggerLaunchOfCloudInstance(CloudInstance $cloudInstance) : void;
 
-    public function cloudInstanceHasFinishedLaunchingOrStarting(CloudInstance $cloudInstance) : bool;
+    public function updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void;
 
-    public function cloudInstanceAdminPasswordCouldBeRetrieved(CloudInstance $cloudInstance, string $encryptionKey) : bool;
+    public function triggerStartOfCloudInstance(CloudInstance $cloudInstance) : void;
 
-    public function cloudInstanceWasAskedToStop(CloudInstance $cloudInstance) : bool;
+    public function cloudInstanceIsRunning(CloudInstance $cloudInstance) : bool;
 
-    public function cloudInstanceHasFinishedStopping(CloudInstance $cloudInstance) : bool;
+    public function getPublicAddressOfRunningCloudInstance(CloudInstance $cloudInstance) : string;
 
-    public function cloudInstanceWasAskedToStart(CloudInstance $cloudInstance) : bool;
+    public function getAdminPasswordOfRunningCloudInstance(CloudInstance $cloudInstance) : string;
 
-    public function cloudInstanceWasAskedToTerminate(CloudInstance $cloudInstance) : bool;
+    public function triggerStopOfCloudInstance(CloudInstance $cloudInstance) : void;
 
-    public function cloudInstanceHasFinishedTerminating(CloudInstance $cloudInstance) : bool;
+    public function cloudInstanceIsStopped(CloudInstance $cloudInstance) : bool;
+
+    public function triggerTerminationOfCloudInstance(CloudInstance $cloudInstance) : void;
+
+    public function cloudInstanceIsTerminated(CloudInstance $cloudInstance) : bool;
 }

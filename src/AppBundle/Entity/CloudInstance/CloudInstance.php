@@ -66,6 +66,10 @@ abstract class CloudInstance implements CloudInstanceInterface
     const RUNSTATUS_SCHEDULED_FOR_TERMINATION = 8;
     const RUNSTATUS_TERMINATING = 9;
     const RUNSTATUS_TERMINATED = 10;
+    const RUNSTATUS_ERROR = 11;
+
+    const ERROR_INSUFFICIENT_PROVIDER_CAPACITY = 0;
+    const ERROR_VPC_NEEDED = 1;
 
     const ADMIN_PASSWORD_ENCRYPTION_KEY = '06c528c143c3f5c73ae200048782bd422a4f1b90';
 
