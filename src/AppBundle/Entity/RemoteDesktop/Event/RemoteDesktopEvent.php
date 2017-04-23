@@ -46,7 +46,7 @@ class RemoteDesktopEvent
 
     public function __construct(RemoteDesktop $remoteDesktop, int $eventType, \DateTime $datetimeOccured)
     {
-        $this->id = $uuid4 = Uuid::uuid4();
+        $this->id = Uuid::uuid4();
 
         $this->remoteDesktop = $remoteDesktop;
 
