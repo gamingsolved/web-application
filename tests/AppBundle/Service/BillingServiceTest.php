@@ -302,7 +302,8 @@ class BillingServiceTest extends TestCase
 
         $latestExistingBillableItem = new BillableItem(
             $remoteDesktop,
-            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01'),
+            BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER
         );
 
         $billableItemRepo = $this
@@ -358,7 +359,8 @@ class BillingServiceTest extends TestCase
 
         $latestExistingBillableItem = new BillableItem(
             $remoteDesktop,
-            DateTimeUtility::createDateTime('2017-03-26 23:37:01')
+            DateTimeUtility::createDateTime('2017-03-26 23:37:01'),
+            BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER
         );
 
         $billableItemRepo = $this
@@ -409,7 +411,8 @@ class BillingServiceTest extends TestCase
 
         $latestExistingBillableItem = new BillableItem(
             $remoteDesktop,
-            DateTimeUtility::createDateTime('2017-03-27 00:37:01')
+            DateTimeUtility::createDateTime('2017-03-27 00:37:01'),
+            BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER
         );
 
         $billableItemRepo = $this

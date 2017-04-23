@@ -59,7 +59,8 @@ class BillingService
             if (!$beganStoppingFound) {
                 $newBillableItem = new BillableItem(
                     $remoteDesktop,
-                    $newestBillableItem->getTimewindowEnd()
+                    $newestBillableItem->getTimewindowEnd(),
+                    BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER
                 );
                 $generatedBillableItems[] = clone($newBillableItem);
                 $newestBillableItem = $newBillableItem;
@@ -158,7 +159,8 @@ class BillingService
                             if (!$found) {
                                 $newBillableItem = new BillableItem(
                                     $remoteDesktop,
-                                    $remoteDesktopEvent->getDatetimeOccured()
+                                    $remoteDesktopEvent->getDatetimeOccured(),
+                                    BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER
                                 );
                                 $generatedBillableItems[] = $newBillableItem;
                                 $newestBillableItem = clone($newBillableItem);
