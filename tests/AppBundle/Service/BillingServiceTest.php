@@ -31,9 +31,16 @@ class BillingServiceTest extends TestCase
         return $remoteDesktop;
     }
 
-    public function testNoBillableItemsForRemoteDesktopWithoutEvents()
+    public function testNoUsageBillableItemsForRemoteDesktopWithoutUsageEvents()
     {
         $remoteDesktop = $this->getRemoteDesktop();
+
+        // For usage billing, this event type must be ignored
+        $provisioningEvent = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+        );
 
         $remoteDesktopEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
@@ -43,7 +50,7 @@ class BillingServiceTest extends TestCase
         $remoteDesktopEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
-            ->willReturn([]);
+            ->willReturn([$provisioningEvent]);
 
         $billableItemRepo = $this
             ->getMockBuilder(EntityRepository::class)
@@ -58,7 +65,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testOneBillableItemForLaunchedRemoteDesktop()
+    public function testOneUsageBillableItemForLaunchedRemoteDesktop()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -101,7 +108,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testOneBillableItemForMultipleTimesLaunchedAndStoppedRemoteDesktop()
+    public function testOneUsageBillableItemForMultipleTimesLaunchedAndStoppedRemoteDesktop()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -129,6 +136,13 @@ class BillingServiceTest extends TestCase
             DateTimeUtility::createDateTime('2017-03-26 19:30:00')
         );
 
+        // For usage billing, this event type must be ignored
+        $provisioningEvent = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+            DateTimeUtility::createDateTime('2017-03-26 19:31:00')
+        );
+
         $remoteDesktopEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
@@ -137,7 +151,13 @@ class BillingServiceTest extends TestCase
         $remoteDesktopEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
-            ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1, $finishedLaunchingEvent2, $beganStoppingEvent2]);
+            ->willReturn([
+                $finishedLaunchingEvent1,
+                $beganStoppingEvent1,
+                $finishedLaunchingEvent2,
+                $beganStoppingEvent2,
+                $provisioningEvent
+            ]);
 
         $billableItemRepo = $this
             ->getMockBuilder(EntityRepository::class)
@@ -162,7 +182,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testThreeBillableItemsForMultipleTimesLaunchedAndStoppedRemoteDesktop()
+    public function testThreeUsageBillableItemsForMultipleTimesLaunchedAndStoppedRemoteDesktop()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -222,7 +242,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testSevenBillableItemsForLaunchedAndStoppedRemoteDesktop()
+    public function testSevenUsageBillableItemsForLaunchedAndStoppedRemoteDesktop()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -274,7 +294,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testOnlySixBillableItemsForLaunchedAndStoppedRemoteDesktopIfOneBillingItemAlreadyExists()
+    public function testOnlySixUsageBillableItemsForLaunchedAndStoppedRemoteDesktopIfOneBillingItemAlreadyExists()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -331,7 +351,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testOnlyOneBillableItemForLaunchedAndStoppedRemoteDesktopIfSixBillingItemsAlreadyExist()
+    public function testOnlyOneUsageBillableItemForLaunchedAndStoppedRemoteDesktopIfSixBillingItemsAlreadyExist()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -383,7 +403,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testNoBillableItemForLaunchedAndStoppedRemoteDesktopIfAllBillingItemsAlreadyExist()
+    public function testNoUsageBillableItemForLaunchedAndStoppedRemoteDesktopIfAllBillingItemsAlreadyExist()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -433,7 +453,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testTwoBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgo()
+    public function testTwoUsageBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgo()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -474,7 +494,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testOneBillableItemForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedWithinOneHour()
+    public function testOneUsageBillableItemForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedWithinOneHour()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -520,7 +540,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testTwoBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedMoreThanOneHourLater()
+    public function testTwoUsageBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedMoreThanOneHourLater()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -567,7 +587,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testOneBillableItemsForRemoteDesktopLaunchedWithinTheUptoHourAndStoppedMoreThanOneHourLater()
+    public function testOneUsageBillableItemsForRemoteDesktopLaunchedWithinTheUptoHourAndStoppedMoreThanOneHourLater()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -625,7 +645,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testTwoBillableItemsForTwoUsagesWithALargeGapBetweenThem()
+    public function testTwoUsageBillableItemsForTwoUsagesWithALargeGapBetweenThem()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
