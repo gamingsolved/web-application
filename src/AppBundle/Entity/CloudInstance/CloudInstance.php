@@ -18,7 +18,7 @@ interface CloudInstanceInterface
 
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface;
 
-    public function getHourlyCosts() : float;
+    public function getHourlyUsageCosts() : float;
 
     public function setStatus(int $status);
     public function getStatus() : int;
@@ -238,11 +238,11 @@ abstract class CloudInstance implements CloudInstanceInterface
         return $this->getCloudInstanceProvider()->getRegionByInternalName($this->regionInternalName);
     }
 
-    public function getHourlyCosts(): float
+    public function getHourlyUsageCosts(): float
     {
         return $this
             ->getCloudInstanceProvider()
-            ->getHourlyCostsForFlavorImageRegionCombination(
+            ->getHourlyUsageCostsForFlavorImageRegionCombination(
                 $this->getFlavor(),
                 $this->getImage(),
                 $this->getRegion()

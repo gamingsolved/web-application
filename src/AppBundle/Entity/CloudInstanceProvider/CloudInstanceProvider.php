@@ -24,9 +24,9 @@ interface CloudInstanceProviderInterface
 
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstance;
 
-    public function getHourlyCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float;
+    public function getHourlyUsageCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float;
 
-    public function getMaximumHourlyCostsForFlavor(Flavor $flavor) : float;
+    public function getMaximumHourlyUsageCostsForFlavor(Flavor $flavor) : float;
 }
 
 abstract class CloudInstanceProvider implements CloudInstanceProviderInterface

@@ -150,12 +150,12 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     /**
      * @throws \Exception
      */
-    public function getHourlyCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float
+    public function getHourlyUsageCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float
     {
-        return $this->getMaximumHourlyCostsForFlavor($flavor);
+        return $this->getMaximumHourlyUsageCostsForFlavor($flavor);
     }
 
-    public function getMaximumHourlyCostsForFlavor(Flavor $flavor) : float
+    public function getMaximumHourlyUsageCostsForFlavor(Flavor $flavor) : float
     {
         if ($flavor->getInternalName() === 'g2.2xlarge') {
             return 1.49;

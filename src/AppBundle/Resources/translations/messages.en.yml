@@ -356,5 +356,5 @@ accountMovement:
 
 insufficientAccountBalance:
     message_one: Your account balance is too low to use this remote desktop.
-    message_two: Running this remote desktop costs %hourlyCosts% per hour, but your current balance is
+    message_two: Running this remote desktop costs %hourlyUsageCosts% per hour, but your current balance is
     click_here_to_increase_your_balance: Click here to increase your balance now

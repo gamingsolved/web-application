@@ -101,17 +101,17 @@
                                         </h3>
                                     {% else %}
                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
-                                            <div class="well well-sm pull-right hourlycostsbox">
+                                            <div class="well well-sm pull-right hourlyusagecostsbox">
                                                 <small>
                                                     {{ "remoteDesktop.index.current_costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyCosts|localizedcurrency('USD') }}
+                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% else %}
-                                            <div class="well well-sm pull-right hourlycostsbox">
+                                            <div class="well well-sm pull-right hourlyusagecostsbox">
                                                 <small>
                                                     {{ "remoteDesktop.index.costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyCosts|localizedcurrency('USD') }}
+                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% endif %}

@@ -127,7 +127,7 @@ class RemoteDesktopController extends Controller
             $choices[
                 $t->trans((string)$remoteDesktopKind)
                 . ' — ' . $remoteDesktopKind->getFlavor()->getHumanName()
-                . ' — $' . $remoteDesktopKind->getMaximumHourlyCosts()
+                . ' — $' . $remoteDesktopKind->getMaximumHourlyUsageCosts()
                 . '/h'
             ] = $remoteDesktopKind->getIdentifier();
         }
@@ -216,11 +216,11 @@ class RemoteDesktopController extends Controller
         /** @var AccountMovementRepository $accountMovementRepository */
         $accountMovementRepository = $em->getRepository(AccountMovement::class);
 
-        if ($remoteDesktop->getHourlyCosts() > $accountMovementRepository->getAccountBalanceForUser($user)) {
+        if ($remoteDesktop->getHourlyUsageCosts() > $accountMovementRepository->getAccountBalanceForUser($user)) {
             return $this->render(
                 'AppBundle:remoteDesktop:insufficientAccountBalance.html.twig',
                 [
-                    'hourlyCosts' => $remoteDesktop->getHourlyCosts(),
+                    'hourlyUsageCosts' => $remoteDesktop->getHourlyUsageCosts(),
                     'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user)
                 ]
             );

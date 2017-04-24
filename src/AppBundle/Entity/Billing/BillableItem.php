@@ -76,7 +76,13 @@ class BillableItem
 
         $this->type = $type;
 
-        $this->price = $remoteDesktop->getHourlyCosts();
+        if ($this->type === self::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER) {
+            $this->price = $remoteDesktop->getHourlyUsageCosts();
+        }
+
+        if ($this->type === self::TYPE_REMOTE_DESKTOP_PROVISIONED_FOR_USER) {
+            $this->price = $remoteDesktop->getHourlyUsageCosts();
+        }
 
         if ($this->price < 0.0) {
             throw new \Exception('Negative price of ' . $this->price . ' is invalid.');
