@@ -109,4 +109,9 @@ class BillableItem
     {
         return $this->price;
     }
+
+    public function getType() : int
+    {
+        return $this->type;
+    }
 }
