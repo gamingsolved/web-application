@@ -20,7 +20,25 @@ class BillingService
         $this->billableItemRepository = $billableItemRepository;
     }
 
-    protected function generateProlongations(RemoteDesktop $remoteDesktop, array $remoteDesktopEvents, BillableItem &$newestBillableItem, array &$generatedBillableItems, \DateTime $upto)
+    protected function getBillableItemTypeFromStartEventType(int $startEventType) : int {
+        if ($startEventType === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER) {
+            return BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER;
+        }
+        if ($startEventType === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER) {
+            return BillableItem::TYPE_REMOTE_DESKTOP_PROVISIONED_FOR_USER;
+        }
+        throw new \Exception('Cannot map start event type ' . $startEventType . ' to billable item type.');
+    }
+
+    protected function generateProlongations(
+        RemoteDesktop $remoteDesktop,
+        array $remoteDesktopEvents,
+        BillableItem &$newestBillableItem,
+        array &$generatedBillableItems,
+        \DateTime $upto,
+        int $startEventType,
+        int $endEventType
+    )
     {
         $beganStoppingFound = false;
         $uptoReached = false;
@@ -48,19 +66,20 @@ class BillingService
             if (sizeof($remoteDesktopEventsInTimewindow) !== 0) {
                 /** @var RemoteDesktopEvent $lastRemoteDesktopEventInTimeWindow */
                 $lastRemoteDesktopEventInTimeWindow = $remoteDesktopEventsInTimewindow[sizeof($remoteDesktopEventsInTimewindow) - 1];
-                if ($lastRemoteDesktopEventInTimeWindow->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER) {
+                if ($lastRemoteDesktopEventInTimeWindow->getEventType() === $endEventType) {
                     $beganStoppingFound = true;
                 }
             }
 
             // If the last event in the time window of the newest billable item wasn't "began stopping",
-            // then we must assume that the desktop is still running, and need to prolongue.
+            // then we must assume that the desktop is still running or the instance still provisioned,
+            // and we need to prolongue the billing.
 
             if (!$beganStoppingFound) {
                 $newBillableItem = new BillableItem(
                     $remoteDesktop,
                     $newestBillableItem->getTimewindowEnd(),
-                    BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER
+                    $this->getBillableItemTypeFromStartEventType($startEventType)
                 );
                 $generatedBillableItems[] = clone($newBillableItem);
                 $newestBillableItem = $newBillableItem;
@@ -75,30 +94,32 @@ class BillingService
     /**
      * @param RemoteDesktop $remoteDesktop
      * @param \DateTime $upto Point in time up to which to consider events - exclusive!
+     * @param int $startEventType Which event type considers the start of a billable duration?
+     * @param int $endEventType Which event type considers the end of a billable duration?
      * @return array
      */
-    public function generateMissingBillableItemsForUsage(RemoteDesktop $remoteDesktop, \DateTime $upto) : array
+    public function generateMissingBillableItems(RemoteDesktop $remoteDesktop, \DateTime $upto, int $startEventType, int $endEventType) : array
     {
         $remoteDesktopEvents = $this->remoteDesktopEventRepository->findBy(
             ['remoteDesktop' => $remoteDesktop],
             ['datetimeOccured' => 'ASC']
         );
 
-        $usageRelatedRemoteDesktopEvents = [];
+        $filteredRemoteDesktopEvents = [];
 
         /** @var RemoteDesktopEvent $remoteDesktopEvent */
         foreach ($remoteDesktopEvents as $remoteDesktopEvent) {
-            if (   $remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
-                || $remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER)
+            if (   $remoteDesktopEvent->getEventType() === $startEventType
+                || $remoteDesktopEvent->getEventType() === $endEventType)
             {
-                $usageRelatedRemoteDesktopEvents[] = $remoteDesktopEvent;
+                $filteredRemoteDesktopEvents[] = $remoteDesktopEvent;
             }
         }
 
         $generatedBillableItems = [];
 
         // No events means there is nothing billable
-        if (sizeof($usageRelatedRemoteDesktopEvents) !== 0) {
+        if (sizeof($filteredRemoteDesktopEvents) !== 0) {
 
             /* We first need to find out if the newest known billable item needs to be "prolonged"
              * (i.e., it needs to be seamlessly followed by a new item because during the last existing
@@ -123,7 +144,15 @@ class BillingService
             );
 
             if (!is_null($newestBillableItem)) {
-                $this->generateProlongations($remoteDesktop, $usageRelatedRemoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
+                $this->generateProlongations(
+                    $remoteDesktop,
+                    $filteredRemoteDesktopEvents,
+                    $newestBillableItem,
+                    $generatedBillableItems,
+                    $upto,
+                    $startEventType,
+                    $endEventType
+                );
             }
 
 
@@ -143,7 +172,7 @@ class BillingService
 
 
             /** @var RemoteDesktopEvent $remoteDesktopEvent */
-            foreach ($usageRelatedRemoteDesktopEvents as $remoteDesktopEvent) {
+            foreach ($filteredRemoteDesktopEvents as $remoteDesktopEvent) {
                 if ($remoteDesktopEvent->getDatetimeOccured() < $upto) {
 
                     // Only consider events which occured after the newest billable item we have, if any
@@ -151,7 +180,7 @@ class BillingService
                         || (is_null($newestBillableItem))
                     ) {
 
-                        if ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER) {
+                        if ($remoteDesktopEvent->getEventType() === $startEventType) {
 
                             // Is this launch already covered by a billable item?
 
@@ -171,7 +200,7 @@ class BillingService
                                 $newBillableItem = new BillableItem(
                                     $remoteDesktop,
                                     $remoteDesktopEvent->getDatetimeOccured(),
-                                    BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER
+                                    $this->getBillableItemTypeFromStartEventType($startEventType)
                                 );
                                 $generatedBillableItems[] = $newBillableItem;
                                 $newestBillableItem = clone($newBillableItem);
@@ -190,7 +219,15 @@ class BillingService
                                  *  exists     prolongation  prolongation              to be created
                                  */
 
-                                $this->generateProlongations($remoteDesktop, $usageRelatedRemoteDesktopEvents, $newestBillableItem, $generatedBillableItems, $upto);
+                                $this->generateProlongations(
+                                    $remoteDesktop,
+                                    $filteredRemoteDesktopEvents,
+                                    $newestBillableItem,
+                                    $generatedBillableItems,
+                                    $upto,
+                                    $startEventType,
+                                    $endEventType
+                                );
                             }
 
                         }

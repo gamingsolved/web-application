@@ -43,7 +43,12 @@ class GenerateBillableItemsCommand extends ContainerAwareCommand
             $output->writeln('Attempting to generate billable items for remote desktop id ' . $remoteDesktop->getId());
             $output->writeln('Desktop owner: ' . $remoteDesktop->getUser()->getUsername());
 
-            $generatedBillableItems = $billingService->generateMissingBillableItemsForUsage($remoteDesktop, DateTimeUtility::createDateTime('now'));
+            $generatedBillableItems = $billingService->generateMissingBillableItems(
+                $remoteDesktop,
+                DateTimeUtility::createDateTime('now'),
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            );
 
             /** @var BillableItem $generatedBillableItem */
             foreach ($generatedBillableItems as $generatedBillableItem) {
