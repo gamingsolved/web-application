@@ -12,7 +12,7 @@ use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 
-class BillingServiceTest extends TestCase
+class BillingServiceUsageBillingTest extends TestCase
 {
 
     protected function getRemoteDesktop() : RemoteDesktop
