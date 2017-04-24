@@ -27,7 +27,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         $this->flavors = [
             new Flavor($this, 'g2.2xlarge', '8 vCPUs, 15 GB RAM, 1 GPU'),
             new Flavor($this, 'g2.8xlarge', '32 vCPUs, 60 GB RAM, 4 GPUs'),
-            new Flavor($this, 'c4.4xlarge', '16 vCPUs, 30 GB RAM')
+            new Flavor($this, 'c4.4xlarge', '16 vCPUs, 30 GB RAM, no GPU')
         ];
 
         $this->images = [
