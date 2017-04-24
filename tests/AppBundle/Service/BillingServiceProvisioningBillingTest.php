@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Service;
 
+use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
@@ -66,6 +67,62 @@ class BillingServiceProvisioningBillingTest extends TestCase
         );
 
         $this->assertEmpty($billableItems);
+    }
+
+    public function testOneProvisioningBillableItemForLaunchedRemoteDesktop()
+    {
+        $remoteDesktop = $this->getRemoteDesktop();
+
+        $events = [
+            new RemoteDesktopEvent(
+                $remoteDesktop,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+                DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+            ),
+            new RemoteDesktopEvent(
+                $remoteDesktop,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+                DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+            ),
+        ];
+
+        $remoteDesktopEventRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $remoteDesktopEventRepo->expects($this->once())
+            ->method('findBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
+            ->willReturn($events);
+
+        $billableItemRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $billableItemRepo->expects($this->once())
+            ->method('findOneBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->willReturn(null);
+
+        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 18:40:00'),
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER
+        );
+
+        $this->assertCount(1, $billableItems);
+
+        /** @var \AppBundle\Entity\Billing\BillableItem $actualBillableItem */
+        $actualBillableItem = $billableItems[0];
+
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $actualBillableItem->getTimewindowBegin());
+        $this->assertEquals(0.3, $actualBillableItem->getPrice());
+        $this->assertEquals(BillableItem::TYPE_REMOTE_DESKTOP_PROVISIONED_FOR_USER, $actualBillableItem->getType());
     }
 
 }
