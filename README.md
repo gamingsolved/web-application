@@ -78,7 +78,7 @@ All DateTime values must always be handled as UTC, and must always explicitly be
     
 Also, when taking parameters of type DateTime, please check for compliance like so:
     
-    if ($dt->getTimezone()->gedtName() !== 'UTC') throw new \Exception();
+    if ($dt->getTimezone()->getName() !== 'UTC') throw new \Exception();
     
 If you want to present a datetime to the user, please convert at the last moment possible (view layer etc.).
 
