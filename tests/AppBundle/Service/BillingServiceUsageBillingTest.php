@@ -21,11 +21,11 @@ class BillingServiceUsageBillingTest extends TestCase
         $remoteDesktop->setCloudInstanceProvider(new AwsCloudInstanceProvider());
         $remoteDesktop->setId('r1');
         $remoteDesktop->setKind(new RemoteDesktopGamingProKind());
-        $awsCloudInstanceProvider = new AwsCloudInstanceProvider();
+        $cloudInstanceProvider = $remoteDesktop->getKind()->getCloudInstanceProvider();
         $remoteDesktop->addCloudInstance(
-            $awsCloudInstanceProvider->createInstanceForRemoteDesktopAndRegion(
+            $cloudInstanceProvider->createInstanceForRemoteDesktopAndRegion(
                 $remoteDesktop,
-                $awsCloudInstanceProvider->getRegionByInternalName('eu-central-1')
+                $cloudInstanceProvider->getRegionByInternalName('eu-central-1')
             )
         );
         return $remoteDesktop;
