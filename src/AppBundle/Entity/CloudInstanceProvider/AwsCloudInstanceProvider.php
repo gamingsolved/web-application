@@ -127,7 +127,9 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstance
     {
         $instance = new AwsCloudInstance();
-        $instance->setFlavor($remoteDesktop->getKind()->getFlavor());
+
+        // We use this indirection because it ensures we work with a valid flavor
+        $instance->setFlavor($this->getFlavorByInternalName($remoteDesktop->getKind()->getFlavor()->getInternalName()));
 
         if (array_key_exists($remoteDesktop->getKind()->getIdentifier(), $this->kindToRegionToImage)) {
             if (array_key_exists($region->getInternalName(), $this->kindToRegionToImage[$remoteDesktop->getKind()->getIdentifier()])) {
@@ -139,6 +141,18 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             }
         } else {
             throw new \Exception('Cannot match kind ' . get_class($remoteDesktop->getKind()) . ' to an AMI.');
+        }
+
+        if ($instance->getFlavor()->getInternalName() === 'g2.2xlarge') {
+            $instance->setRootVolumeSize(60);
+            $instance->setAdditionalVolumeSize(200);
+        } elseif ($instance->getFlavor()->getInternalName() === 'g2.8xlarge') {
+            $instance->setRootVolumeSize(240);
+        } elseif ($instance->getFlavor()->getInternalName() === 'c4.4xlarge') {
+            $instance->setRootVolumeSize(60);
+            $instance->setAdditionalVolumeSize(200);
+        } else {
+            throw new \Exception('Missing root volume size mapping for flavor ' . $instance->getFlavor()->getInternalName());
         }
 
         // We use this indirection because it ensures we work with a valid region
@@ -171,4 +185,15 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
 
         throw new \Exception('Unknown flavor ' . $flavor->getInternalName());
     }
+
+    public function getHourlyProvisioningCostsForFlavorImageRegionVolumeSizesCombination(
+        Flavor $flavor, Image $image, Region $region, int $rootVolumeSize, int $additionalVolumeSize) : float
+    {
+        $pricePerGBPerMonth = 0.119; // gp2 Volume type
+        $daysPerMonth = 30;
+        $hoursPerDay = 24;
+        $hoursPerMonth = $daysPerMonth * $hoursPerDay;
+        return round(( ($rootVolumeSize + $additionalVolumeSize) * $pricePerGBPerMonth ) / $hoursPerMonth, 2);
+    }
+
 }

@@ -81,7 +81,7 @@ class BillableItem
         }
 
         if ($this->type === self::TYPE_REMOTE_DESKTOP_PROVISIONED_FOR_USER) {
-            $this->price = $remoteDesktop->getHourlyUsageCosts();
+            $this->price = $remoteDesktop->getHourlyProvisioningCosts();
         }
 
         if ($this->price < 0.0) {

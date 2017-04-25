@@ -321,6 +321,11 @@ class RemoteDesktop
         return $this->getActiveCloudInstance()->getHourlyUsageCosts();
     }
 
+    public function getHourlyProvisioningCosts() : float
+    {
+        return $this->getActiveCloudInstance()->getHourlyProvisioningCosts();
+    }
+
     public function getScheduledForStopAt()
     {
         return $this->getActiveCloudInstance()->getScheduleForStopAt();

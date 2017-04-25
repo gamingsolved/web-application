@@ -19,6 +19,7 @@ interface CloudInstanceInterface
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface;
 
     public function getHourlyUsageCosts() : float;
+    public function getHourlyProvisioningCosts() : float;
 
     public function setStatus(int $status);
     public function getStatus() : int;
@@ -34,6 +35,12 @@ interface CloudInstanceInterface
 
     public function setRegion(Region $region);
     public function getRegion() : Region;
+
+    public function setRootVolumeSize(int $sizeInGB);
+    public function getRootVolumeSize() : int;
+
+    public function setAdditionalVolumeSize(int $sizeInGB);
+    public function getAdditionalVolumeSize() : int;
 
     public function setRemoteDesktop(RemoteDesktop $remoteDesktop);
     public function getRemoteDesktop() : RemoteDesktop;
@@ -117,6 +124,18 @@ abstract class CloudInstance implements CloudInstanceInterface
      * @ORM\Column(name="region_internal_name", type="string", length=128)
      */
     protected $regionInternalName;
+
+    /**
+     * @var int
+     * @ORM\Column(name="root_volume_size", type="int")
+     */
+    protected $rootVolumeSize;
+
+    /**
+     * @var int
+     * @ORM\Column(name="additional_volume_size", type="int")
+     */
+    protected $additionalVolumeSize;
 
     /**
      * @var string
@@ -238,6 +257,34 @@ abstract class CloudInstance implements CloudInstanceInterface
         return $this->getCloudInstanceProvider()->getRegionByInternalName($this->regionInternalName);
     }
 
+    public function setRootVolumeSize(int $sizeInGB)
+    {
+        $this->rootVolumeSize = $sizeInGB;
+    }
+
+    public function getRootVolumeSize(): int
+    {
+        if (is_null($this->rootVolumeSize)) {
+            return 0;
+        } else {
+            return $this->rootVolumeSize;
+        }
+    }
+
+    public function setAdditionalVolumeSize(int $sizeInGB)
+    {
+        $this->additionalVolumeSize = $sizeInGB;
+    }
+
+    public function getAdditionalVolumeSize() : int
+    {
+        if (is_null($this->additionalVolumeSize)) {
+            return 0;
+        } else {
+            return $this->additionalVolumeSize;
+        }
+    }
+
     public function getHourlyUsageCosts(): float
     {
         return $this
@@ -246,6 +293,19 @@ abstract class CloudInstance implements CloudInstanceInterface
                 $this->getFlavor(),
                 $this->getImage(),
                 $this->getRegion()
+            );
+    }
+
+    public function getHourlyProvisioningCosts(): float
+    {
+        return $this
+            ->getCloudInstanceProvider()
+            ->getHourlyProvisioningCostsForFlavorImageRegionVolumeSizesCombination(
+                $this->getFlavor(),
+                $this->getImage(),
+                $this->getRegion(),
+                $this->getRootVolumeSize(),
+                $this->getAdditionalVolumeSize()
             );
     }
 

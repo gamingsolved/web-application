@@ -26,6 +26,9 @@ interface CloudInstanceProviderInterface
 
     public function getHourlyUsageCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float;
 
+    public function getHourlyProvisioningCostsForFlavorImageRegionVolumeSizesCombination(
+        Flavor $flavor, Image $image, Region $region, int $rootVolumeSize, int $additionalVolumeSize) : float;
+
     public function getMaximumHourlyUsageCostsForFlavor(Flavor $flavor) : float;
 }
 
