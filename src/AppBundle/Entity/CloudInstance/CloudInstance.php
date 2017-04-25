@@ -127,13 +127,13 @@ abstract class CloudInstance implements CloudInstanceInterface
 
     /**
      * @var int
-     * @ORM\Column(name="root_volume_size", type="int")
+     * @ORM\Column(name="root_volume_size", type="integer")
      */
     protected $rootVolumeSize;
 
     /**
      * @var int
-     * @ORM\Column(name="additional_volume_size", type="int")
+     * @ORM\Column(name="additional_volume_size", type="integer")
      */
     protected $additionalVolumeSize;
 

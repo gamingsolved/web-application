@@ -18,9 +18,9 @@ interface CloudInstanceCoordinator
 
     public function cloudInstanceIsRunning(CloudInstance $cloudInstance) : bool;
 
-    public function getPublicAddressOfRunningCloudInstance(CloudInstance $cloudInstance) : string;
+    public function getPublicAddressOfRunningCloudInstance(CloudInstance $cloudInstance);
 
-    public function getAdminPasswordOfRunningCloudInstance(CloudInstance $cloudInstance) : string;
+    public function getAdminPasswordOfRunningCloudInstance(CloudInstance $cloudInstance);
 
     public function triggerStopOfCloudInstance(CloudInstance $cloudInstance) : void;
 

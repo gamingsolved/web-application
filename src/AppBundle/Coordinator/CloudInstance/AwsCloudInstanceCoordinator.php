@@ -43,14 +43,31 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      */
     public function triggerLaunchOfCloudInstance(CloudInstance $cloudInstance) : void
     {
-        $result = $this->ec2Client->runInstances([
+        $parameters = [
             'ImageId' => $cloudInstance->getImage()->getInternalName(),
             'MinCount' => 1,
             'MaxCount' => 1,
             'InstanceType' => $cloudInstance->getFlavor()->getInternalName(),
             'KeyName' => self::KEYPAIR_NAME,
             'SecurityGroups' => [self::SECURITY_GROUP_NAME]
-        ]);
+        ];
+
+        if ($cloudInstance->getAdditionalVolumeSize() > 0) {
+            $parameters['BlockDeviceMappings'][0] = [
+                'DeviceName' => 'xvdh',
+                'Ebs' => [
+                    'DeleteOnTermination' => true,
+                    'Encrypted' => false,
+                    'VolumeType' => 'gp2',
+                    'VolumeSize' => $cloudInstance->getAdditionalVolumeSize()
+                ]
+            ];
+        }
+
+        print_r($parameters);
+
+        $result = $this->ec2Client->runInstances($parameters);
+        print_r($result);
 
         $this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()] = $result['Instances'][0]['InstanceId'];
     }
@@ -103,8 +120,9 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * param type differs intentionally
      *
      * @param AwsCloudInstance $cloudInstance
+     * @return null|string
      */
-    public function getPublicAddressOfRunningCloudInstance(CloudInstance $cloudInstance) : string
+    public function getPublicAddressOfRunningCloudInstance(CloudInstance $cloudInstance)
     {
         try {
             $result = $this->ec2Client->describeInstances([
@@ -132,8 +150,9 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
      * param type differs intentionally
      *
      * @param AwsCloudInstance $cloudInstance
+     * @return null|string
      */
-    public function getAdminPasswordOfRunningCloudInstance(CloudInstance $cloudInstance) : string
+    public function getAdminPasswordOfRunningCloudInstance(CloudInstance $cloudInstance)
     {
         try {
             $result = $this->ec2Client->getPasswordData([
