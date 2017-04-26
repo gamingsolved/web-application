@@ -31,6 +31,7 @@ class BillingServiceProvisioningBillingTest extends TestCase
         return $remoteDesktop;
     }
 
+
     public function testNoProvisioningBillableItemsForRemoteDesktopWithoutProvisioningEvents()
     {
         $remoteDesktop = $this->getRemoteDesktop();
@@ -67,6 +68,7 @@ class BillingServiceProvisioningBillingTest extends TestCase
 
         $this->assertEmpty($billableItems);
     }
+
 
     public function testOneProvisioningBillableItemForLaunchedRemoteDesktop()
     {
@@ -123,7 +125,8 @@ class BillingServiceProvisioningBillingTest extends TestCase
         $this->assertEquals(BillableItem::TYPE_PROVISIONING, $actualBillableItem->getType());
     }
 
-    public function testTwoProvisiningBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgo()
+
+    public function testTwoProvisioningBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgo()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -182,4 +185,115 @@ class BillingServiceProvisioningBillingTest extends TestCase
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 19:37:01'), $billableItems[1]->getTimewindowBegin());
     }
 
+
+    public function testNoProvisioningBillableItemForProvisionedAndUnprovisionedRemoteDesktopIfAllBillingItemsAlreadyExist()
+    {
+        $remoteDesktop = $this->getRemoteDesktop();
+
+        $finishedLaunchingEvent1 = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+        );
+
+        $beganStoppingEvent1 = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
+            DateTimeUtility::createDateTime('2017-03-27 00:37:01')
+        );
+
+        $remoteDesktopEventRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $remoteDesktopEventRepo->expects($this->once())
+            ->method('findBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
+            ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
+
+        $latestExistingBillableItem = new BillableItem(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-27 00:37:01'),
+            BillableItem::TYPE_PROVISIONING
+        );
+
+        $billableItemRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $billableItemRepo->expects($this->once())
+            ->method('findOneBy')
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_PROVISIONING], ['timewindowBegin' => 'DESC'])
+            ->willReturn($latestExistingBillableItem);
+
+        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
+            BillableItem::TYPE_PROVISIONING
+        );
+
+        $this->assertCount(0, $billableItems);
+    }
+
+
+    public function testSevenProvisioningBillableItemsForProvisionedAndUnprovisionedRemoteDesktop()
+    {
+        $remoteDesktop = $this->getRemoteDesktop();
+
+        $provisioningEvent = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+        );
+
+        $unprovisioningEvent = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
+            DateTimeUtility::createDateTime('2017-03-27 00:37:01')
+        );
+
+        $remoteDesktopEventRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $remoteDesktopEventRepo->expects($this->once())
+            ->method('findBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
+            ->willReturn([$provisioningEvent, $unprovisioningEvent]);
+
+        $billableItemRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $billableItemRepo->expects($this->once())
+            ->method('findOneBy')
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_PROVISIONING], ['timewindowBegin' => 'DESC'])
+            ->willReturn(null);
+
+        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
+            BillableItem::TYPE_PROVISIONING
+        );
+
+        $this->assertCount(7, $billableItems);
+
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $billableItems[0]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 19:37:01'), $billableItems[1]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 20:37:01'), $billableItems[2]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 21:37:01'), $billableItems[3]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 22:37:01'), $billableItems[4]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 23:37:01'), $billableItems[5]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-27 00:37:01'), $billableItems[6]->getTimewindowBegin());
+    }
 }
