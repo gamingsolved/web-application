@@ -104,6 +104,11 @@ class AccountMovementController extends Controller
             }
         }
 
+        foreach ($eventblocks as $index => $eventblock) {
+            $eventblocks[$index]['accountBalance'] =
+                $accountMovementRepository->getAccountBalanceForUserUpUntil($user, $eventblock['occuredAt']);
+        }
+
         /** @var RemoteDesktopEvent $remoteDesktopEvent */
         foreach ($remoteDesktopEvents as $remoteDesktopEvent) {
             if ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER) {

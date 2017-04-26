@@ -10,8 +10,9 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>{{ "accountMovement.index.thead_occurred_at"|trans }}</th>
+                                <th style="min-width: 130px;">{{ "accountMovement.index.thead_occurred_at"|trans }}</th>
                                 <th>{{ "accountMovement.index.thead_events"|trans }}</th>
+                                <th>{{ "accountMovement.index.thead_balance"|trans }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,6 +34,11 @@
                                             <br>
                                             <br>
                                         {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% if eventblock.accountBalance is defined %}
+                                            {{ eventblock.accountBalance|localizedcurrency('USD') }}
+                                        {% endif %}
                                     </td>
                                 </tr>
 

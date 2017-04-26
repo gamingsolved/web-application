@@ -218,6 +218,13 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
             $crawler->filter('tr td')->eq(1)->text()
         );
 
+        /* Sadly, this is currently too flaky
+        $this->assertContains(
+            "98.47",
+            $crawler->filter('tr td')->eq(2)->text()
+        );
+        */
+
         // We want to build on this in other tests
         return $client;
     }
