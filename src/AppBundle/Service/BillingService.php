@@ -105,8 +105,7 @@ class BillingService
     /**
      * @param RemoteDesktop $remoteDesktop
      * @param \DateTime $upto Point in time up to which to consider events - exclusive!
-     * @param int $startEventType Which event type considers the start of a billable duration?
-     * @param int $endEventType Which event type considers the end of a billable duration?
+     * @param int $billableItemType What type of costs do we want to bill, usage or provisioning
      * @return array
      */
     public function generateMissingBillableItems(RemoteDesktop $remoteDesktop, \DateTime $upto, int $billableItemType) : array
@@ -151,17 +150,20 @@ class BillingService
 
             // Get the chronologically last billable item
 
-            /** @var BillableItem $newestBillableItem */
-            $newestBillableItem = $this->billableItemRepository->findOneBy(
-                ['remoteDesktop' => $remoteDesktop],
+            /** @var BillableItem $latestExistingBillableItem */
+            $latestExistingBillableItem = $this->billableItemRepository->findOneBy(
+                [
+                    'remoteDesktop' => $remoteDesktop,
+                    'type' => $billableItemType
+                ],
                 ['timewindowBegin' => 'DESC']
             );
 
-            if (!is_null($newestBillableItem)) {
+            if (!is_null($latestExistingBillableItem)) {
                 $this->generateProlongations(
                     $remoteDesktop,
                     $filteredRemoteDesktopEvents,
-                    $newestBillableItem,
+                    $latestExistingBillableItem,
                     $generatedBillableItems,
                     $upto,
                     $billableItemType
@@ -189,8 +191,8 @@ class BillingService
                 if ($remoteDesktopEvent->getDatetimeOccured() < $upto) {
 
                     // Only consider events which occured after the newest billable item we have, if any
-                    if (   (!is_null($newestBillableItem) && $remoteDesktopEvent->getDatetimeOccured() >= $newestBillableItem->getTimewindowEnd())
-                        || (is_null($newestBillableItem))
+                    if (   (!is_null($latestExistingBillableItem) && $remoteDesktopEvent->getDatetimeOccured() >= $latestExistingBillableItem->getTimewindowEnd())
+                        || (is_null($latestExistingBillableItem))
                     ) {
 
                         if ($remoteDesktopEvent->getEventType() === $startEventType) {
@@ -216,7 +218,7 @@ class BillingService
                                     $billableItemType
                                 );
                                 $generatedBillableItems[] = $newBillableItem;
-                                $newestBillableItem = clone($newBillableItem);
+                                $latestExistingBillableItem = clone($newBillableItem);
 
                                 // Now that we generated a new billable item, we immediately want to know if it has
                                 // prolongations, to avoid generating further items which are not neccessary because
@@ -235,7 +237,7 @@ class BillingService
                                 $this->generateProlongations(
                                     $remoteDesktop,
                                     $filteredRemoteDesktopEvents,
-                                    $newestBillableItem,
+                                    $latestExistingBillableItem,
                                     $generatedBillableItems,
                                     $upto,
                                     $billableItemType

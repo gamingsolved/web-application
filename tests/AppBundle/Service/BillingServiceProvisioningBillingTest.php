@@ -102,7 +102,7 @@ class BillingServiceProvisioningBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_PROVISIONING], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -157,7 +157,7 @@ class BillingServiceProvisioningBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_PROVISIONING], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);

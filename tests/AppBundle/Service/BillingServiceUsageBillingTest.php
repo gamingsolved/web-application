@@ -96,7 +96,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -174,7 +174,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -241,7 +241,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -293,7 +293,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -355,7 +355,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn($latestExistingBillableItem);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -416,7 +416,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn($latestExistingBillableItem);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -472,7 +472,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn($latestExistingBillableItem);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -514,7 +514,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -565,7 +565,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -615,7 +615,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -666,7 +666,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->exactly(2))
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
@@ -744,7 +744,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
