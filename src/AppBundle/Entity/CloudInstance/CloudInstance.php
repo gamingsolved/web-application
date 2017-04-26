@@ -196,7 +196,33 @@ abstract class CloudInstance implements CloudInstanceInterface
             throw new \Exception('Runstatus ' . $runstatus . ' is invalid');
         }
 
-        // We are billing as fair as possible: We only count costs once the user has their machine available...
+        // We are billing as fair as possible: billing of provisioning of instances only starts as soon as the machine
+        // is launched for the very first time...
+
+        if ($runstatus === self::RUNSTATUS_RUNNING) {
+            $remoteDesktopEvents = $this->remoteDesktop->getRemoteDesktopEvents();
+            if ($remoteDesktopEvents->count() === 0) {
+                $remoteDesktopEvent = new RemoteDesktopEvent(
+                    $this->remoteDesktop,
+                    RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+                    DateTimeUtility::createDateTime('now')
+                );
+                $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+            }
+        }
+
+        // Provisioning billing stops once a machine is scheduled for termination
+        if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_TERMINATION) {
+            $remoteDesktopEvent = new RemoteDesktopEvent(
+                $this->remoteDesktop,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
+                DateTimeUtility::createDateTime('now')
+            );
+            $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+        }
+
+
+        // We only bill usage costs once the user has their machine available...
         if ($runstatus === self::RUNSTATUS_RUNNING) {
             $remoteDesktopEvent = new RemoteDesktopEvent(
                 $this->remoteDesktop,

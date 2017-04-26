@@ -202,7 +202,15 @@ class RemoteDesktop
     }
 
     /**
-     * @return Collection|CloudInstance
+     * @return Collection[RemoteDesktopEvent]
+     */
+    public function getRemoteDesktopEvents(): Collection
+    {
+        return $this->remoteDesktopEvents;
+    }
+
+    /**
+     * @return Collection[CloudInstance]
      */
     public function getCloudInstances() : Collection
     {
