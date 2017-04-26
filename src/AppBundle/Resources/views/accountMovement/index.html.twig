@@ -37,7 +37,7 @@
                                     </td>
                                     <td>
                                         {% if eventblock.accountBalance is defined %}
-                                            {{ eventblock.accountBalance|localizedcurrency('USD') }}
+                                            <strong>{{ eventblock.accountBalance|localizedcurrency('USD') }}</strong>
                                         {% endif %}
                                     </td>
                                 </tr>
