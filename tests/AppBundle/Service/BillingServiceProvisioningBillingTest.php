@@ -138,6 +138,13 @@ class BillingServiceProvisioningBillingTest extends TestCase
                 RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
                 DateTimeUtility::createDateTime('2017-03-26 18:37:01')
             ),
+
+            // The fact that a desktop is stopped must not be relevant for provisioning billing
+            new RemoteDesktopEvent(
+                $remoteDesktop,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+                DateTimeUtility::createDateTime('2017-03-26 18:38:01')
+            ),
         ];
 
         $remoteDesktopEventRepo = $this
