@@ -130,10 +130,9 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ]);
 
             if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'running') {
-                $ip = $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'][0]['Association']['PublicIp'];
-
-                // IP address is in other field...
-                if (is_null($ip)) {
+                if (array_key_exists(0, $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'])) {
+                    $ip = $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'][0]['Association']['PublicIp'];
+                } else {
                     $ip = $result['Reservations'][0]['Instances'][0]['PublicIpAddress'];
                 }
                 return $ip;
