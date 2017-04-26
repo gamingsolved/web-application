@@ -59,6 +59,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('now'),
@@ -101,6 +102,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 18:40:00'),
@@ -109,7 +111,6 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $this->assertCount(1, $billableItems);
 
-        /** @var \AppBundle\Entity\Billing\BillableItem $actualBillableItem */
         $actualBillableItem = $billableItems[0];
 
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $actualBillableItem->getTimewindowBegin());
@@ -179,6 +180,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 22:40:00'),
@@ -187,7 +189,6 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $this->assertCount(1, $billableItems);
 
-        /** @var \AppBundle\Entity\Billing\BillableItem $actualBillableItem */
         $actualBillableItem = $billableItems[0];
 
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $actualBillableItem->getTimewindowBegin());
@@ -246,6 +247,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 22:40:00'),
@@ -298,6 +300,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
@@ -360,6 +363,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
@@ -421,6 +425,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
@@ -477,6 +482,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
@@ -519,6 +525,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 19:40:00'),
@@ -570,6 +577,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 19:40:00'),
@@ -620,6 +628,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 23:40:00'),
@@ -673,6 +682,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         // We ask to only work up to a point in time that is not more than one hour away from the start event - thus
         // we expect to not learn about the prolongation
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 19:37:01'),
@@ -686,6 +696,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         // However, if we set up to to only one seconds into the hour that follows the hour from the beginning of the item
         // created by the start event, we expect to get the prolongation
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 19:37:02'),
@@ -751,6 +762,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         // We ask to only work up to a point in time that is not more than one hour away from the start event - thus
         // we expect to not learn about the prolongation
+        /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-29 22:30:00'),
