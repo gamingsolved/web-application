@@ -123,4 +123,56 @@ class BillingServiceProvisioningBillingTest extends TestCase
         $this->assertEquals(BillableItem::TYPE_PROVISIONING, $actualBillableItem->getType());
     }
 
+    public function testTwoProvisiningBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgo()
+    {
+        $remoteDesktop = $this->getRemoteDesktop();
+
+        $events = [
+            new RemoteDesktopEvent(
+                $remoteDesktop,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+                DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+            ),
+            new RemoteDesktopEvent(
+                $remoteDesktop,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+                DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+            ),
+        ];
+
+        $remoteDesktopEventRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $remoteDesktopEventRepo->expects($this->once())
+            ->method('findBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
+            ->willReturn($events);
+
+        $billableItemRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $billableItemRepo->expects($this->once())
+            ->method('findOneBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->willReturn(null);
+
+        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 19:40:00'),
+            BillableItem::TYPE_PROVISIONING
+        );
+
+        $this->assertCount(2, $billableItems);
+
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $billableItems[0]->getTimewindowBegin());
+        $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 19:37:01'), $billableItems[1]->getTimewindowBegin());
+    }
+
 }
