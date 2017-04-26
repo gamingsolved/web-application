@@ -16,23 +16,32 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AccountMovementController extends Controller
 {
-    protected function addEventAt(array &$events, \DateTime $at, string $description, float $moneyValue1, float $moneyValue2, string $stringValue)
+    protected function addEventAt(
+        array &$events,
+        \DateTime $at,
+        string $description,
+        float $moneyValue = 0.0,
+        string $stringValue = '',
+        int $billableItemType = null,
+        string $remoteDesktopTitle = '')
     {
         $key = $at->format('Y-m-d H:i');
         if (array_key_exists($key, $events)) {
             $events[$key]['events'][] = [
                 'description' => $description,
-                'moneyValue1' => $moneyValue1,
-                'moneyValue2' => $moneyValue2,
-                'stringValue' => $stringValue
+                'moneyValue'  => $moneyValue,
+                'stringValue' => $stringValue,
+                'billableItemType' => $billableItemType,
+                'remoteDesktopTitle' => $remoteDesktopTitle
             ];
         } else {
             $events[$key]['occuredAt'] = $at;
             $events[$key]['events'][] = [
                 'description' => $description,
-                'moneyValue1' => $moneyValue1,
-                'moneyValue2' => $moneyValue2,
-                'stringValue' => $stringValue
+                'moneyValue'  => $moneyValue,
+                'stringValue' => $stringValue,
+                'billableItemType' => $billableItemType,
+                'remoteDesktopTitle' => $remoteDesktopTitle
             ];
         }
     }
@@ -74,18 +83,24 @@ class AccountMovementController extends Controller
                 || ($accountMovement->getMovementType() === AccountMovement::MOVEMENT_TYPE_DEPOSIT && $accountMovement->getPaymentFinished()) ) {
 
                 if ($accountMovement->getMovementType() === AccountMovement::MOVEMENT_TYPE_DEPOSIT) {
-                    $description = 'accountMovement.index.account_movement_deposit_description';
+                    $this->addEventAt(
+                        $events,
+                        $accountMovement->getDatetimeOccured(),
+                        'accountMovement.index.account_movement_deposit_description',
+                        abs($accountMovement->getAmount())
+                    );
                 } else {
-                    $description = 'accountMovement.index.account_movement_debit_description';
+                    $this->addEventAt(
+                        $events,
+                        $accountMovement->getDatetimeOccured(),
+                        'accountMovement.index.account_movement_debit_description',
+                        abs($accountMovement->getAmount()),
+                        '',
+                        $accountMovement->getBillableItem()->getType(),
+                        $accountMovement->getBillableItem()->getRemoteDesktop()->getTitle()
+                    );
                 }
-                $this->addEventAt(
-                    $events,
-                    $accountMovement->getDatetimeOccured(),
-                    $description,
-                    abs($accountMovement->getAmount()),
-                    $accountMovementRepository->getAccountBalanceForUserUpUntil($user, $accountMovement->getDatetimeOccured()),
-                    ''
-                );
+
             }
         }
 
@@ -93,10 +108,22 @@ class AccountMovementController extends Controller
         foreach ($remoteDesktopEvents as $remoteDesktopEvent) {
             if ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER) {
                 $description = 'accountMovement.index.remote_desktop_event_became_available';
-            } else {
+            } elseif ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER) {
                 $description = 'accountMovement.index.remote_desktop_event_became_unavailable';
+            } elseif ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER) {
+                $description = 'accountMovement.index.remote_desktop_event_was_provisioned';
+            } elseif ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER) {
+                $description = 'accountMovement.index.remote_desktop_event_was_unprovisioned';
+            } else {
+                throw new \Exception('Unknown remote desktop event type ' . $remoteDesktopEvent->getEventType());
             }
-            $this->addEventAt($events, $remoteDesktopEvent->getDatetimeOccured(), $description, 0.0, 0.0, $remoteDesktopEvent->getRemoteDesktop()->getTitle());
+            $this->addEventAt(
+                $events,
+                $remoteDesktopEvent->getDatetimeOccured(),
+                $description,
+                0.0,
+                $remoteDesktopEvent->getRemoteDesktop()->getTitle()
+            );
         }
 
         krsort($events);

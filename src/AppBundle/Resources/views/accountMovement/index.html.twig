@@ -24,9 +24,11 @@
                                     <td>
                                         {% for oneEvent in event.events %}
                                             {{ oneEvent.description|trans({
-                                                '%moneyValue1%': oneEvent.moneyValue1|localizedcurrency('USD'),
-                                                '%moneyValue2%': oneEvent.moneyValue2|localizedcurrency('USD'),
-                                                '%stringValue%': oneEvent.stringValue})|replace({'[br]': '<br>'})|raw
+                                                '%moneyValue%': oneEvent.moneyValue|localizedcurrency('USD'),
+                                                '%stringValue%': oneEvent.stringValue,
+                                                '%billableItemTypeTranslation%': ('accountMovement.index.billable_item_type_translation_' ~ oneEvent.billableItemType)|trans,
+                                                '%remoteDesktopTitle%': oneEvent.remoteDesktopTitle
+                                                })|replace({'[br]': '<br>'})|raw
                                             }}
                                             <br>
                                             <br>

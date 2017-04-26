@@ -191,7 +191,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $accountMovementRepo = $em->getRepository(AccountMovement::class);
 
         $this->assertSame(
-            98.51,
+            98.47, // 1.49 for usage, 0.04 for provisioning
             $accountMovementRepo->getAccountBalanceForUser($remoteDesktop->getUser())
         );
 
@@ -202,11 +202,19 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
             $crawler->filter('tr td')->eq(1)->text()
         );
         $this->assertContains(
-            'An amount of $1.49 was debited from your account.Your new account balance at this point in time is $98.51.',
+            'An amount of $1.49 was debited from your account for 1 usage hour of desktop \'My first remote desktop\'.',
             $crawler->filter('tr td')->eq(1)->text()
         );
         $this->assertContains(
-            "The remote desktop 'My first remote desktop' became available.",
+            'An amount of $0.04 was debited from your account for 1 storage space hour of desktop \'My first remote desktop\'.',
+            $crawler->filter('tr td')->eq(1)->text()
+        );
+        $this->assertContains(
+            'Storage for the remote desktop \'My first remote desktop\' was provisioned.',
+            $crawler->filter('tr td')->eq(1)->text()
+        );
+        $this->assertContains(
+            "The remote desktop 'My first remote desktop' became available for remote sessions.",
             $crawler->filter('tr td')->eq(1)->text()
         );
 

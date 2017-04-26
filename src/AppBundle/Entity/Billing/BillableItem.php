@@ -114,4 +114,9 @@ class BillableItem
     {
         return $this->type;
     }
+
+    public function getRemoteDesktop() : RemoteDesktop
+    {
+        return $this->remoteDesktop;
+    }
 }

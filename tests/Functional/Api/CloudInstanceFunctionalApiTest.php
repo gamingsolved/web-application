@@ -36,7 +36,10 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertSame(200, $client->getResponse()->getStatusCode());
         $this->assertSame('application/json', $client->getResponse()->headers->get('Content-Type'));
-        $this->assertSame('14340', $client->getResponse()->getContent());
+
+        // We are a bit unstrict here because due to the timing nature of this test it is fragile
+        $content = $client->getResponse()->getContent();
+        $this->assertTrue($content === '14339' || $content === '14340');
 
         $client->request(
             'GET',
