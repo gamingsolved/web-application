@@ -69,6 +69,42 @@ class BillingServiceProvisioningBillingTest extends TestCase
         $this->assertEmpty($billableItems);
     }
 
+    public function testNoProvisioningBillableItemsForRemoteDesktopWithoutOnlyAnProvisioningEndEvent()
+    {
+        $remoteDesktop = $this->getRemoteDesktop();
+
+        // For provisioning billing, this event type must be ignored
+        $usageEvent = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+        );
+
+        $remoteDesktopEventRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $remoteDesktopEventRepo->expects($this->once())
+            ->method('findBy')
+            ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
+            ->willReturn([$usageEvent]);
+
+        $billableItemRepo = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('now'),
+            BillableItem::TYPE_PROVISIONING
+        );
+
+        $this->assertEmpty($billableItems);
+    }
 
     public function testOneProvisioningBillableItemForLaunchedRemoteDesktop()
     {
