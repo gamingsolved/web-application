@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 class AccountMovementController extends Controller
 {
     protected function addEventAt(
-        array &$events,
+        array &$eventblocks,
         \DateTime $at,
         string $description,
         float $moneyValue = 0.0,
@@ -26,8 +26,8 @@ class AccountMovementController extends Controller
         string $remoteDesktopTitle = '')
     {
         $key = $at->format('Y-m-d H:i');
-        if (array_key_exists($key, $events)) {
-            $events[$key]['events'][] = [
+        if (array_key_exists($key, $eventblocks)) {
+            $eventblocks[$key]['events'][] = [
                 'description' => $description,
                 'moneyValue'  => $moneyValue,
                 'stringValue' => $stringValue,
@@ -35,8 +35,8 @@ class AccountMovementController extends Controller
                 'remoteDesktopTitle' => $remoteDesktopTitle
             ];
         } else {
-            $events[$key]['occuredAt'] = $at;
-            $events[$key]['events'][] = [
+            $eventblocks[$key]['occuredAt'] = $at;
+            $eventblocks[$key]['events'][] = [
                 'description' => $description,
                 'moneyValue'  => $moneyValue,
                 'stringValue' => $stringValue,
@@ -53,7 +53,7 @@ class AccountMovementController extends Controller
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
-        $events = [];
+        $eventblocks = [];
 
         /** @var AccountMovementRepository $accountMovementRepository */
         $accountMovementRepository = $em->getRepository(AccountMovement::class);
@@ -84,14 +84,14 @@ class AccountMovementController extends Controller
 
                 if ($accountMovement->getMovementType() === AccountMovement::MOVEMENT_TYPE_DEPOSIT) {
                     $this->addEventAt(
-                        $events,
+                        $eventblocks,
                         $accountMovement->getDatetimeOccured(),
                         'accountMovement.index.account_movement_deposit_description',
                         abs($accountMovement->getAmount())
                     );
                 } else {
                     $this->addEventAt(
-                        $events,
+                        $eventblocks,
                         $accountMovement->getDatetimeOccured(),
                         'accountMovement.index.account_movement_debit_description',
                         abs($accountMovement->getAmount()),
@@ -118,7 +118,7 @@ class AccountMovementController extends Controller
                 throw new \Exception('Unknown remote desktop event type ' . $remoteDesktopEvent->getEventType());
             }
             $this->addEventAt(
-                $events,
+                $eventblocks,
                 $remoteDesktopEvent->getDatetimeOccured(),
                 $description,
                 0.0,
@@ -126,12 +126,12 @@ class AccountMovementController extends Controller
             );
         }
 
-        krsort($events);
+        krsort($eventblocks);
 
         return $this->render(
             'AppBundle:accountMovement:index.html.twig',
             [
-                'events' => $events
+                'eventblocks' => $eventblocks
             ]
         );
     }
