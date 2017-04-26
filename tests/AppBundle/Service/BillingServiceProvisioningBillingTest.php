@@ -62,8 +62,7 @@ class BillingServiceProvisioningBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('now'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER
+            BillableItem::TYPE_PROVISIONING
         );
 
         $this->assertEmpty($billableItems);
@@ -111,8 +110,7 @@ class BillingServiceProvisioningBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 18:40:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER
+            BillableItem::TYPE_PROVISIONING
         );
 
         $this->assertCount(1, $billableItems);
@@ -122,7 +120,7 @@ class BillingServiceProvisioningBillingTest extends TestCase
 
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $actualBillableItem->getTimewindowBegin());
         $this->assertEquals(0.04, $actualBillableItem->getPrice());
-        $this->assertEquals(BillableItem::TYPE_REMOTE_DESKTOP_PROVISIONED_FOR_USER, $actualBillableItem->getType());
+        $this->assertEquals(BillableItem::TYPE_PROVISIONING, $actualBillableItem->getType());
     }
 
 }

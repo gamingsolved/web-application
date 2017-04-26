@@ -62,8 +62,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('now'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertEmpty($billableItems);
@@ -105,8 +104,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 18:40:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(1, $billableItems);
@@ -184,8 +182,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 22:40:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(1, $billableItems);
@@ -194,7 +191,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $actualBillableItem = $billableItems[0];
 
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $actualBillableItem->getTimewindowBegin());
-        $this->assertEquals(BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER, $actualBillableItem->getType());
+        $this->assertEquals(BillableItem::TYPE_USAGE, $actualBillableItem->getType());
         $this->assertEquals(1.49, $actualBillableItem->getPrice());
     }
 
@@ -252,8 +249,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 22:40:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(3, $billableItems);
@@ -305,8 +301,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(7, $billableItems);
@@ -350,7 +345,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $latestExistingBillableItem = new BillableItem(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01'),
-            BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $billableItemRepo = $this
@@ -368,8 +363,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(6, $billableItems);
@@ -412,7 +406,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $latestExistingBillableItem = new BillableItem(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 23:37:01'),
-            BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $billableItemRepo = $this
@@ -430,8 +424,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(1, $billableItems);
@@ -469,7 +462,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $latestExistingBillableItem = new BillableItem(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-27 00:37:01'),
-            BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $billableItemRepo = $this
@@ -487,8 +480,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(0, $billableItems);
@@ -530,8 +522,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 19:40:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(2, $billableItems);
@@ -582,8 +573,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 19:40:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(1, $billableItems);
@@ -633,8 +623,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 23:40:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(2, $billableItems);
@@ -687,8 +676,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 19:37:01'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(1, $billableItems);
@@ -701,8 +689,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-26 19:37:02'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(2, $billableItems);
@@ -767,8 +754,7 @@ class BillingServiceUsageBillingTest extends TestCase
         $billableItems = $bs->generateMissingBillableItems(
             $remoteDesktop,
             DateTimeUtility::createDateTime('2017-03-29 22:30:00'),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            BillableItem::TYPE_USAGE
         );
 
         $this->assertCount(2, $billableItems);

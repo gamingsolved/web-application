@@ -13,8 +13,8 @@ class BillableItem
 {
     const BILLABLE_TIMEWINDOW_REMOTEDESKTOPUSAGE = 3600; // A minimum of 1 hour is billed when using a remote desktop
 
-    const TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER = 0;
-    const TYPE_REMOTE_DESKTOP_PROVISIONED_FOR_USER = 1;
+    const TYPE_USAGE = 0;
+    const TYPE_PROVISIONING = 1;
 
     /**
      * @var string
@@ -63,7 +63,7 @@ class BillableItem
             throw new \Exception('Provided time zone is not UTC.');
         }
 
-        if ($type < self::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER || $type > self::TYPE_REMOTE_DESKTOP_PROVISIONED_FOR_USER) {
+        if ($type < self::TYPE_USAGE || $type > self::TYPE_PROVISIONING) {
             throw new \Exception('Invalid type ' . $type);
         }
 
@@ -76,11 +76,11 @@ class BillableItem
 
         $this->type = $type;
 
-        if ($this->type === self::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER) {
+        if ($this->type === self::TYPE_USAGE) {
             $this->price = $remoteDesktop->getHourlyUsageCosts();
         }
 
-        if ($this->type === self::TYPE_REMOTE_DESKTOP_PROVISIONED_FOR_USER) {
+        if ($this->type === self::TYPE_PROVISIONING) {
             $this->price = $remoteDesktop->getHourlyProvisioningCosts();
         }
 

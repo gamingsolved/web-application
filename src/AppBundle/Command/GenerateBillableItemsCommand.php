@@ -46,8 +46,7 @@ class GenerateBillableItemsCommand extends ContainerAwareCommand
             $generatedBillableItems = $billingService->generateMissingBillableItems(
                 $remoteDesktop,
                 DateTimeUtility::createDateTime('now'),
-                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+                BillableItem::TYPE_USAGE
             );
 
             /** @var BillableItem $generatedBillableItem */

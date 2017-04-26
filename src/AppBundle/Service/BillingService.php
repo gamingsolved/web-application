@@ -20,14 +20,24 @@ class BillingService
         $this->billableItemRepository = $billableItemRepository;
     }
 
-    protected function getBillableItemTypeFromStartEventType(int $startEventType) : int {
-        if ($startEventType === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER) {
-            return BillableItem::TYPE_REMOTE_DESKTOP_AVAILABLE_TO_USER;
+    protected function getStartEventTypeFromBillableItemType(int $billableItemType) : int {
+        if ($billableItemType === BillableItem::TYPE_USAGE) {
+            return RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER;
         }
-        if ($startEventType === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER) {
-            return BillableItem::TYPE_REMOTE_DESKTOP_PROVISIONED_FOR_USER;
+        if ($billableItemType === BillableItem::TYPE_PROVISIONING) {
+            return RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER;
         }
-        throw new \Exception('Cannot map start event type ' . $startEventType . ' to billable item type.');
+        throw new \Exception('Cannot map billable item type ' . $billableItemType . ' to start event type.');
+    }
+
+    protected function getEndEventTypeFromBillableItemType(int $billableItemType) : int {
+        if ($billableItemType === BillableItem::TYPE_USAGE) {
+            return RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER;
+        }
+        if ($billableItemType === BillableItem::TYPE_PROVISIONING) {
+            return RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER;
+        }
+        throw new \Exception('Cannot map billable item type ' . $billableItemType . ' to end event type.');
     }
 
     protected function generateProlongations(
@@ -36,10 +46,11 @@ class BillingService
         BillableItem &$newestBillableItem,
         array &$generatedBillableItems,
         \DateTime $upto,
-        int $startEventType,
-        int $endEventType
+        int $billableItemType
     )
     {
+        $endEventType = $this->getEndEventTypeFromBillableItemType($billableItemType);
+
         $beganStoppingFound = false;
         $uptoReached = false;
 
@@ -79,7 +90,7 @@ class BillingService
                 $newBillableItem = new BillableItem(
                     $remoteDesktop,
                     $newestBillableItem->getTimewindowEnd(),
-                    $this->getBillableItemTypeFromStartEventType($startEventType)
+                    $billableItemType
                 );
                 $generatedBillableItems[] = clone($newBillableItem);
                 $newestBillableItem = $newBillableItem;
@@ -98,8 +109,11 @@ class BillingService
      * @param int $endEventType Which event type considers the end of a billable duration?
      * @return array
      */
-    public function generateMissingBillableItems(RemoteDesktop $remoteDesktop, \DateTime $upto, int $startEventType, int $endEventType) : array
+    public function generateMissingBillableItems(RemoteDesktop $remoteDesktop, \DateTime $upto, int $billableItemType) : array
     {
+        $startEventType = $this->getStartEventTypeFromBillableItemType($billableItemType);
+        $endEventType = $this->getEndEventTypeFromBillableItemType($billableItemType);
+
         $remoteDesktopEvents = $this->remoteDesktopEventRepository->findBy(
             ['remoteDesktop' => $remoteDesktop],
             ['datetimeOccured' => 'ASC']
@@ -150,8 +164,7 @@ class BillingService
                     $newestBillableItem,
                     $generatedBillableItems,
                     $upto,
-                    $startEventType,
-                    $endEventType
+                    $billableItemType
                 );
             }
 
@@ -200,7 +213,7 @@ class BillingService
                                 $newBillableItem = new BillableItem(
                                     $remoteDesktop,
                                     $remoteDesktopEvent->getDatetimeOccured(),
-                                    $this->getBillableItemTypeFromStartEventType($startEventType)
+                                    $billableItemType
                                 );
                                 $generatedBillableItems[] = $newBillableItem;
                                 $newestBillableItem = clone($newBillableItem);
@@ -225,8 +238,7 @@ class BillingService
                                     $newestBillableItem,
                                     $generatedBillableItems,
                                     $upto,
-                                    $startEventType,
-                                    $endEventType
+                                    $billableItemType
                                 );
                             }
 
