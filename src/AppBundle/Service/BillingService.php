@@ -123,7 +123,7 @@ class BillingService
 
             /* We first need to find out if the newest known billable item needs to be "prolonged"
              * (i.e., it needs to be seamlessly followed by a new item because during the last existing
-             * item, the desktop has not been stopped and is therefore still running, like this:
+             * item, the desktop has not been stopped (for usage billing) and is therefore still running, like this:
              *
              * desktop                     desktop     desktop
              * started                     stopped     started          up to
