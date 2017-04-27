@@ -270,13 +270,7 @@
                                                 <p>
                                                     <strong>
                                                         {{ "remoteDesktop.index.auto_stop_info"|trans }}
-
-                                                        {% if app.request.cookies.has('ubiqmachine_timezone') %}
-                                                            {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}
-                                                            ({{ app.request.cookies.get('ubiqmachine_timezone') }}).
-                                                        {% else %}
-                                                            {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', 'UTC') }} (UTC)
-                                                        {% endif %}
+                                                        {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', timezone) }} ({{ timezone }}).
                                                     </strong>
                                                 </p>
                                             {% endif %}
@@ -287,7 +281,7 @@
                                                     <a
                                                         class="btn btn-sm btn-default"
                                                         href="{{ path('remotedesktops.scheduleForStopAtEndOfUsageHour', {'remoteDesktop': remoteDesktop.id, 'usageHour': usageHour}) }}"
-                                                        title="{{ "remoteDesktop.index.auto_stop_change_btn_title"|trans }}{% if app.request.cookies.has('ubiqmachine_timezone') %}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}{% else %}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', 'UTC') }} (UTC){% endif %}.">
+                                                        title="{{ "remoteDesktop.index.auto_stop_change_btn_title"|trans }}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', timezone) }}.">
                                                         {{ ("remoteDesktop.index.auto_stop_change_hour_" ~ usageHour)|trans }}
                                                     </a>
                                                 {% endfor %}

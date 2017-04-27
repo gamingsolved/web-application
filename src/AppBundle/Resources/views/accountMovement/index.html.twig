@@ -10,9 +10,21 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>{{ "accountMovement.index.thead_occurred_at"|trans }}</th>
-                                <th>{{ "accountMovement.index.thead_events"|trans }}</th>
-                                <th>{{ "accountMovement.index.thead_balance"|trans }}</th>
+                                <th>
+                                    {{ "accountMovement.index.thead_occurred_at"|trans }}
+                                    <br>
+                                    <small style="font-weight: normal;">{{ timezone }}</small>
+                                </th>
+                                <th>
+                                    {{ "accountMovement.index.thead_events"|trans }}
+                                    <br>
+                                    <small>&nbsp;</small>
+                                </th>
+                                <th>
+                                    {{ "accountMovement.index.thead_balance"|trans }}
+                                    <br>
+                                    <small>&nbsp;</small>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -22,10 +34,10 @@
                                 <tr>
                                     <td>
                                         <strong>
-                                            {{ eventblock.occuredAt|date('F j, Y', app.request.cookies.get('ubiqmachine_timezone')) }}
+                                            {{ eventblock.occuredAt|date('F j, Y', timezone) }}
                                             <br>
                                         </strong>
-                                        {{ eventblock.occuredAt|date('H:i', app.request.cookies.get('ubiqmachine_timezone')) }}&nbsp;{{ "accountMovement.index.oclock"|trans }}
+                                        {{ eventblock.occuredAt|date('H:i', timezone) }}&nbsp;{{ "accountMovement.index.oclock"|trans }}
                                     </td>
 
                                     <td>
