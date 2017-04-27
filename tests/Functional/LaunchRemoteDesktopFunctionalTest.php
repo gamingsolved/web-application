@@ -196,7 +196,9 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         );
 
         $crawler = $client->click($crawler->filter('.accountbalancehistorylink')->link());
-        $this->assertContains(DateTimeUtility::createDateTime()->format('F j, Y H:i'), $crawler->filter('tr td')->eq(0)->text());
+        $this->assertContains(DateTimeUtility::createDateTime()->format('F j, Y'), $crawler->filter('tr td')->eq(0)->text());
+        $this->assertContains(DateTimeUtility::createDateTime()->format('H:i'), $crawler->filter('tr td')->eq(0)->text());
+
         $this->assertContains(
             'An amount of $100.00 was deposited onto your account.',
             $crawler->filter('tr td')->eq(1)->text()

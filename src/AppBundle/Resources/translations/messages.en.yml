@@ -342,6 +342,7 @@ accountMovement:
         thead_occurred_at: Date and time
         thead_events: Desktop and billing events
         thead_balance: Resulting balance
+        oclock: "h"
         account_movement_deposit_description: An amount of %moneyValue% was deposited onto your account.
         account_movement_debit_description: An amount of %moneyValue% was debited from your account for 1 %billableItemTypeTranslation% hour of desktop '%remoteDesktopTitle%'.
         billable_item_type_translation_0: usage

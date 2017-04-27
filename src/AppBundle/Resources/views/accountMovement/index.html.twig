@@ -10,7 +10,7 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th style="min-width: 130px;">{{ "accountMovement.index.thead_occurred_at"|trans }}</th>
+                                <th>{{ "accountMovement.index.thead_occurred_at"|trans }}</th>
                                 <th>{{ "accountMovement.index.thead_events"|trans }}</th>
                                 <th>{{ "accountMovement.index.thead_balance"|trans }}</th>
                             </tr>
@@ -20,7 +20,14 @@
                             {% for eventblock in eventblocks %}
 
                                 <tr>
-                                    <td>{{ eventblock.occuredAt|date('F j, Y H:i', app.request.cookies.get('ubiqmachine_timezone')) }}</td>
+                                    <td>
+                                        <strong>
+                                            {{ eventblock.occuredAt|date('F j, Y', app.request.cookies.get('ubiqmachine_timezone')) }}
+                                            <br>
+                                        </strong>
+                                        {{ eventblock.occuredAt|date('H:i', app.request.cookies.get('ubiqmachine_timezone')) }}
+                                        {{ "accountMovement.index.oclock"|trans }}
+                                    </td>
 
                                     <td>
                                         {% for event in eventblock.events %}

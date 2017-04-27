@@ -88,11 +88,14 @@ header a.brand:focus {
 
 .navbar-toggle {
   border-color: #444;
-  background-color: #444;
 }
 
 .navbar-toggle {
   background-color: #777;
+}
+
+#navbar.in, #navbar.collapsing {
+  margin-top: 20px;
 }
 
 .icon-bar {
@@ -160,14 +163,14 @@ section:empty {
 }
 
 #loggedin-info {
-  position: fixed;
-  top: 58px;
-  right: 0;
-  z-index: 1031;
-  padding: 0 4px 1px 7px;
   background-color: #ddd;
   color: #444;
   font-weight: 300;
+  padding: 4px 9px 5px 10px;
+  position: fixed;
+  right: 0;
+  top: 57px;
+  z-index: 1031;
 }
 
 #navbar.collapsing #loggedin-info {
@@ -175,7 +178,7 @@ section:empty {
 }
 
 #navbar.in #loggedin-info {
-  top: 204px;
+  top: 218px;
 }
 
 div.full-row {
