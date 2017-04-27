@@ -4,6 +4,7 @@ _navigation:
     logout: Log out
     your_remote_desktops: Your remote desktops
     create_new_remote_desktop: Create a new remote desktop
+    how_billing_works: How billing works
 
 logoutSuccessful:
     message: You are now logged out.
@@ -19,6 +20,12 @@ about:
         introduction_two: In case your remote desktop is still running at the end of the
                           usage hour, another usage hour begins, and you are charged for it.
         introduction_three: The diagrams below visualize this mechanism.
+        introduction_four: Please note that independently from usage billing, you are also billed a small fee
+                           (around $0.02 per hour per 100 GB) for the hard disk storage of your remote desktop.
+                           Because this storage space is always provisioned, also if your system is not running,
+                           this fee is billed also when your desktop is off. Of course, once you remove a remote
+                           desktop, the system and all its storage is decommisioned, and you are no longer billed
+                           for hard disk storage space.
         headline_one_hour: Using a remote desktop for one hour
         headline_two_hours: Using a remote desktop for two consecutive hours
     privacypolicy:
@@ -240,7 +247,11 @@ remoteDesktop:
         click_here_to_increase_your_balance: Click here to increase your balance
         headline: Your remote desktops
         no_remote_desktops_yet: You do not yet have any remote desktops.
-        costs_per_hour: Costs per hour
+        usage_costs_per_hour: Usage costs per hour
+        current_usage_costs_per_hour: Current usage costs per hour
+        only_in_status: only in status
+        while_in_status: while in status
+        provisioning_costs_per_hour: Current storage costs per hour (until desktop is removed)
         auto_stop_info: "Cost protection: This remote desktop will automatically stop on"
         auto_stop_change_first: "Set cost protection to stop this desktop at the end of the"
         auto_stop_change_last: "usage hour from now."
@@ -253,9 +264,6 @@ remoteDesktop:
         auto_stop_change_hour_5: "6th"
         auto_stop_change_hour_6: "7th"
         auto_stop_change_hour_7: "8th"
-        only_in_status: only in status
-        current_costs_per_hour: Current hourly costs
-        while_in_status: while in status
         add_button: Create a new remote desktop
         download_client_windows: Download the Windows client
         download_client_mac: Download the Mac client
@@ -339,9 +347,11 @@ payment:
 accountMovement:
     index:
         headline: Your account balance history
+        read_how_billing_works: Read about how billing works
+        read_how_billing_works_here: here
         thead_occurred_at: Date and time
         thead_events: Desktop and billing events
-        thead_balance: Resulting balance
+        thead_balance: Balance
         oclock: "h"
         account_movement_deposit_description: An amount of %moneyValue% was deposited onto your account.
         account_movement_debit_description: An amount of %moneyValue% was debited from your account for 1 %billableItemTypeTranslation% hour of desktop '%remoteDesktopTitle%'.
