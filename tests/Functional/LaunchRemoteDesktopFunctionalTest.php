@@ -27,8 +27,8 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('Costs per hour', $crawler->filter('div.hourlycostsbox')->first()->text());
-        $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlycostsbox')->first()->text());
+        $this->assertContains('Costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
 
@@ -109,15 +109,21 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $em->flush();
 
         $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
+
+        /** @var RemoteDesktopEvent[] $remoteDesktopEvents */
         $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
         $this->assertEquals(
-            1,
+            2,
             sizeof($remoteDesktopEvents)
         );
-        /** @var RemoteDesktopEvent $remoteDesktopEvent */
-        $remoteDesktopEvent = $remoteDesktopEvents[0];
+
         $this->assertEquals(
-            $remoteDesktopEvent->getEventType(),
+            $remoteDesktopEvents[0]->getEventType(),
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER
+        );
+
+        $this->assertEquals(
+            $remoteDesktopEvents[1]->getEventType(),
             RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
         );
 
@@ -126,8 +132,8 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('Current hourly costs', $crawler->filter('div.hourlycostsbox')->first()->text());
-        $this->assertContains('(while in status Ready to use): $1.49', $crawler->filter('div.hourlycostsbox')->first()->text());
+        $this->assertContains('Current hourly costs', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(while in status Ready to use): $1.49', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());
@@ -170,6 +176,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('ip: 121.122.123.124', $client->getResponse()->getContent());
         $this->assertContains('key: ' . $remoteDesktop->getId(), $client->getResponse()->getContent());
+        $this->assertContains('mouse-relative: true', $client->getResponse()->getContent());
 
         // Check that billing worked
         $kernel = static::createClient()->getKernel();
@@ -185,24 +192,41 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $accountMovementRepo = $em->getRepository(AccountMovement::class);
 
         $this->assertSame(
-            98.51,
+            98.47, // 1.49 for usage, 0.04 for provisioning
             $accountMovementRepo->getAccountBalanceForUser($remoteDesktop->getUser())
         );
 
         $crawler = $client->click($crawler->filter('.accountbalancehistorylink')->link());
-        $this->assertContains(DateTimeUtility::createDateTime()->format('F j, Y H:i'), $crawler->filter('tr td')->eq(0)->text());
+        $this->assertContains(DateTimeUtility::createDateTime()->format('F j, Y'), $crawler->filter('tr td')->eq(0)->text());
+        $this->assertContains(DateTimeUtility::createDateTime()->format('H:i'), $crawler->filter('tr td')->eq(0)->text());
+
         $this->assertContains(
             'An amount of $100.00 was deposited onto your account.',
             $crawler->filter('tr td')->eq(1)->text()
         );
         $this->assertContains(
-            'An amount of $1.49 was debited from your account.Your new account balance at this point in time is $98.51.',
+            'An amount of $1.49 was debited from your account for 1 usage hour of desktop \'My first remote desktop\'.',
             $crawler->filter('tr td')->eq(1)->text()
         );
         $this->assertContains(
-            "The remote desktop 'My first remote desktop' became available.",
+            'An amount of $0.04 was debited from your account for 1 storage space hour of desktop \'My first remote desktop\'.',
             $crawler->filter('tr td')->eq(1)->text()
         );
+        $this->assertContains(
+            'Storage for the remote desktop \'My first remote desktop\' was provisioned.',
+            $crawler->filter('tr td')->eq(1)->text()
+        );
+        $this->assertContains(
+            "The remote desktop 'My first remote desktop' became available for remote sessions.",
+            $crawler->filter('tr td')->eq(1)->text()
+        );
+
+        /* Sadly, this is currently too flaky
+        $this->assertContains(
+            "98.47",
+            $crawler->filter('tr td')->eq(2)->text()
+        );
+        */
 
         // We want to build on this in other tests
         return $client;

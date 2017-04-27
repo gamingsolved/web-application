@@ -107,7 +107,8 @@ class CloudInstanceManagementService
                 }
 
                 if ($stoppedOrTerminatedWhileRunning) {
-                    $output->writeln('Action: Also logging for the billing logic that the desktop became unavailable');
+
+                    $output->writeln('Action: Also logging for the usage billing logic that the desktop became unavailable');
                     $remoteDesktop = $cloudInstance->getRemoteDesktop();
                     $remoteDesktopEvent = new RemoteDesktopEvent(
                         $remoteDesktop,
@@ -115,6 +116,18 @@ class CloudInstanceManagementService
                         DateTimeUtility::createDateTime('now')
                     );
                     $remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+
+                    if ($cloudInstance->getRunstatus() == CloudInstance::RUNSTATUS_TERMINATED) {
+                        $output->writeln('Action: Also logging for the provisioning billing logic that the desktop is no longer provisioned');
+                        $remoteDesktop = $cloudInstance->getRemoteDesktop();
+                        $remoteDesktopEvent = new RemoteDesktopEvent(
+                            $remoteDesktop,
+                            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
+                            DateTimeUtility::createDateTime('now')
+                        );
+                        $remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+                    }
+
                     $this->em->persist($remoteDesktop);
                     $this->em->flush();
 
@@ -168,15 +181,15 @@ class CloudInstanceManagementService
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
 
-            $hourlyCosts = $cloudInstance->getHourlyCosts();
+            $hourlyUsageCosts = $cloudInstance->getHourlyUsageCosts();
             $accountBalance =
                 $this->accountMovementRepository->getAccountBalanceForUser(
                     $cloudInstance->getRemoteDesktop()->getUser()
                 );
 
-            if ($hourlyCosts > $accountBalance) {
+            if ($hourlyUsageCosts > $accountBalance) {
                 $output->writeln('Action: would launch the cloud instance, but owner has insufficient balance');
-                $output->writeln('Hourly costs would be ' . $hourlyCosts . ', balance is only ' . $accountBalance);
+                $output->writeln('Hourly costs would be ' . $hourlyUsageCosts . ', balance is only ' . $accountBalance);
             } else {
                 $output->writeln('Action: launching the cloud instance');
 
@@ -229,15 +242,15 @@ class CloudInstanceManagementService
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_START) {
 
-            $hourlyCosts = $cloudInstance->getHourlyCosts();
+            $hourlyUsageCosts = $cloudInstance->getHourlyUsageCosts();
             $accountBalance = $this->accountMovementRepository
                 ->getAccountBalanceForUser(
                     $cloudInstance->getRemoteDesktop()->getUser()
                 );
 
-            if ($hourlyCosts > $accountBalance) {
+            if ($hourlyUsageCosts > $accountBalance) {
                 $output->writeln('Action: would start the cloud instance, but owner has insufficient balance');
-                $output->writeln('Hourly costs would be ' . $hourlyCosts . ', balance is only ' . $accountBalance);
+                $output->writeln('Hourly costs would be ' . $hourlyUsageCosts . ', balance is only ' . $accountBalance);
             } else {
                 $output->writeln('Action: asking the cloud instance to start');
                 try {

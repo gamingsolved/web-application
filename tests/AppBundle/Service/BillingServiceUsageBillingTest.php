@@ -12,7 +12,7 @@ use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 
-class BillingServiceTest extends TestCase
+class BillingServiceUsageBillingTest extends TestCase
 {
 
     protected function getRemoteDesktop() : RemoteDesktop
@@ -21,19 +21,26 @@ class BillingServiceTest extends TestCase
         $remoteDesktop->setCloudInstanceProvider(new AwsCloudInstanceProvider());
         $remoteDesktop->setId('r1');
         $remoteDesktop->setKind(new RemoteDesktopGamingProKind());
-        $awsCloudInstanceProvider = new AwsCloudInstanceProvider();
+        $cloudInstanceProvider = $remoteDesktop->getKind()->getCloudInstanceProvider();
         $remoteDesktop->addCloudInstance(
-            $awsCloudInstanceProvider->createInstanceForRemoteDesktopAndRegion(
+            $cloudInstanceProvider->createInstanceForRemoteDesktopAndRegion(
                 $remoteDesktop,
-                $awsCloudInstanceProvider->getRegionByInternalName('eu-central-1')
+                $cloudInstanceProvider->getRegionByInternalName('eu-central-1')
             )
         );
         return $remoteDesktop;
     }
 
-    public function testNoBillableItemsForRemoteDesktopWithoutEvents()
+    public function testNoUsageBillableItemsForRemoteDesktopWithoutUsageEvents()
     {
         $remoteDesktop = $this->getRemoteDesktop();
+
+        // For usage billing, this event type must be ignored
+        $provisioningEvent = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+        );
 
         $remoteDesktopEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
@@ -43,7 +50,7 @@ class BillingServiceTest extends TestCase
         $remoteDesktopEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
-            ->willReturn([]);
+            ->willReturn([$provisioningEvent]);
 
         $billableItemRepo = $this
             ->getMockBuilder(EntityRepository::class)
@@ -52,13 +59,18 @@ class BillingServiceTest extends TestCase
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('now'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('now'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertEmpty($billableItems);
     }
 
 
-    public function testOneBillableItemForLaunchedRemoteDesktop()
+    public function testOneUsageBillableItemForLaunchedRemoteDesktop()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -85,23 +97,27 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 18:40:00'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 18:40:00'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(1, $billableItems);
 
-        /** @var \AppBundle\Entity\Billing\BillableItem $actualBillableItem */
         $actualBillableItem = $billableItems[0];
 
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $actualBillableItem->getTimewindowBegin());
     }
 
 
-    public function testOneBillableItemForMultipleTimesLaunchedAndStoppedRemoteDesktop()
+    public function testOneUsageBillableItemForMultipleTimesLaunchedAndStoppedRemoteDesktop()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -129,6 +145,13 @@ class BillingServiceTest extends TestCase
             DateTimeUtility::createDateTime('2017-03-26 19:30:00')
         );
 
+        // For usage billing, this event type must be ignored
+        $provisioningEvent = new RemoteDesktopEvent(
+            $remoteDesktop,
+            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+            DateTimeUtility::createDateTime('2017-03-26 19:31:00')
+        );
+
         $remoteDesktopEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
@@ -137,7 +160,13 @@ class BillingServiceTest extends TestCase
         $remoteDesktopEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
-            ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1, $finishedLaunchingEvent2, $beganStoppingEvent2]);
+            ->willReturn([
+                $finishedLaunchingEvent1,
+                $beganStoppingEvent1,
+                $finishedLaunchingEvent2,
+                $beganStoppingEvent2,
+                $provisioningEvent
+            ]);
 
         $billableItemRepo = $this
             ->getMockBuilder(EntityRepository::class)
@@ -146,23 +175,29 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 22:40:00'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 22:40:00'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(1, $billableItems);
 
-        /** @var \AppBundle\Entity\Billing\BillableItem $actualBillableItem */
         $actualBillableItem = $billableItems[0];
 
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $actualBillableItem->getTimewindowBegin());
+        $this->assertEquals(BillableItem::TYPE_USAGE, $actualBillableItem->getType());
+        $this->assertEquals(1.49, $actualBillableItem->getPrice());
     }
 
 
-    public function testThreeBillableItemsForMultipleTimesLaunchedAndStoppedRemoteDesktop()
+    public function testThreeUsageBillableItemsForMultipleTimesLaunchedAndStoppedRemoteDesktop()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -207,12 +242,17 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 22:40:00'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 22:40:00'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(3, $billableItems);
 
@@ -222,7 +262,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testSevenBillableItemsForLaunchedAndStoppedRemoteDesktop()
+    public function testSevenUsageBillableItemsForLaunchedAndStoppedRemoteDesktop()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -255,12 +295,17 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(7, $billableItems);
 
@@ -274,7 +319,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testOnlySixBillableItemsForLaunchedAndStoppedRemoteDesktopIfOneBillingItemAlreadyExists()
+    public function testOnlySixUsageBillableItemsForLaunchedAndStoppedRemoteDesktopIfOneBillingItemAlreadyExists()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -302,7 +347,8 @@ class BillingServiceTest extends TestCase
 
         $latestExistingBillableItem = new BillableItem(
             $remoteDesktop,
-            DateTimeUtility::createDateTime('2017-03-26 18:37:01')
+            DateTimeUtility::createDateTime('2017-03-26 18:37:01'),
+            BillableItem::TYPE_USAGE
         );
 
         $billableItemRepo = $this
@@ -312,12 +358,17 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn($latestExistingBillableItem);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(6, $billableItems);
 
@@ -330,7 +381,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testOnlyOneBillableItemForLaunchedAndStoppedRemoteDesktopIfSixBillingItemsAlreadyExist()
+    public function testOnlyOneUsageBillableItemForLaunchedAndStoppedRemoteDesktopIfSixBillingItemsAlreadyExist()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -358,7 +409,8 @@ class BillingServiceTest extends TestCase
 
         $latestExistingBillableItem = new BillableItem(
             $remoteDesktop,
-            DateTimeUtility::createDateTime('2017-03-26 23:37:01')
+            DateTimeUtility::createDateTime('2017-03-26 23:37:01'),
+            BillableItem::TYPE_USAGE
         );
 
         $billableItemRepo = $this
@@ -368,12 +420,17 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn($latestExistingBillableItem);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(1, $billableItems);
 
@@ -381,7 +438,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testNoBillableItemForLaunchedAndStoppedRemoteDesktopIfAllBillingItemsAlreadyExist()
+    public function testNoUsageBillableItemForLaunchedAndStoppedRemoteDesktopIfAllBillingItemsAlreadyExist()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -409,7 +466,8 @@ class BillingServiceTest extends TestCase
 
         $latestExistingBillableItem = new BillableItem(
             $remoteDesktop,
-            DateTimeUtility::createDateTime('2017-03-27 00:37:01')
+            DateTimeUtility::createDateTime('2017-03-27 00:37:01'),
+            BillableItem::TYPE_USAGE
         );
 
         $billableItemRepo = $this
@@ -419,18 +477,23 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn($latestExistingBillableItem);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-27 15:40:00'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-27 15:40:00'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(0, $billableItems);
     }
 
 
-    public function testTwoBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgo()
+    public function testTwoUsageBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgo()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -457,12 +520,17 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:40:00'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 19:40:00'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(2, $billableItems);
 
@@ -471,7 +539,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testOneBillableItemForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedWithinOneHour()
+    public function testOneUsageBillableItemForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedWithinOneHour()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -504,12 +572,17 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:40:00'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 19:40:00'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(1, $billableItems);
 
@@ -517,7 +590,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testTwoBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedMoreThanOneHourLater()
+    public function testTwoUsageBillableItemsForRemoteDesktopLaunchedMoreThanOneHourAgoAndStoppedMoreThanOneHourLater()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -550,12 +623,17 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 23:40:00'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 23:40:00'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(2, $billableItems);
 
@@ -564,7 +642,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testOneBillableItemsForRemoteDesktopLaunchedWithinTheUptoHourAndStoppedMoreThanOneHourLater()
+    public function testOneUsageBillableItemsForRemoteDesktopLaunchedWithinTheUptoHourAndStoppedMoreThanOneHourLater()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -597,14 +675,19 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->exactly(2))
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
         // We ask to only work up to a point in time that is not more than one hour away from the start event - thus
         // we expect to not learn about the prolongation
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:37:01'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 19:37:01'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(1, $billableItems);
 
@@ -613,7 +696,12 @@ class BillingServiceTest extends TestCase
 
         // However, if we set up to to only one seconds into the hour that follows the hour from the beginning of the item
         // created by the start event, we expect to get the prolongation
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-26 19:37:02'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-26 19:37:02'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(2, $billableItems);
 
@@ -622,7 +710,7 @@ class BillingServiceTest extends TestCase
     }
 
 
-    public function testTwoBillableItemsForTwoUsagesWithALargeGapBetweenThem()
+    public function testTwoUsageBillableItemsForTwoUsagesWithALargeGapBetweenThem()
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
@@ -667,14 +755,19 @@ class BillingServiceTest extends TestCase
 
         $billableItemRepo->expects($this->once())
             ->method('findOneBy')
-            ->with(['remoteDesktop' => $remoteDesktop], ['timewindowBegin' => 'DESC'])
+            ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
         $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
 
         // We ask to only work up to a point in time that is not more than one hour away from the start event - thus
         // we expect to not learn about the prolongation
-        $billableItems = $bs->generateMissingBillableItems($remoteDesktop, DateTimeUtility::createDateTime('2017-03-29 22:30:00'));
+        /** @var BillableItem[] $billableItems */
+        $billableItems = $bs->generateMissingBillableItems(
+            $remoteDesktop,
+            DateTimeUtility::createDateTime('2017-03-29 22:30:00'),
+            BillableItem::TYPE_USAGE
+        );
 
         $this->assertCount(2, $billableItems);
 

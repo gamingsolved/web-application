@@ -27,7 +27,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         $this->flavors = [
             new Flavor($this, 'g2.2xlarge', '8 vCPUs, 15 GB RAM, 1 GPU'),
             new Flavor($this, 'g2.8xlarge', '32 vCPUs, 60 GB RAM, 4 GPUs'),
-            new Flavor($this, 'c4.4xlarge', '16 vCPUs, 30 GB RAM')
+            new Flavor($this, 'c4.4xlarge', '16 vCPUs, 30 GB RAM, no GPU')
         ];
 
         $this->images = [
@@ -127,7 +127,9 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstance
     {
         $instance = new AwsCloudInstance();
-        $instance->setFlavor($remoteDesktop->getKind()->getFlavor());
+
+        // We use this indirection because it ensures we work with a valid flavor
+        $instance->setFlavor($this->getFlavorByInternalName($remoteDesktop->getKind()->getFlavor()->getInternalName()));
 
         if (array_key_exists($remoteDesktop->getKind()->getIdentifier(), $this->kindToRegionToImage)) {
             if (array_key_exists($region->getInternalName(), $this->kindToRegionToImage[$remoteDesktop->getKind()->getIdentifier()])) {
@@ -141,6 +143,18 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             throw new \Exception('Cannot match kind ' . get_class($remoteDesktop->getKind()) . ' to an AMI.');
         }
 
+        if ($instance->getFlavor()->getInternalName() === 'g2.2xlarge') {
+            $instance->setRootVolumeSize(60);
+            $instance->setAdditionalVolumeSize(200);
+        } elseif ($instance->getFlavor()->getInternalName() === 'g2.8xlarge') {
+            $instance->setRootVolumeSize(240);
+        } elseif ($instance->getFlavor()->getInternalName() === 'c4.4xlarge') {
+            $instance->setRootVolumeSize(60);
+            $instance->setAdditionalVolumeSize(200);
+        } else {
+            throw new \Exception('Missing root volume size mapping for flavor ' . $instance->getFlavor()->getInternalName());
+        }
+
         // We use this indirection because it ensures we work with a valid region
         $instance->setRegion($this->getRegionByInternalName($region->getInternalName()));
 
@@ -150,12 +164,12 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     /**
      * @throws \Exception
      */
-    public function getHourlyCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float
+    public function getHourlyUsageCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float
     {
-        return $this->getMaximumHourlyCostsForFlavor($flavor);
+        return $this->getMaximumHourlyUsageCostsForFlavor($flavor);
     }
 
-    public function getMaximumHourlyCostsForFlavor(Flavor $flavor) : float
+    public function getMaximumHourlyUsageCostsForFlavor(Flavor $flavor) : float
     {
         if ($flavor->getInternalName() === 'g2.2xlarge') {
             return 1.49;
@@ -171,4 +185,15 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
 
         throw new \Exception('Unknown flavor ' . $flavor->getInternalName());
     }
+
+    public function getHourlyProvisioningCostsForFlavorImageRegionVolumeSizesCombination(
+        Flavor $flavor, Image $image, Region $region, int $rootVolumeSize, int $additionalVolumeSize) : float
+    {
+        $pricePerGBPerMonth = 0.119; // gp2 Volume type
+        $daysPerMonth = 30;
+        $hoursPerDay = 24;
+        $hoursPerMonth = $daysPerMonth * $hoursPerDay;
+        return round(( ($rootVolumeSize + $additionalVolumeSize) * $pricePerGBPerMonth ) / $hoursPerMonth, 2);
+    }
+
 }

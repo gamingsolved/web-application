@@ -1,3 +1,9 @@
+{% if app.request.cookies.has('ubiqmachine_timezone') %}
+    {% set timezone = app.request.cookies.get('ubiqmachine_timezone') %}
+{% else %}
+    {% set timezone = 'UTC' %}
+{% endif %}
+
 <!DOCTYPE html>
 <html>
     <head>

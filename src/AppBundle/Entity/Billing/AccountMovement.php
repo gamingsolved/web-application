@@ -113,6 +113,11 @@ class AccountMovement
         return $this->user;
     }
 
+    public function getBillableItem() : BillableItem
+    {
+        return $this->billableItem;
+    }
+
     public function getAmount() : float
     {
         return $this->amount;

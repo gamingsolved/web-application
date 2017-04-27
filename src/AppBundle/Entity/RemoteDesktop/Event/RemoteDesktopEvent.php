@@ -12,8 +12,14 @@ use Ramsey\Uuid\Uuid;
  */
 class RemoteDesktopEvent
 {
+    // A desktop was made available so the user can actually connect to it
     const EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER = 0;
     const EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER  = 1;
+
+    // Whether online or not, a desktop was generally made available, that is, the instance and ressources like disks
+    // were created at the provider
+    const EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER  = 2;
+    const EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER  = 3;
 
     /**
      * @var string
@@ -46,11 +52,11 @@ class RemoteDesktopEvent
 
     public function __construct(RemoteDesktop $remoteDesktop, int $eventType, \DateTime $datetimeOccured)
     {
-        $this->id = $uuid4 = Uuid::uuid4();
+        $this->id = Uuid::uuid4();
 
         $this->remoteDesktop = $remoteDesktop;
 
-        if ($eventType < self::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER || $eventType > self::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER) {
+        if ($eventType < self::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER || $eventType > self::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER) {
             throw new \Exception('Event type ' . $eventType . ' is invalid');
         }
         $this->eventType = $eventType;

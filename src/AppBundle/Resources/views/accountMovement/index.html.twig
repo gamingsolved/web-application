@@ -10,27 +10,53 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                    <th>{{ "accountMovement.index.thead_occurred_at"|trans }}</th>
-                                <th>{{ "accountMovement.index.thead_events"|trans }}</th>
+                                <th>
+                                    {{ "accountMovement.index.thead_occurred_at"|trans }}
+                                    <br>
+                                    <small style="font-weight: normal;">{{ timezone }}</small>
+                                </th>
+                                <th>
+                                    {{ "accountMovement.index.thead_events"|trans }}
+                                    <br>
+                                    <small>&nbsp;</small>
+                                </th>
+                                <th>
+                                    {{ "accountMovement.index.thead_balance"|trans }}
+                                    <br>
+                                    <small>&nbsp;</small>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
 
-                            {% for event in events %}
+                            {% for eventblock in eventblocks %}
 
                                 <tr>
-                                    <td>{{ event.occuredAt|date('F j, Y H:i', app.request.cookies.get('ubiqmachine_timezone')) }}</td>
+                                    <td>
+                                        <strong>
+                                            {{ eventblock.occuredAt|date('F j, Y', timezone) }}
+                                            <br>
+                                        </strong>
+                                        {{ eventblock.occuredAt|date('H:i', timezone) }}&nbsp;{{ "accountMovement.index.oclock"|trans }}
+                                    </td>
 
                                     <td>
-                                        {% for oneEvent in event.events %}
-                                            {{ oneEvent.description|trans({
-                                                '%moneyValue1%': oneEvent.moneyValue1|localizedcurrency('USD'),
-                                                '%moneyValue2%': oneEvent.moneyValue2|localizedcurrency('USD'),
-                                                '%stringValue%': oneEvent.stringValue})|replace({'[br]': '<br>'})|raw
+                                        {% for event in eventblock.events %}
+                                            {{ event.description|trans({
+                                                '%moneyValue%': event.moneyValue|localizedcurrency('USD'),
+                                                '%stringValue%': event.stringValue,
+                                                '%billableItemTypeTranslation%': ('accountMovement.index.billable_item_type_translation_' ~ event.billableItemType)|trans,
+                                                '%remoteDesktopTitle%': event.remoteDesktopTitle
+                                                })|replace({'[br]': '<br>'})|raw
                                             }}
                                             <br>
                                             <br>
                                         {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% if eventblock.accountBalance is defined %}
+                                            <strong>{{ eventblock.accountBalance|localizedcurrency('USD') }}</strong>
+                                        {% endif %}
                                     </td>
                                 </tr>
 

@@ -23,8 +23,8 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('Costs per hour', $crawler->filter('div.hourlycostsbox')->first()->text());
-        $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlycostsbox')->first()->text());
+        $this->assertContains('Costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Stopping...', $crawler->filter('.remotedesktopstatus')->first()->text());
@@ -83,15 +83,16 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
         // At this point, the instance must be in "Scheduled for stop" state on the UI
 
         $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
+
+        /** @var RemoteDesktopEvent[] $remoteDesktopEvents */
         $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
         $this->assertEquals(
-            2, // Two, because there is one from the launch on which we build
+            3, // provisioned, start, stop
             sizeof($remoteDesktopEvents)
         );
-        /** @var RemoteDesktopEvent $remoteDesktopEvent */
-        $remoteDesktopEvent = $remoteDesktopEvents[1];
+
         $this->assertEquals(
-            $remoteDesktopEvent->getEventType(),
+            $remoteDesktopEvents[2]->getEventType(),
             RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
         );
 
@@ -128,8 +129,8 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('Costs per hour', $crawler->filter('div.hourlycostsbox')->first()->text());
-        $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlycostsbox')->first()->text());
+        $this->assertContains('Costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Stopped', $crawler->filter('.remotedesktopstatus')->first()->text());

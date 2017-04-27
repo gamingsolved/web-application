@@ -202,7 +202,15 @@ class RemoteDesktop
     }
 
     /**
-     * @return Collection|CloudInstance
+     * @return Collection[RemoteDesktopEvent]
+     */
+    public function getRemoteDesktopEvents(): Collection
+    {
+        return $this->remoteDesktopEvents;
+    }
+
+    /**
+     * @return Collection[CloudInstance]
      */
     public function getCloudInstances() : Collection
     {
@@ -316,9 +324,14 @@ class RemoteDesktop
         }
     }
 
-    public function getHourlyCosts() : float
+    public function getHourlyUsageCosts() : float
     {
-        return $this->getActiveCloudInstance()->getHourlyCosts();
+        return $this->getActiveCloudInstance()->getHourlyUsageCosts();
+    }
+
+    public function getHourlyProvisioningCosts() : float
+    {
+        return $this->getActiveCloudInstance()->getHourlyProvisioningCosts();
     }
 
     public function getScheduledForStopAt()

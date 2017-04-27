@@ -18,7 +18,8 @@ interface CloudInstanceInterface
 
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface;
 
-    public function getHourlyCosts() : float;
+    public function getHourlyUsageCosts() : float;
+    public function getHourlyProvisioningCosts() : float;
 
     public function setStatus(int $status);
     public function getStatus() : int;
@@ -34,6 +35,12 @@ interface CloudInstanceInterface
 
     public function setRegion(Region $region);
     public function getRegion() : Region;
+
+    public function setRootVolumeSize(int $sizeInGB);
+    public function getRootVolumeSize() : int;
+
+    public function setAdditionalVolumeSize(int $sizeInGB);
+    public function getAdditionalVolumeSize() : int;
 
     public function setRemoteDesktop(RemoteDesktop $remoteDesktop);
     public function getRemoteDesktop() : RemoteDesktop;
@@ -119,6 +126,18 @@ abstract class CloudInstance implements CloudInstanceInterface
     protected $regionInternalName;
 
     /**
+     * @var int
+     * @ORM\Column(name="root_volume_size", type="integer")
+     */
+    protected $rootVolumeSize;
+
+    /**
+     * @var int
+     * @ORM\Column(name="additional_volume_size", type="integer")
+     */
+    protected $additionalVolumeSize;
+
+    /**
      * @var string
      * @ORM\Column(name="public_address", type="string", length=128, nullable=true)
      */
@@ -177,7 +196,33 @@ abstract class CloudInstance implements CloudInstanceInterface
             throw new \Exception('Runstatus ' . $runstatus . ' is invalid');
         }
 
-        // We are billing as fair as possible: We only count costs once the user has their machine available...
+        // We are billing as fair as possible: billing of provisioning of instances only starts as soon as the machine
+        // is launched for the very first time...
+
+        if ($runstatus === self::RUNSTATUS_RUNNING) {
+            $remoteDesktopEvents = $this->remoteDesktop->getRemoteDesktopEvents();
+            if ($remoteDesktopEvents->count() === 0) {
+                $remoteDesktopEvent = new RemoteDesktopEvent(
+                    $this->remoteDesktop,
+                    RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+                    DateTimeUtility::createDateTime('now')
+                );
+                $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+            }
+        }
+
+        // Provisioning billing stops once a machine is scheduled for termination
+        if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_TERMINATION) {
+            $remoteDesktopEvent = new RemoteDesktopEvent(
+                $this->remoteDesktop,
+                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
+                DateTimeUtility::createDateTime('now')
+            );
+            $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+        }
+
+
+        // We only bill usage costs once the user has their machine available...
         if ($runstatus === self::RUNSTATUS_RUNNING) {
             $remoteDesktopEvent = new RemoteDesktopEvent(
                 $this->remoteDesktop,
@@ -238,14 +283,55 @@ abstract class CloudInstance implements CloudInstanceInterface
         return $this->getCloudInstanceProvider()->getRegionByInternalName($this->regionInternalName);
     }
 
-    public function getHourlyCosts(): float
+    public function setRootVolumeSize(int $sizeInGB)
+    {
+        $this->rootVolumeSize = $sizeInGB;
+    }
+
+    public function getRootVolumeSize(): int
+    {
+        if (is_null($this->rootVolumeSize)) {
+            return 0;
+        } else {
+            return $this->rootVolumeSize;
+        }
+    }
+
+    public function setAdditionalVolumeSize(int $sizeInGB)
+    {
+        $this->additionalVolumeSize = $sizeInGB;
+    }
+
+    public function getAdditionalVolumeSize() : int
+    {
+        if (is_null($this->additionalVolumeSize)) {
+            return 0;
+        } else {
+            return $this->additionalVolumeSize;
+        }
+    }
+
+    public function getHourlyUsageCosts(): float
     {
         return $this
             ->getCloudInstanceProvider()
-            ->getHourlyCostsForFlavorImageRegionCombination(
+            ->getHourlyUsageCostsForFlavorImageRegionCombination(
                 $this->getFlavor(),
                 $this->getImage(),
                 $this->getRegion()
+            );
+    }
+
+    public function getHourlyProvisioningCosts(): float
+    {
+        return $this
+            ->getCloudInstanceProvider()
+            ->getHourlyProvisioningCostsForFlavorImageRegionVolumeSizesCombination(
+                $this->getFlavor(),
+                $this->getImage(),
+                $this->getRegion(),
+                $this->getRootVolumeSize(),
+                $this->getAdditionalVolumeSize()
             );
     }
 

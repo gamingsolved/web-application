@@ -28,4 +28,9 @@ class RemoteDesktopGamingProKind extends RemoteDesktopKind {
         return $this->getCloudInstanceProvider()->getFlavorByInternalName('g2.2xlarge');
     }
 
+    // Absolute mode makes the mouse unusable in game
+    public function getMouseRelativeValue(): string
+    {
+        return 'true';
+    }
 }

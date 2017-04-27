@@ -66,9 +66,9 @@ class CloudInstanceController extends Controller
                 $cloudInstanceProvider->getRegionByInternalName($form->get('region')->getData())
             );
 
-            $hourlyCosts = $cloudInstance
+            $hourlyUsageCosts = $cloudInstance
                 ->getCloudInstanceProvider()
-                ->getHourlyCostsForFlavorImageRegionCombination(
+                ->getHourlyUsageCostsForFlavorImageRegionCombination(
                     $cloudInstance->getFlavor(),
                     $cloudInstance->getImage(),
                     $cloudInstance->getRegion()
@@ -78,13 +78,13 @@ class CloudInstanceController extends Controller
             /** @var AccountMovementRepository $accountMovementRepository */
             $accountMovementRepository = $em->getRepository(AccountMovement::class);
 
-            if ($hourlyCosts > $accountMovementRepository->getAccountBalanceForUser($user)) {
+            if ($hourlyUsageCosts > $accountMovementRepository->getAccountBalanceForUser($user)) {
                 return $this->render(
                     'AppBundle:cloudInstance:new.html.twig',
                     [
                         'insufficientAccountBalance' => true,
                         'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
-                        'hourlyCosts' => $hourlyCosts,
+                        'hourlyUsageCosts' => $hourlyUsageCosts,
                         'form' => $form->createView()
                     ]
                 );
@@ -104,7 +104,7 @@ class CloudInstanceController extends Controller
                 [
                     'insufficientAccountBalance' => false,
                     'currentAccountBalance' => null,
-                    'hourlyCosts' => null,
+                    'hourlyUsageCosts' => null,
                     'form' => $form->createView()
                 ]
             );

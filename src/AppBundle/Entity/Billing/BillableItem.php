@@ -13,6 +13,9 @@ class BillableItem
 {
     const BILLABLE_TIMEWINDOW_REMOTEDESKTOPUSAGE = 3600; // A minimum of 1 hour is billed when using a remote desktop
 
+    const TYPE_USAGE = 0;
+    const TYPE_PROVISIONING = 1;
+
     /**
      * @var string
      * @ORM\GeneratedValue(strategy="UUID")
@@ -27,6 +30,12 @@ class BillableItem
      * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id", nullable=false)
      */
     protected $remoteDesktop;
+
+    /**
+     * @var int
+     * @ORM\Column(name="type", type="smallint", nullable=false)
+     */
+    protected $type;
 
     /**
      * @var \DateTime $timewindowBegin The begin of the window for which this item covers costs - inclusive
@@ -49,10 +58,15 @@ class BillableItem
     protected $price;
 
 
-    public function __construct(RemoteDesktop $remoteDesktop, \DateTime $timewindowBegin) {
+    public function __construct(RemoteDesktop $remoteDesktop, \DateTime $timewindowBegin, int $type) {
         if ($timewindowBegin->getTimezone()->getName() !== 'UTC') {
             throw new \Exception('Provided time zone is not UTC.');
         }
+
+        if ($type < self::TYPE_USAGE || $type > self::TYPE_PROVISIONING) {
+            throw new \Exception('Invalid type ' . $type);
+        }
+
         $this->timewindowBegin = clone($timewindowBegin);
 
         $this->timewindowEnd = clone($timewindowBegin);
@@ -60,7 +74,15 @@ class BillableItem
 
         $this->remoteDesktop = $remoteDesktop;
 
-        $this->price = $remoteDesktop->getHourlyCosts();
+        $this->type = $type;
+
+        if ($this->type === self::TYPE_USAGE) {
+            $this->price = $remoteDesktop->getHourlyUsageCosts();
+        }
+
+        if ($this->type === self::TYPE_PROVISIONING) {
+            $this->price = $remoteDesktop->getHourlyProvisioningCosts();
+        }
 
         if ($this->price < 0.0) {
             throw new \Exception('Negative price of ' . $this->price . ' is invalid.');
@@ -86,5 +108,15 @@ class BillableItem
     public function getPrice() : float
     {
         return $this->price;
+    }
+
+    public function getType() : int
+    {
+        return $this->type;
+    }
+
+    public function getRemoteDesktop() : RemoteDesktop
+    {
+        return $this->remoteDesktop;
     }
 }

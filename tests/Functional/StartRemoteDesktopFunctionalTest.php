@@ -88,15 +88,15 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $em->flush();
 
         $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
+
+        /** @var RemoteDesktopEvent[] $remoteDesktopEvents */
         $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
         $this->assertEquals(
-            3, // start, stop, start
+            4, // provisioning, start, stop, start
             sizeof($remoteDesktopEvents)
         );
-        /** @var RemoteDesktopEvent $remoteDesktopEvent */
-        $remoteDesktopEvent = $remoteDesktopEvents[0];
         $this->assertEquals(
-            $remoteDesktopEvent->getEventType(),
+            $remoteDesktopEvents[3]->getEventType(),
             RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
         );
 
@@ -105,8 +105,8 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('Current hourly costs', $crawler->filter('div.hourlycostsbox')->first()->text());
-        $this->assertContains('(while in status Ready to use): $1.49', $crawler->filter('div.hourlycostsbox')->first()->text());
+        $this->assertContains('Current hourly costs', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(while in status Ready to use): $1.49', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());

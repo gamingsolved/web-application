@@ -17,7 +17,7 @@
 
 {% set clientDownloadButtonsAlreadyShown = false %}
 {% set clientDownloadUriWin = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/win32/cgxClient-Scalable%20Graphics-CGX%20Portal.1.10.0.7.exe' %}
-{% set clientDownloadUriMac = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/osx/CGX_1.10.0.10.dmg' %}
+{% set clientDownloadUriMac = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/osx/CGX_1.10.0.17.dmg' %}
 
 {% block body %}
     <div class="container">
@@ -101,17 +101,17 @@
                                         </h3>
                                     {% else %}
                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
-                                            <div class="well well-sm pull-right hourlycostsbox">
+                                            <div class="well well-sm pull-right hourlyusagecostsbox">
                                                 <small>
                                                     {{ "remoteDesktop.index.current_costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyCosts|localizedcurrency('USD') }}
+                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% else %}
-                                            <div class="well well-sm pull-right hourlycostsbox">
+                                            <div class="well well-sm pull-right hourlyusagecostsbox">
                                                 <small>
                                                     {{ "remoteDesktop.index.costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyCosts|localizedcurrency('USD') }}
+                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% endif %}
@@ -270,13 +270,7 @@
                                                 <p>
                                                     <strong>
                                                         {{ "remoteDesktop.index.auto_stop_info"|trans }}
-
-                                                        {% if app.request.cookies.has('ubiqmachine_timezone') %}
-                                                            {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}
-                                                            ({{ app.request.cookies.get('ubiqmachine_timezone') }}).
-                                                        {% else %}
-                                                            {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', 'UTC') }} (UTC)
-                                                        {% endif %}
+                                                        {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', timezone) }} ({{ timezone }}).
                                                     </strong>
                                                 </p>
                                             {% endif %}
@@ -287,7 +281,7 @@
                                                     <a
                                                         class="btn btn-sm btn-default"
                                                         href="{{ path('remotedesktops.scheduleForStopAtEndOfUsageHour', {'remoteDesktop': remoteDesktop.id, 'usageHour': usageHour}) }}"
-                                                        title="{{ "remoteDesktop.index.auto_stop_change_btn_title"|trans }}{% if app.request.cookies.has('ubiqmachine_timezone') %}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', app.request.cookies.get('ubiqmachine_timezone')) }}{% else %}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', 'UTC') }} (UTC){% endif %}.">
+                                                        title="{{ "remoteDesktop.index.auto_stop_change_btn_title"|trans }}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', timezone) }}.">
                                                         {{ ("remoteDesktop.index.auto_stop_change_hour_" ~ usageHour)|trans }}
                                                     </a>
                                                 {% endfor %}
