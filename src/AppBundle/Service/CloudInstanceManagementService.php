@@ -63,7 +63,7 @@ class CloudInstanceManagementService
         $output->writeln('Image: ' . $cloudInstance->getImage()->getInternalName());
         $output->writeln('Region: ' . $cloudInstance->getRegion()->getInternalName());
         $output->writeln('Public IP: ' . $cloudInstance->getPublicAddress());
-        $output->writeln('Admin password: ' . $cloudInstance->getAdminPassword());
+        $output->writeln('Admin password (shortened): ' . substr($cloudInstance->getAdminPassword(), 0, 3));
 
 
         // Running
