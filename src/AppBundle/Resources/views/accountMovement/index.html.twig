@@ -25,8 +25,7 @@
                                             {{ eventblock.occuredAt|date('F j, Y', app.request.cookies.get('ubiqmachine_timezone')) }}
                                             <br>
                                         </strong>
-                                        {{ eventblock.occuredAt|date('H:i', app.request.cookies.get('ubiqmachine_timezone')) }}
-                                        {{ "accountMovement.index.oclock"|trans }}
+                                        {{ eventblock.occuredAt|date('H:i', app.request.cookies.get('ubiqmachine_timezone')) }}&nbsp;{{ "accountMovement.index.oclock"|trans }}
                                     </td>
 
                                     <td>
