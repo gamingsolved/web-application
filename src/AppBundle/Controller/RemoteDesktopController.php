@@ -302,12 +302,34 @@ class RemoteDesktopController extends Controller
             return $this->redirectToRoute('homepage', [], Response::HTTP_FORBIDDEN);
         }
 
+        $resolutionsAndBitrates = [
+            ['width' => '1024', 'height' => '768',  'bitrate' => '6'],
+            ['width' => '1280', 'height' => '720',  'bitrate' => '8'],
+            ['width' => '1280', 'height' => '800',  'bitrate' => '9'],
+            ['width' => '1536', 'height' => '1152', 'bitrate' => '11'],
+            ['width' => '1920', 'height' => '1080', 'bitrate' => '13'],
+            ['width' => '1920', 'height' => '1200', 'bitrate' => '15'],
+            ['width' => '2048', 'height' => '1536', 'bitrate' => '17'],
+            ['width' => '2560', 'height' => '1440', 'bitrate' => '19']
+        ];
+
+        $bitrate = null;
+        foreach ($resolutionsAndBitrates as $resolutionsAndBitrate) {
+            if ($resolutionsAndBitrate['width'] === $width && $resolutionsAndBitrate['height'] === $height) {
+                $bitrate = $resolutionsAndBitrate['bitrate'];
+            }
+        }
+        if (is_null($bitrate)) {
+            throw new \Exception('Could not match width ' . $width . ' and height ' . $height . ' to a bitrate.');
+        }
+
         $response = $this->render(
             'AppBundle:remoteDesktop:sgxFile/tag.sgx.twig',
             [
                 'ip'       => $remoteDesktop->getPublicAddress(),
                 'width'    => $width,
                 'height'   => $height,
+                'bitrate'  => $bitrate,
                 'key'      => $remoteDesktop->getId(),
                 'password' => $remoteDesktop->getAdminPassword(),
 

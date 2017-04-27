@@ -177,12 +177,30 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
             $launcherUri
         );
 
-        // /remoteDesktops/{remoteDesktop}/{width}/{height}/sgx_files/{tag}.sgx
-        $client->request('GET', '/en/remoteDesktops/' . $remoteDesktop->getId() . '/' . $remoteDesktop->getIdHash() . '/1280/800/sgx_files/' . $remoteDesktop->getId() . '.sgx');
+        $resolutionsAndBitrates = [
+            ['width' => '1024', 'height' => '768',  'bitrate' => '6'],
+            ['width' => '1280', 'height' => '720',  'bitrate' => '8'],
+            ['width' => '1280', 'height' => '800',  'bitrate' => '9'],
+            ['width' => '1536', 'height' => '1152', 'bitrate' => '11'],
+            ['width' => '1920', 'height' => '1080', 'bitrate' => '13'],
+            ['width' => '1920', 'height' => '1200', 'bitrate' => '15'],
+            ['width' => '2048', 'height' => '1536', 'bitrate' => '17'],
+            ['width' => '2560', 'height' => '1440', 'bitrate' => '19']
+        ];
 
-        $this->assertContains('ip: 121.122.123.124', $client->getResponse()->getContent());
-        $this->assertContains('key: ' . $remoteDesktop->getId(), $client->getResponse()->getContent());
-        $this->assertContains('mouse-relative: true', $client->getResponse()->getContent());
+        foreach ($resolutionsAndBitrates as $resolutionsAndBitrate) {
+            $client->request('GET', '/en/remoteDesktops/' . $remoteDesktop->getId() . '/' . $remoteDesktop->getIdHash() . '/' . $resolutionsAndBitrate['width'] . '/' . $resolutionsAndBitrate['height'] . '/sgx_files/' . $remoteDesktop->getId() . '.sgx');
+
+            $content = $client->getResponse()->getContent();
+
+            $this->assertContains('ip: 121.122.123.124', $content);
+            $this->assertContains('key: ' . $remoteDesktop->getId(), $content);
+            $this->assertContains('password: foo', $content);
+            $this->assertContains('mouse-relative: true', $content);
+            $this->assertContains('bitrate: ' . $resolutionsAndBitrate['bitrate'], $content);
+            $this->assertContains('width: ' . $resolutionsAndBitrate['width'], $content);
+            $this->assertContains('height: ' . $resolutionsAndBitrate['height'], $content);
+        }
 
         // Check that billing worked
         $kernel = static::createClient()->getKernel();
