@@ -176,6 +176,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('ip: 121.122.123.124', $client->getResponse()->getContent());
         $this->assertContains('key: ' . $remoteDesktop->getId(), $client->getResponse()->getContent());
+        $this->assertContains('mouse-relative: true', $client->getResponse()->getContent());
 
         // Check that billing worked
         $kernel = static::createClient()->getKernel();

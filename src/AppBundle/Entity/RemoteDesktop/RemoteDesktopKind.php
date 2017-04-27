@@ -13,6 +13,7 @@ interface RemoteDesktopKindInterface
     public function getIdentifier() : int;
     public function getFlavor(): Flavor;
     public function getMaximumHourlyUsageCosts(): float;
+    public function getMouseRelativeValue(): string;
 }
 
 // Never remove kinds, only add new - existing customers might have old desktops with existing kinds!
@@ -78,5 +79,10 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
     public function getMaximumHourlyUsageCosts() : float
     {
         return $this->getCloudInstanceProvider()->getMaximumHourlyUsageCostsForFlavor($this->getFlavor());
+    }
+
+    public function getMouseRelativeValue(): string
+    {
+        return 'false';
     }
 }

@@ -309,7 +309,10 @@ class RemoteDesktopController extends Controller
                 'width'    => $width,
                 'height'   => $height,
                 'key'      => $remoteDesktop->getId(),
-                'password' => $remoteDesktop->getAdminPassword()
+                'password' => $remoteDesktop->getAdminPassword(),
+
+                // Games only work with mouse mode "relative"
+                'mouseRelative' => $remoteDesktop->getKind()->getMouseRelativeValue()
             ]
         );
 
