@@ -5,8 +5,11 @@
         <div class="row">
             <div class="col-xs-12">
                 <h1>{{ "accountMovement.index.headline"|trans }}</h1>
+                <div class="alert alert-success">
+                    {{ "accountMovement.index.read_how_billing_works"|trans }}
+                    <a href="{{ path('about.howBillingWorks') }}">{{ "accountMovement.index.read_how_billing_works_here"|trans }}</a>.
+                </div>
                 <div class="well">
-
                     <table class="table table-striped">
                         <thead>
                             <tr>
