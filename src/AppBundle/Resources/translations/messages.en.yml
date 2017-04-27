@@ -20,6 +20,10 @@ about:
         introduction_two: In case your remote desktop is still running at the end of the
                           usage hour, another usage hour begins, and you are charged for it.
         introduction_three: The diagrams below visualize this mechanism.
+        introduction_four: Please note that independently from usage billing, you are also billed a small fee
+                           (around $0.02 per hour per 100 GB) for the hard disk storage of your remote desktop.
+                           Because this storage space is always provisioned, also if your system is not running,
+                           this fee is billed also when your desktop is off.
         headline_one_hour: Using a remote desktop for one hour
         headline_two_hours: Using a remote desktop for two consecutive hours
     privacypolicy:
