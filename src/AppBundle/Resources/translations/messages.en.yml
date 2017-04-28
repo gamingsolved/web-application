@@ -294,12 +294,12 @@ remoteDesktop:
             per_usage_hour: per usage hour
             submit_label: Continue
     kind:
-        gamingpro: "Gaming: Preinstalled with Steam, UPlay, GOG and Origin"
-        cadpro: "CAD Pro: Preinstalled Autodesk AutoCAD® 2017 and Revit® 2017"
-        cadultra: "CAD Ultra: Preinstalled Autodesk AutoCAD® 2017 and Revit® 2017"
-        3dmediapro: "3D Media Pro: Preinstalled Autodesk Maya® 2017 and 3ds Max® 2017"
-        3dmediaultra: "3D Media Ultra: Preinstalled Autodesk Maya® 2017 and 3ds Max® 2017"
-        unitypro: "Unity 'Light Baking' Pro: Preinstalled Unity® 5.6 (no GPU)"
+        gamingpro: "Gaming: Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™"
+        cadpro: "CAD Pro: Preinstalled Autodesk® AutoCAD® 2017 and Revit® 2017"
+        cadultra: "CAD Ultra: Preinstalled Autodesk® AutoCAD® 2017 and Revit® 2017"
+        3dmediapro: "3D Media Pro: Preinstalled Autodesk® Maya® 2017 and 3ds Max® 2017"
+        3dmediaultra: "3D Media Ultra: Preinstalled Autodesk® Maya® 2017 and 3ds Max® 2017"
+        unitypro: "Light Baking Pro: Preinstalled Unity® 5.6 (no GPU)"
     status:
         label: Current status:
         never_launched: Not running

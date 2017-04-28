@@ -20,5 +20,5 @@ remoteDesktop:
             kind_label: Wofür möchten Sie diesen Remote-Desktop benutzen?
             submit_label: Weiter
     kind:
-        games: "Gaming: Steam & UPlay vorinstalliert"
+        games: "Gaming: Steam & Uplay vorinstalliert"
         cad: "CAD: Autodesk AutoCAD® 2017 vorinstalliert"
