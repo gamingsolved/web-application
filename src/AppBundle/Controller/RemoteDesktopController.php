@@ -303,14 +303,14 @@ class RemoteDesktopController extends Controller
         }
 
         $resolutionsAndBitrates = [
-            ['width' => '1024', 'height' => '768',  'bitrate' => '6'],
-            ['width' => '1280', 'height' => '720',  'bitrate' => '8'],
-            ['width' => '1280', 'height' => '800',  'bitrate' => '9'],
-            ['width' => '1536', 'height' => '1152', 'bitrate' => '11'],
-            ['width' => '1920', 'height' => '1080', 'bitrate' => '13'],
-            ['width' => '1920', 'height' => '1200', 'bitrate' => '15'],
-            ['width' => '2048', 'height' => '1536', 'bitrate' => '17'],
-            ['width' => '2560', 'height' => '1440', 'bitrate' => '19']
+            ['width' => '1024', 'height' => '768',  'bitrate' => '8'],
+            ['width' => '1280', 'height' => '720',  'bitrate' => '10'],
+            ['width' => '1280', 'height' => '800',  'bitrate' => '12'],
+            ['width' => '1536', 'height' => '1152', 'bitrate' => '15'],
+            ['width' => '1920', 'height' => '1080', 'bitrate' => '17'],
+            ['width' => '1920', 'height' => '1200', 'bitrate' => '19'],
+            ['width' => '2048', 'height' => '1536', 'bitrate' => '25'],
+            ['width' => '2560', 'height' => '1440', 'bitrate' => '30']
         ];
 
         $bitrate = null;
