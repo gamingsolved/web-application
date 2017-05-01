@@ -18,7 +18,47 @@ class MockEc2Client
 
 class AwsCloudInstanceCoordinatorTest extends TestCase
 {
-    public function testTriggerLaunchOfCloudInstance()
+    protected function getMockEc2Client() : \PHPUnit_Framework_MockObject_MockObject
+    {
+        return $this
+            ->getMockBuilder(MockEc2Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    protected function getAwsCloudInstanceCoordinator(DummyOutput $dummyOutput, \PHPUnit_Framework_MockObject_MockObject $mockEc2Client)
+    {
+        $awsCloudInstanceProvider = new AwsCloudInstanceProvider();
+
+        return new AwsCloudInstanceCoordinator(
+            ['keypairPrivateKey' => 'blubb'],
+            new Region($awsCloudInstanceProvider, 'region-foo', 'Region Foo'),
+            $dummyOutput,
+            $mockEc2Client
+        );
+
+    }
+
+    protected function getMockCloudInstance() : \PHPUnit_Framework_MockObject_MockObject
+    {
+        $awsCloudInstanceProvider = new AwsCloudInstanceProvider();
+
+        $mockCloudInstance = $this
+            ->getMockBuilder(AwsCloudInstance::class)
+            ->setMethods(['getId', 'getAdditionalVolumeSize'])
+            ->getMock();
+
+        $mockCloudInstance->expects($this->exactly(2))
+            ->method('getId')
+            ->willReturn('abcdef');
+
+        $mockCloudInstance->setFlavor($awsCloudInstanceProvider->getFlavorByInternalName('g2.2xlarge'));
+        $mockCloudInstance->setImage($awsCloudInstanceProvider->getImageByInternalName('ami-14c0107b'));
+
+        return $mockCloudInstance;
+    }
+
+    public function testTriggerLaunchOfCloudInstanceWithoutAdditionalVolumesShouldGoWellIfAllIsWell()
     {
         $expectedParameters = [
             'ImageId' => 'ami-14c0107b',
@@ -37,36 +77,74 @@ class AwsCloudInstanceCoordinatorTest extends TestCase
             ]
         ];
 
-        $mockEc2Client = $this
-            ->getMockBuilder(MockEc2Client::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $mockEc2Client = $this->getMockEc2Client();
 
         $mockEc2Client->expects($this->once())
             ->method('runInstances')
             ->with($expectedParameters)
             ->willReturn($mockResult);
 
-        $awsCloudInstanceProvider = new AwsCloudInstanceProvider();
+        $dummyOutput = new DummyOutput();
 
-        $awsCloudInstanceCoordinator = new AwsCloudInstanceCoordinator(
-            ['keypairPrivateKey' => 'blubb'],
-            new Region($awsCloudInstanceProvider, 'region-foo', 'Region Foo'),
-            new DummyOutput(),
-            $mockEc2Client
-        );
+        $awsCloudInstanceCoordinator = $this->getAwsCloudInstanceCoordinator($dummyOutput, $mockEc2Client);
 
-        $mockCloudInstance = $this
-            ->getMockBuilder(AwsCloudInstance::class)
-            ->setMethods(['getId'])
-            ->getMock();
+        $mockCloudInstance = $this->getMockCloudInstance();
+        $mockCloudInstance->expects($this->exactly(1))
+            ->method('getAdditionalVolumeSize')
+            ->willReturn(0);
+
+        $awsCloudInstanceCoordinator->triggerLaunchOfCloudInstance($mockCloudInstance);
+        $awsCloudInstanceCoordinator->updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered($mockCloudInstance);
+
+        $this->assertSame('i-123456', $mockCloudInstance->getEc2InstanceId());
+    }
+
+    public function testTriggerLaunchOfCloudInstanceWithAdditionalVolumesShouldGoWellIfAllIsWell()
+    {
+        $expectedParameters = [
+            'ImageId' => 'ami-14c0107b',
+            'MinCount' => 1,
+            'MaxCount' => 1,
+            'InstanceType' => 'g2.2xlarge',
+            'KeyName' => 'ubiqmachine-default',
+            'SecurityGroups' => ['ubiqmachine-cgxclient-default'],
+            'BlockDeviceMappings' => [
+                0 => [
+                    'DeviceName' => 'xvdh',
+                    'Ebs' => [
+                        'DeleteOnTermination' => true,
+                        'Encrypted' => false,
+                        'VolumeType' => 'gp2',
+                        'VolumeSize' => 200
+                    ]
+                ]
+            ]
+        ];
+
+        $mockResult = [
+            'Instances' => [
+                0 => [
+                    'InstanceId' => 'i-123456'
+                ]
+            ]
+        ];
+
+        $mockEc2Client = $this->getMockEc2Client();
+
+        $mockEc2Client->expects($this->once())
+            ->method('runInstances')
+            ->with($expectedParameters)
+            ->willReturn($mockResult);
+
+        $dummyOutput = new DummyOutput();
+
+        $awsCloudInstanceCoordinator = $this->getAwsCloudInstanceCoordinator($dummyOutput, $mockEc2Client);
+
+        $mockCloudInstance = $this->getMockCloudInstance();
 
         $mockCloudInstance->expects($this->exactly(2))
-            ->method('getId')
-            ->willReturn('abcdef');
-
-        $mockCloudInstance->setFlavor(new Flavor($awsCloudInstanceProvider, 'g2.2xlarge', ''));
-        $mockCloudInstance->setImage(new Image($awsCloudInstanceProvider, 'ami-14c0107b', ''));
+            ->method('getAdditionalVolumeSize')
+            ->willReturn(200);
 
         $awsCloudInstanceCoordinator->triggerLaunchOfCloudInstance($mockCloudInstance);
         $awsCloudInstanceCoordinator->updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered($mockCloudInstance);
