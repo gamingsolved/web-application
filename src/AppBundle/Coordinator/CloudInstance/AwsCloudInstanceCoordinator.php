@@ -5,6 +5,7 @@ namespace AppBundle\Coordinator\CloudInstance;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
+use Aws\Ec2\Exception\Ec2Exception;
 use Aws\Sdk;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -75,9 +76,14 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ];
         }
 
-        $result = $this->ec2Client->runInstances($parameters);
-
-        $this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()] = $result['Instances'][0]['InstanceId'];
+        try {
+            $result = $this->ec2Client->runInstances($parameters);
+            $this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()] = $result['Instances'][0]['InstanceId'];
+        } catch (Ec2Exception $e) {
+            if ($e->getAwsErrorCode() === 'InsufficientInstanceCapacity') {
+                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_OUT_OF_INSTANCE_CAPACITY, $e);
+            }
+        }
     }
 
     /**

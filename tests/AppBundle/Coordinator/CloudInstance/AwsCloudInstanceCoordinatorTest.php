@@ -3,17 +3,27 @@
 namespace Tests\AppBundle\Coordinator\CloudInstance;
 
 use AppBundle\Coordinator\CloudInstance\AwsCloudInstanceCoordinator;
+use AppBundle\Coordinator\CloudInstance\CloudProviderProblemException;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
-use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
-use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
+use Aws\Ec2\Exception\Ec2Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tests\Fixtures\DummyOutput;
 
 class MockEc2Client
 {
     public function runInstances(array $arr) {}
+}
+
+class InsufficientInstanceCapacityEc2Capacity extends Ec2Exception
+{
+    public function __construct() {}
+
+    public function getAwsErrorCode()
+    {
+        return 'InsufficientInstanceCapacity';
+    }
 }
 
 class AwsCloudInstanceCoordinatorTest extends TestCase
@@ -48,7 +58,7 @@ class AwsCloudInstanceCoordinatorTest extends TestCase
             ->setMethods(['getId', 'getAdditionalVolumeSize'])
             ->getMock();
 
-        $mockCloudInstance->expects($this->exactly(2))
+        $mockCloudInstance->expects($this->any())
             ->method('getId')
             ->willReturn('abcdef');
 
@@ -150,6 +160,28 @@ class AwsCloudInstanceCoordinatorTest extends TestCase
         $awsCloudInstanceCoordinator->updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered($mockCloudInstance);
 
         $this->assertSame('i-123456', $mockCloudInstance->getEc2InstanceId());
+    }
+
+    public function testTriggerLaunchOfCloudInstanceShouldThrowExceptionIfAwsHasAProblem()
+    {
+        $mockEc2Client = $this->getMockEc2Client();
+
+        $mockEc2Client->expects($this->once())
+            ->method('runInstances')
+            ->willThrowException(new InsufficientInstanceCapacityEc2Capacity());
+
+        $dummyOutput = new DummyOutput();
+
+        $awsCloudInstanceCoordinator = $this->getAwsCloudInstanceCoordinator($dummyOutput, $mockEc2Client);
+
+        $mockCloudInstance = $this->getMockCloudInstance();
+        $mockCloudInstance->expects($this->exactly(1))
+            ->method('getAdditionalVolumeSize')
+            ->willReturn(0);
+
+        $this->expectException(CloudProviderProblemException::class);
+        $this->expectExceptionCode(CloudProviderProblemException::CODE_OUT_OF_INSTANCE_CAPACITY);
+        $awsCloudInstanceCoordinator->triggerLaunchOfCloudInstance($mockCloudInstance);
     }
 
 }
