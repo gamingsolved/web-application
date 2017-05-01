@@ -19,20 +19,31 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
 
     protected $cloudInstanceIds2Ec2InstanceIds = [];
 
-    public function __construct(array $credentials, Region $region, OutputInterface $output)
+    /**
+     * AwsCloudInstanceCoordinator constructor.
+     * @param array $credentials
+     * @param Region $region
+     * @param OutputInterface $output
+     * @param null|\Aws\Ec2\Ec2Client $ec2Client If provided, this constructor does not build its own ec2 API client
+     */
+    public function __construct(array $credentials, Region $region, OutputInterface $output, $ec2Client = null)
     {
         $this->keypairPrivateKey = $credentials['keypairPrivateKey'];
-        $sdk = new Sdk(
-            [
-                'credentials' => [
-                    'key' => $credentials['apiKey'],
-                    'secret' => $credentials['apiSecret']
-                ],
-                'region' => $region->getInternalName(),
-                'version' => '2016-11-15'
-            ]
-        );
-        $this->ec2Client = $sdk->createEc2();
+        if (!is_null($ec2Client)) {
+            $this->ec2Client = $ec2Client;
+        } else {
+            $sdk = new Sdk(
+                [
+                    'credentials' => [
+                        'key' => $credentials['apiKey'],
+                        'secret' => $credentials['apiSecret']
+                    ],
+                    'region' => $region->getInternalName(),
+                    'version' => '2016-11-15'
+                ]
+            );
+            $this->ec2Client = $sdk->createEc2();
+        }
         $this->output = $output;
     }
 
@@ -64,10 +75,7 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
             ];
         }
 
-        print_r($parameters);
-
         $result = $this->ec2Client->runInstances($parameters);
-        print_r($result);
 
         $this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()] = $result['Instances'][0]['InstanceId'];
     }
