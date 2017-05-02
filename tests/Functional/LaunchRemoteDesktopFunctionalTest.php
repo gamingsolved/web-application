@@ -178,13 +178,13 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         );
 
         $resolutionsAndBitrates = [
-            ['width' => '1024', 'height' => '768',  'bitrate' => '8'],
-            ['width' => '1280', 'height' => '720',  'bitrate' => '10'],
-            ['width' => '1280', 'height' => '800',  'bitrate' => '12'],
-            ['width' => '1536', 'height' => '1152', 'bitrate' => '15'],
-            ['width' => '1920', 'height' => '1080', 'bitrate' => '17'],
-            ['width' => '1920', 'height' => '1200', 'bitrate' => '19'],
-            ['width' => '2048', 'height' => '1536', 'bitrate' => '25'],
+            ['width' => '1024', 'height' => '768',  'bitrate' => '10'],
+            ['width' => '1280', 'height' => '720',  'bitrate' => '12'],
+            ['width' => '1280', 'height' => '800',  'bitrate' => '15'],
+            ['width' => '1536', 'height' => '1152', 'bitrate' => '17'],
+            ['width' => '1920', 'height' => '1080', 'bitrate' => '23'],
+            ['width' => '1920', 'height' => '1200', 'bitrate' => '25'],
+            ['width' => '2048', 'height' => '1536', 'bitrate' => '28'],
             ['width' => '2560', 'height' => '1440', 'bitrate' => '30']
         ];
 
