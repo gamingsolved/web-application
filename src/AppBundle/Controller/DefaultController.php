@@ -38,6 +38,11 @@ class DefaultController extends Controller
         }
     }
 
+    public function indexLinuxAction()
+    {
+        return $this->render('default/linux.html.twig');
+    }
+
     public function logoutSuccessfulAction()
     {
         $this->addFlash('success', $this->get('translator')->trans('logoutSuccessful.message'));

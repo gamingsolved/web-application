@@ -3,6 +3,11 @@ homepage:
     defaults: { _controller: AppBundle:Default:index }
     methods:  [GET]
 
+homepage.linux:
+    path:     /linux
+    defaults: { _controller: AppBundle:Default:indexLinux }
+    methods:  [GET]
+
 about.howBillingWorks:
     path:     /about/how-billing-works
     defaults: { _controller: AppBundle:About:howBillingWorks }
