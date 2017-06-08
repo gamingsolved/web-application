@@ -3,59 +3,31 @@ body {
   color: #000;
   white-space: normal;
   font-weight: 400;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Work Sans', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat Alternates';
+  font-weight: 700;
   color: #fff;
 }
 
 #logo {
-  margin-left: 38px;
   position: absolute;
   top: 16px;
-  left: 26px;
-  margin-top: -5px;
+  left: 20px;
   @media only screen and (max-width : 768px) {
     top: 20px;
+    left: 20px;
   }
 }
 
-.logo-box {
-  border-radius: 22px 0 45px;
-  color: #fff;
-  display: inline-block;
-  font-size: 20px;
-  margin-left: -53px;
-  padding: 9px 44px 9px 30px;
-  width: 188px;
-  position: absolute;
-  font-weight: bold;
-}
-
-#logo-box-1 {
-  background-color: #2bbe83;
-}
-#logo-box-2 {
-  background-color: #337bb7;
-  top: 8px;
-  left: 8px;
-  width: 186px;
-  z-index: -1;
-}
-#logo-box-3 {
-  background-color: #4442c2;
-  top: 16px;
-  left: 16px;
-  width: 184px;
-  z-index: -2;
-}
 
 
 /* Custom page header */
 header nav {
   margin-bottom: 0;
-  background-color: #444;
+  background-color: #000;
 }
 
 header a {
@@ -75,7 +47,7 @@ header a.brand:focus {
 .navbar {
   margin: 0;
   padding-top: 6px;
-  border-color: #777;
+  border-color: #444;
 }
 
 .navbar-toggle {
@@ -124,7 +96,7 @@ header + main {
 main {
   padding-top: 100px;
   padding-bottom: 88px;
-  background-color: #337BB7;
+  background-color: #2962ff;
 }
 
 .container {
@@ -187,22 +159,32 @@ div.full-row {
 
 div.white {
   color: #333;
-  background-color: #fff;
+  background-color: #fafafa;
+}
+
+div.white h3 {
+  color: #333;
 }
 
 div.bang {
   color: #fff;
-  background-color: #2BBE83;
+  background-color: #00c853;
 }
 
 div.middle {
   color: #fff;
-  background-color: #337BB7;
+  background-color: #2962ff;
 }
 
 div.dark {
   color: #fff;
-  background-color: #4442C2;
+  background-color: #000;
+}
+
+.splash-text-box {
+  padding: 20px 40px 20px 40px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
 }
 
 .jumbotron {
@@ -272,7 +254,7 @@ label.resolution-label {
 
 input.resolution-radio:checked + label.resolution-label {
   color: #fff;
-  background-color: #5cb85c;
+  background-color: #00c853;
   box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.1);
   padding: 10px;
 }
@@ -287,7 +269,7 @@ label.remotedesktopkind-label {
 }
 
 input.remotedesktopkind-radio:checked + label.remotedesktopkind-label {
-  background-color: #337ab7;
+  background-color: #2962ff;
   color: #fff;
 }
 
@@ -306,7 +288,7 @@ div.alert hr {
 }
 
 div.well.image {
-  background-color: #337bb7;
+  background-color: #2962ff;
   padding: 0;
   text-align: center;
 }

@@ -43,6 +43,11 @@ class DefaultController extends Controller
         return $this->render('AppBundle:default:linux.html.twig');
     }
 
+    public function indexMacAction()
+    {
+        return $this->render('AppBundle:default:mac.html.twig');
+    }
+
     public function logoutSuccessfulAction()
     {
         $this->addFlash('success', $this->get('translator')->trans('logoutSuccessful.message'));

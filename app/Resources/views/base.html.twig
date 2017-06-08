@@ -13,7 +13,8 @@
         <title>{% block title %}ubiqMachine{% endblock %}</title>
 
         {% block stylesheets %}
-            <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:700" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/bootstrap.min.css') }}">
             <!-- <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/bootstrap-material-design.min.css') }}"> -->
             <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/ripples.min.css') }}">
@@ -45,9 +46,7 @@
 
                             <a href="{{ path('homepage') }}">
                                 <div id="logo">
-                                    <span id="logo-box-3" class="logo-box">&nbsp;</span>
-                                    <span id="logo-box-2" class="logo-box">&nbsp;</span>
-                                    <span id="logo-box-1" class="logo-box">ubiqMachine</span>
+                                    <img src="{{ asset('bundles/app/images/gaming-solved-logo.png') }}" width="160px" height="26px">
                                 </div>
                             </a>
 

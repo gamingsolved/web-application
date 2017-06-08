@@ -1,0 +1,333 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    <style>
+        h3 {
+            color: #fff;
+            text-align: left;
+            line-height: 140%;
+        }
+
+        .btn-primary {
+            background-color: #2bbe83;
+            border-color: #2bbe83;
+        }
+
+        div.well {
+            color: #444;
+        }
+
+        body {
+            padding-top: 48px;
+            background-color: #4442C2;
+        }
+
+        main {
+            padding-top: 0;
+        }
+    </style>
+
+{% endblock %}
+
+{% block body %}
+
+    <div
+        class="full-row"
+        style="
+            background-image: url('{{ asset('bundles/app/images/homepage-splash-mac.png') }}');
+            background-size: cover;
+            height: 80vh;
+            background-repeat: no-repeat;
+            background-color: #000;
+        "
+    >
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-xl-4">
+
+                    <div class="splash-text-box" style="margin-top: 40px">
+                        <h1
+                            style="
+                                background-color: #fff;
+                                color: #000;
+                                padding: 30px;
+                                margin-top: -40px;
+                                margin-left: -40px;
+                                margin-right: -40px;
+                            "
+                        >
+                            Gaming on Mac is finally: solved.
+                        </h1>
+
+                        <h4>
+                            Play <u>any</u> game title on your Mac
+                            computer - <u>without</u> the hassle.
+                        </h4>
+
+                        <hr>
+
+                        <p>
+                            A 3D accelerated Windows dektop in the cloud
+                            streams its video signal to your local Mac - think Remote Desktop on steroids.
+                        </p>
+
+                        <p>
+                            This means:
+                        </p>
+
+                        <ul>
+                            <li>
+                                You are not limited to Mac games - <u>any</u> Windows just game works.
+                            </li>
+                        </ul>
+
+                        <ul>
+                            <li>
+                                No need for hacks like Wine, a virtual machine, or even Bootcamp.
+                            </li>
+                        </ul>
+
+                        <ul>
+                            <li>
+                                No need for a Mac with powerful graphics - the cloud computer does the heavy lifting.
+                            </li>
+                        </ul>
+
+                        <ul>
+                            <li>
+                                No need to invest in a gaming rig - you rent your cloud gaming rig and pay per usage hour.
+                            </li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="full-row white">
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <h3>
+                        Your <span style="background-color: #2BBE83; padding-left: 4px; padding-right: 4px;">ubiqMachine</span> is your GPU powered desktop in the cloud.
+                    </h3>
+
+                </div>
+
+                <div class="col-sm-6">
+
+                    <div class="well">
+                        <p>
+                            Is your own computer lacking a powerful processor and a dedicated GPU?
+                        </p>
+                        <p>
+                            With ubiqMachine, you can still play the latest 3D games or work with demanding
+                            CAD programs.
+                        </p>
+                        <p>
+                            Our cloud computers feature powerful graphics cards, and they fluidly stream
+                            their video and audio output to your local computer with
+                            low latency and high quality thanks to our
+                            highly optimized encoding technology.
+                        </p>
+                        <p>
+                            All you need is an internet connection with a bandwidth of 25&nbsp;Mbit/s
+                            or more - we take care of the rest.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="full-row middle">
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <h3>
+                        Start in 4 simple steps.
+                    </h3>
+                </div>
+
+                <div class="col-sm-1">
+                    <h3 class="hidden-xs">
+                        <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                    </h3>
+                </div>
+                <div class="col-sm-5">
+                    <h3>
+                        1. Sign up
+                    </h3>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3 class="hidden-xs">
+                        &nbsp;
+                    </h3>
+                </div>
+
+                <div class="col-sm-1">
+                    <h3 class="hidden-xs">
+                        <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                    </h3>
+                </div>
+                <div class="col-sm-5">
+                    <h3>
+                        2. Download and install the client.
+                    </h3>
+                    For Windows and Mac. Linux coming soon.
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3 class="hidden-xs">
+                        &nbsp;
+                    </h3>
+                </div>
+
+                <div class="col-sm-1">
+                    <h3 class="hidden-xs">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </h3>
+                </div>
+                <div class="col-sm-5">
+                    <h3>
+                        3. Create a remote desktop.
+                    </h3>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3 class="hidden-xs">
+                        &nbsp;
+                    </h3>
+                </div>
+
+                <div class="col-sm-1">
+                    <h3 class="hidden-xs">
+                        <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
+                    </h3>
+                </div>
+                <div class="col-sm-5">
+                    <h3>
+                        4. Connect with one click.
+                    </h3>
+                </div>
+            </div>
+
+            <hr>
+
+        </div>
+
+
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-sm-6">
+
+                    <h3>
+                        Strictly pay-per-use.
+                    </h3>
+                    <p>
+                        <a class="btn btn-primary btn-lg" href="{{ path('fos_user_registration_register') }}">
+                            Sign up now
+                            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                        </a>
+                    </p>
+                    <p class="small">
+                        Prices start as low as $1.49 per usage hour and $0.02 for each hour per 100 GB provisioned hard disk storage.
+                    </p>
+                    <p class="small">
+                        No recurring fees, no hidden costs, no nonsense.
+                    </p>
+                </div>
+
+                <div class="col-sm-6">
+
+                    <div class="well">
+                        <p>
+                            Skip investing in expensive hardware for your home or office.
+                        </p>
+                        <p>
+                            You pay for your ubiqMachine by the hour, and when you are
+                            not using it, you are not paying anything.
+                        </p>
+                        <p>
+                            It's that simple.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="full-row middle">
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-sm-6">
+
+                    <h3>
+                        How exactly does pay-per-use work?
+                    </h3>
+                </div>
+
+                <div class="col-sm-6">
+
+                    <div class="well">
+                        <p>
+                            See <a href="{{ path('about.howBillingWorks') }}">How Billing Works</a> for a detailed
+                            explanation and visualization.
+                        </p>
+                    </div>
+                    <div class="well image">
+                        <a href="{{ path('about.howBillingWorks') }}"><img src="{{ asset('bundles/app/images/billing-diagram-1-hour-small.png') }}" width="95%"></a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

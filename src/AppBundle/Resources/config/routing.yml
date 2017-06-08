@@ -8,6 +8,11 @@ homepage.linux:
     defaults: { _controller: AppBundle:Default:indexLinux }
     methods:  [GET]
 
+homepage.mac:
+    path:     /mac
+    defaults: { _controller: AppBundle:Default:indexMac }
+    methods:  [GET]
+
 about.howBillingWorks:
     path:     /about/how-billing-works
     defaults: { _controller: AppBundle:About:howBillingWorks }
