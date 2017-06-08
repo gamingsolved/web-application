@@ -4,7 +4,7 @@ security:
         forgot_password: Password vergessen?
 registration:
     email:
-        subject: Willkommen bei Gaming: Solved.
+        subject: "Willkommen bei Gaming: Solved."
         message: |
             Hallo,
 
@@ -19,7 +19,7 @@ registration:
 # Password resetting
 resetting:
     email:
-        subject: Gaming: Solved. - Password zurücksetzen
+        subject: "Gaming: Solved. - Password zurücksetzen"
         message: |
             Hallo %username%!
 
