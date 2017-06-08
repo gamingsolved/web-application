@@ -8,7 +8,7 @@ security:
 sign_up: Sign up
 registration:
     email:
-        subject: Welcome to ubiqMachine!
+        subject: "Welcome to Gaming: Solved."
         message: |
             Hello,
 
@@ -18,12 +18,12 @@ registration:
             With best regards,
 
             --
-              The ubiqMachine team
+              The Gaming: Solved. team
 
 # Password resetting
 resetting:
     email:
-        subject: ubiqMachine Password Reset
+        subject: "Gaming: Solved. - Password Reset"
         message: |
             Hello %username%!
 
@@ -33,4 +33,4 @@ resetting:
             With best regards,
 
             --
-              The ubiqMachine team
+              The Gaming: Solved. team

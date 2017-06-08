@@ -1,5 +1,5 @@
-{% if app.request.cookies.has('ubiqmachine_timezone') %}
-    {% set timezone = app.request.cookies.get('ubiqmachine_timezone') %}
+{% if app.request.cookies.has('gamingsolved_timezone') %}
+    {% set timezone = app.request.cookies.get('gamingsolved_timezone') %}
 {% else %}
     {% set timezone = 'UTC' %}
 {% endif %}
@@ -10,11 +10,11 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{% block title %}ubiqMachine{% endblock %}</title>
+        <title>{% block title %}Gaming: Solved.{% endblock %}</title>
 
         {% block stylesheets %}
-            <!--<link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:700" rel="stylesheet">
-            <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">-->
+            <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:700" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/bootstrap.min.css') }}">
             <!-- <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/bootstrap-material-design.min.css') }}"> -->
             <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/ripples.min.css') }}">
@@ -150,14 +150,14 @@
                     <div class="col-xs-12 text-center">
 
                         <p>
-                            <strong>&copy;2017 The ubiqMachine Team.</strong>
+                            <strong>&copy;2017 The Gaming: Solved. Team.</strong>
                         </p>
                         <p>
                             Made with ❤ in France and Germany
                             &nbsp;·&nbsp;
-                            <a style="color: #fff;" href="mailto:info@ubiqmachine.com">Get in touch</a>
+                            <a style="color: #fff;" href="mailto:info@gamingsolved.com">Get in touch</a>
                             &nbsp;·&nbsp;
-                            <a style="color: #fff;" href="https://blog.ubiqmachine.com">Read the blog</a>
+                            <a style="color: #fff;" href="https://blog.gamingsolved.com">Read the blog</a>
                             &nbsp;·&nbsp;
                             <a style="color: #fff;" href="{{ path('about.imprint') }}">Imprint</a>
                             &nbsp;·&nbsp;
@@ -217,7 +217,7 @@
             jQuery('document').ready(function () {
                 jQuery(function() {
                     var tz = jstz.determine();
-                    Cookies.set('ubiqmachine_timezone', tz.name());
+                    Cookies.set('gamingsolved_timezone', tz.name());
                 });
             });
         </script>
