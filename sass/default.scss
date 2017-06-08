@@ -1,5 +1,5 @@
 body {
-  background-color: #4442c2;
+  background-color: #000;
   color: #000;
   white-space: normal;
   font-weight: 400;
@@ -154,7 +154,8 @@ section:empty {
 }
 
 div.full-row {
-  padding: 48px;
+  padding-top: 48px;
+  padding-bottom: 48px;
 }
 
 div.white {
@@ -183,8 +184,23 @@ div.dark {
 
 .splash-text-box {
   padding: 20px 40px 20px 40px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 200, 83, 0.85);
   color: #fff;
+  text-align: center;
+}
+
+.info-text-box {
+  text-align: center;
+  background-color: #f0efef;
+  max-width: 320px;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+}
+
+.info-text-box h3 {
+  text-align: center;
 }
 
 .jumbotron {

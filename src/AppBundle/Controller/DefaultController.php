@@ -34,18 +34,30 @@ class DefaultController extends Controller
         if (!is_null($user)) {
             return $this->redirectToRoute('remotedesktops.index');
         } else {
-            return $this->render('AppBundle:default:index.html.twig');
+            return $this->redirectToRoute('homepage.mac');
         }
     }
 
     public function indexLinuxAction()
     {
-        return $this->render('AppBundle:default:linux.html.twig');
+        $user = $this->getUser();
+
+        if (!is_null($user)) {
+            return $this->redirectToRoute('remotedesktops.index');
+        } else {
+            return $this->render('AppBundle:default:linux.html.twig');
+        }
     }
 
     public function indexMacAction()
     {
-        return $this->render('AppBundle:default:mac.html.twig');
+        $user = $this->getUser();
+
+        if (!is_null($user)) {
+            return $this->redirectToRoute('remotedesktops.index');
+        } else {
+            return $this->render('AppBundle:default:mac.html.twig');
+        }
     }
 
     public function logoutSuccessfulAction()
