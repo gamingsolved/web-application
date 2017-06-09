@@ -12,7 +12,7 @@ logoutSuccessful:
 about:
     howbillingworks:
         headline: How billing works
-        introduction_one: When running your remote desktop, ubiqMachine charges you for usage hours.
+        introduction_one: When running your remote desktop, you are charged for usage hours.
                           A new usage hour begins as soon as your remote desktop finished booting and
                           is therefore available for use. Within this running usage hour, you can stop
                           and start your remote desktop as often as you wish, without any effect on
@@ -40,7 +40,7 @@ about:
           <p>
             Your trust in us is important to us! This is why we guarantee a maximum of safety and security for all your personal data. Our privacy policy is in accordance with German law, especially the Federal Data Protection Act (BDSG) and the Tele Media Act (TMG).
           </p>
-          <h4>ubiqMachine Privacy Policy</h4>
+          <h4>Gaming: Solved. Privacy Policy</h4>
           <p>
              We store and use your personal data only for contacting you and for providing and managing your personal user account.
           </p>
@@ -89,13 +89,14 @@ about:
             You can at any time opt-out of the usage of your personal data for the future. In this case, please contact:
           </p>
           <p>
-            ubiqMachine<br>
+            Gaming: Solved.<br>
             Manuel Kiessling<br>
             Freiherrenstr. 32<br>
             41515 Grevenbroich<br>
+            Germany<br>
           </p>
           <p>
-            or via e-mail to <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>.
+            or via e-mail to <a href="mailto:info@gamingsolved.com">info@gamingsolved.com</a>.
           </p>
           <h4>External links on our web site</h4>
           <p>
@@ -103,7 +104,7 @@ about:
           </p>
           <h4>Changes to the privacy policy</h4>
           <p>
-            We may change this privacy policy at any time without prior notice. Please inform yourself about the currently valid privacy policy whenever you use "ubiqmachine.com".
+            We may change this privacy policy at any time without prior notice. Please inform yourself about the currently valid privacy policy whenever you use "gamingsolved.com".
           </p>
           <h4>Contect person for privacy-related issues</h4>
           <p>
@@ -113,9 +114,10 @@ about:
             Manuel Kiessling<br>
             Freiherrenstr. 32<br>
             41515 Grevenbroich<br>
+            Germany<br>
           </p>
           <p>
-            e-mail: <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>.
+            e-mail: <a href="mailto:info@gamingsolved.com">info@gamingsolved.com</a>.
           </p>
       headline_secondary: Unsere Datenschutzerklärung
       text_secondary: >
@@ -125,7 +127,7 @@ about:
           <p>
             Ihr Vertrauen ist uns wichtig! Darum garantieren wir Ihnen größtmögliche Sicherheit und den Schutz aller persönlichen Daten. Unsere Datenschutzpraxis steht im Einklang mit dem Bundesdatenschutzgesetz (BDSG) sowie dem Telemediengesetz (TMG).
           </p>
-          <h4>ubiqMachine Datenschutzerklärung</h4>
+          <h4>Gaming: Solved. Datenschutzerklärung</h4>
           <p>
              Wir speichern und verwenden Ihre personenbezogenen Daten nur für die Kontaktaufnahme mit Ihnen sowie für die Bereitstellung und Verwaltung Ihres persönlichen Benutzerkontos.
           </p>
@@ -170,13 +172,14 @@ about:
             Ihre Einwilligung zur Nutzung Ihrer personenbezogenen Daten können Sie jederzeit für die Zukunft widersprechen. Widersprüche richten Sie bitte an
           </p>
           <p>
-            ubiqMachine<br>
+            Gaming: Solved.<br>
             Manuel Kiessling<br>
             Freiherrenstr. 32<br>
             41515 Grevenbroich<br>
+            Deutschland<br>
           </p>
           <p>
-            oder per E-Mail an <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>.
+            oder per E-Mail an <a href="mailto:info@gamingsolved.com">info@gamingsolved.com</a>.
           </p>
           <h4>Externe Links auf unseren Webseiten</h4>
           <p>
@@ -184,7 +187,7 @@ about:
           </p>
           <h4>Änderung der Datenschutzerklärung</h4>
           <p>
-            Wir behalten uns vor, diese Datenschutzerklärung jederzeit ohne Ankündigung zu ändern. Bitte informieren Sie sich bei jeder Nutzung von "ubiqmachine.com" über die zum jeweiligen Zeitpunkt geltende aktuelle Datenschutzerklärung.
+            Wir behalten uns vor, diese Datenschutzerklärung jederzeit ohne Ankündigung zu ändern. Bitte informieren Sie sich bei jeder Nutzung von "gamingsolved.com" über die zum jeweiligen Zeitpunkt geltende aktuelle Datenschutzerklärung.
           </p>
           <h4>Ansprechpartner für Datenschutz</h4>
           <p>
@@ -194,9 +197,10 @@ about:
             Manuel Kiessling<br>
             Freiherrenstr. 32<br>
             41515 Grevenbroich<br>
+            Deutschland<br>
           </p>
           <p>
-            E-Mail: <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>.
+            E-Mail: <a href="mailto:info@gamingsolved.com">info@gamingsolved.com</a>.
           </p>
     imprint:
       headline_primary: Imprint
@@ -204,11 +208,11 @@ about:
           <p>
             Die deutschsprachige Version unseres Impressums finden Sie weiter unten auf der Seite.
           </p>
-          <p>ubiqmachine.com is realized by Manuel Kiessling and Scalable Graphics SAS.</p>
-          <p>Responsible for ubiqmachine.com: Manuel Kiessling.</p>
+          <p>gamingsolved.com is realized by Manuel Kiessling and Scalable Graphics SAS.</p>
+          <p>Responsible for gamingsolved.com: Manuel Kiessling.</p>
           <h4>Contact</h4>
           <p>
-            ubiqmachine.com<br>
+            gamingsolved.com<br>
             Manuel Kiessling<br>
             Freiherrenstr. 32<br>
             41515 Grevenbroich<br>
@@ -217,16 +221,16 @@ about:
           <p>
             Phone: +49-2181-7838778<br>
             Fax: +49-2181-7838778<br>
-            e-mail: <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>
+            e-mail: <a href="mailto:info@gamingsolved.com">info@gamingsolved.com</a>
           </p>
 
       headline_secondary: Impressum
       text_secondary: >
-          <p>Die Realisation von ubiqmachine.com erfolgt durch Manuel Kiessling und Scalable Graphics SAS.</p>
-          <p>Verantwortlich für ubiqmachine.com ist Herr Manuel Kiessling.</p>
+          <p>Die Realisation von gamingsolved.com erfolgt durch Manuel Kiessling und Scalable Graphics SAS.</p>
+          <p>Verantwortlich für gamingsolved.com ist Herr Manuel Kiessling.</p>
           <h4>Kontakt</h4>
           <p>
-            ubiqmachine.com<br>
+            gamingsolved.com<br>
             Manuel Kiessling<br>
             Freiherrenstr. 32<br>
             41515 Grevenbroich<br>
@@ -235,7 +239,7 @@ about:
           <p>
             Telefon: +49-2181-7838778<br>
             Fax: +49-2181-7838778<br>
-            E-Mail: <a href="mailto:info@ubiqmachine.com">info@ubiqmachine.com</a>
+            E-Mail: <a href="mailto:info@gamingsolved.com">info@gamingsolved.com</a>
           </p>
 
 remoteDesktop:
