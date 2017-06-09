@@ -174,7 +174,7 @@ div.bang {
 
 div.middle {
   color: #fff;
-  background-color: #2962ff;
+  background-color: #5280FF;
 }
 
 div.dark {
@@ -201,6 +201,18 @@ div.dark {
 
 .info-text-box h3 {
   text-align: center;
+}
+
+.faq-block, .faq-block h4 {
+  text-align: justify;
+  color: #000;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.faq-block h4 {
+  margin-top: 30px;
 }
 
 .jumbotron {
