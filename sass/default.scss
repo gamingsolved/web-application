@@ -246,9 +246,12 @@ div.dark {
 .faq-block, .faq-block h4 {
   text-align: justify;
   color: #000;
-  max-width: 480px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.faq-block {
+  max-width: 90%;
 }
 
 .faq-block h4 {
