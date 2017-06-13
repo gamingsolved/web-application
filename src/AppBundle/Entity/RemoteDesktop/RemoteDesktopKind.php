@@ -63,11 +63,6 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
     {
         return [
             self::createRemoteDesktopKind(self::GAMING_PRO),
-            self::createRemoteDesktopKind(self::CAD_PRO),
-            self::createRemoteDesktopKind(self::CAD_ULTRA),
-            self::createRemoteDesktopKind(self::THREED_MEDIA_PRO),
-            self::createRemoteDesktopKind(self::THREED_MEDIA_ULTRA),
-            self::createRemoteDesktopKind(self::UNITY_PRO) // See https://trello.com/c/QnRbib98/65-recreate-unity-amis-with-correct-encoding
         ];
     }
 
