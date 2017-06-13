@@ -2,8 +2,8 @@ _navigation:
     register: Sign up
     login: Sign in
     logout: Log out
-    your_remote_desktops: Your remote desktops
-    create_new_remote_desktop: Create a new remote desktop
+    your_remote_desktops: Your cloud gaming rigs
+    create_new_remote_desktop: Create a new cloud gaming rig
     how_billing_works: How billing works
 
 logoutSuccessful:
@@ -12,22 +12,22 @@ logoutSuccessful:
 about:
     howbillingworks:
         headline: How billing works
-        introduction_one: When running your remote desktop, you are charged for usage hours.
-                          A new usage hour begins as soon as your remote desktop finished booting and
+        introduction_one: When running your cloud gaming rig, you are charged for usage hours.
+                          A new usage hour begins as soon as your cloud gaming rig finished booting and
                           is therefore available for use. Within this running usage hour, you can stop
-                          and start your remote desktop as often as you wish, without any effect on
+                          and start your cloud gaming rig as often as you wish, without any effect on
                           billing.
-        introduction_two: In case your remote desktop is still running at the end of the
+        introduction_two: In case your cloud gaming rig is still running at the end of the
                           usage hour, another usage hour begins, and you are charged for it.
         introduction_three: The diagrams below visualize this mechanism.
         introduction_four: Please note that independently from usage billing, you are also billed a small fee
-                           (around $0.02 per hour per 100 GB) for the hard disk storage of your remote desktop.
+                           (around $0.02 per hour per 100 GB) for the hard disk storage of your cloud gaming rig.
                            Because this storage space is always provisioned, also if your system is not running,
-                           this fee is billed also when your desktop is off. Of course, once you remove a remote
-                           desktop, the system and all its storage is decommisioned, and you are no longer billed
+                           this fee is billed also when your cloud gaming rig is off. Of course, once you remove a cloud
+                           gaming rig, the system and all its storage is decommisioned, and you are no longer billed
                            for hard disk storage space.
-        headline_one_hour: Using a remote desktop for one hour
-        headline_two_hours: Using a remote desktop for two consecutive hours
+        headline_one_hour: Using a cloud gaming rig for one hour
+        headline_two_hours: Using a cloud gaming rig for two consecutive hours
     privacypolicy:
       headline_primary: Our Privacy Policy
       text_primary: >
@@ -45,7 +45,7 @@ about:
              We store and use your personal data only for contacting you and for providing and managing your personal user account.
           </p>
           <p>
-            Please note that all personal data which you enter and store on your remote desktop instances which we provide to you are stored out of our reach and out of our control on the system instances at Amazon Web Services, operated by Amazon Web Services, Inc., 410 Terry Avenue North, Seattle WA 98109, United States. Depending on your choice of a remote desktop launch location, your instances are potentially operated outside of Germany and the EU, for example in the USA.
+            Please note that all personal data which you enter and store on your cloud gaming rig instances which we provide to you are stored out of our reach and out of our control on the system instances at Amazon Web Services, operated by Amazon Web Services, Inc., 410 Terry Avenue North, Seattle WA 98109, United States. Depending on your choice of a cloud gaming rig launch location, your instances are potentially operated outside of Germany and the EU, for example in the USA.
           </p>
           <h4>We do not share your personal data with third parties</h4>
           <p>
@@ -249,17 +249,17 @@ remoteDesktop:
         your_current_account_balance_is_only: Your current account balance is only
         see_account_balance_history: See your account balance history
         click_here_to_increase_your_balance: Click here to increase your balance
-        headline: Your remote desktops
-        no_remote_desktops_yet: You do not yet have any remote desktops.
+        headline: Your cloud gaming rigs
+        no_remote_desktops_yet: You do not yet have any cloud gaming rigs.
         usage_costs_per_hour: Usage costs per hour
         current_usage_costs_per_hour: Current usage costs per hour
         only_in_status: only in status
         while_in_status: while in status
-        provisioning_costs_per_hour: Current storage costs per hour (until desktop is removed)
-        auto_stop_info: "Cost protection: This remote desktop will automatically stop on"
-        auto_stop_change_first: "Set cost protection to stop this desktop at the end of the"
+        provisioning_costs_per_hour: Current storage costs per hour (until rig is removed)
+        auto_stop_info: "Cost protection: This cloud gaming rig will automatically stop on"
+        auto_stop_change_first: "Set cost protection to stop this rig at the end of the"
         auto_stop_change_last: "usage hour from now."
-        auto_stop_change_btn_title: "This would stop the desktop on "
+        auto_stop_change_btn_title: "This would stop the rig on "
         auto_stop_change_hour_0: "current"
         auto_stop_change_hour_1: "2nd"
         auto_stop_change_hour_2: "3rd"
@@ -268,17 +268,17 @@ remoteDesktop:
         auto_stop_change_hour_5: "6th"
         auto_stop_change_hour_6: "7th"
         auto_stop_change_hour_7: "8th"
-        add_button: Create a new remote desktop
+        add_button: Create a new cloud gaming rig
         download_client_windows: Download the Windows client
         download_client_mac: Download the Mac client
-        launch_button: Launch this remote desktop
+        launch_button: Launch this cloud gaming rig
         refresh_button: Refresh status
-        stop_data_safe_info: Your data is safe - everything is kept in place when your remote desktop is stopped.
-        start_button: Start this remote desktop
-        terminate_button: Remove this remote desktop
-        terminate_data_lost_info: All your remote desktop data will be lost upon removal!
-        info_launching: Booting a remote desktop can take between 30 seconds and 15 minutes. You are only billed once the desktop is fully available.
-        info_stopping: Stopping a remote desktop can take up to 5 minutes. You are no longer billed now.
+        stop_data_safe_info: Your data is safe - everything is kept in place when your cloud gaming rig is stopped.
+        start_button: Start this cloud gaming rig
+        terminate_button: Remove this cloud gaming rig
+        terminate_data_lost_info: All your cloud gaming rig data will be lost upon removal!
+        info_launching: Booting a cloud gaming rig can take between 30 seconds and 15 minutes. You are only billed once the rig is fully available.
+        info_stopping: Stopping a cloud gaming rig can take up to 5 minutes. You are no longer billed now.
         publicaddress_label: IP address:
         username_label: Username:
         password_label: Password:
@@ -288,13 +288,13 @@ remoteDesktop:
         connect_now_client_info: You need to have the client program installed.
         countdownbox:
             checking_again_in: Checking again in
-            not_yet_available: The remote desktop is not yet available.
-            now_available: The remote desktop is available! Click to show connection info.
+            not_yet_available: The cloud gaming rig is not yet available.
+            now_available: The cloud gaming rig is available! Click to show connection info.
     new:
         form:
-            headline: Create a new remote desktop
-            title_label: Title for this remote desktop:
-            kind_label: What kind of remote desktop do you want to create?
+            headline: Create a new cloud gaming rig
+            title_label: Title for this cloud gaming rig:
+            kind_label: What kind of cloud gaming rig do you want to create?
             per_usage_hour: per usage hour
             submit_label: Continue
     kind:
@@ -320,7 +320,7 @@ remoteDesktop:
 cloudInstance:
     new:
         form:
-            headline: Launch your remote desktop
+            headline: Launch your cloud gaming rig
             region_label: Please select the region which is closest to your current position:
             submit_label: Launch now
         launch_later_button: Launch later
@@ -346,7 +346,7 @@ payment:
         cancel_message: The transaction was canceled, and the amount of %amount% has NOT been added to your balance!
         current_balance: Your current balance is %balance%.
         accessDenied_message: You are not allowed to access this page.
-        back_to_remotedesktops: Back to your remote desktops
+        back_to_remotedesktops: Back to your cloud gaming rigs
 
 accountMovement:
     index:
@@ -354,18 +354,18 @@ accountMovement:
         read_how_billing_works: Read about how billing works
         read_how_billing_works_here: here
         thead_occurred_at: Date and time
-        thead_events: Desktop and billing events
+        thead_events: Rig and billing events
         thead_balance: Balance
         oclock: "h"
         account_movement_deposit_description: An amount of %moneyValue% was deposited onto your account.
-        account_movement_debit_description: An amount of %moneyValue% was debited from your account for 1 %billableItemTypeTranslation% hour of desktop '%remoteDesktopTitle%'.
+        account_movement_debit_description: An amount of %moneyValue% was debited from your account for 1 %billableItemTypeTranslation% hour of rig '%remoteDesktopTitle%'.
         billable_item_type_translation_0: usage
         billable_item_type_translation_1: storage space
         new_account_balance: Your new account balance at this point in time is %moneyValue%.
-        remote_desktop_event_became_available: The remote desktop '%stringValue%' became available for remote sessions.
-        remote_desktop_event_became_unavailable: The remote desktop '%stringValue%' became unavailable for remote sessions.
-        remote_desktop_event_was_provisioned: Storage for the remote desktop '%stringValue%' was provisioned.
-        remote_desktop_event_was_unprovisioned: Storage for the remote desktop '%stringValue%' was unprovisioned.
+        remote_desktop_event_became_available: The cloud gaming rig '%stringValue%' became available for remote sessions.
+        remote_desktop_event_became_unavailable: The cloud gaming rig '%stringValue%' became unavailable for remote sessions.
+        remote_desktop_event_was_provisioned: Storage for the cloud gaming rig '%stringValue%' was provisioned.
+        remote_desktop_event_was_unprovisioned: Storage for the cloud gaming rig '%stringValue%' was unprovisioned.
 
     newDeposit:
         form:
@@ -373,9 +373,9 @@ accountMovement:
             amount_label: Please choose the amount to use for increasing your balance:
             submit_label: Continue to payment
         current_balance: Your current balance is %balance%.
-        back_to_remotedesktops: Back to your remote desktops
+        back_to_remotedesktops: Back to your cloud gaming rigs
 
 insufficientAccountBalance:
-    message_one: Your account balance is too low to use this remote desktop.
-    message_two: Running this remote desktop costs %hourlyUsageCosts% per hour, but your current balance is
+    message_one: Your account balance is too low to use this cloud gaming rig.
+    message_two: Running this cloud gaming rig costs %hourlyUsageCosts% per hour, but your current balance is
     click_here_to_increase_your_balance: Click here to increase your balance now
