@@ -218,9 +218,12 @@ div.dark {
 
 .splash-text-box {
   padding: 20px 40px 20px 40px;
-  background-color: rgba(0, 200, 83, 0.85);
+  background-color: rgba(0, 200, 83, 0.95);
   color: #fff;
   text-align: center;
+  max-width: 400px;
+  margin-right: 0;
+  margin-left: auto;
 }
 
 .pitch-box {
