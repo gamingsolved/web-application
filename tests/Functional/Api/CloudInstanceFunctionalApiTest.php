@@ -20,7 +20,7 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
 
         $remoteDesktopRepository = $em->getRepository(RemoteDesktop::class);
         /** @var RemoteDesktop $remoteDesktop */
-        $remoteDesktop = $remoteDesktopRepository->findOneBy(['title' => 'My first remote desktop']);
+        $remoteDesktop = $remoteDesktopRepository->findOneBy(['title' => 'My first cloud gaming rig']);
 
         /** @var AwsCloudInstance $cloudInstance */
         $cloudInstance = $remoteDesktop->getActiveCloudInstance();

@@ -31,14 +31,14 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
         $client = $this->getClientThatRegisteredAndActivatedAUser();
 
         $crawler = $client->request('GET', '/en/remoteDesktops/');
-        $link = $crawler->selectLink('Create a new remote desktop')->first()->link();
+        $link = $crawler->selectLink('Create a new cloud gaming rig')->first()->link();
         $crawler = $client->click($link);
 
         $buttonNode = $crawler->selectButton('Continue');
         $form = $buttonNode->form();
 
         $client->submit($form, [
-            'form[title]' => 'My first remote desktop',
+            'form[title]' => 'My first cloud gaming rig',
             'form[kind]' => '0' // "Gaming"
         ]);
 
@@ -50,7 +50,7 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
         /** @var EntityRepository $repo */
         $repo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
         /** @var RemoteDesktop $remoteDesktop */
-        $remoteDesktop = $repo->findOneBy(['title' => 'My first remote desktop']);
+        $remoteDesktop = $repo->findOneBy(['title' => 'My first cloud gaming rig']);
         $this->assertEquals(
             '/en/remoteDesktops/' . $remoteDesktop->getId() . '/cloudInstances/new',
             $client->getRequest()->getRequestUri()
@@ -62,17 +62,17 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertEquals(
             0,
-            $crawler->filter('div.alert-info:contains("You do not yet have any remote desktops.")')->count()
+            $crawler->filter('div.alert-info:contains("You do not yet have any cloud gaming rigs.")')->count()
         );
 
-        $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
+        $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Gaming: Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™', $crawler->filter('div.remotedesktop-infobox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Not running', $crawler->filter('.remotedesktopstatus')->first()->text());
 
-        $this->assertContains('Launch this remote desktop', $crawler->filter('.panel-footer a.btn')->first()->text());
+        $this->assertContains('Launch this cloud gaming rig', $crawler->filter('.panel-footer a.btn')->first()->text());
 
         $this->assertEquals(
             1,
