@@ -10,13 +10,28 @@
                     {{ form_row(form.title) }}
 
                     <div class="form-group">
-                        <label class="control-label required">{{ "remoteDesktop.new.form.kind_label"|trans }}</label>
+                        <label class="control-label required">
+                            {% if remoteDesktopKinds|length == 1 %}
+                                {{ "remoteDesktop.new.form.kind_label_if_only_one_kind"|trans }}
+                            {% else %}
+                                {{ "remoteDesktop.new.form.kind_label"|trans }}
+                            {% endif %}
+                        </label>
                         <div>
 
                             {% for remoteDesktopKind in remoteDesktopKinds %}
 
                                 <div class="radio">
-                                    <input id="remotedesktopkind-{{ remoteDesktopKind.identifier }}" class="remotedesktopkind-radio" name="form[kind]" required="required" value="{{ remoteDesktopKind.identifier }}" type="radio">
+                                    <input
+                                        id="remotedesktopkind-{{ remoteDesktopKind.identifier }}"
+                                        class="remotedesktopkind-radio"
+                                        name="form[kind]"
+                                        required="required"
+                                        value="{{ remoteDesktopKind.identifier }}"
+                                        type="radio"
+                                        {% if loop.length == 1 %}checked="checked"{% endif %}
+                                    >
+
                                     <label for="remotedesktopkind-{{ remoteDesktopKind.identifier }}" class="required well remotedesktopkind-label">
                                         <span class="remotedesktopkind-name">{{ remoteDesktopKind.name|trans }}</span>
                                         <br>
