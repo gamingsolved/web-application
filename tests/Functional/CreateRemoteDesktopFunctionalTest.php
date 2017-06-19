@@ -75,8 +75,24 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('Launch this cloud gaming rig', $crawler->filter('.panel-footer a.btn')->first()->text());
 
         $this->assertEquals(
-            1,
+            2,
             $crawler->filter('.panel-footer a.btn')->count()
+        );
+
+        $this->assertContains(
+            'Launch this cloud gaming rig',
+            $crawler->filter('.panel-footer a.btn')->eq(0)->text()
+        );
+
+        $this->assertContains(
+            'Remove this cloud gaming rig',
+            $crawler->filter('.panel-footer a.btn')->eq(1)->text()
+        );
+
+        // Data loss warning label only for instance which have been launched at least once and therefore have data
+        $this->assertEquals(
+            0,
+            $crawler->filter('.datainfolabel')->count()
         );
 
         // We want to build on this in other tests

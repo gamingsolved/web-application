@@ -246,10 +246,15 @@ class RemoteDesktopController extends Controller
             return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
         }
 
-        $remoteDesktop->scheduleForTermination();
-
         $em = $this->getDoctrine()->getManager();
-        $em->persist($remoteDesktop);
+
+        if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_NEVER_LAUNCHED) {
+            $em->remove($remoteDesktop);
+        } else {
+            $remoteDesktop->scheduleForTermination();
+            $em->persist($remoteDesktop);
+        }
+
         $em->flush();
 
         return $this->redirectToRoute('remotedesktops.index');
