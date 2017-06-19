@@ -37,7 +37,38 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         );
     }
 
-    public function testRemoveRemoteDesktop()
+    public function testRemoveNotYetLaunchedRemoteDesktop()
+    {
+        $client = (new CreateRemoteDesktopFunctionalTest())->testCreateRemoteDesktop();
+
+        $crawler = $client->request('GET', '/en/remoteDesktops/');
+
+        $link = $crawler->selectLink('Remove this cloud gaming rig')->first()->link();
+
+        $client->click($link);
+
+        $crawler = $client->followRedirect();
+
+        // We want to be back in the overview
+        $this->assertEquals(
+            '/en/remoteDesktops/',
+            $client->getRequest()->getRequestUri()
+        );
+
+        // Because it was never launched, the desktop is immediately gone
+
+        $this->assertEmpty($crawler->filter('h2'));
+        $this->assertEmpty($crawler->filter('div.hourlyusagecostsbox'));
+        $this->assertEmpty($crawler->filter('h3'));
+        $this->assertEmpty($crawler->filter('.remotedesktopstatus'));
+
+        $this->assertEquals(
+            0,
+            $crawler->filter('.panel-footer a.btn')->count()
+        );
+    }
+
+    public function testRemoveStoppedRemoteDesktop()
     {
         $client = (new StopRemoteDesktopFunctionalTest())->testStopRemoteDesktop();
 
