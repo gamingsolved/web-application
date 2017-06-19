@@ -32,9 +32,9 @@ class ShowEmptyRemoteDesktopsOverviewFunctionalTest extends WebTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertContains('Your remote desktops', $crawler->filter('h1')->text());
+        $this->assertContains('Your cloud gaming rigs', $crawler->filter('h1')->text());
 
-        $this->assertContains('You do not yet have any remote desktops.', $crawler->filter('div.alert-info')->text());
+        $this->assertContains('You do not yet have any cloud gaming rigs.', $crawler->filter('div.alert-info')->text());
     }
 
     public function testAccountBalanceInfo()

@@ -105,8 +105,11 @@ class AccountMovementController extends Controller
         }
 
         foreach ($eventblocks as $index => $eventblock) {
+            /** @var \DateTime $occuredAt */
+            $occuredAt = clone($eventblock['occuredAt']);
+            $occuredAt->add(new \DateInterval('PT59S'));
             $eventblocks[$index]['accountBalance'] =
-                $accountMovementRepository->getAccountBalanceForUserUpUntil($user, $eventblock['occuredAt']);
+                $accountMovementRepository->getAccountBalanceForUserUpUntil($user, $occuredAt);
         }
 
         /** @var RemoteDesktopEvent $remoteDesktopEvent */

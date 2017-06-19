@@ -19,13 +19,13 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         $link = $crawler->selectLink('Refresh status')->first()->link();
         $crawler = $client->click($link);
 
-        $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
+        $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Usage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
         $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current storage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(until desktop is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Removing...', $crawler->filter('.remotedesktopstatus')->first()->text());
@@ -43,7 +43,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
 
         $crawler = $client->request('GET', '/en/remoteDesktops/');
 
-        $link = $crawler->selectLink('Remove this remote desktop')->first()->link();
+        $link = $crawler->selectLink('Remove this cloud gaming rig')->first()->link();
 
         $client->click($link);
 
@@ -68,7 +68,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         $em = $container->get('doctrine.orm.entity_manager');
         $remoteDesktopRepo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
         /** @var RemoteDesktop $remoteDesktop */
-        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first cloud gaming rig']);
         /** @var CloudInstance $cloudInstance */
         $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATING);
@@ -80,7 +80,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
 
         // Switching instance to "Terminated" status, which must put the desktop into "Removed" status
 
-        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first cloud gaming rig']);
         /** @var CloudInstance $cloudInstance */
         $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);

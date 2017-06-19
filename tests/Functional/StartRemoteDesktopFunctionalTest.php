@@ -20,14 +20,14 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $link = $crawler->selectLink('Refresh status')->first()->link();
         $crawler = $client->click($link);
 
-        $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
+        $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Booting...', $crawler->filter('.remotedesktopstatus')->first()->text());
 
         $this->assertEquals(
             0,
-            $crawler->filter('a.btn:contains("Start this remote desktop")')->count()
+            $crawler->filter('a.btn:contains("Start this cloud gaming rig")')->count()
         );
 
         $this->assertContains('Refresh status', $crawler->filter('.panel-footer a.btn')->first()->text());
@@ -43,7 +43,7 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
 
         $crawler = $client->request('GET', '/en/remoteDesktops/');
 
-        $link = $crawler->selectLink('Start this remote desktop')->first()->link();
+        $link = $crawler->selectLink('Start this cloud gaming rig')->first()->link();
 
         $client->click($link);
 
@@ -68,7 +68,7 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $em = $container->get('doctrine.orm.entity_manager');
         $remoteDesktopRepo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
         /** @var RemoteDesktop $remoteDesktop */
-        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first cloud gaming rig']);
         /** @var CloudInstance $cloudInstance */
         $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STARTING);
@@ -80,7 +80,7 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
 
         // Switching instance to "Running" status, which must put the desktop into "Ready to use" status
 
-        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first cloud gaming rig']);
         /** @var CloudInstance $cloudInstance */
         $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
@@ -103,13 +103,13 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $link = $crawler->selectLink('Refresh status')->first()->link();
         $crawler = $client->click($link);
 
-        $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
+        $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Current usage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
         $this->assertContains('(while in status Ready to use): $1.49', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current storage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(until desktop is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());
@@ -123,17 +123,17 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
 
         $crawler = $client->request('GET', '/en/remoteDesktops/');
 
-        $link = $crawler->selectLink('Start this remote desktop')->first()->link();
+        $link = $crawler->selectLink('Start this cloud gaming rig')->first()->link();
 
         $crawler = $client->click($link);
 
         $this->assertContains(
-            'Your account balance is too low to use this remote desktop.',
+            'Your account balance is too low to use this cloud gaming rig.',
             $crawler->filter('div.alert')->first()->text()
         );
 
         $this->assertContains(
-            'Running this remote desktop costs $1.49 per hour, but your current balance is',
+            'Running this cloud gaming rig costs $1.49 per hour, but your current balance is',
             $crawler->filter('div.alert')->first()->text()
         );
 

@@ -21,13 +21,13 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
         $link = $crawler->selectLink('Refresh status')->first()->link();
         $crawler = $client->click($link);
 
-        $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
+        $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Usage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
         $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current storage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(until desktop is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Stopping...', $crawler->filter('.remotedesktopstatus')->first()->text());
@@ -49,7 +49,7 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
 
         $remoteDesktopRepo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
         /** @var RemoteDesktop $remoteDesktop */
-        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first cloud gaming rig']);
 
         $rdas = new RemoteDesktopAutostopService();
         $optimalHourlyAutostopTimesForRemoteDesktop = $rdas->getOptimalHourlyAutostopTimesForRemoteDesktop(
@@ -74,7 +74,7 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
         // Therefore, we do this through the entities.
         $remoteDesktopRepo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
         /** @var RemoteDesktop $remoteDesktop */
-        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first cloud gaming rig']);
         /** @var CloudInstance $cloudInstance */
         $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_STOP);
@@ -108,7 +108,7 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
         $em = $container->get('doctrine.orm.entity_manager');
         $remoteDesktopRepo = $em->getRepository('AppBundle\Entity\RemoteDesktop\RemoteDesktop');
         /** @var RemoteDesktop $remoteDesktop */
-        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first cloud gaming rig']);
         /** @var CloudInstance $cloudInstance */
         $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPING);
@@ -120,7 +120,7 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
 
         // Switching instance to "Stopped" status, which must put the desktop into "Stopped" status
 
-        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first remote desktop']);
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first cloud gaming rig']);
         /** @var CloudInstance $cloudInstance */
         $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_STOPPED);
@@ -130,19 +130,19 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
         $link = $crawler->selectLink('Refresh status')->first()->link();
         $crawler = $client->click($link);
 
-        $this->assertContains('My first remote desktop', $crawler->filter('h2')->first()->text());
+        $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Usage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
         $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current storage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(until desktop is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Stopped', $crawler->filter('.remotedesktopstatus')->first()->text());
-        $this->assertContains('Start this remote desktop', $crawler->filter('a.remotedesktop-action-button')->first()->text());
-        $this->assertContains('Remove this remote desktop', $crawler->filter('a.remotedesktop-action-button')->eq(1)->text());
-        $this->assertContains('All your remote desktop data will be lost upon removal!', $crawler->filter('.datainfolabel')->first()->text());
+        $this->assertContains('Start this cloud gaming rig', $crawler->filter('a.remotedesktop-action-button')->first()->text());
+        $this->assertContains('Remove this cloud gaming rig', $crawler->filter('a.remotedesktop-action-button')->eq(1)->text());
+        $this->assertContains('All your cloud gaming rig data will be lost upon removal!', $crawler->filter('.datainfolabel')->first()->text());
 
 
         // We want to build on this in other tests

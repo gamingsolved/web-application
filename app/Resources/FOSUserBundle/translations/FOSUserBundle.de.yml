@@ -4,7 +4,7 @@ security:
         forgot_password: Password vergessen?
 registration:
     email:
-        subject: Willkommen bei ubiqMachine!
+        subject: "Willkommen bei Gaming: Solved."
         message: |
             Hallo,
 
@@ -14,12 +14,12 @@ registration:
             Mit freundlichen Grüßen,
 
             --
-              Das ubiqMachine Team
+              Das Gaming: Solved. Team
 
 # Password resetting
 resetting:
     email:
-        subject: ubiqMachine - Password zurücksetzen
+        subject: "Gaming: Solved. - Password zurücksetzen"
         message: |
             Hallo %username%!
 
@@ -29,4 +29,4 @@ resetting:
             Mit freundlichen Grüßen,
 
             --
-              Das ubiqMachine Team
+              Das Gaming: Solved. Team

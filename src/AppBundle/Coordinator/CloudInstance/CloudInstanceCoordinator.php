@@ -30,3 +30,8 @@ interface CloudInstanceCoordinator
 
     public function cloudInstanceIsTerminated(CloudInstance $cloudInstance) : bool;
 }
+
+class CloudProviderProblemException extends \RuntimeException
+{
+    const CODE_OUT_OF_INSTANCE_CAPACITY = 0;
+}

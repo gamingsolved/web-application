@@ -21,3 +21,4 @@
 /sassdoc
 /sass/vendor/
 npm-debug.log
+.web-server-pid

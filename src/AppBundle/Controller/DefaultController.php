@@ -17,7 +17,7 @@ class DefaultController extends Controller
     public function catchallAction(Request $request)
     {
         if (substr($request->getRequestUri(), 0, 7) === '/en/en/') {
-            return $this->render('default/notfound.html.twig');
+            return $this->render('AppBundle:default:notfound.html.twig');
         }
 
         $preferred = $request->getPreferredLanguage(['en']);
@@ -34,13 +34,35 @@ class DefaultController extends Controller
         if (!is_null($user)) {
             return $this->redirectToRoute('remotedesktops.index');
         } else {
-            return $this->render('default/index.html.twig');
+            return $this->redirectToRoute('homepage.mac');
+        }
+    }
+
+    public function indexLinuxAction()
+    {
+        $user = $this->getUser();
+
+        if (!is_null($user)) {
+            return $this->redirectToRoute('remotedesktops.index');
+        } else {
+            return $this->render('AppBundle:default:linux.html.twig');
+        }
+    }
+
+    public function indexMacAction()
+    {
+        $user = $this->getUser();
+
+        if (!is_null($user)) {
+            return $this->redirectToRoute('remotedesktops.index');
+        } else {
+            return $this->render('AppBundle:default:mac.html.twig');
         }
     }
 
     public function logoutSuccessfulAction()
     {
         $this->addFlash('success', $this->get('translator')->trans('logoutSuccessful.message'));
-        return $this->render('default/logoutSuccessful.html.twig');
+        return $this->render('AppBundle:default:logoutSuccessful.html.twig');
     }
 }

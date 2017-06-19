@@ -47,7 +47,7 @@ abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
                 return $flavor;
             }
         }
-        throw new \Exception('Could not find flavor with internal name' . $flavorInternalName);
+        throw new \Exception('Could not find flavor with internal name ' . $flavorInternalName);
     }
 
     public function getImageByInternalName(string $imageInternalName) : Image
@@ -58,7 +58,7 @@ abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
                 return $image;
             }
         }
-        throw new \Exception('Could not find image with internal name' . $imageInternalName);
+        throw new \Exception('Could not find image with internal name ' . $imageInternalName);
     }
 
     public function getRegionByInternalName(string $regionInternalName) : Region
@@ -69,6 +69,6 @@ abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
                 return $region;
             }
         }
-        throw new \Exception('Could not find region with internal name' . $regionInternalName);
+        throw new \Exception('Could not find region with internal name ' . $regionInternalName);
     }
 }

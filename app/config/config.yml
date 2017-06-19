@@ -23,7 +23,6 @@ framework:
         engines: ['twig']
     default_locale:  "%locale%"
     trusted_hosts:   ~
-    trusted_proxies: ~
     session:
         # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id:  session.handler.native_file
@@ -83,11 +82,11 @@ fos_user:
     resetting:
         email:
            from_email:
-              address:     info@ubiqMachine.com
-              sender_name: ubiqMachine
+              address:     info@gamingsolved.com
+              sender_name: "Gaming: Solved."
     from_email:
-        address:     info@ubiqMachine.com
-        sender_name: ubiqMachine
+        address:     info@gamingsolved.com
+        sender_name: "Gaming: Solved."
 
 doctrine_migrations:
     dir_name: "%kernel.root_dir%/Resources/migrations"

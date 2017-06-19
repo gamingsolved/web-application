@@ -29,7 +29,7 @@ class LoginFunctionalTest extends WebTestCase
             '_password' => 'test123'
         ));
 
-        $this->assertEquals('Your remote desktops', $crawler->filter('h1')->text());
+        $this->assertEquals('Your cloud gaming rigs', $crawler->filter('h1')->text());
     }
 
 }

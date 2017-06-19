@@ -1,5 +1,5 @@
-{% if app.request.cookies.has('ubiqmachine_timezone') %}
-    {% set timezone = app.request.cookies.get('ubiqmachine_timezone') %}
+{% if app.request.cookies.has('gamingsolved_timezone') %}
+    {% set timezone = app.request.cookies.get('gamingsolved_timezone') %}
 {% else %}
     {% set timezone = 'UTC' %}
 {% endif %}
@@ -10,12 +10,12 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{% block title %}ubiqMachine{% endblock %}</title>
+        <title>{% block title %}Gaming: Solved.{% endblock %}</title>
 
         {% block stylesheets %}
-            <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:700" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/bootstrap.min.css') }}">
-            <!-- <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/bootstrap-material-design.min.css') }}"> -->
             <link rel="stylesheet" href="{{ asset('bundles/app/vendor/css/ripples.min.css') }}">
             <link rel="stylesheet" href="{{ asset('bundles/app/default.css') }}">
         {% endblock %}
@@ -45,15 +45,52 @@
 
                             <a href="{{ path('homepage') }}">
                                 <div id="logo">
-                                    <span id="logo-box-3" class="logo-box">&nbsp;</span>
-                                    <span id="logo-box-2" class="logo-box">&nbsp;</span>
-                                    <span id="logo-box-1" class="logo-box">ubiqMachine</span>
+                                    <img src="{{ asset('bundles/app/images/gaming-solved-logo.png') }}" width="200px" height="32px">
                                 </div>
                             </a>
 
                         </div>
                         <div class="collapse navbar-collapse" id="navbar">
-                            {{ include('_right-navigation.html.twig') }}
+                            {% if app.user %}
+                                <div id="loggedin-info">
+                                    <small>Logged in as <b>{{ app.user.username }}</b></small>
+                                </div>
+                            {% endif %}
+                            <ul class="nav navbar-nav pull-right">
+                                {% if app.user %}
+                                    <li>
+                                        <a href="{{ path('remotedesktops.index') }}">
+                                            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                                            &nbsp;{{ "_navigation.your_remote_desktops"|trans }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('remotedesktops.new') }}">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                            {{ "_navigation.create_new_remote_desktop"|trans }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('fos_user_security_logout') }}">
+                                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                                            {{ "_navigation.logout"|trans }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="{{ path('fos_user_registration_register') }}">
+                                            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                                            {{ "_navigation.register"|trans }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('fos_user_security_login') }}">
+                                            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+                                            &nbsp;{{ "_navigation.login"|trans }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -71,7 +108,31 @@
 
         <main>
 
-            {{ include('_messages.html.twig') }}
+            {% if (app.session.flashbag.has('success'))
+            or (app.session.flashbag.has('info'))
+            or (app.session.flashbag.has('error')) %}
+                <aside class="messages">
+                    <section class="container">
+                        {% for flashMessage in app.session.flashbag.get('success') %}
+                            <div class="alert alert-success" role="alert">
+                                {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                        {% for flashMessage in app.session.flashbag.get('info') %}
+                            <div class="alert alert-info" role="alert">
+                                {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                        {% for flashMessage in app.session.flashbag.get('error') %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+
+                        {% block messages %}{% endblock %}
+                    </section>
+                </aside>
+            {% endif %}
 
             {% block body %}{% endblock %}
 
@@ -88,14 +149,14 @@
                     <div class="col-xs-12 text-center">
 
                         <p>
-                            <strong>&copy;2017 The ubiqMachine Team.</strong>
+                            &copy;2017 The <strong>Gaming: Solved.</strong> Team.
                         </p>
                         <p>
                             Made with ❤ in France and Germany
                             &nbsp;·&nbsp;
-                            <a style="color: #fff;" href="mailto:info@ubiqmachine.com">Get in touch</a>
+                            <a style="color: #fff;" href="mailto:info@gamingsolved.com">Get in touch</a>
                             &nbsp;·&nbsp;
-                            <a style="color: #fff;" href="https://blog.ubiqmachine.com">Read the blog</a>
+                            <a style="color: #fff;" href="https://blog.gamingsolved.com">Read the blog</a>
                             &nbsp;·&nbsp;
                             <a style="color: #fff;" href="{{ path('about.imprint') }}">Imprint</a>
                             &nbsp;·&nbsp;
@@ -155,7 +216,7 @@
             jQuery('document').ready(function () {
                 jQuery(function() {
                     var tz = jstz.determine();
-                    Cookies.set('ubiqmachine_timezone', tz.name());
+                    Cookies.set('gamingsolved_timezone', tz.name());
                 });
             });
         </script>

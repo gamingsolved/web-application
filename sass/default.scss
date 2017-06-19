@@ -1,61 +1,33 @@
 body {
-  background-color: #4442c2;
+  background-color: #000;
   color: #000;
   white-space: normal;
   font-weight: 400;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Work Sans', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat Alternates';
+  font-weight: 700;
   color: #fff;
 }
 
 #logo {
-  margin-left: 38px;
   position: absolute;
-  top: 16px;
-  left: 26px;
-  margin-top: -5px;
+  top: 13px;
+  left: 14px;
   @media only screen and (max-width : 768px) {
-    top: 20px;
+    top: 16px;
+    left: 14px;
   }
 }
 
-.logo-box {
-  border-radius: 22px 0 45px;
-  color: #fff;
-  display: inline-block;
-  font-size: 20px;
-  margin-left: -53px;
-  padding: 9px 44px 9px 30px;
-  width: 188px;
-  position: absolute;
-  font-weight: bold;
-}
-
-#logo-box-1 {
-  background-color: #2bbe83;
-}
-#logo-box-2 {
-  background-color: #337bb7;
-  top: 8px;
-  left: 8px;
-  width: 186px;
-  z-index: -1;
-}
-#logo-box-3 {
-  background-color: #4442c2;
-  top: 16px;
-  left: 16px;
-  width: 184px;
-  z-index: -2;
-}
 
 
 /* Custom page header */
 header nav {
   margin-bottom: 0;
-  background-color: #444;
+  background-color: #000;
 }
 
 header a {
@@ -75,7 +47,7 @@ header a.brand:focus {
 .navbar {
   margin: 0;
   padding-top: 6px;
-  border-color: #777;
+  border-color: #444;
 }
 
 .navbar-toggle {
@@ -124,7 +96,7 @@ header + main {
 main {
   padding-top: 100px;
   padding-bottom: 88px;
-  background-color: #337BB7;
+  background-color: #2962ff;
 }
 
 .container {
@@ -182,27 +154,77 @@ section:empty {
 }
 
 div.full-row {
-  padding: 48px;
+  padding-top: 48px;
+  padding-bottom: 48px;
 }
 
 div.white {
   color: #333;
-  background-color: #fff;
+  background-color: #fafafa;
+}
+
+div.white h3 {
+  color: #333;
 }
 
 div.bang {
   color: #fff;
-  background-color: #2BBE83;
+  background-color: #00c853;
 }
 
 div.middle {
   color: #fff;
-  background-color: #337BB7;
+  background-color: #5280FF;
 }
 
 div.dark {
   color: #fff;
-  background-color: #4442C2;
+  background-color: #000;
+}
+
+.splash-text-box {
+  padding: 20px 40px 20px 40px;
+  background-color: rgba(0, 200, 83, 0.95);
+  color: #fff;
+  text-align: center;
+  max-width: 400px;
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.pitch-box {
+  background-color: #fafafa;
+  padding: 20px 20px 15px 25px;
+  color: #000;
+}
+
+.info-text-box {
+  text-align: center;
+  background-color: #f0efef;
+  max-width: 320px;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+}
+
+.info-text-box h3 {
+  text-align: center;
+}
+
+.faq-block, .faq-block h4 {
+  text-align: justify;
+  color: #000;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.faq-block {
+  max-width: 90%;
+}
+
+.faq-block h4 {
+  margin-top: 30px;
 }
 
 .jumbotron {
@@ -272,7 +294,7 @@ label.resolution-label {
 
 input.resolution-radio:checked + label.resolution-label {
   color: #fff;
-  background-color: #5cb85c;
+  background-color: #00c853;
   box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.1);
   padding: 10px;
 }
@@ -287,7 +309,7 @@ label.remotedesktopkind-label {
 }
 
 input.remotedesktopkind-radio:checked + label.remotedesktopkind-label {
-  background-color: #337ab7;
+  background-color: #2962ff;
   color: #fff;
 }
 
@@ -306,7 +328,7 @@ div.alert hr {
 }
 
 div.well.image {
-  background-color: #337bb7;
+  background-color: #2962ff;
   padding: 0;
   text-align: center;
 }

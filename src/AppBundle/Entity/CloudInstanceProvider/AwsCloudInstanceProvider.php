@@ -21,7 +21,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     public function __construct()
     {
 
-        // Never remove remove a flavor, image or region, because there might still be users
+        // Never remove a flavor, image or region, because there might still be users
         // who have old desktops with this flavor/image/region
 
         $this->flavors = [
