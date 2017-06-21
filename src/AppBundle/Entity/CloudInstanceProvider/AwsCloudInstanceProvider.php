@@ -31,25 +31,38 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         ];
 
         $this->images = [
-            new Image($this, 'ami-14c0107b', '[CURRENT] Gaming for eu-central-1'),
-            new Image($this, 'ami-a2437cc4', '[CURRENT] Gaming for eu-west-1'),
-            new Image($this, 'ami-96179a80', '[CURRENT] Gaming for us-east-1'),
-            new Image($this, 'ami-d8c59fb8', '[CURRENT] Gaming for us-west-1'),
+            new Image($this, 'ami-8a03a4e5', '[CURRENT] Gaming for eu-central-1 (Windows Server 2016)'),
+            new Image($this, 'ami-14c0107b', '[LEGACY]  Gaming for eu-central-1'),
+            new Image($this, 'ami-f2fde69e', '[LEGACY]  Gaming for eu-central-1'),
+
+            new Image($this, 'ami-a9e1f9cf', '[CURRENT] Gaming for eu-west-1 (Windows Server 2016)'),
+            new Image($this, 'ami-a2437cc4', '[LEGACY]  Gaming for eu-west-1'),
+
+            new Image($this, 'ami-a4406eb2', '[CURRENT] Gaming for us-east-1 (Windows Server 2016)'),
+            new Image($this, 'ami-2b4a6b3d', '[LEGACY]  Gaming for us-east-1 (Windows Server 2016)'),
+            new Image($this, 'ami-96179a80', '[LEGACY]  Gaming for us-east-1'),
+            new Image($this, 'ami-10334270', '[LEGACY]  Gaming for us-east-1'),
+
+            new Image($this, 'ami-d3aa87b3', '[CURRENT] Gaming for us-west-1 (Windows Server 2016)'),
+            new Image($this, 'ami-d8c59fb8', '[LEGACY]  Gaming for us-west-1'),
+            new Image($this, 'ami-b0c7f2da', '[LEGACY]  Gaming for us-west-1'),
+
+            new Image($this, 'ami-20302043', '[CURRENT] Gaming for ap-southeast-2 (Windows Server 2016)'),
+
             new Image($this, 'ami-70c0101f', '[CURRENT] CAD for eu-central-1'),
             new Image($this, 'ami-5c39063a', '[CURRENT] CAD for eu-west-1'),
             new Image($this, 'ami-5c169b4a', '[CURRENT] CAD for us-east-1'),
             new Image($this, 'ami-cec79dae', '[CURRENT] CAD for us-west-1'),
+
             new Image($this, 'ami-71c0101e', '[CURRENT] 3D Media for eu-central-1'),
             new Image($this, 'ami-ff2a1599', '[CURRENT] 3D Media for eu-west-1'),
             new Image($this, 'ami-7d119c6b', '[CURRENT] 3D Media for us-east-1'),
             new Image($this, 'ami-cfc79daf', '[CURRENT] 3D Media for us-west-1'),
+
             new Image($this, 'ami-51c2123e', '[CURRENT] Unity for eu-central-1'),
             new Image($this, 'ami-ef3b0489', '[CURRENT] Unity for eu-west-1'),
             new Image($this, 'ami-71119c67', '[CURRENT] Unity for us-east-1'),
-            new Image($this, 'ami-92c79df2', '[CURRENT] Unity for us-west-1'),
-            new Image($this, 'ami-f2fde69e', '[LEGACY] Gaming for eu-central-1'),
-            new Image($this, 'ami-10334270', '[LEGACY] Gaming for us-east-1'),
-            new Image($this, 'ami-b0c7f2da', '[LEGACY] Gaming for us-west-1')
+            new Image($this, 'ami-92c79df2', '[CURRENT] Unity for us-west-1')
         ];
 
 
@@ -57,15 +70,17 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             new Region($this, 'eu-central-1', 'cloudprovider.aws.region.eu-central-1'),
             new Region($this, 'eu-west-1', 'cloudprovider.aws.region.eu-west-1'),
             new Region($this, 'us-east-1', 'cloudprovider.aws.region.us-east-1'),
-            new Region($this, 'us-west-1', 'cloudprovider.aws.region.us-west-1')
+            new Region($this, 'us-west-1', 'cloudprovider.aws.region.us-west-1'),
+            new Region($this, 'ap-southeast-2', 'cloudprovider.aws.region.ap-southeast-2')
         ];
 
         $this->kindToRegionToImage = [
             RemoteDesktopKind::GAMING_PRO => [
-                'eu-central-1' => $this->getImageByInternalName('ami-14c0107b'),
-                'eu-west-1' => $this->getImageByInternalName('ami-a2437cc4'),
-                'us-east-1' => $this->getImageByInternalName('ami-96179a80'),
-                'us-west-1' => $this->getImageByInternalName('ami-d8c59fb8'),
+                'eu-central-1'   => $this->getImageByInternalName('ami-8a03a4e5'),
+                'eu-west-1'      => $this->getImageByInternalName('ami-a9e1f9cf'),
+                'us-east-1'      => $this->getImageByInternalName('ami-a4406eb2'),
+                'us-west-1'      => $this->getImageByInternalName('ami-d3aa87b3'),
+                'ap-southeast-2' => $this->getImageByInternalName('ami-20302043'),
             ],
             RemoteDesktopKind::CAD_PRO => [
                 'eu-central-1' => $this->getImageByInternalName('ami-70c0101f'),
