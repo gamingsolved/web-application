@@ -333,6 +333,7 @@ cloudprovider:
             eu-central-1: Germany
             us-east-1: US East
             us-west-1: US West
+            ap-southeast-2: Australia
 
 payment:
     new:
