@@ -2,11 +2,9 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Coordinator\CloudInstance\AwsCloudInstanceCoordinator;
-use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinator;
+use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinatorFactory;
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
-use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Utility\DateTimeUtility;
@@ -22,35 +20,27 @@ class CloudInstanceManagementService
     /** @var AccountMovementRepository */
     protected $accountMovementRepository;
 
-    protected function getCloudInstanceCoordinatorForCloudInstance(
-        CloudInstance $cloudInstance, InputInterface $input, OutputInterface $output) : CloudInstanceCoordinator {
-        if ($cloudInstance instanceof AwsCloudInstance) {
-            return new AwsCloudInstanceCoordinator(
-                [
-                    'apiKey' => $input->getArgument('awsApiKey'),
-                    'apiSecret' => $input->getArgument('awsApiSecret'),
-                    'keypairPrivateKey' => file_get_contents($input->getArgument('awsKeypairPrivateKeyFile'))
-                ],
-                $cloudInstance->getRegion(),
-                $output
-            );
-        } else {
-            throw new \Exception('No cloud instance coordinator for cloud instances of class ' . get_class($cloudInstance));
-        }
-    }
+    /** @var CloudInstanceCoordinatorFactory */
+    protected $cloudInstanceCoordinatorFactory;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, CloudInstanceCoordinatorFactory $cloudInstanceCoordinatorFactory)
     {
         $this->em = $em;
         $this->accountMovementRepository = $this->em->getRepository(AccountMovement::class);
+        $this->cloudInstanceCoordinatorFactory = $cloudInstanceCoordinatorFactory;
     }
 
-    public function manageCloudInstance(CloudInstance $cloudInstance, InputInterface $input, OutputInterface $output)
+    public function manageCloudInstance(
+        CloudInstance $cloudInstance,
+        InputInterface $input,
+        OutputInterface $output)
     {
         // We need a coordinator per instance bc e.g. AWS uses different API endpoints per region
-        $cloudInstanceCoordinator = $this->getCloudInstanceCoordinatorForCloudInstance(
+        $cloudInstanceCoordinator = $this->cloudInstanceCoordinatorFactory->getCloudInstanceCoordinatorForCloudInstance(
             $cloudInstance,
-            $input,
+            $input->getArgument('awsApiKey'),
+            $input->getArgument('awsApiSecret'),
+            $input->getArgument('awsKeypairPrivateKeyFile'),
             $output
         );
 
@@ -177,7 +167,7 @@ class CloudInstanceManagementService
         }
 
 
-        // Launching
+        // Scheduled for Launch
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
 
@@ -208,7 +198,7 @@ class CloudInstanceManagementService
         }
 
 
-        // Stopping
+        // Scheduled for Stop
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_STOP) {
             $output->writeln('Action: asking the cloud instance to stop');
@@ -223,6 +213,8 @@ class CloudInstanceManagementService
                 $output->writeln($e->getMessage());
             }
         }
+
+        // Stopping
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STOPPING) {
             $output->writeln('Action: probing if stop is complete');

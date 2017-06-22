@@ -6,7 +6,7 @@ use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use Symfony\Component\Console\Output\OutputInterface;
 
-interface CloudInstanceCoordinator
+interface CloudInstanceCoordinatorInterface
 {
     public function __construct(array $credentials, Region $region, OutputInterface $output);
 
