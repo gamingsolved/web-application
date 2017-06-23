@@ -162,6 +162,11 @@ abstract class CloudInstance implements CloudInstanceInterface
         $this->setStatus(self::STATUS_IN_USE);
     }
 
+    public function setId(string $id)
+    {
+        $this->id = $id;
+    }
+
     public function getId(): string
     {
         return $this->id;
