@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Tests\Fixtures\DummyOutput;
 
 class CloudInstanceManagementServiceTest extends TestCase
@@ -45,22 +46,8 @@ class CloudInstanceManagementServiceTest extends TestCase
             ->getMock();
     }
 
-    public function testScheduledForLaunchIsLaunched()
+    public function testScheduledForLaunchIsNotLaunchedIfBalanceInsufficient()
     {
-        $mockAccountMovementRepository = $this->getMockAccountMovementRepository();
-
-        $mockEm = $this->getMockEntityManager();
-
-        $mockEm->expects($this->once())
-            ->method('getRepository')
-            ->with(AccountMovement::class)
-            ->willReturn($mockAccountMovementRepository);
-
-        $cloudInstanceManagementService = new CloudInstanceManagementService(
-            $mockEm,
-            $this->getMockCloudInstanceCoordinatorFactory()
-        );
-
         $user = new User();
         $user->setUsername('userA');
 
@@ -82,11 +69,24 @@ class CloudInstanceManagementServiceTest extends TestCase
 
         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH);
 
-        $inputDefinition = new InputDefinition([
-            new InputArgument('awsApiKey', InputArgument::REQUIRED),
-            new InputArgument('awsApiSecret', InputArgument::REQUIRED),
-            new InputArgument('awsKeypairPrivateKeyFile', InputArgument::REQUIRED),
-        ]);
+
+        $mockAccountMovementRepository = $this->getMockAccountMovementRepository();
+
+        $mockAccountMovementRepository
+            ->expects($this->once())
+            ->method('getAccountBalanceForUser')
+            ->with($user)
+            ->willReturn(0.0);
+
+
+        $mockEm = $this->getMockEntityManager();
+
+        $mockEm
+            ->expects($this->once())
+            ->method('getRepository')
+            ->with(AccountMovement::class)
+            ->willReturn($mockAccountMovementRepository);
+
 
         $input = new ArrayInput(
             [
@@ -94,14 +94,28 @@ class CloudInstanceManagementServiceTest extends TestCase
                 'awsApiSecret' => 'bar',
                 'awsKeypairPrivateKeyFile' => 'baz'
             ],
-            $inputDefinition
+            new InputDefinition([
+                new InputArgument('awsApiKey', InputArgument::REQUIRED),
+                new InputArgument('awsApiSecret', InputArgument::REQUIRED),
+                new InputArgument('awsKeypairPrivateKeyFile', InputArgument::REQUIRED),
+            ])
         );
 
-        $output = new DummyOutput();
+        $output = new BufferedOutput();
+
+
+        $cloudInstanceManagementService = new CloudInstanceManagementService(
+            $mockEm,
+            $this->getMockCloudInstanceCoordinatorFactory()
+        );
 
         $cloudInstanceManagementService->manageCloudInstance($cloudInstance, $input, $output);
 
-        $this->assertTrue(true);
+
+        $loglines = $output->fetch();
+
+        $this->assertContains('Action: would launch the cloud instance, but owner has insufficient balance', $loglines);
+        $this->assertContains('Hourly costs would be 1.49, balance is only 0', $loglines);
     }
 
 }
