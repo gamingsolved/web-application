@@ -3,6 +3,8 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinatorFactory;
+use AppBundle\Entity\Billing\AccountMovement;
+use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
@@ -36,10 +38,26 @@ class CloudInstanceManagementServiceTest extends TestCase
             ->getMock();
     }
 
+    public function getMockAccountMovementRepository()
+    {
+        return $this->getMockBuilder(AccountMovementRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
     public function testScheduledForLaunchIsLaunched()
     {
+        $mockAccountMovementRepository = $this->getMockAccountMovementRepository();
+
+        $mockEm = $this->getMockEntityManager();
+
+        $mockEm->expects($this->once())
+            ->method('getRepository')
+            ->with(AccountMovement::class)
+            ->willReturn($mockAccountMovementRepository);
+
         $cloudInstanceManagementService = new CloudInstanceManagementService(
-            $this->getMockEntityManager(),
+            $mockEm,
             $this->getMockCloudInstanceCoordinatorFactory()
         );
 
@@ -52,11 +70,15 @@ class CloudInstanceManagementServiceTest extends TestCase
         $remoteDesktop->setKind(RemoteDesktopKind::createRemoteDesktopKind(RemoteDesktopKind::GAMING_PRO));
         $remoteDesktop->setUser($user);
 
+        $awsCloudInstanceProvider = new AwsCloudInstanceProvider();
+
         $cloudInstance = new AwsCloudInstance();
         $cloudInstance->setId('c1');
         $cloudInstance->setEc2InstanceId('ec1');
         $cloudInstance->setRemoteDesktop($remoteDesktop);
-        $cloudInstance->setFlavor(new Flavor(new AwsCloudInstanceProvider(), 'f1', 'flavor1', true));
+        $cloudInstance->setFlavor($awsCloudInstanceProvider->getFlavorByInternalName('g2.2xlarge'));
+        $cloudInstance->setImage($awsCloudInstanceProvider->getImageByInternalName('ami-f2fde69e'));
+        $cloudInstance->setRegion($awsCloudInstanceProvider->getRegionByInternalName('eu-central-1'));
 
         $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH);
 
