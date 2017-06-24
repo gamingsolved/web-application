@@ -13,6 +13,7 @@ administration:
         title: Administration home
         usertable:
             remotedesktops: "Remote desktops:"
+            cloudinstances: "Cloud instances:"
 
 logoutSuccessful:
     message: You are now logged out.

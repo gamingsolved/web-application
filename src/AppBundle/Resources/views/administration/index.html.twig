@@ -57,6 +57,27 @@
                                                         {{ ("remoteDesktop.status." ~ remoteDesktop.statusLabel) |trans }}
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td colspan="2">
+                                                        <strong>{{ "administration.home.usertable.cloudinstances"|trans }}</strong>
+                                                        <table class="table table-sm table-condensed table-hover">
+                                                            {% for cloudInstance in remoteDesktop.cloudInstances %}
+                                                                <tr>
+                                                                    <td width="20%">{{ cloudInstance.id }}</td>
+                                                                    <td width="20%">
+                                                                        {{ cloudInstance.region.internalName }}<br>
+                                                                        {{ cloudInstance.flavor.internalName }}<br>
+                                                                        {{ cloudInstance.image.internalName }}
+                                                                    </td>
+                                                                    <td width="20%">{{ cloudInstance.hourlyUsageCosts|localizedcurrency('USD') }}</td>
+                                                                    <td width="20%">{{ cloudInstance.hourlyProvisioningCosts|localizedcurrency('USD') }}</td>
+                                                                    <td width="20%">{{ cloudInstance.runstatus }}</td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </table>
+                                                    </td>
+                                                </tr>
                                             {% endfor %}
                                         </tbody>
                                     </table>
