@@ -9,7 +9,10 @@ _navigation:
     logged_in_as: Logged in as
 
 administration:
-    home_title: Administration home
+    home:
+        title: Administration home
+        usertable:
+            remotedesktops: "Remote desktops:"
 
 logoutSuccessful:
     message: You are now logged out.

@@ -17,24 +17,58 @@
 
 {% block body %}
     <section class="container-fluid">
-        <h1>{{ "administration.home_title"|trans }}</h1>
+        <h1>{{ "administration.home.title"|trans }}</h1>
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-striped">
-                    {% for user in users %}
-                        <tr>
-                            <td>{{ user.id }}</td>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.email }}</td>
-                            <td
-                                {% if attribute(accountBalances, user.id) > 0.0 %} class="success" {% endif %}
-                                {% if attribute(accountBalances, user.id) == 0.0 %} class="warning" {% endif %}
-                                {% if attribute(accountBalances, user.id) < 0.0 %} class="danger" {% endif %}
-                            >
-                                {{ attribute(accountBalances, user.id)|localizedcurrency('USD') }}
-                            </td>
-                        </tr>
-                    {% endfor %}
+                <table class="table table-hover">
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td
+                                    {% if attribute(accountBalances, user.id) > 0.0 %} class="success" {% endif %}
+                                    {% if attribute(accountBalances, user.id) == 0.0 %} class="warning" {% endif %}
+                                    {% if attribute(accountBalances, user.id) < 0.0 %} class="danger" {% endif %}
+                                >
+                                    {{ attribute(accountBalances, user.id)|localizedcurrency('USD') }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td colspan="3">
+                                    <strong>{{ "administration.home.usertable.remotedesktops"|trans }}</strong>
+                                    <table class="table table-sm table-condensed table-hover">
+                                        <tbody>
+                                            {% for remoteDesktop in user.remoteDesktops %}
+                                                <tr>
+                                                    <td width="33%">{{ remoteDesktop.id }}</td>
+                                                    <td width="33%">{{ remoteDesktop.title }}</td>
+                                                    <td width="34%"
+                                                        {% if remoteDesktop.status == 0 %} class="info" {% endif %}
+                                                        {% if remoteDesktop.status == 1 %} class="success" {% endif %}
+                                                        {% if remoteDesktop.status == 2 %} class="success" {% endif %}
+                                                        {% if remoteDesktop.status == 3 %} class="warning" {% endif %}
+                                                        {% if remoteDesktop.status == 4 %} class="warning" {% endif %}
+                                                        {% if remoteDesktop.status == 5 %} class="danger" {% endif %}
+                                                        {% if remoteDesktop.status == 6 %} class="danger" {% endif %}
+                                                    >
+                                                        {{ ("remoteDesktop.status." ~ remoteDesktop.statusLabel) |trans }}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="active">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>

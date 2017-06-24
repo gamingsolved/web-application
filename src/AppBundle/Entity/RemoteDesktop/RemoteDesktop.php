@@ -261,6 +261,40 @@ class RemoteDesktop
         return $status;
     }
 
+    public function statusToStatusLabel(int $status): string
+    {
+        switch ($status) {
+            case self::STATUS_NEVER_LAUNCHED:
+                return 'never_launched';
+                break;
+            case self::STATUS_BOOTING:
+                return 'booting';
+                break;
+            case self::STATUS_READY_TO_USE:
+                return 'ready_to_use';
+                break;
+            case self::STATUS_STOPPING:
+                return 'stopping';
+                break;
+            case self::STATUS_STOPPED:
+                return 'stopped';
+                break;
+            case self::STATUS_TERMINATING:
+                return 'terminating';
+                break;
+            case self::STATUS_TERMINATED:
+                return 'terminated';
+                break;
+            default:
+                throw new \Exception('Unknown remoteDesktop status value ' .$status);
+        }
+    }
+
+    public function getStatusLabel() : string
+    {
+        return $this->statusToStatusLabel($this->getStatus());
+    }
+
     public function getPublicAddress() : string
     {
         return $this->getActiveCloudInstance()->getPublicAddress();
