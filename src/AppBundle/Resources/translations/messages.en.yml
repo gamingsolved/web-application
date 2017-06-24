@@ -5,6 +5,11 @@ _navigation:
     your_remote_desktops: Your cloud gaming rigs
     create_new_remote_desktop: Create a new cloud gaming rig
     how_billing_works: How billing works
+    administration: Administration area
+    logged_in_as: Logged in as
+
+administration:
+    home_title: Administration home
 
 logoutSuccessful:
     message: You are now logged out.

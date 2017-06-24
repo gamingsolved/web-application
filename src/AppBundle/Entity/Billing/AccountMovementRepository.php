@@ -14,7 +14,7 @@ class AccountMovementRepository extends EntityRepository
         $query = $qb
             ->add('select', 'SUM(a.amount)')
             ->where('a.user = :user')
-            ->andWhere('a.paymentFinished = true OR a.paymentFinished IS NULL')
+            ->andWhere('a.paymentFinished = true OR a.paymentFinished IS NULL') // debits are NULL, successful deposits are true
             ->setParameter(':user', $user)
             ->getQuery();
 

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinatorFactory;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Service\CloudInstanceManagementService;
@@ -47,7 +48,7 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
 
-        $cloudInstanceManagementService = new CloudInstanceManagementService($em);
+        $cloudInstanceManagementService = new CloudInstanceManagementService($em, new CloudInstanceCoordinatorFactory());
 
         foreach (self::CLOUD_INSTANCE_CLASSES as $cloudInstanceClass) {
             $output->writeln('Attempting to handle cloud instances of class: ' . $cloudInstanceClass);

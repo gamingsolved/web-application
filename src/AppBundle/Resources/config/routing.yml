@@ -112,3 +112,8 @@ payment.cancel:
     path:     /accountMovements/{accountMovement}/payment/cancel
     defaults: { _controller: AppBundle:Payment:cancel }
     methods:  [GET]
+
+administration.index:
+    path:     /administration/
+    defaults: { _controller: AppBundle:Administration:index }
+    methods:  [GET]

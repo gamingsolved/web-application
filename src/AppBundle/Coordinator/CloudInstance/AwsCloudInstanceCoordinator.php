@@ -9,7 +9,7 @@ use Aws\Ec2\Exception\Ec2Exception;
 use Aws\Sdk;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AwsCloudInstanceCoordinator implements CloudInstanceCoordinator
+class AwsCloudInstanceCoordinator implements CloudInstanceCoordinatorInterface
 {
     const KEYPAIR_NAME = 'ubiqmachine-default';
     const SECURITY_GROUP_NAME = 'ubiqmachine-cgxclient-default';

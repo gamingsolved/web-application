@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    <style>
+        main {
+            background-color: #fff;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #000;
+        }
+    </style>
+
+{% endblock %}
+
+{% block body %}
+    <section class="container">
+        <h1>{{ "administration.home_title"|trans }}</h1>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td
+                                {% if attribute(accountBalances, user.id) > 0.0 %} class="success" {% endif %}
+                                {% if attribute(accountBalances, user.id) == 0.0 %} class="warning" {% endif %}
+                                {% if attribute(accountBalances, user.id) < 0.0 %} class="danger" {% endif %}
+                            >
+                                {{ attribute(accountBalances, user.id)|localizedcurrency('USD') }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}
