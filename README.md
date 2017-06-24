@@ -1,5 +1,14 @@
 # ubiqmachine-webapp
 
+## Administration
+
+Promote your user:
+
+    ./bin/console fos:user:promote your-user-name ROLE_ADMIN
+
+Go to https://gamingsolved.com/en/administration/
+
+
 ## Dev setup
 
 ### If you want to use Docker for MySQL, but work with the app and PHP locally
