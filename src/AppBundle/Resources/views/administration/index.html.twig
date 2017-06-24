@@ -24,14 +24,25 @@
                     <tbody>
                         {% for user in users %}
                             <tr class="info">
-                                <td><strong>{{ user.id }}</strong></td>
-                                <td><strong>{{ user.username }}</strong></td>
+                                <td>
+                                    <strong>{{ user.id }}</strong><br>
+                                    {{ "administration.home.usertable.last_login"|trans }}<br>
+                                    {{ user.lastLogin|date('F j, Y', timezone) }} ({{ timezone }})
+                                </td>
+                                <td>
+                                    <strong>{{ user.username }}</strong><br>
+                                    <strong>{{ user.email }}</strong>
+                                </td>
                                 <td><strong>{{ user.email }}</strong></td>
                                 <td
                                     {% if attribute(currentAccountBalances, user.id) > 0.0 %} class="success" {% endif %}
                                     {% if attribute(currentAccountBalances, user.id) == 0.0 %} class="warning" {% endif %}
                                     {% if attribute(currentAccountBalances, user.id) < 0.0 %} class="danger" {% endif %}
                                 >
+                                    {% if attribute(currentAccountBalances, user.id) < 0.0 and attribute(currentAccountBalances, user.id) < attribute(anHourAgoAccountBalances, user.id) %}
+                                        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span><br>
+                                    {% endif %}
+
                                     <strong>{{ attribute(currentAccountBalances, user.id)|localizedcurrency('USD') }}</strong><br>
                                     <strong>{{ attribute(anHourAgoAccountBalances, user.id)|localizedcurrency('USD') }}</strong> (-1h)<br>
                                     <strong>{{ attribute(twentyFourHoursAgoAccountBalances, user.id)|localizedcurrency('USD') }}</strong> (-24h)<br>
@@ -48,13 +59,18 @@
                                                     <td width="33%">{{ remoteDesktop.id }}</td>
                                                     <td width="33%">{{ remoteDesktop.title }}</td>
                                                     <td width="34%"
-                                                        {% if remoteDesktop.status == 0 %} class="info" {% endif %}
-                                                        {% if remoteDesktop.status == 1 %} class="success" {% endif %}
-                                                        {% if remoteDesktop.status == 2 %} class="success" {% endif %}
-                                                        {% if remoteDesktop.status == 3 %} class="warning" {% endif %}
-                                                        {% if remoteDesktop.status == 4 %} class="warning" {% endif %}
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %} class="info" {% endif %}
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_BOOTING') %} class="success" {% endif %}
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %} class="success" {% endif %}
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING') %} class="warning" {% endif %}
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %} class="warning" {% endif %}
                                                     >
                                                         {{ ("remoteDesktop.status." ~ remoteDesktop.statusLabel) |trans }}
+
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
+                                                            <br>
+                                                            <a class="btn btn-sm btn-danger" href="{{ path('remotedesktops.terminate', { 'remoteDesktop': remoteDesktop.id }) }}">{{ "administration.home.usertable.terminate"|trans }}</a>
+                                                        {% endif %}
                                                     </td>
                                                 </tr>
                                                 <tr>

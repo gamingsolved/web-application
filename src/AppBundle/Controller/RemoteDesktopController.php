@@ -7,6 +7,7 @@ use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktopKind;
+use AppBundle\Entity\User;
 use AppBundle\Factory\RemoteDesktopFactory;
 use AppBundle\Service\RemoteDesktopAutostopService;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -240,9 +241,10 @@ class RemoteDesktopController extends Controller
      */
     public function terminateAction(RemoteDesktop $remoteDesktop, Request $request)
     {
+        /** @var User $user */
         $user = $this->getUser();
 
-        if ($remoteDesktop->getUser()->getId() !== $user->getId()) {
+        if (!($remoteDesktop->getUser()->getId() === $user->getId() || $user->hasRole('ROLE_ADMIN'))) {
             return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
         }
 
@@ -257,7 +259,11 @@ class RemoteDesktopController extends Controller
 
         $em->flush();
 
-        return $this->redirectToRoute('remotedesktops.index');
+        if ($user->hasRole('ROLE_ADMIN')) {
+            return $this->redirect($request->headers->get('referer'));
+        } else {
+            return $this->redirectToRoute('remotedesktops.index');
+        }
     }
 
     /**
