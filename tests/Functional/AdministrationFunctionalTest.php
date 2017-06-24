@@ -9,7 +9,6 @@ class LogoutFunctionalTest extends WebTestCase
 {
     use Helpers;
 
-
     public function testNonAdminUserCannotReachAdministrationArea()
     {
         $this->resetDatabase();
