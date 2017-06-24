@@ -15,6 +15,8 @@ rsync \
     --exclude var/logs/test.log \
     $DIR/../ www-data@185.162.248.214:/opt/ubiqmachine-webapp/prod/
 
+[ $1 == "quick" ] && exit 0
+
 ssh root@185.162.248.214 'cd /opt/ubiqmachine-webapp/prod/ && sudo -u www-data SYMFONY_ENV=prod php composer.phar install'
 
 ssh root@185.162.248.214 'sudo -u www-data php /opt/ubiqmachine-webapp/prod/bin/console --env=prod doctrine:migrations:migrate --no-interaction'

@@ -23,16 +23,18 @@
                 <table class="table table-hover">
                     <tbody>
                         {% for user in users %}
-                            <tr>
-                                <td>{{ user.id }}</td>
-                                <td>{{ user.username }}</td>
-                                <td>{{ user.email }}</td>
+                            <tr class="info">
+                                <td><strong>{{ user.id }}</strong></td>
+                                <td><strong>{{ user.username }}</strong></td>
+                                <td><strong>{{ user.email }}</strong></td>
                                 <td
-                                    {% if attribute(accountBalances, user.id) > 0.0 %} class="success" {% endif %}
-                                    {% if attribute(accountBalances, user.id) == 0.0 %} class="warning" {% endif %}
-                                    {% if attribute(accountBalances, user.id) < 0.0 %} class="danger" {% endif %}
+                                    {% if attribute(currentAccountBalances, user.id) > 0.0 %} class="success" {% endif %}
+                                    {% if attribute(currentAccountBalances, user.id) == 0.0 %} class="warning" {% endif %}
+                                    {% if attribute(currentAccountBalances, user.id) < 0.0 %} class="danger" {% endif %}
                                 >
-                                    {{ attribute(accountBalances, user.id)|localizedcurrency('USD') }}
+                                    <strong>{{ attribute(currentAccountBalances, user.id)|localizedcurrency('USD') }}</strong><br>
+                                    <strong>{{ attribute(anHourAgoAccountBalances, user.id)|localizedcurrency('USD') }}</strong> (-1h)<br>
+                                    <strong>{{ attribute(twentyFourHoursAgoAccountBalances, user.id)|localizedcurrency('USD') }}</strong> (-24h)<br>
                                 </td>
                             </tr>
                             <tr>
@@ -51,8 +53,6 @@
                                                         {% if remoteDesktop.status == 2 %} class="success" {% endif %}
                                                         {% if remoteDesktop.status == 3 %} class="warning" {% endif %}
                                                         {% if remoteDesktop.status == 4 %} class="warning" {% endif %}
-                                                        {% if remoteDesktop.status == 5 %} class="danger" {% endif %}
-                                                        {% if remoteDesktop.status == 6 %} class="danger" {% endif %}
                                                     >
                                                         {{ ("remoteDesktop.status." ~ remoteDesktop.statusLabel) |trans }}
                                                     </td>
@@ -64,11 +64,16 @@
                                                         <table class="table table-sm table-condensed table-hover">
                                                             {% for cloudInstance in remoteDesktop.cloudInstances %}
                                                                 <tr>
-                                                                    <td width="20%">{{ cloudInstance.id }}</td>
                                                                     <td width="20%">
+                                                                        {{ cloudInstance.id }}
+                                                                    </td>
+                                                                    <td width="20%">
+                                                                        <a target="_blank" href="https://{{ cloudInstance.region.internalName }}.console.aws.amazon.com/ec2/v2/home?region={{ cloudInstance.region.internalName }}#Instances:instanceId={{ cloudInstance.providerInstanceId }};sort=desc:tag:Name">{{ cloudInstance.providerInstanceId }}</a><br>
                                                                         {{ cloudInstance.region.internalName }}<br>
                                                                         {{ cloudInstance.flavor.internalName }}<br>
-                                                                        {{ cloudInstance.image.internalName }}
+                                                                        {{ cloudInstance.image.internalName }}<br>
+                                                                        <hr>
+                                                                        <a target="_blank" href="https://{{ cloudInstance.region.internalName }}.console.aws.amazon.com/ec2/v2/home?region={{ cloudInstance.region.internalName }}#Volumes:instanceId={{ cloudInstance.providerInstanceId }};sort=desc:createTime">{{ cloudInstance.rootVolumeSize }} GiB + {{ cloudInstance.additionalVolumeSize }} GiB</a>
                                                                     </td>
                                                                     <td width="20%">{{ cloudInstance.hourlyUsageCosts|localizedcurrency('USD') }}</td>
                                                                     <td width="20%">{{ cloudInstance.hourlyProvisioningCosts|localizedcurrency('USD') }}</td>
@@ -84,7 +89,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="4" class="active">
+                                <td colspan="4">
                                     &nbsp;
                                 </td>
                             </tr>
