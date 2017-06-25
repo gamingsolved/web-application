@@ -51,7 +51,7 @@
                             <tr>
                                 <td>&nbsp;</td>
                                 <td colspan="3">
-                                    <strong>{{ "administration.home.usertable.remotedesktops"|trans }}</strong>
+                                    <strong>{{ "administration.home.usertable.remotedesktops.title"|trans }}</strong>
                                     <table class="table table-sm table-condensed table-hover">
                                         <tbody>
                                             {% for remoteDesktop in user.remoteDesktops %}
@@ -65,7 +65,7 @@
                                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING') %} class="warning" {% endif %}
                                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %} class="warning" {% endif %}
                                                     >
-                                                        {{ ("remoteDesktop.status." ~ remoteDesktop.statusLabel) |trans }}
+                                                        {{ ("administration.home.usertable.remotedesktops.status." ~ remoteDesktop.statusLabel) |trans }}
 
                                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
                                                             <br>

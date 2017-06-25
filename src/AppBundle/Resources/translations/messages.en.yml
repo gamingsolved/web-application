@@ -12,7 +12,16 @@ administration:
     home:
         title: Administration home
         usertable:
-            remotedesktops: "Remote desktops:"
+            remotedesktops:
+                title: "Remote desktops:"
+                status:
+                    never_launched: never launched
+                    booting: booting
+                    ready_to_use: ready to use
+                    stopping: stopping
+                    stopped: stopped
+                    terminating: terminating
+                    terminated: terminated
             cloudinstances: "Cloud instances:"
             last_login: "Last login:"
             terminate: "Terminate"
