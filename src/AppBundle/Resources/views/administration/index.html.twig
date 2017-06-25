@@ -84,8 +84,16 @@
                                                                         {{ cloudInstance.id }}
                                                                     </td>
                                                                     <td width="20%">
-                                                                        <a target="_blank" href="https://{{ cloudInstance.region.internalName }}.console.aws.amazon.com/ec2/v2/home?region={{ cloudInstance.region.internalName }}#Instances:instanceId={{ cloudInstance.providerInstanceId }};sort=desc:tag:Name">{{ cloudInstance.providerInstanceId }}</a><br>
-                                                                        {{ cloudInstance.region.internalName }}<br>
+                                                                        <a
+                                                                            target="_blank"
+                                                                            href="https://{{ cloudInstance.region.internalName }}.console.aws.amazon.com/ec2/v2/home?region={{ cloudInstance.region.internalName }}#Instances:instanceId={{ cloudInstance.providerInstanceId }};sort=desc:tag:Name"
+                                                                        >{{ cloudInstance.providerInstanceId }}</a><br>
+
+                                                                        <a
+                                                                            target="_blank"
+                                                                            href="https://{{ cloudInstance.region.internalName }}.console.aws.amazon.com/ec2/v2/home?region={{ cloudInstance.region.internalName }}#Instances:sort=desc:tag:Name"
+                                                                        >{{ cloudInstance.region.internalName }}</a><br>
+
                                                                         {{ cloudInstance.flavor.internalName }}<br>
                                                                         {{ cloudInstance.image.internalName }}<br>
                                                                         <hr>
