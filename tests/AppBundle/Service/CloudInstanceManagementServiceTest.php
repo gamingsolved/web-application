@@ -25,40 +25,49 @@ use Symfony\Component\Console\Tests\Fixtures\DummyOutput;
 class CloudInstanceManagementServiceTest extends TestCase
 {
 
-    public function getMockCloudInstanceCoordinatorFactory()
+    private function getMockCloudInstanceCoordinatorFactory()
     {
         return $this->getMockBuilder(CloudInstanceCoordinatorFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
 
-    public function getMockEntityManager()
+    private function getMockEntityManager()
     {
         return $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
 
-    public function getMockAccountMovementRepository()
+    private function getMockAccountMovementRepository()
     {
         return $this->getMockBuilder(AccountMovementRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
 
-    public function testScheduledForLaunchIsNotLaunchedIfBalanceInsufficient()
+    private function getUser(): User
     {
         $user = new User();
         $user->setUsername('userA');
 
+        return $user;
+    }
+
+    private function getRemoteDesktop(User $user): RemoteDesktop
+    {
         $remoteDesktop = new RemoteDesktop();
         $remoteDesktop->setId('r1');
         $remoteDesktop->setCloudInstanceProvider(new AwsCloudInstanceProvider());
         $remoteDesktop->setKind(RemoteDesktopKind::createRemoteDesktopKind(RemoteDesktopKind::GAMING_PRO));
         $remoteDesktop->setUser($user);
 
-        $awsCloudInstanceProvider = new AwsCloudInstanceProvider();
+        return $remoteDesktop;
+    }
 
+    private function getCloudInstance(RemoteDesktop $remoteDesktop) : CloudInstance
+    {
+        $awsCloudInstanceProvider = new AwsCloudInstanceProvider();
         $cloudInstance = new AwsCloudInstance();
         $cloudInstance->setId('c1');
         $cloudInstance->setEc2InstanceId('ec1');
@@ -67,7 +76,32 @@ class CloudInstanceManagementServiceTest extends TestCase
         $cloudInstance->setImage($awsCloudInstanceProvider->getImageByInternalName('ami-f2fde69e'));
         $cloudInstance->setRegion($awsCloudInstanceProvider->getRegionByInternalName('eu-central-1'));
 
-        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH);
+        return $cloudInstance;
+    }
+
+    private function getInput() : ArrayInput
+    {
+        return new ArrayInput(
+            [
+                'awsApiKey' => 'foo',
+                'awsApiSecret' => 'bar',
+                'awsKeypairPrivateKeyFile' => 'baz'
+            ],
+            new InputDefinition([
+                new InputArgument('awsApiKey', InputArgument::REQUIRED),
+                new InputArgument('awsApiSecret', InputArgument::REQUIRED),
+                new InputArgument('awsKeypairPrivateKeyFile', InputArgument::REQUIRED),
+            ])
+        );
+    }
+
+    public function testScheduledForLaunchIsNotLaunchedIfBalanceInsufficient()
+    {
+        $user = $this->getUser();
+        $remoteDesktop = $this->getRemoteDesktop($user);
+        $cloudInstance = $this->getCloudInstance($remoteDesktop);
+        $input = $this->getInput();
+        $output = new BufferedOutput();
 
 
         $mockAccountMovementRepository = $this->getMockAccountMovementRepository();
@@ -88,26 +122,13 @@ class CloudInstanceManagementServiceTest extends TestCase
             ->willReturn($mockAccountMovementRepository);
 
 
-        $input = new ArrayInput(
-            [
-                'awsApiKey' => 'foo',
-                'awsApiSecret' => 'bar',
-                'awsKeypairPrivateKeyFile' => 'baz'
-            ],
-            new InputDefinition([
-                new InputArgument('awsApiKey', InputArgument::REQUIRED),
-                new InputArgument('awsApiSecret', InputArgument::REQUIRED),
-                new InputArgument('awsKeypairPrivateKeyFile', InputArgument::REQUIRED),
-            ])
-        );
-
-        $output = new BufferedOutput();
-
-
         $cloudInstanceManagementService = new CloudInstanceManagementService(
             $mockEm,
             $this->getMockCloudInstanceCoordinatorFactory()
         );
+
+
+        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH);
 
         $cloudInstanceManagementService->manageCloudInstance($cloudInstance, $input, $output);
 
