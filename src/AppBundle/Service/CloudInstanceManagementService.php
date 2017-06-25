@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinatorFactory;
+use AppBundle\Coordinator\CloudInstance\CloudProviderProblemException;
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\CloudInstance;
@@ -192,6 +193,7 @@ class CloudInstanceManagementService
                     $output->writeln('Action result: success');
                 } catch (\Exception $e) {
                     $output->writeln('Action result: failure, exception output follows');
+                    $output->writeln(get_class($e));
                     $output->writeln($e->getMessage());
                 }
             }
@@ -269,8 +271,18 @@ class CloudInstanceManagementService
                 $this->em->persist($cloudInstance);
                 $this->em->flush();
                 $output->writeln('Action result: success');
+            } catch (CloudProviderProblemException $e) {
+                $output->writeln('Action result: treatable failure');
+                if ($e->getCode() === CloudProviderProblemException::CODE_INSTANCE_UNKNOWN) {
+                    $output->writeln('Action result: instance not found at provider, setting to terminated');
+                    $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);
+                    $this->em->persist($cloudInstance);
+                    $this->em->flush();
+                    $output->writeln('Action result: success');
+                }
             } catch (\Exception $e) {
-                $output->writeln('Action result: failure, exception output follows');
+                $output->writeln('Action result: unexpected failure, exception output follows');
+                $output->writeln(get_class($e));
                 $output->writeln($e->getMessage());
             }
         }

@@ -2,7 +2,9 @@
 
 namespace Tests\AppBundle\Service;
 
+use AppBundle\Coordinator\CloudInstance\AwsCloudInstanceCoordinator;
 use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinatorFactory;
+use AppBundle\Coordinator\CloudInstance\CloudProviderProblemException;
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
@@ -54,7 +56,7 @@ class CloudInstanceManagementServiceTest extends TestCase
             ->getMock();
 
         $mockAccountMovementRepository
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('getAccountBalanceForUser')
             ->with($user)
             ->willReturn($accountBalance);
@@ -111,6 +113,7 @@ class CloudInstanceManagementServiceTest extends TestCase
         );
     }
 
+
     public function testScheduledForLaunchIsNotLaunchedIfBalanceInsufficient()
     {
         $user = $this->getUser();
@@ -138,6 +141,51 @@ class CloudInstanceManagementServiceTest extends TestCase
         $this->assertSame(CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH, $cloudInstance->getRunstatus());
         $this->assertContains('Action: would launch the cloud instance, but owner has insufficient balance', $loglines);
         $this->assertContains('Hourly costs would be 1.49, balance is only 0', $loglines);
+    }
+
+
+    public function testTerminatingInstanceIsSetToTerminatedIfInstanceNotFoundAtProvider()
+    {
+        $user = $this->getUser();
+        $remoteDesktop = $this->getRemoteDesktop($user);
+        $cloudInstance = $this->getCloudInstance($remoteDesktop);
+        $input = $this->getInput();
+        $output = new BufferedOutput();
+
+        $mockEm = $this->getMockEntityManager(10.0, $user);
+
+        $mockAwsCloudInstanceCoordinator = $this->getMockBuilder(AwsCloudInstanceCoordinator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockAwsCloudInstanceCoordinator
+            ->expects($this->once())
+            ->method('triggerTerminationOfCloudInstance')
+            ->with($cloudInstance)
+            ->willThrowException(new CloudProviderProblemException('', CloudProviderProblemException::CODE_INSTANCE_UNKNOWN));
+
+        $mockCloudInstanceCoordinatorFactory = $this->getMockCloudInstanceCoordinatorFactory();
+        $mockCloudInstanceCoordinatorFactory
+            ->expects($this->once())
+            ->method('getCloudInstanceCoordinatorForCloudInstance')
+            ->willReturn($mockAwsCloudInstanceCoordinator);
+
+
+        $cloudInstanceManagementService = new CloudInstanceManagementService(
+            $mockEm,
+            $mockCloudInstanceCoordinatorFactory
+        );
+
+
+        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION);
+
+        $cloudInstanceManagementService->manageCloudInstance($cloudInstance, $input, $output);
+
+
+        $loglines = $output->fetch();
+
+        $this->assertSame(CloudInstance::RUNSTATUS_TERMINATED, $cloudInstance->getRunstatus());
+        $this->assertContains('instance not found at provider, setting to terminated', $loglines);
     }
 
 }

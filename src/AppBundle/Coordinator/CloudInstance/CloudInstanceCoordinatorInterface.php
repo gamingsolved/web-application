@@ -34,4 +34,5 @@ interface CloudInstanceCoordinatorInterface
 class CloudProviderProblemException extends \RuntimeException
 {
     const CODE_OUT_OF_INSTANCE_CAPACITY = 0;
+    const CODE_INSTANCE_UNKNOWN = 1;
 }
