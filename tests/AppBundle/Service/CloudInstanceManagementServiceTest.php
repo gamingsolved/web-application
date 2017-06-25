@@ -141,6 +141,54 @@ class CloudInstanceManagementServiceTest extends TestCase
     }
 
 
+    public function testScheduledForLaunchIsLaunchedIfBalanceSufficient()
+    {
+        $user = $this->getUser();
+        $remoteDesktop = $this->getRemoteDesktop($user);
+        $cloudInstance = $this->getCloudInstance($remoteDesktop);
+        $input = $this->getInput();
+        $output = new BufferedOutput();
+
+        $mockEm = $this->getMockEntityManager(10.0, $user);
+
+        $mockAwsCloudInstanceCoordinator = $this->getMockBuilder(AwsCloudInstanceCoordinator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockAwsCloudInstanceCoordinator
+            ->expects($this->once())
+            ->method('triggerLaunchOfCloudInstance')
+            ->with($cloudInstance);
+
+        $mockAwsCloudInstanceCoordinator
+            ->expects($this->once())
+            ->method('updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered')
+            ->with($cloudInstance);
+
+        $mockCloudInstanceCoordinatorFactory = $this->getMockCloudInstanceCoordinatorFactory();
+        $mockCloudInstanceCoordinatorFactory
+            ->expects($this->once())
+            ->method('getCloudInstanceCoordinatorForCloudInstance')
+            ->willReturn($mockAwsCloudInstanceCoordinator);
+
+        $cloudInstanceManagementService = new CloudInstanceManagementService(
+            $mockEm,
+            $mockCloudInstanceCoordinatorFactory
+        );
+
+
+        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH);
+
+        $cloudInstanceManagementService->manageCloudInstance($cloudInstance, $input, $output);
+
+
+        $loglines = $output->fetch();
+
+        $this->assertSame(CloudInstance::RUNSTATUS_LAUNCHING, $cloudInstance->getRunstatus());
+        $this->assertContains('Action: launching the cloud instance', $loglines);
+    }
+
+
     public function testTerminatingInstanceIsSetToTerminatedIfInstanceNotFoundAtProvider()
     {
         $user = $this->getUser();
