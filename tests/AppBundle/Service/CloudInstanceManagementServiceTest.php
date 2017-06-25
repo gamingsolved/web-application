@@ -32,18 +32,34 @@ class CloudInstanceManagementServiceTest extends TestCase
             ->getMock();
     }
 
-    private function getMockEntityManager()
+    private function getMockEntityManager(float $accountBalance, User $user)
     {
-        return $this->getMockBuilder(EntityManager::class)
+        $mockEm = $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        $mockEm
+            ->expects($this->once())
+            ->method('getRepository')
+            ->with(AccountMovement::class)
+            ->willReturn($this->getMockAccountMovementRepository($accountBalance, $user));
+
+        return $mockEm;
     }
 
-    private function getMockAccountMovementRepository()
+    private function getMockAccountMovementRepository(float $accountBalance, User $user)
     {
-        return $this->getMockBuilder(AccountMovementRepository::class)
+        $mockAccountMovementRepository = $this->getMockBuilder(AccountMovementRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        $mockAccountMovementRepository
+            ->expects($this->once())
+            ->method('getAccountBalanceForUser')
+            ->with($user)
+            ->willReturn($accountBalance);
+
+        return $mockAccountMovementRepository;
     }
 
     private function getUser(): User
@@ -103,23 +119,7 @@ class CloudInstanceManagementServiceTest extends TestCase
         $input = $this->getInput();
         $output = new BufferedOutput();
 
-
-        $mockAccountMovementRepository = $this->getMockAccountMovementRepository();
-
-        $mockAccountMovementRepository
-            ->expects($this->once())
-            ->method('getAccountBalanceForUser')
-            ->with($user)
-            ->willReturn(0.0);
-
-
-        $mockEm = $this->getMockEntityManager();
-
-        $mockEm
-            ->expects($this->once())
-            ->method('getRepository')
-            ->with(AccountMovement::class)
-            ->willReturn($mockAccountMovementRepository);
+        $mockEm = $this->getMockEntityManager(0.0, $user);
 
 
         $cloudInstanceManagementService = new CloudInstanceManagementService(
