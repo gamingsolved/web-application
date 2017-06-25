@@ -9,11 +9,17 @@ rsync \
     --exclude .git \
     --exclude .idea \
     --exclude var/sessions \
+    --exclude var/cache/prod \
+    --exclude var/cache/preprod \
     --exclude var/cache/dev \
     --exclude var/cache/test \
+    --exclude var/logs/prod.log \
+    --exclude var/logs/preprod.log \
     --exclude var/logs/dev.log \
     --exclude var/logs/test.log \
     $DIR/../ www-data@185.162.248.214:/opt/ubiqmachine-webapp/preprod/
+
+[ "$1" == "quick" ] && exit 0
 
 ssh root@185.162.248.214 'cd /opt/ubiqmachine-webapp/preprod/ && sudo -u www-data SYMFONY_ENV=preprod php composer.phar install'
 
