@@ -102,7 +102,7 @@
                     var regionFormField = regionFormFields.pop();
                     if (regionFormField) {
                         var region = regionFormField.value;
-                        var endpoint = 'http://dynamodb.' + region + '.amazonaws.com/';
+                        var endpoint = 'https://dynamodb.' + region + '.amazonaws.com/';
                         step1ConnectEndpoint(regionFormField, region, endpoint, regionFormFields);
                     }
                 }
