@@ -342,14 +342,16 @@ cloudInstance:
     new:
         form:
             headline: Launch your cloud gaming rig
-            region_label: Please select the region which is closest to your current position.
+            subheadline: "Please select the region where you want to launch your gaming rig."
+            region_label: ""
             region_title: "Region:"
             submit_label: Launch now
             pinginfo:
                 title: "Connection latency:"
-                waiting: "Waiting..."
+                waiting: "Setup..."
                 connecting: "Connecting..."
                 pinging: "Pinging..."
+                explanation: "Choose the region with the lowest connection latency for the best experience."
         launch_later_button: Launch later
 
 cloudprovider:

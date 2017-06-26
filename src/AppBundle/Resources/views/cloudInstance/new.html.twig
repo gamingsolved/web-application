@@ -5,19 +5,14 @@
     {{ parent() }}
 
     <style>
-        #form_region {
-            margin-top: 48px;
-        }
-
-        #regionTitle {
-            position: relative;
-            top: -218px;
+        #titles {
+            margin-top: 20px;
+            margin-bottom: -20px;
         }
 
         #pingInfoTitle {
             position: relative;
-            top: -218px;
-            left: 83px;
+            left: 84px;
         }
 
         .regionFormFieldPingInfo {
@@ -33,18 +28,18 @@
         }
 
         .regionFormFieldPingInfo.good {
-            background-color: #008800;
-            color: #fff;
+            background-color: #ccffcc;
+            color: #008800;
         }
 
         .regionFormFieldPingInfo.medium {
-            background-color: orange;
-            color: #fff;
+            background-color: #ffffcc;
+            color: #888800;
         }
 
         .regionFormFieldPingInfo.bad {
-            background-color: #ff0000;
-            color: #fff;
+            background-color: #ffcccc;
+            color: #880000;
         }
     </style>
 
@@ -63,13 +58,19 @@
                 <div id="pingImageCell" style="display: none;"></div>
 
                 <div class="well">
+                    <strong>{{ "cloudInstance.new.form.subheadline"|trans }}</strong>
+
+                    <div id="titles">
+                        <span id="regionTitle"><u>{{ "cloudInstance.new.form.region_title"|trans }}</u></span>
+                        <span id="pingInfoTitle"><u>{{ "cloudInstance.new.form.pinginfo.title"|trans }}</u></span>
+                    </div>
+
                     {{ form_start(form) }}
                     {{ form_errors(form) }}
                     {{ form_widget(form) }}
                     {{ form_end(form) }}
 
-                    <span id="regionTitle"><u>{{ "cloudInstance.new.form.region_title"|trans }}</u></span>
-                    <span id="pingInfoTitle"><u>{{ "cloudInstance.new.form.pinginfo.title"|trans }}</u></span>
+                    {{ "cloudInstance.new.form.pinginfo.explanation"|trans }}
                 </div>
 
                 <a href="{{ path('remotedesktops.index') }}" class="btn btn-default">
