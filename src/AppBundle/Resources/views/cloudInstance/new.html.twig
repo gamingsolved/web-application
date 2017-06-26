@@ -5,9 +5,24 @@
     {{ parent() }}
 
     <style>
+        #form_region {
+            margin-top: 48px;
+        }
+
+        #regionTitle {
+            position: relative;
+            top: -218px;
+        }
+
+        #pingInfoTitle {
+            position: relative;
+            top: -218px;
+            left: 83px;
+        }
+
         .regionFormFieldPingInfo {
             position: absolute;
-            min-width: 80px;
+            min-width: 100px;
             left: 100px;
             display: inline-block;
             margin-left: 40px;
@@ -46,11 +61,15 @@
                 {% endif %}
 
                 <div id="pingImageCell" style="display: none;"></div>
+
                 <div class="well">
                     {{ form_start(form) }}
                     {{ form_errors(form) }}
                     {{ form_widget(form) }}
                     {{ form_end(form) }}
+
+                    <span id="regionTitle"><u>{{ "cloudInstance.new.form.region_title"|trans }}</u></span>
+                    <span id="pingInfoTitle"><u>{{ "cloudInstance.new.form.pinginfo.title"|trans }}</u></span>
                 </div>
 
                 <a href="{{ path('remotedesktops.index') }}" class="btn btn-default">
@@ -74,7 +93,7 @@
                 regionFormFields.forEach(function (regionFormField) {
                     jQuery('input[value="' + regionFormField.value + '"]')
                         .closest('label')
-                        .append('<span class="regionFormFieldPingInfo" id="regionFormFieldPingInfo_' + regionFormField.value + '">Measuring connection latency, please wait...</span>');
+                        .append('<span class="regionFormFieldPingInfo" id="regionFormFieldPingInfo_' + regionFormField.value + '">{{ "cloudInstance.new.form.pinginfo.waiting"|trans }}</span>');
                 });
 
                 window.setTimeout(
@@ -108,12 +127,12 @@
                 }
 
                 function step1ConnectEndpoint(regionFormField, region, endpoint, regionFormFields) {
-                    jQuery('#regionFormFieldPingInfo_' + region).html('connecting...');
+                    jQuery('#regionFormFieldPingInfo_' + region).html('{{ "cloudInstance.new.form.pinginfo.connecting"|trans }}');
                     pingEndpoint(endpoint, function() { step2PingEndpoint(regionFormField, region, endpoint, regionFormFields); });
                 }
 
                 function step2PingEndpoint(regionFormField, region, endpoint, regionFormFields) {
-                    jQuery('#regionFormFieldPingInfo_' + region).html('pinging...');
+                    jQuery('#regionFormFieldPingInfo_' + region).html('{{ "cloudInstance.new.form.pinginfo.pinging"|trans }}');
                     var startTime = currentTimeMillis();
                     pingEndpoint(endpoint, function() { step3DisplayResult(startTime, regionFormField, region, endpoint, regionFormFields); });
                 }
