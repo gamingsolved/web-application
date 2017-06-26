@@ -1,5 +1,40 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    <style>
+        .regionFormFieldPingInfo {
+            position: absolute;
+            min-width: 80px;
+            left: 100px;
+            display: inline-block;
+            margin-left: 40px;
+            padding-left: 4px;
+            padding-right: 4px;
+            background-color: #ccc;
+            color: #444;
+        }
+
+        .regionFormFieldPingInfo.good {
+            background-color: #008800;
+            color: #fff;
+        }
+
+        .regionFormFieldPingInfo.medium {
+            background-color: orange;
+            color: #fff;
+        }
+
+        .regionFormFieldPingInfo.bad {
+            background-color: #ff0000;
+            color: #fff;
+        }
+    </style>
+
+{% endblock %}
+
 {% block body %}
     <div class="container">
         <div class="row">
@@ -15,15 +50,6 @@
                     {{ form_errors(form) }}
                     {{ form_widget(form) }}
                     {{ form_end(form) }}
-                </div>
-
-                <div class="well">
-                    <div id="requestImageCell" style="display: none;"></div>
-                    <span id="regionPingResult_eu-central-1"></span>
-                    <span id="regionPingResult_eu-west-1"></span>
-                    <span id="regionPingResult_us-east-1"></span>
-                    <span id="regionPingResult_us-west-1"></span>
-                    <span id="regionPingResult_ap-southeast-2"></span>
                 </div>
 
                 <a href="{{ path('remotedesktops.index') }}" class="btn btn-default">
@@ -42,7 +68,12 @@
             jQuery(function() {
 
                 var regionFormFields = jQuery('input[name="form[region]"]').toArray().reverse();
-                var requestImageCell = jQuery('#requestImageCell');
+
+                regionFormFields.forEach(function (regionFormField) {
+                    jQuery('input[value="' + regionFormField.value + '"]')
+                        .closest('label')
+                        .append('<span class="regionFormFieldPingInfo" id="regionFormFieldPingInfo_' + regionFormField.value + '">Measuring connection latency, please wait...</span>');
+                });
 
                 window.setTimeout(
                     function () {
@@ -58,11 +89,13 @@
                 function pingEndpoint(endpoint, onComplete) {
                     var randomString = Math.floor(Math.random()*0xFFFFFFFFFFFFFFFF).toString(36);
                     var targetUrl = endpoint + 'ping?x=' + randomString;
-                    requestImageCell.empty();
-                    requestImageCell.html('<img id="pingImage" style="display: none;">');
-                    var pingImage = jQuery('#pingImage');
-                    pingImage.on('error', onComplete);
-                    pingImage.attr('src', targetUrl);
+
+                    jQuery.ajax({
+                        type: 'GET',
+                        url: targetUrl
+                    }).fail(function () {
+                        onComplete();
+                    });
                 }
 
                 function doNextRegionFormField(regionFormFields) {
@@ -75,12 +108,12 @@
                 }
 
                 function step1ConnectEndpoint(regionFormField, region, endpoint, regionFormFields) {
-                    jQuery('#regionPingResult_' + region).html('connecting...');
+                    jQuery('#regionFormFieldPingInfo_' + region).html('connecting...');
                     pingEndpoint(endpoint, function() { step2PingEndpoint(regionFormField, region, endpoint, regionFormFields); });
                 }
 
                 function step2PingEndpoint(regionFormField, region, endpoint, regionFormFields) {
-                    jQuery('#regionPingResult_' + region).html('pinging...');
+                    jQuery('#regionFormFieldPingInfo_' + region).html('pinging...');
                     var startTime = currentTimeMillis();
                     pingEndpoint(endpoint, function() { step3DisplayResult(startTime, regionFormField, region, endpoint, regionFormFields); });
                 }
@@ -89,7 +122,16 @@
                     var endTime = currentTimeMillis();
                     var elapsed = endTime - startTime;
                     var resultText = elapsed.toString() + ' ms';
-                    jQuery('#regionPingResult_' + region).html(resultText);
+
+                    if (elapsed < 30) {
+                        jQuery('#regionFormFieldPingInfo_' + region).addClass('good');
+                    } else if (elapsed < 60) {
+                        jQuery('#regionFormFieldPingInfo_' + region).addClass('medium');
+                    } else {
+                        jQuery('#regionFormFieldPingInfo_' + region).addClass('bad');
+                    }
+
+                    jQuery('#regionFormFieldPingInfo_' + region).html(resultText);
                     doNextRegionFormField(regionFormFields);
                 }
 
