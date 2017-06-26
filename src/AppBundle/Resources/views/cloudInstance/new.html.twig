@@ -45,6 +45,7 @@
                     {{ include('AppBundle:_reusable:insufficientAccountBalance.html.twig') }}
                 {% endif %}
 
+                <div id="pingImageCell" style="display: none;"></div>
                 <div class="well">
                     {{ form_start(form) }}
                     {{ form_errors(form) }}
@@ -68,6 +69,7 @@
             jQuery(function() {
 
                 var regionFormFields = jQuery('input[name="form[region]"]').toArray().reverse();
+                var pingImageCell = jQuery('#pingImageCell');
 
                 regionFormFields.forEach(function (regionFormField) {
                     jQuery('input[value="' + regionFormField.value + '"]')
@@ -89,13 +91,11 @@
                 function pingEndpoint(endpoint, onComplete) {
                     var randomString = Math.floor(Math.random()*0xFFFFFFFFFFFFFFFF).toString(36);
                     var targetUrl = endpoint + 'ping?x=' + randomString;
-
-                    jQuery.ajax({
-                        type: 'GET',
-                        url: targetUrl
-                    }).fail(function () {
-                        onComplete();
-                    });
+                    pingImageCell.empty();
+                    pingImageCell.html("<img id='pingImage' style='display: none'>");
+                    var pingImage = $("#pingImage");
+                    pingImage.on('error', onComplete);
+                    pingImage.attr('src', targetUrl);
                 }
 
                 function doNextRegionFormField(regionFormFields) {
