@@ -12,6 +12,11 @@ h1, h2, h3, h4, h5, h6 {
   color: #fff;
 }
 
+div.well h1, div.well h2, div.well h3, div.well h4, div.well h5, div.well h6 {
+  color: #000;
+}
+
+
 #logo {
   position: absolute;
   top: 13px;
