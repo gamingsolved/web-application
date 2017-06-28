@@ -137,7 +137,7 @@ class CloudInstanceManagementServiceTest extends TestCase
 
         $this->assertSame(CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH, $cloudInstance->getRunstatus());
         $this->assertContains('Action: would launch the cloud instance, but owner has insufficient balance', $loglines);
-        $this->assertContains('Hourly costs would be 1.49, balance is only 0', $loglines);
+        $this->assertContains('Hourly costs would be 0.95, balance is only 0', $loglines);
     }
 
 

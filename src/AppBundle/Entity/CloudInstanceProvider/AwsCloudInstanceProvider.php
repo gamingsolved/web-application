@@ -187,7 +187,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     public function getMaximumHourlyUsageCostsForFlavor(Flavor $flavor) : float
     {
         if ($flavor->getInternalName() === 'g2.2xlarge') {
-            return 1.49;
+            return 0.95;
         }
 
         if ($flavor->getInternalName() === 'c4.4xlarge') {
