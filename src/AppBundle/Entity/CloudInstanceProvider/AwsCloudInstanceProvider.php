@@ -38,7 +38,8 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             new Image($this, 'ami-a9e1f9cf', '[CURRENT] Gaming for eu-west-1 (Windows Server 2016)'),
             new Image($this, 'ami-a2437cc4', '[LEGACY]  Gaming for eu-west-1'),
 
-            new Image($this, 'ami-a4406eb2', '[CURRENT] Gaming for us-east-1 (Windows Server 2016)'),
+            new Image($this, 'ami-ed1120fb', '[CURRENT] Gaming for us-east-1 (Windows Server 2016 v2)'),
+            new Image($this, 'ami-a4406eb2', '[LEGACY]  Gaming for us-east-1 (Windows Server 2016)'),
             new Image($this, 'ami-2b4a6b3d', '[LEGACY]  Gaming for us-east-1 (Windows Server 2016)'),
             new Image($this, 'ami-96179a80', '[LEGACY]  Gaming for us-east-1'),
             new Image($this, 'ami-10334270', '[LEGACY]  Gaming for us-east-1'),
@@ -78,7 +79,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             RemoteDesktopKind::GAMING_PRO => [
                 'eu-central-1'   => $this->getImageByInternalName('ami-8a03a4e5'),
                 'eu-west-1'      => $this->getImageByInternalName('ami-a9e1f9cf'),
-                'us-east-1'      => $this->getImageByInternalName('ami-a4406eb2'),
+                'us-east-1'      => $this->getImageByInternalName('ami-ed1120fb'),
                 'us-west-1'      => $this->getImageByInternalName('ami-d3aa87b3'),
                 'ap-southeast-2' => $this->getImageByInternalName('ami-20302043'),
             ],
