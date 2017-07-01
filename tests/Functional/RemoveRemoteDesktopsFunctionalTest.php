@@ -22,7 +22,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Usage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(only in status Ready to use): $0.95', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(only in status Ready to use): $1.95', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current storage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
         $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());

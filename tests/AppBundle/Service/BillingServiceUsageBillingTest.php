@@ -193,7 +193,7 @@ class BillingServiceUsageBillingTest extends TestCase
 
         $this->assertEquals(DateTimeUtility::createDateTime('2017-03-26 18:37:01'), $actualBillableItem->getTimewindowBegin());
         $this->assertEquals(BillableItem::TYPE_USAGE, $actualBillableItem->getType());
-        $this->assertEquals(0.95, $actualBillableItem->getPrice());
+        $this->assertEquals(1.95, $actualBillableItem->getPrice());
     }
 
 
