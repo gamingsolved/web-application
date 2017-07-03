@@ -31,27 +31,27 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         ];
 
         $this->images = [
-            new Image($this, 'ami-0e62c361', '[CURRENT] Gaming for eu-central-1 (Windows Server 2016 v2)'),
+            new Image($this, 'ami-0e62c361', '[ON HOLD] Gaming for eu-central-1 (Windows Server 2016 v2)'),
             new Image($this, 'ami-8a03a4e5', '[LEGACY]  Gaming for eu-central-1 (Windows Server 2016)'),
-            new Image($this, 'ami-14c0107b', '[LEGACY]  Gaming for eu-central-1'),
+            new Image($this, 'ami-14c0107b', '[CURRENT] Gaming for eu-central-1'),
             new Image($this, 'ami-f2fde69e', '[LEGACY]  Gaming for eu-central-1'),
 
-            new Image($this, 'ami-bc4ca8c5', '[CURRENT] Gaming for eu-west-1 (Windows Server 2016 v2)'),
+            new Image($this, 'ami-bc4ca8c5', '[ON HOLD] Gaming for eu-west-1 (Windows Server 2016 v2)'),
             new Image($this, 'ami-a9e1f9cf', '[LEGACY]  Gaming for eu-west-1 (Windows Server 2016)'),
-            new Image($this, 'ami-a2437cc4', '[LEGACY]  Gaming for eu-west-1'),
+            new Image($this, 'ami-a2437cc4', '[CURRENT] Gaming for eu-west-1'),
 
-            new Image($this, 'ami-ed1120fb', '[CURRENT] Gaming for us-east-1 (Windows Server 2016 v2)'),
+            new Image($this, 'ami-ed1120fb', '[ON HOLD] Gaming for us-east-1 (Windows Server 2016 v2)'),
             new Image($this, 'ami-a4406eb2', '[LEGACY]  Gaming for us-east-1 (Windows Server 2016)'),
             new Image($this, 'ami-2b4a6b3d', '[LEGACY]  Gaming for us-east-1 (Windows Server 2016)'),
-            new Image($this, 'ami-96179a80', '[LEGACY]  Gaming for us-east-1'),
+            new Image($this, 'ami-96179a80', '[CURRENT] Gaming for us-east-1'),
             new Image($this, 'ami-10334270', '[LEGACY]  Gaming for us-east-1'),
 
-            new Image($this, 'ami-60b29e00', '[CURRENT] Gaming for us-west-1 (Windows Server 2016 v2)'),
+            new Image($this, 'ami-60b29e00', '[ON HOLD] Gaming for us-west-1 (Windows Server 2016 v2)'),
             new Image($this, 'ami-d3aa87b3', '[LEGACY]  Gaming for us-west-1 (Windows Server 2016)'),
-            new Image($this, 'ami-d8c59fb8', '[LEGACY]  Gaming for us-west-1'),
+            new Image($this, 'ami-d8c59fb8', '[CURRENT] Gaming for us-west-1'),
             new Image($this, 'ami-b0c7f2da', '[LEGACY]  Gaming for us-west-1'),
 
-            new Image($this, 'ami-c49a89a7', '[CURRENT] Gaming for ap-southeast-2 (Windows Server 2016 v2)'),
+            new Image($this, 'ami-c49a89a7', '[ON HOLD] Gaming for ap-southeast-2 (Windows Server 2016 v2)'),
             new Image($this, 'ami-20302043', '[LEGACY]  Gaming for ap-southeast-2 (Windows Server 2016)'),
 
             new Image($this, 'ami-70c0101f', '[CURRENT] CAD for eu-central-1'),
@@ -76,16 +76,15 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             new Region($this, 'eu-west-1', 'cloudprovider.aws.region.eu-west-1'),
             new Region($this, 'us-east-1', 'cloudprovider.aws.region.us-east-1'),
             new Region($this, 'us-west-1', 'cloudprovider.aws.region.us-west-1'),
-            new Region($this, 'ap-southeast-2', 'cloudprovider.aws.region.ap-southeast-2')
+            new Region($this, 'ap-southeast-2', 'cloudprovider.aws.region.ap-southeast-2', false)
         ];
 
         $this->kindToRegionToImage = [
             RemoteDesktopKind::GAMING_PRO => [
-                'eu-central-1'   => $this->getImageByInternalName('ami-0e62c361'),
-                'eu-west-1'      => $this->getImageByInternalName('ami-bc4ca8c5'),
-                'us-east-1'      => $this->getImageByInternalName('ami-ed1120fb'),
-                'us-west-1'      => $this->getImageByInternalName('ami-60b29e00'),
-                'ap-southeast-2' => $this->getImageByInternalName('ami-c49a89a7'),
+                'eu-central-1'   => $this->getImageByInternalName('ami-14c0107b'),
+                'eu-west-1'      => $this->getImageByInternalName('ami-a2437cc4'),
+                'us-east-1'      => $this->getImageByInternalName('ami-96179a80'),
+                'us-west-1'      => $this->getImageByInternalName('ami-d8c59fb8'),
             ],
             RemoteDesktopKind::CAD_PRO => [
                 'eu-central-1' => $this->getImageByInternalName('ami-70c0101f'),
