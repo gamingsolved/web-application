@@ -1,4 +1,6 @@
 _navigation:
+    faq: FAQ
+    pricing: Pricing
     register: Sign up
     login: Sign in
     logout: Log out

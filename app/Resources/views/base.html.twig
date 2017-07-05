@@ -61,35 +61,40 @@
                                 </div>
                             {% endif %}
                             <ul class="nav navbar-nav pull-right">
+                                <li>
+                                    <a href="{{ path('homepage') }}#questions-and-answers">
+                                        {{ "_navigation.faq"|trans }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('homepage') }}#pricing">
+                                        {{ "_navigation.pricing"|trans }}
+                                    </a>
+                                </li>
                                 {% if app.user %}
                                     <li>
                                         <a href="{{ path('remotedesktops.index') }}">
-                                            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
                                             &nbsp;{{ "_navigation.your_remote_desktops"|trans }}
                                         </a>
                                     </li>
                                     <li>
                                         <a href="{{ path('remotedesktops.new') }}">
-                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                             {{ "_navigation.create_new_remote_desktop"|trans }}
                                         </a>
                                     </li>
                                     <li>
                                         <a href="{{ path('fos_user_security_logout') }}">
-                                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                                             {{ "_navigation.logout"|trans }}
                                         </a>
                                     </li>
                                 {% else %}
                                     <li>
                                         <a href="{{ path('fos_user_registration_register') }}">
-                                            <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
                                             {{ "_navigation.register"|trans }}
                                         </a>
                                     </li>
                                     <li>
                                         <a href="{{ path('fos_user_security_login') }}">
-                                            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
                                             &nbsp;{{ "_navigation.login"|trans }}
                                         </a>
                                     </li>
