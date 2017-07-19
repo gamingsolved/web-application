@@ -293,6 +293,7 @@ remoteDesktop:
         add_button: Create a new cloud gaming rig
         download_client_windows: Download the Windows client
         download_client_mac: Download the Mac client
+        download_client_note: "Our client needs to be installed on your local computer in order to connect to your remote gaming rig. You don't need to ever launch or configure the client application yourself - it is automatically triggered when you initiate a remote session from this webpage."
         launch_button: Launch this cloud gaming rig
         refresh_button: Refresh status
         stop_data_safe_info: Your data is safe - everything is kept in place when your cloud gaming rig is stopped.
