@@ -262,4 +262,14 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinatorInterface
             return false;
         }
     }
+
+    /**
+     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     */
+    public function triggerRebootOfCloudInstance(CloudInstance $cloudInstance) : void
+    {
+        $this->ec2Client->rebootInstances([
+            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+        ]);
+    }
 }

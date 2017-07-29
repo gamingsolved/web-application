@@ -29,6 +29,8 @@ interface CloudInstanceCoordinatorInterface
     public function triggerTerminationOfCloudInstance(CloudInstance $cloudInstance) : void;
 
     public function cloudInstanceIsTerminated(CloudInstance $cloudInstance) : bool;
+
+    public function triggerRebootOfCloudInstance(CloudInstance $cloudInstance) : void;
 }
 
 class CloudProviderProblemException extends \RuntimeException

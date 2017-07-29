@@ -73,7 +73,9 @@ abstract class CloudInstance implements CloudInstanceInterface
     const RUNSTATUS_SCHEDULED_FOR_TERMINATION = 8;
     const RUNSTATUS_TERMINATING = 9;
     const RUNSTATUS_TERMINATED = 10;
-    const RUNSTATUS_ERROR = 11;
+    const RUNSTATUS_SCHEDULED_FOR_REBOOT = 11;
+    const RUNSTATUS_REBOOTING = 12;
+    const RUNSTATUS_ERROR_GENERAL = 100;
 
     const ERROR_INSUFFICIENT_PROVIDER_CAPACITY = 0;
     const ERROR_VPC_NEEDED = 1;
@@ -197,7 +199,7 @@ abstract class CloudInstance implements CloudInstanceInterface
 
     public function setRunstatus(int $runstatus)
     {
-        if ($runstatus < self::RUNSTATUS_SCHEDULED_FOR_LAUNCH || $runstatus > self::RUNSTATUS_TERMINATED) {
+        if ($runstatus < self::RUNSTATUS_SCHEDULED_FOR_LAUNCH || $runstatus > self::RUNSTATUS_REBOOTING) {
             throw new \Exception('Runstatus ' . $runstatus . ' is invalid');
         }
 
@@ -249,6 +251,8 @@ abstract class CloudInstance implements CloudInstanceInterface
             );
             $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
         }
+
+        // We do not track reboots as events which make the desktop unavailable, as AWS also doesn't do this.
 
         $this->runstatus = $runstatus;
     }
