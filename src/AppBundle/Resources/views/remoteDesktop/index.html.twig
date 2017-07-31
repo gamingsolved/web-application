@@ -132,11 +132,7 @@
                                             <div class="well well-sm pull-right hourlyusagecostsbox text-right">
                                                 <small>
                                                     {{ "remoteDesktop.index.current_usage_costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.while_in_status"|trans }}
-                                                    <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>
-                                                    {{ "remoteDesktop.index.while_in_status_and"|trans }}
-                                                    <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>
-                                                    ): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
+                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong> {{ "remoteDesktop.index.while_in_status_and"|trans }} <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
                                                     <br>
                                                     {{ "remoteDesktop.index.provisioning_costs_per_hour"|trans }}: {{ remoteDesktop.hourlyProvisioningCosts|localizedcurrency('USD') }}
                                                 </small>
@@ -145,11 +141,7 @@
                                             <div class="well well-sm pull-right hourlyusagecostsbox">
                                                 <small>
                                                     {{ "remoteDesktop.index.usage_costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.only_in_status"|trans }}
-                                                    <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>
-                                                    {{ "remoteDesktop.index.only_in_status_and"|trans }}
-                                                    <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>)
-                                                    : {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
+                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong> {{ "remoteDesktop.index.only_in_status_and"|trans }} <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
                                                     <br>
                                                     {{ "remoteDesktop.index.provisioning_costs_per_hour"|trans }}: {{ remoteDesktop.hourlyProvisioningCosts|localizedcurrency('USD') }}
                                                 </small>
