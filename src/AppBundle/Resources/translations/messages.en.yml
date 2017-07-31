@@ -276,7 +276,9 @@ remoteDesktop:
         usage_costs_per_hour: Usage costs per hour
         current_usage_costs_per_hour: Current usage costs per hour
         only_in_status: only in status
+        only_in_status_and: and
         while_in_status: while in status
+        while_in_status_and: and
         provisioning_costs_per_hour: Current storage costs per hour (until rig is removed)
         auto_stop_info: "Cost protection: This cloud gaming rig will automatically stop on"
         auto_stop_change_first: "Set cost protection to stop this rig at the end of the"
@@ -298,10 +300,16 @@ remoteDesktop:
         refresh_button: Refresh status
         stop_data_safe_info: Your data is safe - everything is kept in place when your cloud gaming rig is stopped.
         start_button: Start this cloud gaming rig
+        stop_button: Stop this cloud gaming rig
+        stop_while_running_info: This will shedule the rig to be stopped right before you are billed another hour.
         terminate_button: Remove this cloud gaming rig
+        terminate_while_running_info: This will immediately shut down and remove your rig with all its data.
         terminate_data_lost_info: All your cloud gaming rig data will be lost upon removal!
-        info_launching: Booting a cloud gaming rig can take between 30 seconds and 15 minutes. You are only billed once the rig is fully available.
+        reboot_button: Reboot this cloud gaming rig
+        reboot_while_running_info: This will fully reboot the Microsoft® Windows® desktop of your cloud gaming rig.
+        info_launching: Booting a cloud gaming rig can take between 30 seconds and 10 minutes. You are only billed once the rig is fully available.
         info_stopping: Stopping a cloud gaming rig can take up to 5 minutes. You are no longer billed now.
+        info_rebooting: Rebooting a cloud gaming rig can take between 30 seconds and 5 minutes.
         publicaddress_label: IP address:
         username_label: Username:
         password_label: Password:
@@ -337,6 +345,7 @@ remoteDesktop:
         stopped: Stopped
         terminating: Removing...
         terminated: Removed
+        rebooting: Rebooting
 
     insufficientAccountBalance:
         headline: Insufficient balance

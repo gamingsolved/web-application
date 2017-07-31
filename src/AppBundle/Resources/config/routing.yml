@@ -63,6 +63,11 @@ remotedesktops.terminate:
     defaults: { _controller: AppBundle:RemoteDesktop:terminate }
     methods:  [GET]
 
+remotedesktops.reboot:
+    path:     /remoteDesktops/{remoteDesktop}/reboot
+    defaults: { _controller: AppBundle:RemoteDesktop:reboot }
+    methods:  [GET]
+
 remotedesktops.scheduleForStopAtEndOfUsageHour:
     path:     /remoteDesktops/{remoteDesktop}/scheduleForStopAtEndOfUsageHour/{usageHour}
     defaults: { _controller: AppBundle:RemoteDesktop:scheduleForStopAtEndOfUsageHour }

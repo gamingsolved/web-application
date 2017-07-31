@@ -45,6 +45,13 @@ class RemoteDesktopController extends Controller
 
         /** @var RemoteDesktop $remoteDesktop */
         foreach ($remoteDesktops as $remoteDesktop) {
+            if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_REBOOTING) {
+                $remoteDesktopsSorted[] = $remoteDesktop;
+            }
+        }
+
+        /** @var RemoteDesktop $remoteDesktop */
+        foreach ($remoteDesktops as $remoteDesktop) {
             if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_STOPPING) {
                 $remoteDesktopsSorted[] = $remoteDesktop;
             }
@@ -257,6 +264,31 @@ class RemoteDesktopController extends Controller
             $em->persist($remoteDesktop);
         }
 
+        $em->flush();
+
+        if ($user->hasRole('ROLE_ADMIN')) {
+            return $this->redirect($request->headers->get('referer'));
+        } else {
+            return $this->redirectToRoute('remotedesktops.index');
+        }
+    }
+
+    /**
+     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     */
+    public function rebootAction(RemoteDesktop $remoteDesktop, Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!($remoteDesktop->getUser()->getId() === $user->getId() || $user->hasRole('ROLE_ADMIN'))) {
+            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $remoteDesktop->scheduleForReboot();
+        $em->persist($remoteDesktop);
         $em->flush();
 
         if ($user->hasRole('ROLE_ADMIN')) {

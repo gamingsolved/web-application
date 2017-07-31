@@ -37,6 +37,7 @@ class RemoteDesktop
     const STATUS_STOPPED = 4;
     const STATUS_TERMINATING = 5;
     const STATUS_TERMINATED = 6;
+    const STATUS_REBOOTING = 7;
 
     const HASH_SECRET = '>"13!V{_:E7 KQ3*ttV,\n|^2,a""k~Q';
 
@@ -252,6 +253,10 @@ class RemoteDesktop
                 case CloudInstance::RUNSTATUS_TERMINATED:
                     $status = self::STATUS_TERMINATED;
                     break;
+                case CloudInstance::RUNSTATUS_SCHEDULED_FOR_REBOOT:
+                case CloudInstance::RUNSTATUS_REBOOTING:
+                    $status = self::STATUS_REBOOTING;
+                    break;
                 default:
                     throw new \Exception('Unexpected cloud instance runstatus ' . $activeCloudInstance->getRunstatus());
 
@@ -284,6 +289,9 @@ class RemoteDesktop
                 break;
             case self::STATUS_TERMINATED:
                 return 'terminated';
+                break;
+            case self::STATUS_REBOOTING:
+                return 'rebooting';
                 break;
             default:
                 throw new \Exception('Unknown remoteDesktop status value ' .$status);
@@ -351,10 +359,23 @@ class RemoteDesktop
     {
         $activeCloudInstance = $this->getActiveCloudInstance();
 
-        if ($activeCloudInstance->getRunstatus() == CloudInstance::RUNSTATUS_STOPPED) {
+        if (   $activeCloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STOPPED
+            || $activeCloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_RUNNING )
+        {
             $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION);
         } else {
-            throw new \Exception('Cannot schedule a cloud instance for termination that is not running');
+            throw new \Exception('Cannot schedule a cloud instance for termination that is not either running or stopped');
+        }
+    }
+
+    public function scheduleForReboot()
+    {
+        $activeCloudInstance = $this->getActiveCloudInstance();
+
+        if ($activeCloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_RUNNING) {
+            $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_REBOOT);
+        } else {
+            throw new \Exception('Cannot schedule a cloud instance for reboot that is not running');
         }
     }
 
