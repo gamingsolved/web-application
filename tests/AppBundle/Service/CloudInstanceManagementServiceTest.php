@@ -233,4 +233,46 @@ class CloudInstanceManagementServiceTest extends TestCase
         $this->assertContains('instance not found at provider, setting to terminated', $loglines);
     }
 
+
+    public function testScheduledForReboot()
+    {
+        $user = $this->getUser();
+        $remoteDesktop = $this->getRemoteDesktop($user);
+        $cloudInstance = $this->getCloudInstance($remoteDesktop);
+        $input = $this->getInput();
+        $output = new BufferedOutput();
+
+        $mockEm = $this->getMockEntityManager(10.0, $user);
+
+        $mockAwsCloudInstanceCoordinator = $this->getMockBuilder(AwsCloudInstanceCoordinator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockAwsCloudInstanceCoordinator
+            ->expects($this->once())
+            ->method('triggerRebootOfCloudInstance')
+            ->with($cloudInstance);
+
+        $mockCloudInstanceCoordinatorFactory = $this->getMockCloudInstanceCoordinatorFactory();
+        $mockCloudInstanceCoordinatorFactory
+            ->expects($this->once())
+            ->method('getCloudInstanceCoordinatorForCloudInstance')
+            ->willReturn($mockAwsCloudInstanceCoordinator);
+
+        $cloudInstanceManagementService = new CloudInstanceManagementService(
+            $mockEm,
+            $mockCloudInstanceCoordinatorFactory
+        );
+
+
+        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_REBOOT);
+
+        $cloudInstanceManagementService->manageCloudInstance($cloudInstance, $input, $output);
+
+
+        $loglines = $output->fetch();
+
+        $this->assertSame(CloudInstance::RUNSTATUS_REBOOTING, $cloudInstance->getRunstatus());
+        $this->assertContains('Action: asking the cloud instance to reboot', $loglines);
+    }
 }
