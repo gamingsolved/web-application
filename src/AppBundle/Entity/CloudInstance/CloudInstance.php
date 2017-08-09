@@ -62,6 +62,7 @@ abstract class CloudInstance implements CloudInstanceInterface
     const STATUS_IN_USE = 0;
     const STATUS_ARCHIVED = 1;
 
+    const RUNSTATUS_NEVER_SET = -1; // This value is not meant to be persisted
     const RUNSTATUS_SCHEDULED_FOR_LAUNCH = 0;
     const RUNSTATUS_LAUNCHING = 1;
     const RUNSTATUS_RUNNING = 2;
@@ -162,6 +163,7 @@ abstract class CloudInstance implements CloudInstanceInterface
     public function __construct()
     {
         $this->setStatus(self::STATUS_IN_USE);
+        $this->runstatus = self::RUNSTATUS_NEVER_SET;
     }
 
     public function setId(string $id)
@@ -218,8 +220,19 @@ abstract class CloudInstance implements CloudInstanceInterface
             }
         }
 
-        // Provisioning billing stops once a machine is scheduled for termination
         if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_TERMINATION) {
+            // In case we schedule a running instance for termination (and not a stopped one), we need to track the
+            // fact that the desktop becomes unavailable to the user without going through the stopped phase first
+            if ($this->getRunstatus() === self::RUNSTATUS_RUNNING) {
+                $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
+                    $this->remoteDesktop,
+                    RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+                    DateTimeUtility::createDateTime('now')
+                );
+                $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
+            }
+
+            // In any case, provisioning billing stops once a machine is scheduled for termination
             $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                 $this->remoteDesktop,
                 RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
