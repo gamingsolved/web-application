@@ -3,7 +3,7 @@
 namespace Tests\Functional;
 
 use AppBundle\Entity\CloudInstance\CloudInstance;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -49,13 +49,13 @@ class RebootRemoteDesktopFunctionalTest extends WebTestCase
 
         // At this point, the instance must be in "Scheduled for reboot" state on the UI
 
-        $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
+        $remoteDesktopRelevantForBillingEventRepo = $em->getRepository(RemoteDesktopRelevantForBillingEvent::class);
 
-        /** @var RemoteDesktopEvent[] $remoteDesktopEvents */
-        $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
+        /** @var RemoteDesktopRelevantForBillingEvent[] $remoteDesktopRelevantForBillingEvents */
+        $remoteDesktopRelevantForBillingEvents = $remoteDesktopRelevantForBillingEventRepo->findAll();
         $this->assertEquals(
             2, // provisioned, start
-            sizeof($remoteDesktopEvents)
+            sizeof($remoteDesktopRelevantForBillingEvents)
         );
 
         $this->verifyDektopStatusRebooting($client, $crawler);

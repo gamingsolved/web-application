@@ -3,7 +3,7 @@
 namespace Tests\Functional;
 
 use AppBundle\Entity\CloudInstance\CloudInstance;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Service\RemoteDesktopAutostopService;
 use Doctrine\ORM\EntityManager;
@@ -54,7 +54,7 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
         $rdas = new RemoteDesktopAutostopService();
         $optimalHourlyAutostopTimesForRemoteDesktop = $rdas->getOptimalHourlyAutostopTimesForRemoteDesktop(
             $remoteDesktop,
-            $em->getRepository(RemoteDesktopEvent::class)
+            $em->getRepository(RemoteDesktopRelevantForBillingEvent::class)
         );
 
         // Auto-stop / Cost protection test
@@ -85,18 +85,18 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
 
         // At this point, the instance must be in "Scheduled for stop" state on the UI
 
-        $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
+        $remoteDesktopRelevantForBillingEventRepo = $em->getRepository(RemoteDesktopRelevantForBillingEvent::class);
 
-        /** @var RemoteDesktopEvent[] $remoteDesktopEvents */
-        $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
+        /** @var RemoteDesktopRelevantForBillingEvent[] $remoteDesktopRelevantForBillingEvents */
+        $remoteDesktopRelevantForBillingEvents = $remoteDesktopRelevantForBillingEventRepo->findAll();
         $this->assertEquals(
             3, // provisioned, start, stop
-            sizeof($remoteDesktopEvents)
+            sizeof($remoteDesktopRelevantForBillingEvents)
         );
 
         $this->assertEquals(
-            $remoteDesktopEvents[2]->getEventType(),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
+            $remoteDesktopRelevantForBillingEvents[2]->getEventType(),
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER
         );
 
         $this->verifyDektopStatusStopping($client, $crawler);

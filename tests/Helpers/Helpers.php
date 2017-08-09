@@ -6,7 +6,7 @@ use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Entity\User;
 use AppBundle\Utility\DateTimeUtility;
@@ -49,7 +49,7 @@ trait Helpers
             FinancialTransaction::class,
             PaymentInstruction::class,
             Payment::class,
-            RemoteDesktopEvent::class,
+            RemoteDesktopRelevantForBillingEvent::class,
             RemoteDesktop::class,
             User::class
         ];

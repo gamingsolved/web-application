@@ -6,7 +6,7 @@ use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Utility\Cryptor;
 use AppBundle\Utility\DateTimeUtility;
@@ -207,36 +207,36 @@ abstract class CloudInstance implements CloudInstanceInterface
         // is launched for the very first time...
 
         if ($runstatus === self::RUNSTATUS_RUNNING) {
-            $remoteDesktopEvents = $this->remoteDesktop->getRemoteDesktopEvents();
-            if ($remoteDesktopEvents->count() === 0) {
-                $remoteDesktopEvent = new RemoteDesktopEvent(
+            $remoteDesktopRelevantForBillingEvents = $this->remoteDesktop->getRemoteDesktopRelevantForBillingEvents();
+            if ($remoteDesktopRelevantForBillingEvents->count() === 0) {
+                $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                     $this->remoteDesktop,
-                    RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+                    RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
                     DateTimeUtility::createDateTime('now')
                 );
-                $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+                $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
             }
         }
 
         // Provisioning billing stops once a machine is scheduled for termination
         if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_TERMINATION) {
-            $remoteDesktopEvent = new RemoteDesktopEvent(
+            $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                 $this->remoteDesktop,
-                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
+                RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
                 DateTimeUtility::createDateTime('now')
             );
-            $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+            $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
         }
 
 
         // We only bill usage costs once the user has their machine available...
         if ($runstatus === self::RUNSTATUS_RUNNING) {
-            $remoteDesktopEvent = new RemoteDesktopEvent(
+            $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                 $this->remoteDesktop,
-                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+                RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
                 DateTimeUtility::createDateTime('now')
             );
-            $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+            $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
 
             // Auto schedule for stop in 3 hours and 59 minutes (14340 seconds)
             $this->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT14340S')));
@@ -244,12 +244,12 @@ abstract class CloudInstance implements CloudInstanceInterface
 
         // ...and stop as soon as they don't want it anymore
         if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_STOP) {
-            $remoteDesktopEvent = new RemoteDesktopEvent(
+            $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                 $this->remoteDesktop,
-                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+                RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
                 DateTimeUtility::createDateTime('now')
             );
-            $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+            $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
         }
 
         // We do not track reboots as events which make the desktop unavailable, as AWS also doesn't do this.

@@ -319,4 +319,51 @@ class CloudInstanceManagementServiceTest extends TestCase
         $this->assertSame(CloudInstance::RUNSTATUS_RUNNING, $cloudInstance->getRunstatus());
         $this->assertContains('Action: probing if reboot is complete', $loglines);
     }
+
+    public function testRemoteDesktopRelevantForBillingEventsAreCreatedCorrectlyIfGoingFromRunningToScheduledForTermination()
+    {
+        $user = $this->getUser();
+        $remoteDesktop = $this->getRemoteDesktop($user);
+        $cloudInstance = $this->getCloudInstance($remoteDesktop);
+        $input = $this->getInput();
+        $output = new BufferedOutput();
+
+        $mockEm = $this->getMockEntityManager(10.0, $user);
+
+        $mockAwsCloudInstanceCoordinator = $this->getMockBuilder(AwsCloudInstanceCoordinator::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockAwsCloudInstanceCoordinator
+            ->expects($this->once())
+            ->method('triggerTerminationOfCloudInstance')
+            ->with($cloudInstance)
+            ->willThrowException(new CloudProviderProblemException('', CloudProviderProblemException::CODE_INSTANCE_UNKNOWN));
+
+        $mockCloudInstanceCoordinatorFactory = $this->getMockCloudInstanceCoordinatorFactory();
+        $mockCloudInstanceCoordinatorFactory
+            ->expects($this->once())
+            ->method('getCloudInstanceCoordinatorForCloudInstance')
+            ->willReturn($mockAwsCloudInstanceCoordinator);
+
+
+        $cloudInstanceManagementService = new CloudInstanceManagementService(
+            $mockEm,
+            $mockCloudInstanceCoordinatorFactory
+        );
+
+
+        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION);
+
+        #print_r($cloudInstance->getRemoteDesktop()->getRemoteDesktopRelevantForBillingEvents()->toArray());
+
+        $cloudInstanceManagementService->manageCloudInstance($cloudInstance, $input, $output);
+
+
+        $loglines = $output->fetch();
+
+        $this->assertSame(CloudInstance::RUNSTATUS_TERMINATED, $cloudInstance->getRunstatus());
+        $this->assertContains('instance not found at provider, setting to terminated', $loglines);
+    }
+
 }

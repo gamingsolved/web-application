@@ -4,7 +4,7 @@ namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktopGamingProKind;
 use AppBundle\Service\BillingService;
@@ -36,18 +36,18 @@ class BillingServiceUsageBillingTest extends TestCase
         $remoteDesktop = $this->getRemoteDesktop();
 
         // For usage billing, this event type must be ignored
-        $provisioningEvent = new RemoteDesktopEvent(
+        $provisioningEvent = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$provisioningEvent]);
@@ -57,7 +57,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
@@ -74,18 +74,18 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $event = new RemoteDesktopEvent(
+        $event = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$event]);
@@ -100,7 +100,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
@@ -121,43 +121,43 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $finishedLaunchingEvent1 = new RemoteDesktopEvent(
+        $finishedLaunchingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $beganStoppingEvent1 = new RemoteDesktopEvent(
+        $beganStoppingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:39:01')
         );
 
-        $finishedLaunchingEvent2 = new RemoteDesktopEvent(
+        $finishedLaunchingEvent2 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:20:00')
         );
 
-        $beganStoppingEvent2 = new RemoteDesktopEvent(
+        $beganStoppingEvent2 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:30:00')
         );
 
         // For usage billing, this event type must be ignored
-        $provisioningEvent = new RemoteDesktopEvent(
+        $provisioningEvent = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:31:00')
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([
@@ -178,7 +178,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
@@ -201,36 +201,36 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $finishedLaunchingEvent1 = new RemoteDesktopEvent(
+        $finishedLaunchingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $beganStoppingEvent1 = new RemoteDesktopEvent(
+        $beganStoppingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:39:01')
         );
 
-        $finishedLaunchingEvent2 = new RemoteDesktopEvent(
+        $finishedLaunchingEvent2 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:20:00')
         );
 
-        $beganStoppingEvent2 = new RemoteDesktopEvent(
+        $beganStoppingEvent2 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 20:37:01') // Within next-next usage hour
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1, $finishedLaunchingEvent2, $beganStoppingEvent2]);
@@ -245,7 +245,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
@@ -266,24 +266,24 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $finishedLaunchingEvent1 = new RemoteDesktopEvent(
+        $finishedLaunchingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $beganStoppingEvent1 = new RemoteDesktopEvent(
+        $beganStoppingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-27 00:37:01')
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
@@ -298,7 +298,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
@@ -323,24 +323,24 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $finishedLaunchingEvent1 = new RemoteDesktopEvent(
+        $finishedLaunchingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $beganStoppingEvent1 = new RemoteDesktopEvent(
+        $beganStoppingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-27 00:37:01')
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
@@ -361,7 +361,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn($latestExistingBillableItem);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
@@ -385,24 +385,24 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $finishedLaunchingEvent1 = new RemoteDesktopEvent(
+        $finishedLaunchingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $beganStoppingEvent1 = new RemoteDesktopEvent(
+        $beganStoppingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-27 00:37:01')
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
@@ -423,7 +423,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn($latestExistingBillableItem);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
@@ -442,24 +442,24 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $finishedLaunchingEvent1 = new RemoteDesktopEvent(
+        $finishedLaunchingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $beganStoppingEvent1 = new RemoteDesktopEvent(
+        $beganStoppingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-27 00:37:01')
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1]);
@@ -480,7 +480,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn($latestExistingBillableItem);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
@@ -497,18 +497,18 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $event = new RemoteDesktopEvent(
+        $event = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$event]);
@@ -523,7 +523,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
@@ -543,24 +543,24 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $finishedLaunchingEvent = new RemoteDesktopEvent(
+        $finishedLaunchingEvent = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $beganStoppingEvent = new RemoteDesktopEvent(
+        $beganStoppingEvent = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:37:00') // This is still considered as within the first usage hour
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent, $beganStoppingEvent]);
@@ -575,7 +575,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
@@ -594,24 +594,24 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $finishedLaunchingEvent = new RemoteDesktopEvent(
+        $finishedLaunchingEvent = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $beganStoppingEvent = new RemoteDesktopEvent(
+        $beganStoppingEvent = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:37:01') // This counts as the next usage hour, because the end date is exclusive
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent, $beganStoppingEvent]);
@@ -626,7 +626,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         /** @var BillableItem[] $billableItems */
         $billableItems = $bs->generateMissingBillableItems(
@@ -646,24 +646,24 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $finishedLaunchingEvent = new RemoteDesktopEvent(
+        $finishedLaunchingEvent = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $beganStoppingEvent = new RemoteDesktopEvent(
+        $beganStoppingEvent = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:50:01') // This counts as the next usage hour, because the end date is exclusive
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->exactly(2))
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->exactly(2))
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent, $beganStoppingEvent]);
@@ -678,7 +678,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         // We ask to only work up to a point in time that is not more than one hour away from the start event - thus
         // we expect to not learn about the prolongation
@@ -714,36 +714,36 @@ class BillingServiceUsageBillingTest extends TestCase
     {
         $remoteDesktop = $this->getRemoteDesktop();
 
-        $finishedLaunchingEvent1 = new RemoteDesktopEvent(
+        $finishedLaunchingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 18:37:01')
         );
 
-        $beganStoppingEvent1 = new RemoteDesktopEvent(
+        $beganStoppingEvent1 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-26 19:20:01')
         );
 
-        $finishedLaunchingEvent2 = new RemoteDesktopEvent(
+        $finishedLaunchingEvent2 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-29 21:15:00')
         );
 
-        $beganStoppingEvent2 = new RemoteDesktopEvent(
+        $beganStoppingEvent2 = new RemoteDesktopRelevantForBillingEvent(
             $remoteDesktop,
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
             DateTimeUtility::createDateTime('2017-03-29 22:10:05')
         );
 
-        $remoteDesktopEventRepo = $this
+        $remoteDesktopRelevantForBillingEventRepo = $this
             ->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $remoteDesktopEventRepo->expects($this->once())
+        $remoteDesktopRelevantForBillingEventRepo->expects($this->once())
             ->method('findBy')
             ->with(['remoteDesktop' => $remoteDesktop], ['datetimeOccured' => 'ASC'])
             ->willReturn([$finishedLaunchingEvent1, $beganStoppingEvent1, $finishedLaunchingEvent2, $beganStoppingEvent2]);
@@ -758,7 +758,7 @@ class BillingServiceUsageBillingTest extends TestCase
             ->with(['remoteDesktop' => $remoteDesktop, 'type' => BillableItem::TYPE_USAGE], ['timewindowBegin' => 'DESC'])
             ->willReturn(null);
 
-        $bs = new BillingService($remoteDesktopEventRepo, $billableItemRepo);
+        $bs = new BillingService($remoteDesktopRelevantForBillingEventRepo, $billableItemRepo);
 
         // We ask to only work up to a point in time that is not more than one hour away from the start event - thus
         // we expect to not learn about the prolongation

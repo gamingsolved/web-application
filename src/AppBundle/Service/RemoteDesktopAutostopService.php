@@ -2,20 +2,20 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Utility\DateTimeUtility;
 use Doctrine\Common\Persistence\ObjectRepository;
 
 class RemoteDesktopAutostopService
 {
-    public function getOptimalHourlyAutostopTimesForRemoteDesktop(RemoteDesktop $remoteDesktop, ObjectRepository $remoteDesktopEventRepository) : array
+    public function getOptimalHourlyAutostopTimesForRemoteDesktop(RemoteDesktop $remoteDesktop, ObjectRepository $remoteDesktopRelevantForBillingEventRepository) : array
     {
-        /** @var RemoteDesktopEvent $latestBecameAvailableEvent */
-        $latestBecameAvailableEvents = $remoteDesktopEventRepository->findBy(
+        /** @var RemoteDesktopRelevantForBillingEvent $latestBecameAvailableEvent */
+        $latestBecameAvailableEvents = $remoteDesktopRelevantForBillingEventRepository->findBy(
             [
                 'remoteDesktop' => $remoteDesktop->getId(),
-                'eventType' => RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
+                'eventType' => RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
             ],
             ['datetimeOccured' => 'DESC'],
             1

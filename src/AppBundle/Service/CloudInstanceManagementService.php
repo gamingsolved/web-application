@@ -7,7 +7,7 @@ use AppBundle\Coordinator\CloudInstance\CloudProviderProblemException;
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\CloudInstance;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Input\InputInterface;
@@ -101,22 +101,22 @@ class CloudInstanceManagementService
 
                     $output->writeln('Action: Also logging for the usage billing logic that the desktop became unavailable');
                     $remoteDesktop = $cloudInstance->getRemoteDesktop();
-                    $remoteDesktopEvent = new RemoteDesktopEvent(
+                    $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                         $remoteDesktop,
-                        RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+                        RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
                         DateTimeUtility::createDateTime('now')
                     );
-                    $remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+                    $remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
 
                     if ($cloudInstance->getRunstatus() == CloudInstance::RUNSTATUS_TERMINATED) {
                         $output->writeln('Action: Also logging for the provisioning billing logic that the desktop is no longer provisioned');
                         $remoteDesktop = $cloudInstance->getRemoteDesktop();
-                        $remoteDesktopEvent = new RemoteDesktopEvent(
+                        $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                             $remoteDesktop,
-                            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
+                            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
                             DateTimeUtility::createDateTime('now')
                         );
-                        $remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+                        $remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
                     }
 
                     $this->em->persist($remoteDesktop);

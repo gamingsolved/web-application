@@ -10,7 +10,7 @@ use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\User;
 use AppBundle\Utility\DateTimeUtility;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -93,10 +93,10 @@ class RemoteDesktop
     private $billableItems;
 
     /**
-     * @var Collection|\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent", mappedBy="remoteDesktop", cascade="all")
+     * @var Collection|\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent", mappedBy="remoteDesktop", cascade="all")
      */
-    private $remoteDesktopEvents;
+    private $remoteDesktopRelevantForBillingEvents;
 
     /**
      * @var array
@@ -106,7 +106,7 @@ class RemoteDesktop
     public function __construct() {
         $this->awsCloudInstances = new ArrayCollection();
         $this->billableItems = new ArrayCollection();
-        $this->remoteDesktopEvents = new ArrayCollection();
+        $this->remoteDesktopRelevantForBillingEvents = new ArrayCollection();
     }
 
     public function setId(string $id) : void
@@ -193,21 +193,21 @@ class RemoteDesktop
     }
 
     /**
-     * @param RemoteDesktopEvent $remoteDesktopEvent
+     * @param RemoteDesktopRelevantForBillingEvent $remoteDesktopRelevantForBillingEvent
      * @return void
      * @throws \Exception
      */
-    public function addRemoteDesktopEvent(RemoteDesktopEvent $remoteDesktopEvent)
+    public function addRemoteDesktopRelevantForBillingEvent(RemoteDesktopRelevantForBillingEvent $remoteDesktopRelevantForBillingEvent)
     {
-        $this->remoteDesktopEvents->add($remoteDesktopEvent);
+        $this->remoteDesktopRelevantForBillingEvents->add($remoteDesktopRelevantForBillingEvent);
     }
 
     /**
-     * @return Collection[RemoteDesktopEvent]
+     * @return Collection[RemoteDesktopRelevantForBillingEvent]
      */
-    public function getRemoteDesktopEvents(): Collection
+    public function getRemoteDesktopRelevantForBillingEvents(): Collection
     {
-        return $this->remoteDesktopEvents;
+        return $this->remoteDesktopRelevantForBillingEvents;
     }
 
     /**

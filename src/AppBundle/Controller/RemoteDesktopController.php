@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktopKind;
 use AppBundle\Entity\User;
@@ -99,7 +99,7 @@ class RemoteDesktopController extends Controller
                 $remoteDesktop->setOptimalHourlyAutostopTimes(
                     $rdas->getOptimalHourlyAutostopTimesForRemoteDesktop(
                         $remoteDesktop,
-                        $em->getRepository(RemoteDesktopEvent::class)
+                        $em->getRepository(RemoteDesktopRelevantForBillingEvent::class)
                     )
                 );
             }
@@ -318,7 +318,7 @@ class RemoteDesktopController extends Controller
         $rdas = new RemoteDesktopAutostopService();
         $optimalHourlyAutostopTimes = $rdas->getOptimalHourlyAutostopTimesForRemoteDesktop(
             $remoteDesktop,
-            $em->getRepository(RemoteDesktopEvent::class)
+            $em->getRepository(RemoteDesktopRelevantForBillingEvent::class)
         );
 
         if (!is_array($optimalHourlyAutostopTimes) || sizeof($optimalHourlyAutostopTimes) !== 8) {

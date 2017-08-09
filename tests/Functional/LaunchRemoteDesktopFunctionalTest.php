@@ -5,7 +5,7 @@ namespace Tests\Functional;
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\CloudInstance;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityManager;
@@ -111,23 +111,23 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $em->persist($cloudInstance);
         $em->flush();
 
-        $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
+        $remoteDesktopRelevantForBillingEventRepo = $em->getRepository(RemoteDesktopRelevantForBillingEvent::class);
 
-        /** @var RemoteDesktopEvent[] $remoteDesktopEvents */
-        $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
+        /** @var RemoteDesktopRelevantForBillingEvent[] $remoteDesktopRelevantForBillingEvents */
+        $remoteDesktopRelevantForBillingEvents = $remoteDesktopRelevantForBillingEventRepo->findAll();
         $this->assertEquals(
             2,
-            sizeof($remoteDesktopEvents)
+            sizeof($remoteDesktopRelevantForBillingEvents)
         );
 
         $this->assertEquals(
-            $remoteDesktopEvents[0]->getEventType(),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER
+            $remoteDesktopRelevantForBillingEvents[0]->getEventType(),
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER
         );
 
         $this->assertEquals(
-            $remoteDesktopEvents[1]->getEventType(),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
+            $remoteDesktopRelevantForBillingEvents[1]->getEventType(),
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
         );
 
         $link = $crawler->selectLink('Refresh status')->first()->link();

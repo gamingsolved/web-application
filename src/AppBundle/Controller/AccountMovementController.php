@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -63,17 +63,17 @@ class AccountMovementController extends Controller
         $remoteDesktopRepository = $em->getRepository(RemoteDesktop::class);
         $remoteDesktops = $remoteDesktopRepository->findBy(['user' => $user]);
 
-        /** @var EntityRepository $remoteDesktopEventRepository */
-        $remoteDesktopEventRepository = $em->getRepository(RemoteDesktopEvent::class);
+        /** @var EntityRepository $remoteDesktopRelevantForBillingEventRepository */
+        $remoteDesktopRelevantForBillingEventRepository = $em->getRepository(RemoteDesktopRelevantForBillingEvent::class);
 
-        $remoteDesktopEvents = [];
+        $remoteDesktopRelevantForBillingEvents = [];
 
         /** @var RemoteDesktop $remoteDesktop */
         foreach ($remoteDesktops as $remoteDesktop) {
-            $thisRemoteDesktopEvents = $remoteDesktopEventRepository->findBy(['remoteDesktop' => $remoteDesktop]);
-            /** @var RemoteDesktopEvent $remoteDesktopEvent */
-            foreach ($thisRemoteDesktopEvents as $remoteDesktopEvent) {
-                $remoteDesktopEvents[] = $remoteDesktopEvent;
+            $thisRemoteDesktopRelevantForBillingEvents = $remoteDesktopRelevantForBillingEventRepository->findBy(['remoteDesktop' => $remoteDesktop]);
+            /** @var RemoteDesktopRelevantForBillingEvent $remoteDesktopRelevantForBillingEvent */
+            foreach ($thisRemoteDesktopRelevantForBillingEvents as $remoteDesktopRelevantForBillingEvent) {
+                $remoteDesktopRelevantForBillingEvents[] = $remoteDesktopRelevantForBillingEvent;
             }
         }
 
@@ -112,25 +112,25 @@ class AccountMovementController extends Controller
                 $accountMovementRepository->getAccountBalanceForUserUpUntil($user, $occuredAt);
         }
 
-        /** @var RemoteDesktopEvent $remoteDesktopEvent */
-        foreach ($remoteDesktopEvents as $remoteDesktopEvent) {
-            if ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER) {
+        /** @var RemoteDesktopRelevantForBillingEvent $remoteDesktopRelevantForBillingEvent */
+        foreach ($remoteDesktopRelevantForBillingEvents as $remoteDesktopRelevantForBillingEvent) {
+            if ($remoteDesktopRelevantForBillingEvent->getEventType() === RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER) {
                 $description = 'accountMovement.index.remote_desktop_event_became_available';
-            } elseif ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER) {
+            } elseif ($remoteDesktopRelevantForBillingEvent->getEventType() === RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER) {
                 $description = 'accountMovement.index.remote_desktop_event_became_unavailable';
-            } elseif ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER) {
+            } elseif ($remoteDesktopRelevantForBillingEvent->getEventType() === RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER) {
                 $description = 'accountMovement.index.remote_desktop_event_was_provisioned';
-            } elseif ($remoteDesktopEvent->getEventType() === RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER) {
+            } elseif ($remoteDesktopRelevantForBillingEvent->getEventType() === RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER) {
                 $description = 'accountMovement.index.remote_desktop_event_was_unprovisioned';
             } else {
-                throw new \Exception('Unknown remote desktop event type ' . $remoteDesktopEvent->getEventType());
+                throw new \Exception('Unknown remote desktop event type ' . $remoteDesktopRelevantForBillingEvent->getEventType());
             }
             $this->addEventAt(
                 $eventblocks,
-                $remoteDesktopEvent->getDatetimeOccured(),
+                $remoteDesktopRelevantForBillingEvent->getDatetimeOccured(),
                 $description,
                 0.0,
-                $remoteDesktopEvent->getRemoteDesktop()->getTitle()
+                $remoteDesktopRelevantForBillingEvent->getRemoteDesktop()->getTitle()
             );
         }
 

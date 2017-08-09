@@ -3,7 +3,7 @@
 namespace Tests\Functional;
 
 use AppBundle\Entity\CloudInstance\CloudInstance;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -87,17 +87,17 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
         $em->persist($cloudInstance);
         $em->flush();
 
-        $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
+        $remoteDesktopRelevantForBillingEventRepo = $em->getRepository(RemoteDesktopRelevantForBillingEvent::class);
 
-        /** @var RemoteDesktopEvent[] $remoteDesktopEvents */
-        $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
+        /** @var RemoteDesktopRelevantForBillingEvent[] $remoteDesktopRelevantForBillingEvents */
+        $remoteDesktopRelevantForBillingEvents = $remoteDesktopRelevantForBillingEventRepo->findAll();
         $this->assertEquals(
             4, // provisioning, start, stop, start
-            sizeof($remoteDesktopEvents)
+            sizeof($remoteDesktopRelevantForBillingEvents)
         );
         $this->assertEquals(
-            $remoteDesktopEvents[3]->getEventType(),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
+            $remoteDesktopRelevantForBillingEvents[3]->getEventType(),
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
         );
 
         $link = $crawler->selectLink('Refresh status')->first()->link();
