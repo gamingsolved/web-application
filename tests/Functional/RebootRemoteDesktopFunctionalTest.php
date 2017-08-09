@@ -75,6 +75,34 @@ class RebootRemoteDesktopFunctionalTest extends WebTestCase
         $em->flush();
 
         $this->verifyDektopStatusRebooting($client, $crawler);
+
+
+        // And switching back to "Running" status, which must not create any new billing relevant desktop events
+
+        /** @var EntityManager $em */
+        $remoteDesktop = $remoteDesktopRepo->findOneBy(['title' => 'My first cloud gaming rig']);
+        /** @var CloudInstance $cloudInstance */
+        $cloudInstance = $remoteDesktop->getCloudInstances()->get(0);
+        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
+        $em->persist($cloudInstance);
+        $em->flush();
+
+        /** @var RemoteDesktopRelevantForBillingEvent[] $remoteDesktopRelevantForBillingEvents */
+        $remoteDesktopRelevantForBillingEvents = $remoteDesktopRelevantForBillingEventRepo->findAll();
+        $this->assertEquals(
+            2, // provisioned, start
+            sizeof($remoteDesktopRelevantForBillingEvents)
+        );
+
+        $this->assertEquals(
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+            $remoteDesktopRelevantForBillingEvents[0]->getEventType()
+        );
+
+        $this->assertEquals(
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+            $remoteDesktopRelevantForBillingEvents[1]->getEventType()
+        );
     }
 
 }

@@ -206,9 +206,10 @@ abstract class CloudInstance implements CloudInstanceInterface
         }
 
         // We are billing as fair as possible: billing of provisioning of instances only starts as soon as the machine
-        // is launched for the very first time...
-
-        if ($runstatus === self::RUNSTATUS_RUNNING) {
+        // is launched for the very first time, and also billing of usage only when we are through with booting and
+        // the user can actually use the system. Rebooting doesn't actually do anything in terms of billing - it's
+        // as if the system is simply running through (which is actually true for the VM.
+        if ($runstatus === self::RUNSTATUS_RUNNING && $this->getRunstatus() !== self::RUNSTATUS_REBOOTING) {
             $remoteDesktopRelevantForBillingEvents = $this->remoteDesktop->getRemoteDesktopRelevantForBillingEvents();
             if ($remoteDesktopRelevantForBillingEvents->count() === 0) {
                 $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
@@ -218,6 +219,16 @@ abstract class CloudInstance implements CloudInstanceInterface
                 );
                 $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
             }
+
+            $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
+                $this->remoteDesktop,
+                RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
+                DateTimeUtility::createDateTime('now')
+            );
+            $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
+
+            // Auto schedule for stop in 3 hours and 59 minutes (14340 seconds)
+            $this->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT14340S')));
         }
 
         if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_TERMINATION) {
@@ -241,21 +252,7 @@ abstract class CloudInstance implements CloudInstanceInterface
             $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
         }
 
-
-        // We only bill usage costs once the user has their machine available...
-        if ($runstatus === self::RUNSTATUS_RUNNING) {
-            $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
-                $this->remoteDesktop,
-                RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-                DateTimeUtility::createDateTime('now')
-            );
-            $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
-
-            // Auto schedule for stop in 3 hours and 59 minutes (14340 seconds)
-            $this->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT14340S')));
-        }
-
-        // ...and stop as soon as they don't want it anymore
+        // We stop usage billing as soon as the user don't want the system anymore
         if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_STOP) {
             $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                 $this->remoteDesktop,
