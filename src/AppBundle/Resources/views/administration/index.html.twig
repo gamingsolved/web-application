@@ -16,25 +16,109 @@
 {% endblock %}
 
 {% block body %}
-    <section class="container">
-        <h1>{{ "administration.home_title"|trans }}</h1>
+    <section class="container-fluid">
+        <h1>{{ "administration.home.title"|trans }}</h1>
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-striped">
-                    {% for user in users %}
-                        <tr>
-                            <td>{{ user.id }}</td>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.email }}</td>
-                            <td
-                                {% if attribute(accountBalances, user.id) > 0.0 %} class="success" {% endif %}
-                                {% if attribute(accountBalances, user.id) == 0.0 %} class="warning" {% endif %}
-                                {% if attribute(accountBalances, user.id) < 0.0 %} class="danger" {% endif %}
-                            >
-                                {{ attribute(accountBalances, user.id)|localizedcurrency('USD') }}
-                            </td>
-                        </tr>
-                    {% endfor %}
+                <table class="table table-hover">
+                    <tbody>
+                        {% for user in users %}
+                            <tr class="info">
+                                <td>
+                                    <strong>{{ user.id }}</strong><br>
+                                    {{ "administration.home.usertable.last_login"|trans }}<br>
+                                    {{ user.lastLogin|date('F j, Y', timezone) }} ({{ timezone }})
+                                </td>
+                                <td>
+                                    <strong>{{ user.username }}</strong><br>
+                                    <strong>{{ user.email }}</strong>
+                                </td>
+                                <td><strong>{{ user.email }}</strong></td>
+                                <td
+                                    {% if attribute(currentAccountBalances, user.id) > 0.0 %} class="success" {% endif %}
+                                    {% if attribute(currentAccountBalances, user.id) == 0.0 %} class="warning" {% endif %}
+                                    {% if attribute(currentAccountBalances, user.id) < 0.0 %} class="danger" {% endif %}
+                                >
+                                    {% if attribute(currentAccountBalances, user.id) < 0.0 and attribute(currentAccountBalances, user.id) < attribute(anHourAgoAccountBalances, user.id) %}
+                                        <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span><br>
+                                    {% endif %}
+
+                                    <strong>{{ attribute(currentAccountBalances, user.id)|localizedcurrency('USD') }}</strong><br>
+                                    <strong>{{ attribute(anHourAgoAccountBalances, user.id)|localizedcurrency('USD') }}</strong> (-1h)<br>
+                                    <strong>{{ attribute(twentyFourHoursAgoAccountBalances, user.id)|localizedcurrency('USD') }}</strong> (-24h)<br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td colspan="3">
+                                    <strong>{{ "administration.home.usertable.remotedesktops.title"|trans }}</strong>
+                                    <table class="table table-sm table-condensed table-hover">
+                                        <tbody>
+                                            {% for remoteDesktop in user.remoteDesktops %}
+                                                <tr>
+                                                    <td width="33%">{{ remoteDesktop.id }}</td>
+                                                    <td width="33%">{{ remoteDesktop.title }}</td>
+                                                    <td width="34%"
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_NEVER_LAUNCHED') %} class="info" {% endif %}
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_BOOTING') %} class="success" {% endif %}
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %} class="success" {% endif %}
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPING') %} class="warning" {% endif %}
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %} class="warning" {% endif %}
+                                                    >
+                                                        {{ ("administration.home.usertable.remotedesktops.status." ~ remoteDesktop.statusLabel) |trans }}
+
+                                                        {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_STOPPED') %}
+                                                            <br>
+                                                            <a class="btn btn-sm btn-danger" href="{{ path('remotedesktops.terminate', { 'remoteDesktop': remoteDesktop.id }) }}">{{ "administration.home.usertable.terminate"|trans }}</a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td colspan="2">
+                                                        <strong>{{ "administration.home.usertable.cloudinstances"|trans }}</strong>
+                                                        <table class="table table-sm table-condensed table-hover">
+                                                            {% for cloudInstance in remoteDesktop.cloudInstances %}
+                                                                <tr>
+                                                                    <td width="20%">
+                                                                        {{ cloudInstance.id }}
+                                                                    </td>
+                                                                    <td width="20%">
+                                                                        <a
+                                                                            target="_blank"
+                                                                            href="https://{{ cloudInstance.region.internalName }}.console.aws.amazon.com/ec2/v2/home?region={{ cloudInstance.region.internalName }}#Instances:instanceId={{ cloudInstance.providerInstanceId }};sort=desc:tag:Name"
+                                                                        >{{ cloudInstance.providerInstanceId }}</a><br>
+
+                                                                        <a
+                                                                            target="_blank"
+                                                                            href="https://{{ cloudInstance.region.internalName }}.console.aws.amazon.com/ec2/v2/home?region={{ cloudInstance.region.internalName }}#Instances:sort=desc:tag:Name"
+                                                                        >{{ cloudInstance.region.internalName }}</a><br>
+
+                                                                        {{ cloudInstance.flavor.internalName }}<br>
+                                                                        {{ cloudInstance.image.internalName }}<br>
+                                                                        <hr>
+                                                                        <a target="_blank" href="https://{{ cloudInstance.region.internalName }}.console.aws.amazon.com/ec2/v2/home?region={{ cloudInstance.region.internalName }}#Volumes:instanceId={{ cloudInstance.providerInstanceId }};sort=desc:createTime">{{ cloudInstance.rootVolumeSize }} GiB + {{ cloudInstance.additionalVolumeSize }} GiB</a>
+                                                                    </td>
+                                                                    <td width="20%">{{ cloudInstance.hourlyUsageCosts|localizedcurrency('USD') }}</td>
+                                                                    <td width="20%">{{ cloudInstance.hourlyProvisioningCosts|localizedcurrency('USD') }}</td>
+                                                                    <td width="20%">{{ cloudInstance.runstatus }}</td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>

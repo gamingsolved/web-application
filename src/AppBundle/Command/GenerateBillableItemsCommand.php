@@ -4,7 +4,7 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\BillableItem;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Service\BillingService;
 use AppBundle\Utility\DateTimeUtility;
@@ -53,7 +53,7 @@ class GenerateBillableItemsCommand extends ContainerAwareCommand
         $remoteDesktops = $remoteDesktopRepo->findAll();
 
         $billingService = new BillingService(
-            $em->getRepository(RemoteDesktopEvent::class),
+            $em->getRepository(RemoteDesktopRelevantForBillingEvent::class),
             $em->getRepository(BillableItem::class)
         );
 

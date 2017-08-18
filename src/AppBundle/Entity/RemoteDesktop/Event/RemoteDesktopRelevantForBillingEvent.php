@@ -7,10 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
 /**
+ * Entity for remote desktop events which are relevant for billing
+ *
  * @ORM\Entity
- * @ORM\Table(name="remote_desktop_events")
+ * @ORM\Table(name="remote_desktop_relevant_for_billing_events")
  */
-class RemoteDesktopEvent
+class RemoteDesktopRelevantForBillingEvent
 {
     // A desktop was made available so the user can actually connect to it
     const EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER = 0;
@@ -31,7 +33,7 @@ class RemoteDesktopEvent
 
     /**
      * @var RemoteDesktop
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="remoteDesktopEvents")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="remoteDesktopRelevantForBillingEvents")
      * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id", nullable=false)
      */
     protected $remoteDesktop;

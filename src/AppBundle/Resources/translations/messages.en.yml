@@ -1,4 +1,6 @@
 _navigation:
+    faq: FAQ
+    pricing: Pricing
     register: Sign up
     login: Sign in
     logout: Log out
@@ -9,7 +11,22 @@ _navigation:
     logged_in_as: Logged in as
 
 administration:
-    home_title: Administration home
+    home:
+        title: Administration home
+        usertable:
+            remotedesktops:
+                title: "Remote desktops:"
+                status:
+                    never_launched: never launched
+                    booting: booting
+                    ready_to_use: ready to use
+                    stopping: stopping
+                    stopped: stopped
+                    terminating: terminating
+                    terminated: terminated
+            cloudinstances: "Cloud instances:"
+            last_login: "Last login:"
+            terminate: "Terminate"
 
 logoutSuccessful:
     message: You are now logged out.
@@ -259,7 +276,9 @@ remoteDesktop:
         usage_costs_per_hour: Usage costs per hour
         current_usage_costs_per_hour: Current usage costs per hour
         only_in_status: only in status
+        only_in_status_and: and
         while_in_status: while in status
+        while_in_status_and: and
         provisioning_costs_per_hour: Current storage costs per hour (until rig is removed)
         auto_stop_info: "Cost protection: This cloud gaming rig will automatically stop on"
         auto_stop_change_first: "Set cost protection to stop this rig at the end of the"
@@ -276,14 +295,21 @@ remoteDesktop:
         add_button: Create a new cloud gaming rig
         download_client_windows: Download the Windows client
         download_client_mac: Download the Mac client
+        download_client_note: "Our client needs to be installed on your local computer in order to connect to your remote gaming rig. You don't need to ever launch or configure the client application yourself - it is automatically triggered when you initiate a remote session from this webpage."
         launch_button: Launch this cloud gaming rig
         refresh_button: Refresh status
         stop_data_safe_info: Your data is safe - everything is kept in place when your cloud gaming rig is stopped.
         start_button: Start this cloud gaming rig
+        stop_button: Stop this cloud gaming rig
+        stop_while_running_info: This will shedule the rig to be stopped right before you are billed another hour.
         terminate_button: Remove this cloud gaming rig
+        terminate_while_running_info: This will immediately shut down and remove your rig with all its data.
         terminate_data_lost_info: All your cloud gaming rig data will be lost upon removal!
-        info_launching: Booting a cloud gaming rig can take between 30 seconds and 15 minutes. You are only billed once the rig is fully available.
+        reboot_button: Reboot this cloud gaming rig
+        reboot_while_running_info: This will fully reboot the Microsoft® Windows® desktop of your cloud gaming rig.
+        info_launching: Booting a cloud gaming rig can take between 30 seconds and 10 minutes. You are only billed once the rig is fully available.
         info_stopping: Stopping a cloud gaming rig can take up to 5 minutes. You are no longer billed now.
+        info_rebooting: Rebooting a cloud gaming rig can take between 30 seconds and 5 minutes.
         publicaddress_label: IP address:
         username_label: Username:
         password_label: Password:
@@ -319,6 +345,7 @@ remoteDesktop:
         stopped: Stopped
         terminating: Removing...
         terminated: Removed
+        rebooting: Rebooting
 
     insufficientAccountBalance:
         headline: Insufficient balance
@@ -327,8 +354,16 @@ cloudInstance:
     new:
         form:
             headline: Launch your cloud gaming rig
-            region_label: Please select the region which is closest to your current position:
+            subheadline: "Please select the region where you want to launch your gaming rig."
+            region_label: ""
+            region_title: "Region:"
             submit_label: Launch now
+            pinginfo:
+                title: "Connection latency:"
+                waiting: "Setup..."
+                connecting: "Connecting..."
+                pinging: "Pinging..."
+                explanation: "Choose the region with the lowest connection latency for the best experience."
         launch_later_button: Launch later
 
 cloudprovider:

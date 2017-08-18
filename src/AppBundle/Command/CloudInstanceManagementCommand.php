@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 date_default_timezone_set('UTC');
-ini_set('memory_limit', '1024M');
+ini_set('memory_limit', '2048M');
 
 class CloudInstanceManagementCommand extends ContainerAwareCommand
 {
@@ -59,7 +59,14 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
 
             /** @var CloudInstance $cloudInstance */
             foreach ($cloudInstancesInUse as $cloudInstance) {
-                $cloudInstanceManagementService->manageCloudInstance($cloudInstance, $input, $output);
+                try {
+                    $cloudInstanceManagementService->manageCloudInstance($cloudInstance, $input, $output);
+                } catch (\Exception $e) {
+                    $output->writeln('Exception while handling cloud instance ' . $cloudInstance->getId() . ' ("' . $cloudInstance->getRemoteDesktop()->getTitle() . '") by ' . $cloudInstance->getRemoteDesktop()->getUser()->getUsername());
+                    $output->writeln($e->getMessage());
+                    $output->writeln('Nevertheless continueing with next instance');
+                    $output->writeln('');
+                }
             }
         }
         $output->writeln('All done, exiting.');

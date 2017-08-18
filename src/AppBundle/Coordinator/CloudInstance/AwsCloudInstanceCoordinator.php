@@ -230,9 +230,15 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinatorInterface
      */
     public function triggerTerminationOfCloudInstance(CloudInstance $cloudInstance) : void
     {
-        $this->ec2Client->terminateInstances([
-            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-        ]);
+        try {
+            $this->ec2Client->terminateInstances([
+                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+            ]);
+        } catch (Ec2Exception $e) {
+            if ($e->getAwsErrorCode() === 'InvalidInstanceID.NotFound') {
+                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_INSTANCE_UNKNOWN, $e);
+            }
+        }
     }
 
     /**
@@ -255,5 +261,15 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinatorInterface
             $this->output->writeln($e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     */
+    public function triggerRebootOfCloudInstance(CloudInstance $cloudInstance) : void
+    {
+        $this->ec2Client->rebootInstances([
+            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
+        ]);
     }
 }

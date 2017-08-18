@@ -17,7 +17,7 @@
 
 {% set clientDownloadButtonsAlreadyShown = false %}
 {% set clientDownloadUriWin = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/win32/cgxClient-Scalable%20Graphics-CGX%20Portal.1.10.0.7.exe' %}
-{% set clientDownloadUriMac = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/osx/CGX_1.10.0.19.dmg' %}
+{% set clientDownloadUriMac = 'http://www.scalablegraphics.com/software/cgx-1-10-0/client/osx/CGX_1.10.0.22.dmg' %}
 
 {% block body %}
     <div class="container">
@@ -71,6 +71,34 @@
 
                         {% if remoteDesktop.status is not constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_TERMINATED') %}
 
+                            <script>
+                                checkStatusFunctions['{{ remoteDesktop.id }}'] = function () {
+                                    jQuery.getJSON('{{ path('remotedesktops.status', {'remoteDesktop': remoteDesktop.id}) }}', null, function (status) {
+                                        if (status == {{ constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') }}) {
+                                            jQuery('#countdownbox-{{ remoteDesktop.id }}').hide();
+                                            jQuery('#nowavailablebox-{{ remoteDesktop.id }}').fadeIn(200);
+                                        } else {
+                                            jQuery('#countdownvalue-{{ remoteDesktop.id }}').html(30);
+                                            jQuery('#notyetavailablebox-{{ remoteDesktop.id }}').fadeIn(200);
+                                            jQuery('#notyetavailablebox-{{ remoteDesktop.id }}').fadeOut(6000);
+                                            lowerCountdownFunctions['{{ remoteDesktop.id }}']();
+                                        }
+                                    });
+                                };
+
+                                lowerCountdownFunctions['{{ remoteDesktop.id }}'] = function () {
+                                    var current = parseInt(jQuery('#countdownvalue-{{ remoteDesktop.id }}').text());
+                                    var updated = 0;
+                                    if (current > 0) {
+                                        updated = current - 1;
+                                        jQuery('#countdownvalue-{{ remoteDesktop.id }}').html(updated);
+                                        window.setTimeout(lowerCountdownFunctions['{{ remoteDesktop.id }}'], 1000);
+                                    } else {
+                                        checkStatusFunctions['{{ remoteDesktop.id }}']();
+                                    }
+                                };
+                            </script>
+
                             <a name="{{ remoteDesktop.id }}"></a>
 
                             <div class="panel panel-default remotedesktop-panel">
@@ -104,7 +132,7 @@
                                             <div class="well well-sm pull-right hourlyusagecostsbox text-right">
                                                 <small>
                                                     {{ "remoteDesktop.index.current_usage_costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
+                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong> {{ "remoteDesktop.index.while_in_status_and"|trans }} <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
                                                     <br>
                                                     {{ "remoteDesktop.index.provisioning_costs_per_hour"|trans }}: {{ remoteDesktop.hourlyProvisioningCosts|localizedcurrency('USD') }}
                                                 </small>
@@ -113,13 +141,48 @@
                                             <div class="well well-sm pull-right hourlyusagecostsbox">
                                                 <small>
                                                     {{ "remoteDesktop.index.usage_costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
+                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong> {{ "remoteDesktop.index.only_in_status_and"|trans }} <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
                                                     <br>
                                                     {{ "remoteDesktop.index.provisioning_costs_per_hour"|trans }}: {{ remoteDesktop.hourlyProvisioningCosts|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% endif %}
                                         <hr>
+                                    {% endif %}
+
+                                    {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_REBOOTING') %}
+                                        <h3>
+                                            <span class="label label-warning label-pulsating remotedesktopstatus">{{ "remoteDesktop.status.label"|trans }}&nbsp;{{ "remoteDesktop.status.rebooting"|trans }}</span>
+                                        </h3>
+
+                                        <label id="countdownbox-{{ remoteDesktop.id }}" class="label label-default">
+                                            {{ "remoteDesktop.index.countdownbox.checking_again_in"|trans }} <span id="countdownvalue-{{ remoteDesktop.id }}">30</span>...
+                                        </label>
+
+                                        <label id="notyetavailablebox-{{ remoteDesktop.id }}" class="label label-default" style="display: none; margin-left: 8px;">
+                                            {{ "remoteDesktop.index.countdownbox.not_yet_available"|trans }}
+                                        </label>
+
+                                        <a id="nowavailablebox-{{ remoteDesktop.id }}"
+                                           href="{{ path('remotedesktops.index') }}?{{ random() }}#{{ remoteDesktop.id }}"
+                                           class="btn btn-default" style="display: none;"
+                                        >
+                                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.countdownbox.now_available"|trans }}
+                                        </a>
+
+                                        <script>
+                                            jQuery('document').ready(function () {
+                                                lowerCountdownFunctions['{{ remoteDesktop.id }}']();
+                                            });
+                                        </script>
+
+                                        <hr>
+
+                                        <div class="alert alert-info small" role="alert">
+                                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                                            {{ "remoteDesktop.index.info_rebooting"|trans }}
+                                        </div>
                                     {% endif %}
 
                                     {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_BOOTING') %}
@@ -144,32 +207,6 @@
                                         </a>
 
                                         <script>
-                                            checkStatusFunctions['{{ remoteDesktop.id }}'] = function () {
-                                                jQuery.getJSON('{{ path('remotedesktops.status', {'remoteDesktop': remoteDesktop.id}) }}', null, function (status) {
-                                                    if (status == {{ constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') }}) {
-                                                        jQuery('#countdownbox-{{ remoteDesktop.id }}').hide();
-                                                        jQuery('#nowavailablebox-{{ remoteDesktop.id }}').fadeIn(200);
-                                                    } else {
-                                                        jQuery('#countdownvalue-{{ remoteDesktop.id }}').html(30);
-                                                        jQuery('#notyetavailablebox-{{ remoteDesktop.id }}').fadeIn(200);
-                                                        jQuery('#notyetavailablebox-{{ remoteDesktop.id }}').fadeOut(6000);
-                                                        lowerCountdownFunctions['{{ remoteDesktop.id }}']();
-                                                    }
-                                                });
-                                            };
-
-                                            lowerCountdownFunctions['{{ remoteDesktop.id }}'] = function () {
-                                                var current = parseInt(jQuery('#countdownvalue-{{ remoteDesktop.id }}').text());
-                                                var updated = 0;
-                                                if (current > 0) {
-                                                    updated = current - 1;
-                                                    jQuery('#countdownvalue-{{ remoteDesktop.id }}').html(updated);
-                                                    window.setTimeout(lowerCountdownFunctions['{{ remoteDesktop.id }}'], 1000);
-                                                } else {
-                                                    checkStatusFunctions['{{ remoteDesktop.id }}']();
-                                                }
-                                            };
-
                                             jQuery('document').ready(function () {
                                                 lowerCountdownFunctions['{{ remoteDesktop.id }}']();
                                             });
@@ -267,6 +304,39 @@
                                             </li>
 
                                         </ul>
+
+                                        <hr>
+
+
+                                        <p class="statemanagementelement">
+                                            <a href="{{ path('remotedesktops.reboot', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-warning remotedesktop-action-button">
+                                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.index.reboot_button"|trans }}
+                                            </a>
+                                            <br>
+                                            <span class="label label-warning">{{ "remoteDesktop.index.reboot_while_running_info"|trans }}</span>
+                                        </p>
+
+                                        <p class="statemanagementelement">
+                                            <a href="{{ path('remotedesktops.scheduleForStopAtEndOfUsageHour', {'remoteDesktop': remoteDesktop.id, 'usageHour': 0}) }}" class="btn btn-default remotedesktop-action-button">
+                                                <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.index.stop_button"|trans }}
+                                            </a>
+                                            <br>
+                                            <span class="label label-default">{{ "remoteDesktop.index.stop_while_running_info"|trans }}</span>
+                                        </p>
+
+                                        <p class="statemanagementelement">
+                                            <a href="{{ path('remotedesktops.terminate', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-danger remotedesktop-action-button">
+                                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                                {{ "remoteDesktop.index.terminate_button"|trans }}
+                                            </a>
+                                            <br>
+                                            <span class="label label-danger">{{ "remoteDesktop.index.terminate_while_running_info"|trans }}</span>
+                                        </p>
+
+
+
 
                                         <hr>
                                         <div class="costprotectionblock">
@@ -407,6 +477,9 @@
                             <span class="glyphicon glyphicon-apple" aria-hidden="true"></span>
                             {{ "remoteDesktop.index.download_client_mac"|trans }}
                         </a>
+                    </p>
+                    <p>
+                        {{ "remoteDesktop.index.download_client_note"|trans }}
                     </p>
                 {% endif %}
 

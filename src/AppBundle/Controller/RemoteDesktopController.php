@@ -4,9 +4,10 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktopKind;
+use AppBundle\Entity\User;
 use AppBundle\Factory\RemoteDesktopFactory;
 use AppBundle\Service\RemoteDesktopAutostopService;
 use Doctrine\Common\Persistence\ObjectRepository;
@@ -38,6 +39,13 @@ class RemoteDesktopController extends Controller
         /** @var RemoteDesktop $remoteDesktop */
         foreach ($remoteDesktops as $remoteDesktop) {
             if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_BOOTING) {
+                $remoteDesktopsSorted[] = $remoteDesktop;
+            }
+        }
+
+        /** @var RemoteDesktop $remoteDesktop */
+        foreach ($remoteDesktops as $remoteDesktop) {
+            if ($remoteDesktop->getStatus() === RemoteDesktop::STATUS_REBOOTING) {
                 $remoteDesktopsSorted[] = $remoteDesktop;
             }
         }
@@ -91,7 +99,7 @@ class RemoteDesktopController extends Controller
                 $remoteDesktop->setOptimalHourlyAutostopTimes(
                     $rdas->getOptimalHourlyAutostopTimesForRemoteDesktop(
                         $remoteDesktop,
-                        $em->getRepository(RemoteDesktopEvent::class)
+                        $em->getRepository(RemoteDesktopRelevantForBillingEvent::class)
                     )
                 );
             }
@@ -240,9 +248,10 @@ class RemoteDesktopController extends Controller
      */
     public function terminateAction(RemoteDesktop $remoteDesktop, Request $request)
     {
+        /** @var User $user */
         $user = $this->getUser();
 
-        if ($remoteDesktop->getUser()->getId() !== $user->getId()) {
+        if (!($remoteDesktop->getUser()->getId() === $user->getId() || $user->hasRole('ROLE_ADMIN'))) {
             return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
         }
 
@@ -257,7 +266,36 @@ class RemoteDesktopController extends Controller
 
         $em->flush();
 
-        return $this->redirectToRoute('remotedesktops.index');
+        if ($user->hasRole('ROLE_ADMIN')) {
+            return $this->redirect($request->headers->get('referer'));
+        } else {
+            return $this->redirectToRoute('remotedesktops.index');
+        }
+    }
+
+    /**
+     * @ParamConverter("remoteDesktop", class="AppBundle:RemoteDesktop\RemoteDesktop")
+     */
+    public function rebootAction(RemoteDesktop $remoteDesktop, Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!($remoteDesktop->getUser()->getId() === $user->getId() || $user->hasRole('ROLE_ADMIN'))) {
+            return $this->redirectToRoute('remotedesktops.index', [], Response::HTTP_FORBIDDEN);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $remoteDesktop->scheduleForReboot();
+        $em->persist($remoteDesktop);
+        $em->flush();
+
+        if ($user->hasRole('ROLE_ADMIN')) {
+            return $this->redirect($request->headers->get('referer'));
+        } else {
+            return $this->redirectToRoute('remotedesktops.index');
+        }
     }
 
     /**
@@ -280,7 +318,7 @@ class RemoteDesktopController extends Controller
         $rdas = new RemoteDesktopAutostopService();
         $optimalHourlyAutostopTimes = $rdas->getOptimalHourlyAutostopTimesForRemoteDesktop(
             $remoteDesktop,
-            $em->getRepository(RemoteDesktopEvent::class)
+            $em->getRepository(RemoteDesktopRelevantForBillingEvent::class)
         );
 
         if (!is_array($optimalHourlyAutostopTimes) || sizeof($optimalHourlyAutostopTimes) !== 8) {

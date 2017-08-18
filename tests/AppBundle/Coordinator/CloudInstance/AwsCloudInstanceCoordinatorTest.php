@@ -14,15 +14,26 @@ use Symfony\Component\Console\Tests\Fixtures\DummyOutput;
 class MockEc2Client
 {
     public function runInstances(array $arr) {}
+    public function terminateInstances(array $arr) {}
 }
 
-class InsufficientInstanceCapacityEc2Capacity extends Ec2Exception
+class InsufficientInstanceCapacityEc2Exception extends Ec2Exception
 {
     public function __construct() {}
 
     public function getAwsErrorCode()
     {
         return 'InsufficientInstanceCapacity';
+    }
+}
+
+class InvalidInstanceIDNotFoundEc2Exception extends Ec2Exception
+{
+    public function __construct() {}
+
+    public function getAwsErrorCode()
+    {
+        return 'InvalidInstanceID.NotFound';
     }
 }
 
@@ -168,7 +179,7 @@ class AwsCloudInstanceCoordinatorTest extends TestCase
 
         $mockEc2Client->expects($this->once())
             ->method('runInstances')
-            ->willThrowException(new InsufficientInstanceCapacityEc2Capacity());
+            ->willThrowException(new InsufficientInstanceCapacityEc2Exception());
 
         $dummyOutput = new DummyOutput();
 
@@ -182,6 +193,25 @@ class AwsCloudInstanceCoordinatorTest extends TestCase
         $this->expectException(CloudProviderProblemException::class);
         $this->expectExceptionCode(CloudProviderProblemException::CODE_OUT_OF_INSTANCE_CAPACITY);
         $awsCloudInstanceCoordinator->triggerLaunchOfCloudInstance($mockCloudInstance);
+    }
+
+    public function testTriggerTerminationOfCloudInstanceShouldThrowExceptionIfAwsDoesNotKnowThisInstance()
+    {
+        $mockEc2Client = $this->getMockEc2Client();
+
+        $mockEc2Client->expects($this->once())
+            ->method('terminateInstances')
+            ->willThrowException(new InvalidInstanceIDNotFoundEc2Exception());
+
+        $dummyOutput = new DummyOutput();
+
+        $awsCloudInstanceCoordinator = $this->getAwsCloudInstanceCoordinator($dummyOutput, $mockEc2Client);
+
+        $mockCloudInstance = $this->getMockCloudInstance();
+
+        $this->expectException(CloudProviderProblemException::class);
+        $this->expectExceptionCode(CloudProviderProblemException::CODE_INSTANCE_UNKNOWN);
+        $awsCloudInstanceCoordinator->triggerTerminationOfCloudInstance($mockCloudInstance);
     }
 
 }

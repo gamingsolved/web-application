@@ -6,7 +6,7 @@ use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Utility\Cryptor;
 use AppBundle\Utility\DateTimeUtility;
@@ -62,6 +62,7 @@ abstract class CloudInstance implements CloudInstanceInterface
     const STATUS_IN_USE = 0;
     const STATUS_ARCHIVED = 1;
 
+    const RUNSTATUS_NEVER_SET = -1; // This value is not meant to be persisted
     const RUNSTATUS_SCHEDULED_FOR_LAUNCH = 0;
     const RUNSTATUS_LAUNCHING = 1;
     const RUNSTATUS_RUNNING = 2;
@@ -73,7 +74,9 @@ abstract class CloudInstance implements CloudInstanceInterface
     const RUNSTATUS_SCHEDULED_FOR_TERMINATION = 8;
     const RUNSTATUS_TERMINATING = 9;
     const RUNSTATUS_TERMINATED = 10;
-    const RUNSTATUS_ERROR = 11;
+    const RUNSTATUS_SCHEDULED_FOR_REBOOT = 11;
+    const RUNSTATUS_REBOOTING = 12;
+    const RUNSTATUS_ERROR_GENERAL = 100;
 
     const ERROR_INSUFFICIENT_PROVIDER_CAPACITY = 0;
     const ERROR_VPC_NEEDED = 1;
@@ -160,6 +163,7 @@ abstract class CloudInstance implements CloudInstanceInterface
     public function __construct()
     {
         $this->setStatus(self::STATUS_IN_USE);
+        $this->runstatus = self::RUNSTATUS_NEVER_SET;
     }
 
     public function setId(string $id)
@@ -197,58 +201,68 @@ abstract class CloudInstance implements CloudInstanceInterface
 
     public function setRunstatus(int $runstatus)
     {
-        if ($runstatus < self::RUNSTATUS_SCHEDULED_FOR_LAUNCH || $runstatus > self::RUNSTATUS_TERMINATED) {
+        if ($runstatus < self::RUNSTATUS_SCHEDULED_FOR_LAUNCH || $runstatus > self::RUNSTATUS_REBOOTING) {
             throw new \Exception('Runstatus ' . $runstatus . ' is invalid');
         }
 
         // We are billing as fair as possible: billing of provisioning of instances only starts as soon as the machine
-        // is launched for the very first time...
-
-        if ($runstatus === self::RUNSTATUS_RUNNING) {
-            $remoteDesktopEvents = $this->remoteDesktop->getRemoteDesktopEvents();
-            if ($remoteDesktopEvents->count() === 0) {
-                $remoteDesktopEvent = new RemoteDesktopEvent(
+        // is launched for the very first time, and also billing of usage only when we are through with booting and
+        // the user can actually use the system. Rebooting doesn't actually do anything in terms of billing - it's
+        // as if the system is simply running through (which is actually true for the VM.
+        if ($runstatus === self::RUNSTATUS_RUNNING && $this->getRunstatus() !== self::RUNSTATUS_REBOOTING) {
+            $remoteDesktopRelevantForBillingEvents = $this->remoteDesktop->getRemoteDesktopRelevantForBillingEvents();
+            if ($remoteDesktopRelevantForBillingEvents->count() === 0) {
+                $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                     $this->remoteDesktop,
-                    RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
+                    RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER,
                     DateTimeUtility::createDateTime('now')
                 );
-                $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+                $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
             }
-        }
 
-        // Provisioning billing stops once a machine is scheduled for termination
-        if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_TERMINATION) {
-            $remoteDesktopEvent = new RemoteDesktopEvent(
+            $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                 $this->remoteDesktop,
-                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
+                RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
                 DateTimeUtility::createDateTime('now')
             );
-            $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
-        }
-
-
-        // We only bill usage costs once the user has their machine available...
-        if ($runstatus === self::RUNSTATUS_RUNNING) {
-            $remoteDesktopEvent = new RemoteDesktopEvent(
-                $this->remoteDesktop,
-                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER,
-                DateTimeUtility::createDateTime('now')
-            );
-            $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+            $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
 
             // Auto schedule for stop in 3 hours and 59 minutes (14340 seconds)
             $this->setScheduleForStopAt(DateTimeUtility::createDateTime()->add(new \DateInterval('PT14340S')));
         }
 
-        // ...and stop as soon as they don't want it anymore
-        if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_STOP) {
-            $remoteDesktopEvent = new RemoteDesktopEvent(
+        if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_TERMINATION) {
+            // In case we schedule a running instance for termination (and not a stopped one), we need to track the
+            // fact that the desktop becomes unavailable to the user without going through the stopped phase first
+            if ($this->getRunstatus() === self::RUNSTATUS_RUNNING) {
+                $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
+                    $this->remoteDesktop,
+                    RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+                    DateTimeUtility::createDateTime('now')
+                );
+                $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
+            }
+
+            // In any case, provisioning billing stops once a machine is scheduled for termination
+            $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                 $this->remoteDesktop,
-                RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+                RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
                 DateTimeUtility::createDateTime('now')
             );
-            $this->remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+            $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
         }
+
+        // We stop usage billing as soon as the user don't want the system anymore
+        if ($runstatus === self::RUNSTATUS_SCHEDULED_FOR_STOP) {
+            $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
+                $this->remoteDesktop,
+                RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+                DateTimeUtility::createDateTime('now')
+            );
+            $this->remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
+        }
+
+        // We do not track reboots as events which make the desktop unavailable, as AWS also doesn't do this.
 
         $this->runstatus = $runstatus;
     }

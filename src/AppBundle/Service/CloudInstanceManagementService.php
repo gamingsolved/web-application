@@ -3,10 +3,11 @@
 namespace AppBundle\Service;
 
 use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinatorFactory;
+use AppBundle\Coordinator\CloudInstance\CloudProviderProblemException;
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\CloudInstance;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Input\InputInterface;
@@ -100,22 +101,22 @@ class CloudInstanceManagementService
 
                     $output->writeln('Action: Also logging for the usage billing logic that the desktop became unavailable');
                     $remoteDesktop = $cloudInstance->getRemoteDesktop();
-                    $remoteDesktopEvent = new RemoteDesktopEvent(
+                    $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                         $remoteDesktop,
-                        RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
+                        RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_UNAVAILABLE_TO_USER,
                         DateTimeUtility::createDateTime('now')
                     );
-                    $remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+                    $remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
 
                     if ($cloudInstance->getRunstatus() == CloudInstance::RUNSTATUS_TERMINATED) {
                         $output->writeln('Action: Also logging for the provisioning billing logic that the desktop is no longer provisioned');
                         $remoteDesktop = $cloudInstance->getRemoteDesktop();
-                        $remoteDesktopEvent = new RemoteDesktopEvent(
+                        $remoteDesktopRelevantForBillingEvent = new RemoteDesktopRelevantForBillingEvent(
                             $remoteDesktop,
-                            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
+                            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_UNPROVISIONED_FOR_USER,
                             DateTimeUtility::createDateTime('now')
                         );
-                        $remoteDesktop->addRemoteDesktopEvent($remoteDesktopEvent);
+                        $remoteDesktop->addRemoteDesktopRelevantForBillingEvent($remoteDesktopRelevantForBillingEvent);
                     }
 
                     $this->em->persist($remoteDesktop);
@@ -192,6 +193,7 @@ class CloudInstanceManagementService
                     $output->writeln('Action result: success');
                 } catch (\Exception $e) {
                     $output->writeln('Action result: failure, exception output follows');
+                    $output->writeln(get_class($e));
                     $output->writeln($e->getMessage());
                 }
             }
@@ -259,7 +261,7 @@ class CloudInstanceManagementService
         }
 
 
-        // Terminating
+        // Scheduled for termination
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION) {
             $output->writeln('Action: asking the cloud instance to terminate');
@@ -269,11 +271,23 @@ class CloudInstanceManagementService
                 $this->em->persist($cloudInstance);
                 $this->em->flush();
                 $output->writeln('Action result: success');
+            } catch (CloudProviderProblemException $e) {
+                $output->writeln('Action result: treatable failure');
+                if ($e->getCode() === CloudProviderProblemException::CODE_INSTANCE_UNKNOWN) {
+                    $output->writeln('Action result: instance not found at provider, setting to terminated');
+                    $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);
+                    $this->em->persist($cloudInstance);
+                    $this->em->flush();
+                    $output->writeln('Action result: success');
+                }
             } catch (\Exception $e) {
-                $output->writeln('Action result: failure, exception output follows');
+                $output->writeln('Action result: unexpected failure, exception output follows');
+                $output->writeln(get_class($e));
                 $output->writeln($e->getMessage());
             }
         }
+
+        // Terminating
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_TERMINATING) {
             $output->writeln('Action: probing if termination is complete');
@@ -287,6 +301,48 @@ class CloudInstanceManagementService
                 $output->writeln('Action result: failure');
             }
         }
+
+
+        // Scheduled for reboot
+
+        if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_REBOOT) {
+            $output->writeln('Action: asking the cloud instance to reboot');
+            try {
+                $cloudInstanceCoordinator->triggerRebootOfCloudInstance($cloudInstance);
+                $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_REBOOTING);
+                $this->em->persist($cloudInstance);
+                $this->em->flush();
+                $output->writeln('Action result: success');
+            } catch (CloudProviderProblemException $e) {
+                $output->writeln('Action result: treatable failure');
+                if ($e->getCode() === CloudProviderProblemException::CODE_INSTANCE_UNKNOWN) {
+                    $output->writeln('Action result: instance not found at provider, setting to terminated');
+                    $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);
+                    $this->em->persist($cloudInstance);
+                    $this->em->flush();
+                    $output->writeln('Action result: success');
+                }
+            } catch (\Exception $e) {
+                $output->writeln('Action result: unexpected failure, exception output follows');
+                $output->writeln(get_class($e));
+                $output->writeln($e->getMessage());
+            }
+        }
+
+        // Rebooting
+
+        if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_REBOOTING) {
+            $output->writeln('Action: probing if reboot is complete');
+            if ($cloudInstanceCoordinator->cloudInstanceIsRunning($cloudInstance)) {
+                $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
+                $this->em->persist($cloudInstance);
+                $this->em->flush();
+                $output->writeln('Action result: success');
+            } else {
+                $output->writeln('Action result: failure');
+            }
+        }
+
 
         $output->writeln('');
     }

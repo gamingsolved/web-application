@@ -5,7 +5,7 @@ namespace Tests\Functional;
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
 use AppBundle\Entity\CloudInstance\CloudInstance;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use AppBundle\Utility\DateTimeUtility;
 use Doctrine\ORM\EntityManager;
@@ -28,7 +28,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Usage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(only in status Ready to use): $1.49', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(only in status Ready to use and Rebooting): $1.95', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current storage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
         $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
@@ -111,23 +111,23 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $em->persist($cloudInstance);
         $em->flush();
 
-        $remoteDesktopEventRepo = $em->getRepository(RemoteDesktopEvent::class);
+        $remoteDesktopRelevantForBillingEventRepo = $em->getRepository(RemoteDesktopRelevantForBillingEvent::class);
 
-        /** @var RemoteDesktopEvent[] $remoteDesktopEvents */
-        $remoteDesktopEvents = $remoteDesktopEventRepo->findAll();
+        /** @var RemoteDesktopRelevantForBillingEvent[] $remoteDesktopRelevantForBillingEvents */
+        $remoteDesktopRelevantForBillingEvents = $remoteDesktopRelevantForBillingEventRepo->findAll();
         $this->assertEquals(
             2,
-            sizeof($remoteDesktopEvents)
+            sizeof($remoteDesktopRelevantForBillingEvents)
         );
 
         $this->assertEquals(
-            $remoteDesktopEvents[0]->getEventType(),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER
+            $remoteDesktopRelevantForBillingEvents[0]->getEventType(),
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_WAS_PROVISIONED_FOR_USER
         );
 
         $this->assertEquals(
-            $remoteDesktopEvents[1]->getEventType(),
-            RemoteDesktopEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
+            $remoteDesktopRelevantForBillingEvents[1]->getEventType(),
+            RemoteDesktopRelevantForBillingEvent::EVENT_TYPE_DESKTOP_BECAME_AVAILABLE_TO_USER
         );
 
         $link = $crawler->selectLink('Refresh status')->first()->link();
@@ -136,7 +136,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
         $this->assertContains('Current usage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(while in status Ready to use): $1.49', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('(while in status Ready to use and Rebooting): $1.95', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
 
         $this->assertContains('Current storage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
         $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
@@ -216,7 +216,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         $accountMovementRepo = $em->getRepository(AccountMovement::class);
 
         $this->assertSame(
-            98.47, // 1.49 for usage, 0.04 for provisioning
+            98.01, // 0.95 for usage, 0.04 for provisioning
             $accountMovementRepo->getAccountBalanceForUser($remoteDesktop->getUser())
         );
 
@@ -229,7 +229,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
             $crawler->filter('tr td')->eq(1)->text()
         );
         $this->assertContains(
-            'An amount of $1.49 was debited from your account for 1 usage hour of rig \'My first cloud gaming rig\'.',
+            'An amount of $1.95 was debited from your account for 1 usage hour of rig \'My first cloud gaming rig\'.',
             $crawler->filter('tr td')->eq(1)->text()
         );
         $this->assertContains(
@@ -283,7 +283,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
         );
 
         $this->assertContains(
-            'Running this cloud gaming rig costs $1.49 per hour, but your current balance is',
+            'Running this cloud gaming rig costs $1.95 per hour, but your current balance is',
             $crawler->filter('div.alert')->first()->text()
         );
 

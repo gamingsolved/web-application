@@ -7,6 +7,7 @@ security:
 # Registration
 sign_up: Sign up
 registration:
+    latency_notice: "By registering you acknowledge that your gaming experience depends on your network connection quality."
     email:
         subject: "Welcome to Gaming: Solved."
         message: |

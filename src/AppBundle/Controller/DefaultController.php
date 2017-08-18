@@ -29,13 +29,7 @@ class DefaultController extends Controller
 
     public function indexAction(Request $request)
     {
-        $user = $this->getUser();
-
-        if (!is_null($user)) {
-            return $this->redirectToRoute('remotedesktops.index');
-        } else {
-            return $this->redirectToRoute('homepage.mac');
-        }
+        return $this->redirectToRoute('homepage.mac');
     }
 
     public function indexLinuxAction()
@@ -51,13 +45,7 @@ class DefaultController extends Controller
 
     public function indexMacAction()
     {
-        $user = $this->getUser();
-
-        if (!is_null($user)) {
-            return $this->redirectToRoute('remotedesktops.index');
-        } else {
-            return $this->render('AppBundle:default:mac.html.twig');
-        }
+        return $this->render('AppBundle:default:mac.html.twig');
     }
 
     public function logoutSuccessfulAction()

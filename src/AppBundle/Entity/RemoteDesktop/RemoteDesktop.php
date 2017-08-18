@@ -10,7 +10,7 @@ use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
-use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent;
+use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\User;
 use AppBundle\Utility\DateTimeUtility;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,6 +37,7 @@ class RemoteDesktop
     const STATUS_STOPPED = 4;
     const STATUS_TERMINATING = 5;
     const STATUS_TERMINATED = 6;
+    const STATUS_REBOOTING = 7;
 
     const HASH_SECRET = '>"13!V{_:E7 KQ3*ttV,\n|^2,a""k~Q';
 
@@ -92,10 +93,10 @@ class RemoteDesktop
     private $billableItems;
 
     /**
-     * @var Collection|\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopEvent", mappedBy="remoteDesktop", cascade="all")
+     * @var Collection|\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent", mappedBy="remoteDesktop", cascade="all")
      */
-    private $remoteDesktopEvents;
+    private $remoteDesktopRelevantForBillingEvents;
 
     /**
      * @var array
@@ -105,7 +106,7 @@ class RemoteDesktop
     public function __construct() {
         $this->awsCloudInstances = new ArrayCollection();
         $this->billableItems = new ArrayCollection();
-        $this->remoteDesktopEvents = new ArrayCollection();
+        $this->remoteDesktopRelevantForBillingEvents = new ArrayCollection();
     }
 
     public function setId(string $id) : void
@@ -192,21 +193,21 @@ class RemoteDesktop
     }
 
     /**
-     * @param RemoteDesktopEvent $remoteDesktopEvent
+     * @param RemoteDesktopRelevantForBillingEvent $remoteDesktopRelevantForBillingEvent
      * @return void
      * @throws \Exception
      */
-    public function addRemoteDesktopEvent(RemoteDesktopEvent $remoteDesktopEvent)
+    public function addRemoteDesktopRelevantForBillingEvent(RemoteDesktopRelevantForBillingEvent $remoteDesktopRelevantForBillingEvent)
     {
-        $this->remoteDesktopEvents->add($remoteDesktopEvent);
+        $this->remoteDesktopRelevantForBillingEvents->add($remoteDesktopRelevantForBillingEvent);
     }
 
     /**
-     * @return Collection[RemoteDesktopEvent]
+     * @return Collection[RemoteDesktopRelevantForBillingEvent]
      */
-    public function getRemoteDesktopEvents(): Collection
+    public function getRemoteDesktopRelevantForBillingEvents(): Collection
     {
-        return $this->remoteDesktopEvents;
+        return $this->remoteDesktopRelevantForBillingEvents;
     }
 
     /**
@@ -252,6 +253,10 @@ class RemoteDesktop
                 case CloudInstance::RUNSTATUS_TERMINATED:
                     $status = self::STATUS_TERMINATED;
                     break;
+                case CloudInstance::RUNSTATUS_SCHEDULED_FOR_REBOOT:
+                case CloudInstance::RUNSTATUS_REBOOTING:
+                    $status = self::STATUS_REBOOTING;
+                    break;
                 default:
                     throw new \Exception('Unexpected cloud instance runstatus ' . $activeCloudInstance->getRunstatus());
 
@@ -259,6 +264,43 @@ class RemoteDesktop
         }
 
         return $status;
+    }
+
+    public function statusToStatusLabel(int $status): string
+    {
+        switch ($status) {
+            case self::STATUS_NEVER_LAUNCHED:
+                return 'never_launched';
+                break;
+            case self::STATUS_BOOTING:
+                return 'booting';
+                break;
+            case self::STATUS_READY_TO_USE:
+                return 'ready_to_use';
+                break;
+            case self::STATUS_STOPPING:
+                return 'stopping';
+                break;
+            case self::STATUS_STOPPED:
+                return 'stopped';
+                break;
+            case self::STATUS_TERMINATING:
+                return 'terminating';
+                break;
+            case self::STATUS_TERMINATED:
+                return 'terminated';
+                break;
+            case self::STATUS_REBOOTING:
+                return 'rebooting';
+                break;
+            default:
+                throw new \Exception('Unknown remoteDesktop status value ' .$status);
+        }
+    }
+
+    public function getStatusLabel() : string
+    {
+        return $this->statusToStatusLabel($this->getStatus());
     }
 
     public function getPublicAddress() : string
@@ -317,10 +359,23 @@ class RemoteDesktop
     {
         $activeCloudInstance = $this->getActiveCloudInstance();
 
-        if ($activeCloudInstance->getRunstatus() == CloudInstance::RUNSTATUS_STOPPED) {
+        if (   $activeCloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STOPPED
+            || $activeCloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_RUNNING )
+        {
             $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_TERMINATION);
         } else {
-            throw new \Exception('Cannot schedule a cloud instance for termination that is not running');
+            throw new \Exception('Cannot schedule a cloud instance for termination that is not either running or stopped');
+        }
+    }
+
+    public function scheduleForReboot()
+    {
+        $activeCloudInstance = $this->getActiveCloudInstance();
+
+        if ($activeCloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_RUNNING) {
+            $this->getActiveCloudInstance()->setRunstatus(CloudInstance::RUNSTATUS_SCHEDULED_FOR_REBOOT);
+        } else {
+            throw new \Exception('Cannot schedule a cloud instance for reboot that is not running');
         }
     }
 
