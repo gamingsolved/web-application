@@ -237,13 +237,14 @@
                     <iframe id="demo-video" width="560" height="315" src="https://www.youtube.com/embed/sgi3UgCkK_I" frameborder="0" allowfullscreen></iframe>
                 </div>
 
-                <a name="latencycheck"></a>
-
                 <hr>
 
                 <h3 style="text-align: center">
                     Our cloud computing locations
                 </h3>
+
+                <a name="latencycheck"></a>
+
                 <div class="col-xs-12" style="text-align: center;">
                     <p>
                         Computing centers in US West, US East, Ireland, and Germany ensure that
@@ -253,41 +254,44 @@
                     <p>
                         <img src="{{ asset('bundles/app/images/locations.png') }}" width="640" style="max-width: 100%;">
                     </p>
+                    <hr>
                 </div>
 
                 <h3 style="text-align: center">
                     Your personal latency results
                 </h3>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>US East</th>
-                        <th>US West</th>
-                        <th>Ireland</th>
-                        <th>Germany</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td class="active" width="25%" id="latencycheckendpoint-0">About to check...</td>
-                        <td class="active" width="25%" id="latencycheckendpoint-1">About to check...</td>
-                        <td class="active" width="25%" id="latencycheckendpoint-2">About to check...</td>
-                        <td class="active" width="25%" id="latencycheckendpoint-3">About to check...</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div id="pingImageContainer" style="display: none;"></div>
-                <p>
-                    The above table shows the live network latency between your local computer system and our cloud
-                    computing centers. At least one of these results should be lower than 30ms for a smooth gaming
-                    experience.
-                </p>
-                <p style="text-align: center;">
-                    <button id="latencycheck-rerun-button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-repeat " aria-hidden="true"></span>
-                        Re-run latency check
-                    </button>
-                </p>
+                <div class="col-xs-12">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>US East</th>
+                            <th>US West</th>
+                            <th>Ireland</th>
+                            <th>Germany</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="active" width="25%" id="latencycheckendpoint-0">About to check...</td>
+                            <td class="active" width="25%" id="latencycheckendpoint-1">About to check...</td>
+                            <td class="active" width="25%" id="latencycheckendpoint-2">About to check...</td>
+                            <td class="active" width="25%" id="latencycheckendpoint-3">About to check...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div id="pingImageContainer" style="display: none;"></div>
+                    <p>
+                        The above table shows the live network latency between your local computer system and our cloud
+                        computing centers. At least one of these results should be lower than 30ms for a truly smooth
+                        gaming experience. Results below 60ms are acceptable for games that are not fast-paced.
+                    </p>
+                    <p style="text-align: center;">
+                        <button id="latencycheck-rerun-button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-repeat " aria-hidden="true"></span>
+                            Re-run latency check
+                        </button>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -527,6 +531,10 @@
                         Last but not least, we visualize the actual latency between your computer and our different
                         hosting locations before you launch your rig, so you can always judge if connection quality
                         is sufficient beforehand.
+                    </p>
+                    <p>
+                        Before registering, you can jump to our <a href="#latencycheck">interactive latency check</a>
+                        to test your network connection speed right here on this page.
                     </p>
 
                     <h4>
