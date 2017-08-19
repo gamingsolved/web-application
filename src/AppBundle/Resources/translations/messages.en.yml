@@ -1,5 +1,6 @@
 _navigation:
     faq: FAQ
+    latencycheck: Latency check
     pricing: Pricing
     register: Sign up
     login: Sign in

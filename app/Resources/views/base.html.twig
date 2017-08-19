@@ -43,7 +43,7 @@
                                 <span class="icon-bar"></span>
                             </button>
 
-                            <a href="{{ path('homepage') }}">
+                            <a href="{{ path('homepage.mac') }}">
                                 <div id="logo">
                                     <img src="{{ asset('bundles/app/images/gaming-solved-logo.png') }}" width="200px" height="32px">
                                 </div>
@@ -62,12 +62,17 @@
                             {% endif %}
                             <ul class="nav navbar-nav pull-right">
                                 <li>
-                                    <a href="{{ path('homepage') }}#questions-and-answers">
+                                    <a href="{{ path('homepage.mac') }}#questions-and-answers">
                                         {{ "_navigation.faq"|trans }}
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ path('homepage') }}#pricing">
+                                    <a href="{{ path('homepage.mac') }}#latencycheck">
+                                        {{ "_navigation.latencycheck"|trans }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('homepage.mac') }}#pricing">
                                         {{ "_navigation.pricing"|trans }}
                                     </a>
                                 </li>
