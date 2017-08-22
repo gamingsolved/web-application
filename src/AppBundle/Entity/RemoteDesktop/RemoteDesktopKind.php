@@ -26,6 +26,7 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
     const THREED_MEDIA_PRO = 3;
     const THREED_MEDIA_ULTRA = 4;
     const UNITY_PRO = 5;
+    const GAMING_PRO_PAPERSPACE = 6;
 
     /**
      * @throws \Exception
@@ -56,6 +57,10 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
             return new RemoteDesktopUnityProKind();
         }
 
+        if ($kind === self::GAMING_PRO_PAPERSPACE) {
+            return new RemoteDesktopGamingProPaperspaceKind();
+        }
+
         throw new \Exception('Unknown remote desktop kind ' . $kind);
     }
 
@@ -63,6 +68,7 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
     {
         return [
             self::createRemoteDesktopKind(self::GAMING_PRO),
+            self::createRemoteDesktopKind(self::GAMING_PRO_PAPERSPACE)
         ];
     }
 

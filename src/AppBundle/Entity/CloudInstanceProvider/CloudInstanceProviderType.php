@@ -21,6 +21,8 @@ class CloudInstanceProviderType extends Type
     {
         if ((int)$value === CloudInstanceProvider::PROVIDER_AWS) {
             return new AwsCloudInstanceProvider();
+        } elseif ((int)$value === CloudInstanceProvider::PROVIDER_PAPERSPACE) {
+            return new PaperspaceCloudInstanceProvider();
         } else {
             throw new \Exception('Could not convert the CloudInstanceProvider value ' . $value . ' to a known CloudInstanceProvider object');
         }
@@ -30,6 +32,8 @@ class CloudInstanceProviderType extends Type
     {
         if ($valueObject instanceof AwsCloudInstanceProvider) {
             $value = CloudInstanceProvider::PROVIDER_AWS;
+        } elseif ($valueObject instanceof PaperspaceCloudInstanceProvider) {
+            $value = CloudInstanceProvider::PROVIDER_PAPERSPACE;
         } else {
             throw new \Exception('Could not convert the CloudInstanceProvider object of class ' . get_class($valueObject) . ' to a known CloudInstanceProvider value');
         }

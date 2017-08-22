@@ -331,7 +331,8 @@ remoteDesktop:
             per_usage_hour: per usage hour
             submit_label: Continue
     kind:
-        gamingpro: "Gaming: Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™"
+        gamingpro: "Gaming (EC2): Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™"
+        gamingpropaperspace: "Gaming (Paperspace): Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™"
         cadpro: "CAD Pro: Preinstalled Autodesk® AutoCAD® 2017 and Revit® 2017"
         cadultra: "CAD Ultra: Preinstalled Autodesk® AutoCAD® 2017 and Revit® 2017"
         3dmediapro: "3D Media Pro: Preinstalled Autodesk® Maya® 2017 and 3ds Max® 2017"
@@ -375,6 +376,10 @@ cloudprovider:
             us-east-1: US East
             us-west-1: US West
             ap-southeast-2: Australia
+    paperspace:
+        region:
+            ny2: US East
+            ca1: US West
 
 payment:
     new:

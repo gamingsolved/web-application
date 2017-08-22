@@ -35,6 +35,7 @@ interface CloudInstanceProviderInterface
 abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
 {
     const PROVIDER_AWS = 0;
+    const PROVIDER_PAPERSPACE = 1;
 
     /**
      * @throws \Exception

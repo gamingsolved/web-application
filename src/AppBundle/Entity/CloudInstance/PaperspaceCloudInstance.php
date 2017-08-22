@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\CloudInstance;
 
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
+use AppBundle\Entity\CloudInstanceProvider\PaperspaceCloudInstanceProvider;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

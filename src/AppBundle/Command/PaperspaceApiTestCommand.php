@@ -69,7 +69,6 @@ class PaperspaceApiTestCommand extends ContainerAwareCommand
         }
 
 
-        /*
         $templatesApiClient = new PaperspaceApiClient\Api\TemplatesApi(null, $config);
 
         try {
@@ -78,7 +77,6 @@ class PaperspaceApiTestCommand extends ContainerAwareCommand
         } catch (\Exception $e) {
             echo 'Exception when calling TemplatesApi->listTemplates: ', $e->getMessage(), PHP_EOL;
         }
-        */
 
     }
 }

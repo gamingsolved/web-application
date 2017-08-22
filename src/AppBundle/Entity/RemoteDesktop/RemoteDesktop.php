@@ -3,9 +3,11 @@
 namespace AppBundle\Entity\RemoteDesktop;
 
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
+use AppBundle\Entity\CloudInstance\PaperspaceCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstanceInterface;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
+use AppBundle\Entity\CloudInstanceProvider\PaperspaceCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
@@ -87,6 +89,12 @@ class RemoteDesktop
     private $awsCloudInstances;
 
     /**
+     * @var Collection|\AppBundle\Entity\CloudInstance\PaperspaceCloudInstance
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\CloudInstance\PaperspaceCloudInstance", mappedBy="remoteDesktop", cascade="all")
+     */
+    private $paperspaceCloudInstances;
+
+    /**
      * @var Collection|\AppBundle\Entity\Billing\BillableItem
      * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Billing\BillableItem", mappedBy="remoteDesktop", cascade="all")
      */
@@ -105,6 +113,7 @@ class RemoteDesktop
 
     public function __construct() {
         $this->awsCloudInstances = new ArrayCollection();
+        $this->paperspaceCloudInstances = new ArrayCollection();
         $this->billableItems = new ArrayCollection();
         $this->remoteDesktopRelevantForBillingEvents = new ArrayCollection();
     }
@@ -184,6 +193,9 @@ class RemoteDesktop
         if ($this->cloudInstanceProvider instanceof AwsCloudInstanceProvider && $cloudInstance instanceof AwsCloudInstance) {
             $cloudInstance->setRemoteDesktop($this);
             $this->awsCloudInstances[] = $cloudInstance;
+        } elseif ($this->cloudInstanceProvider instanceof PaperspaceCloudInstanceProvider && $cloudInstance instanceof PaperspaceCloudInstance) {
+            $cloudInstance->setRemoteDesktop($this);
+            $this->paperspaceCloudInstances[] = $cloudInstance;
         } else {
             throw new \Exception(
                 'Cannot add cloud instance of class ' . get_class($cloudInstance) .
@@ -215,7 +227,15 @@ class RemoteDesktop
      */
     public function getCloudInstances() : Collection
     {
-        return $this->awsCloudInstances;
+        if ($this->cloudInstanceProvider instanceof AwsCloudInstanceProvider) {
+            return $this->awsCloudInstances;
+        } elseif ($this->cloudInstanceProvider instanceof PaperspaceCloudInstanceProvider) {
+            return $this->paperspaceCloudInstances;
+        } else {
+            throw new \Exception(
+                'Cannot get cloud instances of class ' . get_class($this->cloudInstanceProvider)
+            );
+        }
     }
 
     public function getStatus() : int
