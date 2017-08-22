@@ -2,48 +2,35 @@
 
 namespace AppBundle\Coordinator\CloudInstance;
 
-use AppBundle\Entity\CloudInstance\AwsCloudInstance;
+use AppBundle\Entity\CloudInstance\PaperspaceCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
-use Aws\Ec2\Exception\Ec2Exception;
-use Aws\Sdk;
+use Gamingsolved\Paperspace\Api\Client\Version0_1_3 as PaperspaceApiClient;
+use Gamingsolved\Paperspace\Api\Client\Version0_1_3\Api\MachinesApi as PaperspaceMachinesApiClient;
+use Gamingsolved\Paperspace\Api\Client\Version0_1_3\Model\Machine as PaperspaceMachine;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInterface
 {
-    const KEYPAIR_NAME = 'ubiqmachine-default';
-    const SECURITY_GROUP_NAME = 'ubiqmachine-cgxclient-default';
-
-    protected $keypairPrivateKey;
-    protected $ec2Client;
     protected $output;
+    protected $paperspaceMachinesApiClient;
 
-    protected $cloudInstanceIds2Ec2InstanceIds = [];
+    protected $cloudInstanceIds2PsInstanceIds = [];
 
     /**
-     * AwsCloudInstanceCoordinator constructor.
      * @param array $credentials
      * @param Region $region
      * @param OutputInterface $output
-     * @param null|\Aws\Ec2\Ec2Client $ec2Client If provided, this constructor does not build its own ec2 API client
+     * @param null|PaperspaceMachinesApiClient $paperspaceMachinesApiClient If provided, this constructor does not build its own API client
      */
-    public function __construct(array $credentials, Region $region, OutputInterface $output, $ec2Client = null)
+    public function __construct(array $credentials, Region $region, OutputInterface $output, $paperspaceMachinesApiClient = null)
     {
-        $this->keypairPrivateKey = $credentials['keypairPrivateKey'];
-        if (!is_null($ec2Client)) {
-            $this->ec2Client = $ec2Client;
+        if (!is_null($paperspaceMachinesApiClient)) {
+            $this->paperspaceMachinesApiClient = $paperspaceMachinesApiClient;
         } else {
-            $sdk = new Sdk(
-                [
-                    'credentials' => [
-                        'key' => $credentials['apiKey'],
-                        'secret' => $credentials['apiSecret']
-                    ],
-                    'region' => $region->getInternalName(),
-                    'version' => '2016-11-15'
-                ]
-            );
-            $this->ec2Client = $sdk->createEc2();
+            $config = PaperspaceApiClient\Configuration::getDefaultConfiguration();
+            $config->setApiKey('X-API-Key', $credentials['apiKey']);
+            $this->paperspaceMachinesApiClient = new PaperspaceApiClient\Api\MachinesApi(null, $config);
         }
         $this->output = $output;
     }
@@ -51,37 +38,53 @@ class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInte
     /**
      * param type differs intentionally
      *
-     * @param AwsCloudInstance $cloudInstance
+     * @param PaperspaceCloudInstance $cloudInstance
      */
     public function triggerLaunchOfCloudInstance(CloudInstance $cloudInstance) : void
     {
-        $parameters = [
-            'ImageId' => $cloudInstance->getImage()->getInternalName(),
-            'MinCount' => 1,
-            'MaxCount' => 1,
-            'InstanceType' => $cloudInstance->getFlavor()->getInternalName(),
-            'KeyName' => self::KEYPAIR_NAME,
-            'SecurityGroups' => [self::SECURITY_GROUP_NAME]
-        ];
-
-        if ($cloudInstance->getAdditionalVolumeSize() > 0) {
-            $parameters['BlockDeviceMappings'][0] = [
-                'DeviceName' => 'xvdh',
-                'Ebs' => [
-                    'DeleteOnTermination' => true,
-                    'Encrypted' => false,
-                    'VolumeType' => 'gp2',
-                    'VolumeSize' => $cloudInstance->getAdditionalVolumeSize()
-                ]
-            ];
-        }
+        $createMachineParams = new PaperspaceApiClient\Model\CreateMachineParams();
+        $createMachineParams->setRegion($cloudInstance->getRegion()->getInternalName());
+        $createMachineParams->setMachineType($cloudInstance->getFlavor()->getInternalName());
+        $createMachineParams->setSize($cloudInstance->getRootVolumeSize());
+        $createMachineParams->setBillingType('hourly');
+        $createMachineParams->setMachineName(
+            'GamingSolved machine for remoteDesktop id '
+            . $cloudInstance->getRemoteDesktop()->getId()
+            . ' of user ' . $cloudInstance->getRemoteDesktop()->getUser()->getUsername()
+        );
+        $createMachineParams->setTemplateId($cloudInstance->getImage()->getInternalName());
+        $createMachineParams->setAssignPublicIp(true);
 
         try {
-            $result = $this->ec2Client->runInstances($parameters);
-            $this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()] = $result['Instances'][0]['InstanceId'];
-        } catch (Ec2Exception $e) {
-            if ($e->getAwsErrorCode() === 'InsufficientInstanceCapacity') {
-                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_OUT_OF_INSTANCE_CAPACITY, $e);
+            $machine = $this->paperspaceMachinesApiClient->createMachine($createMachineParams);
+            $this->cloudInstanceIds2PsInstanceIds[$cloudInstance->getId()] = $machine->getId();
+        } catch (\Exception $e) {
+            throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
+        }
+    }
+
+    /**
+     * param type differs intentionally
+     *
+     * @param PaperspaceCloudInstance $cloudInstance
+     */
+    public function updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void
+    {
+        $cloudInstance->setPsInstanceId($this->cloudInstanceIds2PsInstanceIds[$cloudInstance->getId()]);
+    }
+
+    /**
+     * @param PaperspaceCloudInstance $cloudInstance param type differs intentionally
+     */
+    public function triggerStartOfCloudInstance(CloudInstance $cloudInstance) : void
+    {
+        try {
+            $this->paperspaceMachinesApiClient->startMachine($cloudInstance->getPsInstanceId());
+        } catch (\Exception $e) {
+            if ($e->getCode() === 404) {
+                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_INSTANCE_UNKNOWN, $e);
+            } else {
+                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
             }
         }
     }
@@ -89,37 +92,15 @@ class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInte
     /**
      * param type differs intentionally
      *
-     * @param AwsCloudInstance $cloudInstance
-     */
-    public function updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void
-    {
-        $cloudInstance->setEc2InstanceId($this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()]);
-    }
-
-    /**
-     * @param AwsCloudInstance $cloudInstance param type differs intentionally
-     */
-    public function triggerStartOfCloudInstance(CloudInstance $cloudInstance) : void
-    {
-        $this->ec2Client->startInstances([
-            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-        ]);
-    }
-
-    /**
-     * param type differs intentionally
-     *
-     * @param AwsCloudInstance $cloudInstance
+     * @param PaperspaceCloudInstance $cloudInstance
      * @return bool
      */
     public function cloudInstanceIsRunning(CloudInstance $cloudInstance) : bool
     {
         try {
-            $result = $this->ec2Client->describeInstances([
-                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-            ]);
+            $machine = $this->paperspaceMachinesApiClient->showMachine($cloudInstance->getPsInstanceId());
 
-            if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'running') {
+            if ($machine->getState() === PaperspaceMachine::STATE_READY) {
                 return true;
             } else {
                 return false;
@@ -133,23 +114,16 @@ class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInte
     /**
      * param type differs intentionally
      *
-     * @param AwsCloudInstance $cloudInstance
+     * @param PaperspaceCloudInstance $cloudInstance
      * @return null|string
      */
     public function getPublicAddressOfRunningCloudInstance(CloudInstance $cloudInstance)
     {
         try {
-            $result = $this->ec2Client->describeInstances([
-                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-            ]);
+            $machine = $this->paperspaceMachinesApiClient->showMachine($cloudInstance->getPsInstanceId());
 
-            if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'running') {
-                if (array_key_exists(0, $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'])) {
-                    $ip = $result['Reservations'][0]['Instances'][0]['NetworkInterfaces'][0]['Association']['PublicIp'];
-                } else {
-                    $ip = $result['Reservations'][0]['Instances'][0]['PublicIpAddress'];
-                }
-                return $ip;
+            if ($machine->getPublicIpAddress() !== '') {
+                return $machine->getPublicIpAddress();
             } else {
                 return null;
             }
@@ -162,59 +136,40 @@ class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInte
     /**
      * param type differs intentionally
      *
-     * @param AwsCloudInstance $cloudInstance
+     * @param PaperspaceCloudInstance $cloudInstance
      * @return null|string
      */
     public function getAdminPasswordOfRunningCloudInstance(CloudInstance $cloudInstance)
     {
+        return '13i820b_98I:6KBp';
+    }
+
+    /**
+     * @param PaperspaceCloudInstance $cloudInstance param type differs intentionally
+     */
+    public function triggerStopOfCloudInstance(CloudInstance $cloudInstance) : void
+    {
         try {
-            $result = $this->ec2Client->getPasswordData([
-                'InstanceId' => $cloudInstance->getEc2InstanceId()
-            ]);
-
-            if ($result['PasswordData'] !== '') {
-                $base64Pwd = $result['PasswordData'];
-                $encryptedPwd = base64_decode($base64Pwd);
-                $cleartextPwd = '';
-
-                $keypairPrivateKeyResource = openssl_get_privatekey($this->keypairPrivateKey);
-
-                if (openssl_private_decrypt($encryptedPwd, $cleartextPwd, $keypairPrivateKeyResource)) {
-                    return $cleartextPwd;
-                } else {
-                    throw new \Exception('Could not decrypt admin password');
-                }
-            } else {
-                return null;
-            }
+            $this->paperspaceMachinesApiClient->stopMachine($cloudInstance->getPsInstanceId());
         } catch (\Exception $e) {
-            $this->output->writeln($e->getMessage());
-            return null;
+            if ($e->getCode() === 404) {
+                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_INSTANCE_UNKNOWN, $e);
+            } else {
+                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
+            }
         }
     }
 
     /**
-     * @param AwsCloudInstance $cloudInstance param type differs intentionally
-     */
-    public function triggerStopOfCloudInstance(CloudInstance $cloudInstance) : void
-    {
-        $this->ec2Client->stopInstances([
-            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-        ]);
-    }
-
-    /**
-     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     * @param PaperspaceCloudInstance $cloudInstance param type differs intentionally
      * @return bool
      */
     public function cloudInstanceIsStopped(CloudInstance $cloudInstance) : bool
     {
         try {
-            $result = $this->ec2Client->describeInstances([
-                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-            ]);
+            $machine = $this->paperspaceMachinesApiClient->showMachine($cloudInstance->getPsInstanceId());
 
-            if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'stopped') {
+            if ($machine->getState() === PaperspaceMachine::STATE_OFF) {
                 return true;
             } else {
                 return false;
@@ -226,50 +181,52 @@ class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInte
     }
 
     /**
-     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     * @param PaperspaceCloudInstance $cloudInstance param type differs intentionally
      */
     public function triggerTerminationOfCloudInstance(CloudInstance $cloudInstance) : void
     {
         try {
-            $this->ec2Client->terminateInstances([
-                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-            ]);
-        } catch (Ec2Exception $e) {
-            if ($e->getAwsErrorCode() === 'InvalidInstanceID.NotFound') {
+            $this->paperspaceMachinesApiClient->destroyMachine($cloudInstance->getPsInstanceId());
+        } catch (\Exception $e) {
+            if ($e->getCode() === 404) {
                 throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_INSTANCE_UNKNOWN, $e);
+            } else {
+                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
             }
         }
     }
 
     /**
-     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     * @param PaperspaceCloudInstance $cloudInstance param type differs intentionally
      * @return bool
      */
     public function cloudInstanceIsTerminated(CloudInstance $cloudInstance) : bool
     {
         try {
-            $result = $this->ec2Client->describeInstances([
-                'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-            ]);
-
-            if ($result['Reservations'][0]['Instances'][0]['State']['Name'] === 'terminated') {
+            $this->paperspaceMachinesApiClient->showMachine($cloudInstance->getPsInstanceId());
+            return false;
+        } catch (\Exception $e) {
+            if ($e->getCode() === 404) {
                 return true;
             } else {
-                return false;
+                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
             }
-        } catch (\Exception $e) {
-            $this->output->writeln($e->getMessage());
-            return false;
         }
     }
 
     /**
-     * @param AwsCloudInstance $cloudInstance param type differs intentionally
+     * @param PaperspaceCloudInstance $cloudInstance param type differs intentionally
      */
     public function triggerRebootOfCloudInstance(CloudInstance $cloudInstance) : void
     {
-        $this->ec2Client->rebootInstances([
-            'InstanceIds' => [$cloudInstance->getEc2InstanceId()]
-        ]);
+        try {
+            $this->paperspaceMachinesApiClient->restartMachine($cloudInstance->getPsInstanceId());
+        } catch (\Exception $e) {
+            if ($e->getCode() === 404) {
+                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_INSTANCE_UNKNOWN, $e);
+            } else {
+                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
+            }
+        }
     }
 }

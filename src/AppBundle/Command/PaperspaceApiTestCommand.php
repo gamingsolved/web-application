@@ -48,9 +48,24 @@ class PaperspaceApiTestCommand extends ContainerAwareCommand
 
         try {
             $result = $machinesApiClient->listMachines();
-            print_r($result);
+            #print_r($result);
         } catch (\Exception $e) {
             echo 'Exception when calling MachinesApi->listMachines: ', $e->getMessage(), PHP_EOL;
+        }
+
+
+        try {
+            $result = $machinesApiClient->showMachine('psg8gwmb');
+            #print_r($result);
+        } catch (\Exception $e) {
+            echo 'Exception when calling MachinesApi->showMachine: ', $e->getMessage(), PHP_EOL;
+        }
+
+        try {
+            $result = $machinesApiClient->startMachine('psg8gwmbs');
+            print_r($result);
+        } catch (\Exception $e) {
+            echo 'Exception when calling MachinesApi->startMachine: ', $e->getMessage(), PHP_EOL;
         }
 
 

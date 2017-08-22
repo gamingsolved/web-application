@@ -145,7 +145,7 @@ class CloudInstanceController extends Controller
             }
 
         } else {
-            return $this->json('Unknown provider ' . $cloudInstanceProvider, Response::HTTP_BAD_REQUEST);
+            return $this->json('Unknown or unsupported provider ' . $cloudInstanceProvider, Response::HTTP_BAD_REQUEST);
         }
     }
 }

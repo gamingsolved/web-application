@@ -25,13 +25,13 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinatorInterface
      * @param array $credentials
      * @param Region $region
      * @param OutputInterface $output
-     * @param null|\Aws\Ec2\Ec2Client $ec2Client If provided, this constructor does not build its own ec2 API client
+     * @param null|\Aws\Ec2\Ec2Client $paperspaceMachinesApiClient If provided, this constructor does not build its own ec2 API client
      */
-    public function __construct(array $credentials, Region $region, OutputInterface $output, $ec2Client = null)
+    public function __construct(array $credentials, Region $region, OutputInterface $output, $paperspaceMachinesApiClient = null)
     {
         $this->keypairPrivateKey = $credentials['keypairPrivateKey'];
-        if (!is_null($ec2Client)) {
-            $this->ec2Client = $ec2Client;
+        if (!is_null($paperspaceMachinesApiClient)) {
+            $this->ec2Client = $paperspaceMachinesApiClient;
         } else {
             $sdk = new Sdk(
                 [

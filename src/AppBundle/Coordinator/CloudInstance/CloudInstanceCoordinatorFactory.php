@@ -4,6 +4,7 @@ namespace AppBundle\Coordinator\CloudInstance;
 
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\CloudInstance\PaperspaceCloudInstance;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CloudInstanceCoordinatorFactory
@@ -13,6 +14,7 @@ class CloudInstanceCoordinatorFactory
         string $awsApiKey,
         string $awsApiSecret,
         string $awsKeypairPrivateKeyFile,
+        string $paperspaceApiKey,
         OutputInterface $output) : CloudInstanceCoordinatorInterface
     {
         if ($cloudInstance instanceof AwsCloudInstance) {
@@ -21,6 +23,14 @@ class CloudInstanceCoordinatorFactory
                     'apiKey' => $awsApiKey,
                     'apiSecret' => $awsApiSecret,
                     'keypairPrivateKey' => file_get_contents($awsKeypairPrivateKeyFile)
+                ],
+                $cloudInstance->getRegion(),
+                $output
+            );
+        } elseif ($cloudInstance instanceof PaperspaceCloudInstance) {
+            return new PaperspaceCloudInstanceCoordinator(
+                [
+                    'apiKey' => $paperspaceApiKey
                 ],
                 $cloudInstance->getRegion(),
                 $output
