@@ -71,7 +71,30 @@ class BillableItem
         $this->timewindowBegin = clone($timewindowBegin);
 
         $this->timewindowEnd = clone($timewindowBegin);
-        $this->timewindowEnd = $this->timewindowEnd->add(new \DateInterval('PT' . self::BILLABLE_TIMEWINDOW_HOURLY . 'S'));
+
+        if ($type === self::TYPE_USAGE) {
+            if ($remoteDesktop->getUsageCostsInterval() === RemoteDesktop::COSTS_INTERVAL_HOURLY) {
+                $this->timewindowEnd = $this->timewindowEnd->add(new \DateInterval('PT' . self::BILLABLE_TIMEWINDOW_HOURLY . 'S'));
+            } elseif ($remoteDesktop->getUsageCostsInterval() === RemoteDesktop::COSTS_INTERVAL_MONTHLY) {
+                $this->timewindowEnd = $this->timewindowEnd->add(new \DateInterval('PT' . self::BILLABLE_TIMEWINDOW_MONTHLY . 'S'));
+            } else {
+                throw new \Exception(
+                    'Invalid usage costs interval ' . $remoteDesktop->getUsageCostsInterval() . ' of remote desktop ' . $remoteDesktop->getId()
+                );
+            }
+        }
+
+        if ($type === self::TYPE_PROVISIONING) {
+            if ($remoteDesktop->getProvisioningCostsInterval() === RemoteDesktop::COSTS_INTERVAL_HOURLY) {
+                $this->timewindowEnd = $this->timewindowEnd->add(new \DateInterval('PT' . self::BILLABLE_TIMEWINDOW_HOURLY . 'S'));
+            } elseif ($remoteDesktop->getProvisioningCostsInterval() === RemoteDesktop::COSTS_INTERVAL_MONTHLY) {
+                $this->timewindowEnd = $this->timewindowEnd->add(new \DateInterval('PT' . self::BILLABLE_TIMEWINDOW_MONTHLY . 'S'));
+            } else {
+                throw new \Exception(
+                    'Invalid provisioning costs interval ' . $remoteDesktop->getProvisioningCostsInterval() . ' of remote desktop ' . $remoteDesktop->getId()
+                );
+            }
+        }
 
         $this->remoteDesktop = $remoteDesktop;
 
