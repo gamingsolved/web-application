@@ -24,9 +24,9 @@ interface CloudInstanceProviderInterface
 
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstance;
 
-    public function getHourlyUsageCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float;
+    public function getUsageCostsForFlavorImageRegionCombinationForOneInterval(Flavor $flavor, Image $image, Region $region) : float;
 
-    public function getHourlyProvisioningCostsForFlavorImageRegionVolumeSizesCombination(
+    public function getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
         Flavor $flavor, Image $image, Region $region, int $rootVolumeSize, int $additionalVolumeSize) : float;
 
     public function getMaximumHourlyUsageCostsForFlavor(Flavor $flavor) : float;

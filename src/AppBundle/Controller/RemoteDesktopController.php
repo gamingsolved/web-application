@@ -224,11 +224,11 @@ class RemoteDesktopController extends Controller
         /** @var AccountMovementRepository $accountMovementRepository */
         $accountMovementRepository = $em->getRepository(AccountMovement::class);
 
-        if ($remoteDesktop->getHourlyUsageCosts() > $accountMovementRepository->getAccountBalanceForUser($user)) {
+        if ($remoteDesktop->getUsageCostsForOneInterval() > $accountMovementRepository->getAccountBalanceForUser($user)) {
             return $this->render(
                 'AppBundle:remoteDesktop:insufficientAccountBalance.html.twig',
                 [
-                    'hourlyUsageCosts' => $remoteDesktop->getHourlyUsageCosts(),
+                    'hourlyUsageCosts' => $remoteDesktop->getUsageCostsForOneInterval(),
                     'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user)
                 ]
             );

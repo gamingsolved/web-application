@@ -4,6 +4,7 @@ namespace AppBundle\Entity\CloudInstance;
 
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
 use AppBundle\Entity\CloudInstanceProvider\PaperspaceCloudInstanceProvider;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,6 +19,8 @@ class PaperspaceCloudInstance extends CloudInstance
      */
     protected $psInstanceId;
 
+    protected $usageCostsInterval = RemoteDesktop::COSTS_INTERVAL_HOURLY;
+    protected $provisioningCostsInterval = RemoteDesktop::COSTS_INTERVAL_MONTHLY;
 
     public function getCloudInstanceProvider(): CloudInstanceProviderInterface
     {

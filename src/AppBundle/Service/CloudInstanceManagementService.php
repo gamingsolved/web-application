@@ -172,7 +172,7 @@ class CloudInstanceManagementService
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
 
-            $hourlyUsageCosts = $cloudInstance->getHourlyUsageCosts();
+            $hourlyUsageCosts = $cloudInstance->getUsageCostsForOneInterval();
             $accountBalance =
                 $this->accountMovementRepository->getAccountBalanceForUser(
                     $cloudInstance->getRemoteDesktop()->getUser()
@@ -236,7 +236,7 @@ class CloudInstanceManagementService
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_START) {
 
-            $hourlyUsageCosts = $cloudInstance->getHourlyUsageCosts();
+            $hourlyUsageCosts = $cloudInstance->getUsageCostsForOneInterval();
             $accountBalance = $this->accountMovementRepository
                 ->getAccountBalanceForUser(
                     $cloudInstance->getRemoteDesktop()->getUser()

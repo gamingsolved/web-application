@@ -18,8 +18,10 @@ interface CloudInstanceInterface
 
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface;
 
-    public function getHourlyUsageCosts() : float;
-    public function getHourlyProvisioningCosts() : float;
+    public function getUsageCostsInterval() : int;
+    public function getProvisioningCostsInterval() : int;
+    public function getUsageCostsForOneInterval() : float;
+    public function getProvisioningCostsForOneInterval() : float;
 
     public function setStatus(int $status);
     public function getStatus() : int;
@@ -82,6 +84,9 @@ abstract class CloudInstance implements CloudInstanceInterface
     const ERROR_VPC_NEEDED = 1;
 
     const ADMIN_PASSWORD_ENCRYPTION_KEY = '06c528c143c3f5c73ae200048782bd422a4f1b90';
+
+    protected $usageCostsInterval = null;
+    protected $provisioningCostsInterval = null;
 
     /**
      * @var string
@@ -330,22 +335,32 @@ abstract class CloudInstance implements CloudInstanceInterface
         }
     }
 
-    public function getHourlyUsageCosts(): float
+    public function getUsageCostsInterval(): int
+    {
+        return $this->usageCostsInterval;
+    }
+
+    public function getProvisioningCostsInterval(): int
+    {
+        return $this->provisioningCostsInterval;
+    }
+
+    public function getUsageCostsForOneInterval(): float
     {
         return $this
             ->getCloudInstanceProvider()
-            ->getHourlyUsageCostsForFlavorImageRegionCombination(
+            ->getUsageCostsForFlavorImageRegionCombinationForOneInterval(
                 $this->getFlavor(),
                 $this->getImage(),
                 $this->getRegion()
             );
     }
 
-    public function getHourlyProvisioningCosts(): float
+    public function getProvisioningCostsForOneInterval(): float
     {
         return $this
             ->getCloudInstanceProvider()
-            ->getHourlyProvisioningCostsForFlavorImageRegionVolumeSizesCombination(
+            ->getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
                 $this->getFlavor(),
                 $this->getImage(),
                 $this->getRegion(),

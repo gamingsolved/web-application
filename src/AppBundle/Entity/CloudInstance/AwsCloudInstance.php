@@ -4,6 +4,7 @@ namespace AppBundle\Entity\CloudInstance;
 
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,6 +21,8 @@ class AwsCloudInstance extends CloudInstance
      */
     protected $ec2InstanceId;
 
+    protected $usageCostsInterval = RemoteDesktop::COSTS_INTERVAL_HOURLY;
+    protected $provisioningCostsInterval = RemoteDesktop::COSTS_INTERVAL_HOURLY;
 
     public function getCloudInstanceProvider(): CloudInstanceProviderInterface
     {

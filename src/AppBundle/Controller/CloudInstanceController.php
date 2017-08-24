@@ -68,7 +68,7 @@ class CloudInstanceController extends Controller
 
             $hourlyUsageCosts = $cloudInstance
                 ->getCloudInstanceProvider()
-                ->getHourlyUsageCostsForFlavorImageRegionCombination(
+                ->getUsageCostsForFlavorImageRegionCombinationForOneInterval(
                     $cloudInstance->getFlavor(),
                     $cloudInstance->getImage(),
                     $cloudInstance->getRegion()

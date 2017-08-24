@@ -102,7 +102,7 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
     /**
      * @throws \Exception
      */
-    public function getHourlyUsageCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float
+    public function getUsageCostsForFlavorImageRegionCombinationForOneInterval(Flavor $flavor, Image $image, Region $region) : float
     {
         return $this->getMaximumHourlyUsageCostsForFlavor($flavor);
     }
@@ -116,17 +116,31 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
         throw new \Exception('Unknown flavor ' . $flavor->getInternalName());
     }
 
-    public function getHourlyProvisioningCostsForFlavorImageRegionVolumeSizesCombination(
+    public function getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
         Flavor $flavor, Image $image, Region $region, int $rootVolumeSize, int $additionalVolumeSize) : float
     {
-        if ($rootVolumeSize === 50) {
-            $pricePerGBPerMonth = 0.10; // Paperspace price is $5 for 50GB,
-            $daysPerMonth = 30;
-            $hoursPerDay = 24;
-            $hoursPerMonth = $daysPerMonth * $hoursPerDay;
-            return round(( ($rootVolumeSize + $additionalVolumeSize) * $pricePerGBPerMonth ) / $hoursPerMonth, 2);
+        switch ($rootVolumeSize) {
+            case 50:
+                return 5.0;
+                break;
+            case 100:
+                return 6.0;
+                break;
+            case 250:
+                return 7.0;
+                break;
+            case 500:
+                return 10.0;
+                break;
+            case 1000:
+                return 20.0;
+                break;
+            case 2000:
+                return 40.0;
+                break;
+            default:
+                throw new \Exception('Cannot calculate monthly Paperspace storage price for volume size ' . $rootVolumeSize);
         }
-        throw new \Exception('Cannot calculate monthly Paperspace storage price for volume size ' . $rootVolumeSize);
     }
 
 }

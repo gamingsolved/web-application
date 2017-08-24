@@ -183,7 +183,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     /**
      * @throws \Exception
      */
-    public function getHourlyUsageCostsForFlavorImageRegionCombination(Flavor $flavor, Image $image, Region $region) : float
+    public function getUsageCostsForFlavorImageRegionCombinationForOneInterval(Flavor $flavor, Image $image, Region $region) : float
     {
         return $this->getMaximumHourlyUsageCostsForFlavor($flavor);
     }
@@ -205,7 +205,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         throw new \Exception('Unknown flavor ' . $flavor->getInternalName());
     }
 
-    public function getHourlyProvisioningCostsForFlavorImageRegionVolumeSizesCombination(
+    public function getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
         Flavor $flavor, Image $image, Region $region, int $rootVolumeSize, int $additionalVolumeSize) : float
     {
         $pricePerGBPerMonth = 0.119; // gp2 Volume type

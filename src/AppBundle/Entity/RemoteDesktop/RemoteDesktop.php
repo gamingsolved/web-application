@@ -41,6 +41,9 @@ class RemoteDesktop
     const STATUS_TERMINATED = 6;
     const STATUS_REBOOTING = 7;
 
+    const COSTS_INTERVAL_HOURLY = 0;
+    const COSTS_INTERVAL_MONTHLY = 1;
+
     const HASH_SECRET = '>"13!V{_:E7 KQ3*ttV,\n|^2,a""k~Q';
 
     /**
@@ -399,14 +402,24 @@ class RemoteDesktop
         }
     }
 
-    public function getHourlyUsageCosts() : float
+    public function getUsageCostsInterval() : int
     {
-        return $this->getActiveCloudInstance()->getHourlyUsageCosts();
+        return $this->getActiveCloudInstance()->getUsageCostsInterval();
     }
 
-    public function getHourlyProvisioningCosts() : float
+    public function getProvisioningCostsInterval() : int
     {
-        return $this->getActiveCloudInstance()->getHourlyProvisioningCosts();
+        return $this->getActiveCloudInstance()->getProvisioningCostsInterval();
+    }
+
+    public function getUsageCostsForOneInterval() : float
+    {
+        return $this->getActiveCloudInstance()->getUsageCostsForOneInterval();
+    }
+
+    public function getProvisioningCostsForOneInterval() : float
+    {
+        return $this->getActiveCloudInstance()->getProvisioningCostsForOneInterval();
     }
 
     public function getScheduledForStopAt()
