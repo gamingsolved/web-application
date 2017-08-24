@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class BillableItem
 {
     const BILLABLE_TIMEWINDOW_HOURLY = 3600; // For hourly usage or provisioning costs
-    const BILLABLE_TIMEWINDOW_MONTHLY = 2592000; // For monthly usage or provisioning costs
+    const BILLABLE_TIMEWINDOW_MONTHLY = 2592000; // For monthly usage or provisioning costs - exactly 30 days
 
     const TYPE_USAGE = 0;
     const TYPE_PROVISIONING = 1;
