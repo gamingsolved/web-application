@@ -40,6 +40,11 @@ class CloudInstanceManagementCommand extends ContainerAwareCommand
                 InputArgument::REQUIRED,
                 'Path to the file holding the private key of the AWS keypair.'
             )
+            ->addArgument(
+                'paperspaceApiKey',
+                InputArgument::REQUIRED,
+                'Key for the Paperspace api.'
+            )
         ;
     }
 

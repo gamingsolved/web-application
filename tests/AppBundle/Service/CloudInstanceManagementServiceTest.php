@@ -100,12 +100,14 @@ class CloudInstanceManagementServiceTest extends TestCase
             [
                 'awsApiKey' => 'foo',
                 'awsApiSecret' => 'bar',
-                'awsKeypairPrivateKeyFile' => 'baz'
+                'awsKeypairPrivateKeyFile' => 'baz',
+                'paperspaceApiKey' => 'bak'
             ],
             new InputDefinition([
                 new InputArgument('awsApiKey', InputArgument::REQUIRED),
                 new InputArgument('awsApiSecret', InputArgument::REQUIRED),
                 new InputArgument('awsKeypairPrivateKeyFile', InputArgument::REQUIRED),
+                new InputArgument('paperspaceApiKey', InputArgument::REQUIRED)
             ])
         );
     }

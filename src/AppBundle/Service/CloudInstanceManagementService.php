@@ -42,6 +42,7 @@ class CloudInstanceManagementService
             $input->getArgument('awsApiKey'),
             $input->getArgument('awsApiSecret'),
             $input->getArgument('awsKeypairPrivateKeyFile'),
+            $input->getArgument('paperspaceApiKey'),
             $output
         );
 
