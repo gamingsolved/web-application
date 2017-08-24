@@ -21,9 +21,6 @@ class AwsCloudInstance extends CloudInstance
      */
     protected $ec2InstanceId;
 
-    protected $usageCostsInterval = RemoteDesktop::COSTS_INTERVAL_HOURLY;
-    protected $provisioningCostsInterval = RemoteDesktop::COSTS_INTERVAL_HOURLY;
-
     public function getCloudInstanceProvider(): CloudInstanceProviderInterface
     {
         return new AwsCloudInstanceProvider();

@@ -404,12 +404,12 @@ class RemoteDesktop
 
     public function getUsageCostsInterval() : int
     {
-        return $this->getActiveCloudInstance()->getUsageCostsInterval();
+        return $this->getCloudInstanceProvider()->getUsageCostsInterval();
     }
 
     public function getProvisioningCostsInterval() : int
     {
-        return $this->getActiveCloudInstance()->getProvisioningCostsInterval();
+        return $this->getCloudInstanceProvider()->getProvisioningCostsInterval();
     }
 
     protected function getCostsIntervalAsString(int $costsIntervalIntValue) : string

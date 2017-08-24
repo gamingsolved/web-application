@@ -18,8 +18,6 @@ interface CloudInstanceInterface
 
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface;
 
-    public function getUsageCostsInterval() : int;
-    public function getProvisioningCostsInterval() : int;
     public function getUsageCostsForOneInterval() : float;
     public function getProvisioningCostsForOneInterval() : float;
 
@@ -84,9 +82,6 @@ abstract class CloudInstance implements CloudInstanceInterface
     const ERROR_VPC_NEEDED = 1;
 
     const ADMIN_PASSWORD_ENCRYPTION_KEY = '06c528c143c3f5c73ae200048782bd422a4f1b90';
-
-    protected $usageCostsInterval = null;
-    protected $provisioningCostsInterval = null;
 
     /**
      * @var string
@@ -335,40 +330,6 @@ abstract class CloudInstance implements CloudInstanceInterface
         }
     }
 
-    public function getUsageCostsInterval(): int
-    {
-        return $this->usageCostsInterval;
-    }
-
-    public function getProvisioningCostsInterval(): int
-    {
-        return $this->provisioningCostsInterval;
-    }
-
-    public function getUsageCostsForOneInterval(): float
-    {
-        return $this
-            ->getCloudInstanceProvider()
-            ->getUsageCostsForFlavorImageRegionCombinationForOneInterval(
-                $this->getFlavor(),
-                $this->getImage(),
-                $this->getRegion()
-            );
-    }
-
-    public function getProvisioningCostsForOneInterval(): float
-    {
-        return $this
-            ->getCloudInstanceProvider()
-            ->getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
-                $this->getFlavor(),
-                $this->getImage(),
-                $this->getRegion(),
-                $this->getRootVolumeSize(),
-                $this->getAdditionalVolumeSize()
-            );
-    }
-
     public static function getStatusName(int $status) : string {
         switch ($status) {
             case self::STATUS_IN_USE:
@@ -475,6 +436,30 @@ abstract class CloudInstance implements CloudInstanceInterface
         } else {
             return null;
         }
+    }
+
+    public function getUsageCostsForOneInterval(): float
+    {
+        return $this
+            ->getCloudInstanceProvider()
+            ->getUsageCostsForFlavorImageRegionCombinationForOneInterval(
+                $this->getFlavor(),
+                $this->getImage(),
+                $this->getRegion()
+            );
+    }
+
+    public function getProvisioningCostsForOneInterval(): float
+    {
+        return $this
+            ->getCloudInstanceProvider()
+            ->getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
+                $this->getFlavor(),
+                $this->getImage(),
+                $this->getRegion(),
+                $this->getRootVolumeSize(),
+                $this->getAdditionalVolumeSize()
+            );
     }
 
 }

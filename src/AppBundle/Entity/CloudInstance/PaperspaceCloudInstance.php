@@ -19,9 +19,6 @@ class PaperspaceCloudInstance extends CloudInstance
      */
     protected $psInstanceId;
 
-    protected $usageCostsInterval = RemoteDesktop::COSTS_INTERVAL_HOURLY;
-    protected $provisioningCostsInterval = RemoteDesktop::COSTS_INTERVAL_MONTHLY;
-
     public function getCloudInstanceProvider(): CloudInstanceProviderInterface
     {
         return new PaperspaceCloudInstanceProvider();

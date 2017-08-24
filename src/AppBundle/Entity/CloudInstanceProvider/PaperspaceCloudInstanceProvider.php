@@ -19,6 +19,9 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
 
     protected $kindToRegionToImage = [];
 
+    protected $usageCostsInterval = RemoteDesktop::COSTS_INTERVAL_HOURLY;
+    protected $provisioningCostsInterval = RemoteDesktop::COSTS_INTERVAL_MONTHLY;
+
     public function __construct()
     {
 

@@ -24,6 +24,10 @@ interface CloudInstanceProviderInterface
 
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstance;
 
+    public function getUsageCostsInterval(): int;
+
+    public function getProvisioningCostsInterval(): int;
+
     public function getUsageCostsForFlavorImageRegionCombinationForOneInterval(Flavor $flavor, Image $image, Region $region) : float;
 
     public function getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
@@ -36,6 +40,9 @@ abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
 {
     const PROVIDER_AWS = 0;
     const PROVIDER_PAPERSPACE = 1;
+
+    protected $usageCostsInterval = null;
+    protected $provisioningCostsInterval = null;
 
     /**
      * @throws \Exception
@@ -72,4 +79,15 @@ abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
         }
         throw new \Exception('Could not find region with internal name ' . $regionInternalName);
     }
+
+    public function getUsageCostsInterval(): int
+    {
+        return $this->usageCostsInterval;
+    }
+
+    public function getProvisioningCostsInterval(): int
+    {
+        return $this->provisioningCostsInterval;
+    }
+
 }

@@ -85,6 +85,7 @@ class CloudInstanceController extends Controller
                         'insufficientAccountBalance' => true,
                         'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
                         'usageCostsForOneInterval' => $usageCostsForOneInterval,
+                        'usageCostsIntervalAsString' => $remoteDesktop->getUsageCostsIntervalAsString(),
                         'form' => $form->createView()
                     ]
                 );

@@ -245,7 +245,7 @@ class CloudInstanceManagementService
 
             if ($usageCostsForOneInterval > $accountBalance) {
                 $output->writeln('Action: would start the cloud instance, but owner has insufficient balance');
-                $output->writeln('Hourly costs would be ' . $usageCostsForOneInterval . ', balance is only ' . $accountBalance);
+                $output->writeln('Interval costs would be ' . $usageCostsForOneInterval . ', balance is only ' . $accountBalance);
             } else {
                 $output->writeln('Action: asking the cloud instance to start');
                 try {
