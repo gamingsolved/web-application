@@ -36,8 +36,8 @@
                                         <span class="remotedesktopkind-name">{{ remoteDesktopKind.name|trans }}</span>
                                         <br>
                                         <span class="label label-default">{{ remoteDesktopKind.flavor.humanName|trans }}</span>
-                                        <span class="pull-right remotedesktopkind-hourlyusagecosts">
-                                            <strong>{{ remoteDesktopKind.maximumHourlyUsageCosts|localizedcurrency('USD') }}</strong>
+                                        <span class="pull-right remotedesktopkind-usagecostsforoneinterval">
+                                            <strong>{{ remoteDesktopKind.maximumUsageCostsForOneInterval|localizedcurrency('USD') }}</strong>
                                             {{ "remoteDesktop.new.form.per_usage_hour"|trans }}
                                         </span>
                                     </label>

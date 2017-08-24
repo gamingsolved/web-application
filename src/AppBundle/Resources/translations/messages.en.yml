@@ -425,5 +425,7 @@ accountMovement:
 
 insufficientAccountBalance:
     message_one: Your account balance is too low to use this cloud gaming rig.
-    message_two: Running this cloud gaming rig costs %hourlyUsageCosts% per hour, but your current balance is
+    message_two: Running this cloud gaming rig costs %usageCostsForOneInterval% %usageCostsInterval%, but your current balance is
     click_here_to_increase_your_balance: Click here to increase your balance now
+    billing_interval_hourly: per hour
+    billing_interval_monthly: per month

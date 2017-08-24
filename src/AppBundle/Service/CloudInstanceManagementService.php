@@ -173,15 +173,15 @@ class CloudInstanceManagementService
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
 
-            $hourlyUsageCosts = $cloudInstance->getUsageCostsForOneInterval();
+            $usageCostsForOneInterval = $cloudInstance->getUsageCostsForOneInterval();
             $accountBalance =
                 $this->accountMovementRepository->getAccountBalanceForUser(
                     $cloudInstance->getRemoteDesktop()->getUser()
                 );
 
-            if ($hourlyUsageCosts > $accountBalance) {
+            if ($usageCostsForOneInterval > $accountBalance) {
                 $output->writeln('Action: would launch the cloud instance, but owner has insufficient balance');
-                $output->writeln('Hourly costs would be ' . $hourlyUsageCosts . ', balance is only ' . $accountBalance);
+                $output->writeln('Interval costs would be ' . $usageCostsForOneInterval . ', balance is only ' . $accountBalance);
             } else {
                 $output->writeln('Action: launching the cloud instance');
 
@@ -237,15 +237,15 @@ class CloudInstanceManagementService
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_START) {
 
-            $hourlyUsageCosts = $cloudInstance->getUsageCostsForOneInterval();
+            $usageCostsForOneInterval = $cloudInstance->getUsageCostsForOneInterval();
             $accountBalance = $this->accountMovementRepository
                 ->getAccountBalanceForUser(
                     $cloudInstance->getRemoteDesktop()->getUser()
                 );
 
-            if ($hourlyUsageCosts > $accountBalance) {
+            if ($usageCostsForOneInterval > $accountBalance) {
                 $output->writeln('Action: would start the cloud instance, but owner has insufficient balance');
-                $output->writeln('Hourly costs would be ' . $hourlyUsageCosts . ', balance is only ' . $accountBalance);
+                $output->writeln('Hourly costs would be ' . $usageCostsForOneInterval . ', balance is only ' . $accountBalance);
             } else {
                 $output->writeln('Action: asking the cloud instance to start');
                 try {
