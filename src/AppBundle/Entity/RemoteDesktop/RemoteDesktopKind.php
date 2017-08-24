@@ -79,7 +79,7 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
 
     public function getMaximumHourlyUsageCosts() : float
     {
-        return $this->getCloudInstanceProvider()->getMaximumHourlyUsageCostsForFlavor($this->getFlavor());
+        return $this->getCloudInstanceProvider()->getMaximumUsageCostsForFlavorForOneInterval($this->getFlavor());
     }
 
     public function getMouseRelativeValue(): string

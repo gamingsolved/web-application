@@ -29,7 +29,7 @@ interface CloudInstanceProviderInterface
     public function getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
         Flavor $flavor, Image $image, Region $region, int $rootVolumeSize, int $additionalVolumeSize) : float;
 
-    public function getMaximumHourlyUsageCostsForFlavor(Flavor $flavor) : float;
+    public function getMaximumUsageCostsForFlavorForOneInterval(Flavor $flavor) : float;
 }
 
 abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
