@@ -33,10 +33,27 @@ class AdministrationController extends Controller
             $twentyFourHoursAgoAccountBalances[$user->getId()] = $accountMovementRepo->getAccountBalanceForUserUpUntil($user, DateTimeUtility::createDateTime()->modify('-24 hours'));
         }
 
+
+        $sortedUsers = [];
+        foreach ($users as $user) {
+            // First, users which make us loose money
+            if (   $currentAccountBalances[$user->getId()] < 0.0
+                && $anHourAgoAccountBalances[$user->getId()] > $currentAccountBalances[$user->getId()]) {
+                $sortedUsers[] = $user;
+            }
+        }
+
+        foreach ($users as $user) {
+            // Then the rest
+            if (!in_array($user, $sortedUsers)) {
+                $sortedUsers[] = $user;
+            }
+        }
+
         return $this->render(
             'AppBundle:administration:index.html.twig',
             [
-                'users' => $users,
+                'users' => $sortedUsers,
                 'currentAccountBalances' => $currentAccountBalances,
                 'anHourAgoAccountBalances' => $anHourAgoAccountBalances,
                 'twentyFourHoursAgoAccountBalances' => $twentyFourHoursAgoAccountBalances
