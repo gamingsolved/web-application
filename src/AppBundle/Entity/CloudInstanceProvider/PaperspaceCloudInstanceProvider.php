@@ -29,11 +29,13 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
         // who have old desktops with this flavor/image/region
 
         $this->flavors = [
-            new Flavor($this, 'Air', '2 vCPUs, 4 GB RAM, 512 MB GPU')
+            new Flavor($this, 'Air', '2 vCPUs, 4 GB RAM, 512 MB GPU'),
+            new Flavor($this, 'GPU+', '8 vCPUs, 30 GB RAM, 8 GB NVIDIA® Quadro® M4000 GPU')
         ];
 
         $this->images = [
             new Image($this, 't6ixobq', 'Windows 10, all regions'),
+            new Image($this, 't2q0g8n', 'Windows 10 with CGX v1, NY2'),
         ];
 
 
@@ -44,7 +46,7 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
 
         $this->kindToRegionToImage = [
             RemoteDesktopKind::GAMING_PRO_PAPERSPACE => [
-                'East Coast (NY2)'   => $this->getImageByInternalName('t6ixobq'),
+                'East Coast (NY2)'   => $this->getImageByInternalName('t2q0g8n'),
                 'West Coast (CA1)'   => $this->getImageByInternalName('t6ixobq')
             ]
         ];
@@ -93,7 +95,7 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
             throw new \Exception('Cannot match kind ' . get_class($remoteDesktop->getKind()) . ' to an image.');
         }
 
-        $instance->setRootVolumeSize(50);
+        $instance->setRootVolumeSize(100);
         $instance->setAdditionalVolumeSize(0);
 
         // We use this indirection because it ensures we work with a valid region
@@ -114,6 +116,10 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
     {
         if ($flavor->getInternalName() === 'Air') {
             return 0.07;
+        }
+
+        if ($flavor->getInternalName() === 'GPU+') {
+            return 0.60;
         }
 
         throw new \Exception('Unknown flavor ' . $flavor->getInternalName());

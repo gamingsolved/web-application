@@ -26,7 +26,7 @@ class RemoteDesktopGamingProPaperspaceKind extends RemoteDesktopKind {
     }
 
     public function getFlavor(): Flavor {
-        return $this->getCloudInstanceProvider()->getFlavorByInternalName('Air');
+        return $this->getCloudInstanceProvider()->getFlavorByInternalName('GPU+');
     }
 
     // Absolute mode makes the mouse unusable in game

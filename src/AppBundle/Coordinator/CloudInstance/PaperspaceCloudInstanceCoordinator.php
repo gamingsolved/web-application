@@ -141,7 +141,7 @@ class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInte
      */
     public function getAdminPasswordOfRunningCloudInstance(CloudInstance $cloudInstance)
     {
-        return '13i820b_98I:6KBp';
+        return 'GamingSolved123';
     }
 
     /**

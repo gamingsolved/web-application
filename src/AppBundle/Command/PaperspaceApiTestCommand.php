@@ -29,11 +29,11 @@ class PaperspaceApiTestCommand extends ContainerAwareCommand
         /*
         $createMachineParams = new PaperspaceApiClient\Model\CreateMachineParams();
         $createMachineParams->setRegion('East Coast (NY2)');
-        $createMachineParams->setMachineType('Air');
+        $createMachineParams->setMachineType('GPU+');
         $createMachineParams->setSize(50);
         $createMachineParams->setBillingType('hourly');
         $createMachineParams->setMachineName('My first API-launched machine');
-        $createMachineParams->setTemplateId('t6ixobq');
+        $createMachineParams->setTemplateId('t2q0g8n');
         $createMachineParams->setAssignPublicIp(true);
 
         try {
@@ -48,31 +48,34 @@ class PaperspaceApiTestCommand extends ContainerAwareCommand
 
         try {
             $result = $machinesApiClient->listMachines();
-            #print_r($result);
+            print_r($result);
         } catch (\Exception $e) {
             echo 'Exception when calling MachinesApi->listMachines: ', $e->getMessage(), PHP_EOL;
         }
 
-
+        /*
         try {
-            $result = $machinesApiClient->showMachine('psg8gwmb');
-            #print_r($result);
+            $result = $machinesApiClient->restartMachine('psg8gwmb');
+            print_r($result);
         } catch (\Exception $e) {
             echo 'Exception when calling MachinesApi->showMachine: ', $e->getMessage(), PHP_EOL;
         }
+        */
 
+        /*
         try {
             $result = $machinesApiClient->startMachine('psg8gwmbs');
             print_r($result);
         } catch (\Exception $e) {
             echo 'Exception when calling MachinesApi->startMachine: ', $e->getMessage(), PHP_EOL;
         }
+        */
 
 
         $templatesApiClient = new PaperspaceApiClient\Api\TemplatesApi(null, $config);
 
         try {
-            $result = $templatesApiClient->listTemplates(null, null, 'Windows 10');
+            $result = $templatesApiClient->listTemplates(null, null, null);
             print_r($result);
         } catch (\Exception $e) {
             echo 'Exception when calling TemplatesApi->listTemplates: ', $e->getMessage(), PHP_EOL;
