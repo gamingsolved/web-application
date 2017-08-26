@@ -14,6 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
 class PaperspaceCloudInstance extends CloudInstance
 {
     /**
+     * @var RemoteDesktop
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="paperspaceCloudInstances")
+     * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id")
+     */
+    protected $remoteDesktop;
+
+    /**
      * @var string
      * @ORM\Column(name="ps_instance_id", type="string", length=128, nullable=true)
      */

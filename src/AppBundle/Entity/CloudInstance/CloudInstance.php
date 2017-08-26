@@ -91,11 +91,7 @@ abstract class CloudInstance implements CloudInstanceInterface
      */
     protected $id;
 
-    /**
-     * @var RemoteDesktop
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="awsCloudInstances")
-     * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id")
-     */
+    /* Due to the ORM 'inversedBy' logic, the ORM mapping must be defined in all children of this class! */
     protected $remoteDesktop;
 
     /**

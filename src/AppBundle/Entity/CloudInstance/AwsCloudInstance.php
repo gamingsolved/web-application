@@ -13,6 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AwsCloudInstance extends CloudInstance
 {
+    /**
+     * @var RemoteDesktop
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="awsCloudInstances")
+     * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id")
+     */
+    protected $remoteDesktop;
+
     // The following fields are AWS specific
 
     /**
