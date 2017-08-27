@@ -152,4 +152,9 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
         }
     }
 
+    public function hasLatencycheckEndpoints() : bool
+    {
+        return false;
+    }
+
 }

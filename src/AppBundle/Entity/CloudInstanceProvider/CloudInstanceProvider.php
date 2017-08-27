@@ -34,6 +34,8 @@ interface CloudInstanceProviderInterface
         Flavor $flavor, Image $image, Region $region, int $rootVolumeSize, int $additionalVolumeSize) : float;
 
     public function getMaximumUsageCostsForFlavorForOneInterval(Flavor $flavor) : float;
+
+    public function hasLatencycheckEndpoints() : bool;
 }
 
 abstract class CloudInstanceProvider implements CloudInstanceProviderInterface

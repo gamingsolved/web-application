@@ -366,6 +366,7 @@ cloudInstance:
                 connecting: "Connecting..."
                 pinging: "Pinging..."
                 explanation: "Choose the region with the lowest connection latency for the best experience."
+                explanation_if_latencycheck_unavailable: "Choose the region closest to your current location."
         launch_later_button: Launch later
 
 cloudprovider:

@@ -218,4 +218,9 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         return round(( ($rootVolumeSize + $additionalVolumeSize) * $pricePerGBPerMonth ) / $hoursPerMonth, 2);
     }
 
+    public function hasLatencycheckEndpoints() : bool
+    {
+        return true;
+    }
+
 }

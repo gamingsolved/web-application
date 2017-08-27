@@ -82,6 +82,7 @@ class CloudInstanceController extends Controller
                 return $this->render(
                     'AppBundle:cloudInstance:new.html.twig',
                     [
+                        'remoteDesktop' => $remoteDesktop,
                         'insufficientAccountBalance' => true,
                         'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
                         'usageCostsForOneInterval' => $usageCostsForOneInterval,
@@ -103,6 +104,7 @@ class CloudInstanceController extends Controller
             return $this->render(
                 'AppBundle:cloudInstance:new.html.twig',
                 [
+                    'remoteDesktop' => $remoteDesktop,
                     'insufficientAccountBalance' => false,
                     'currentAccountBalance' => null,
                     'usageCostsForOneInterval' => null,
