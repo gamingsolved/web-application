@@ -274,13 +274,16 @@ remoteDesktop:
         click_here_to_increase_your_balance: Click here to increase your balance
         headline: Your cloud gaming rigs
         no_remote_desktops_yet: You do not yet have any cloud gaming rigs.
-        usage_costs_per_hour: Usage costs per hour
-        current_usage_costs_per_hour: Current usage costs per hour
+        usage_costs_hourly: Usage costs per hour
+        usage_costs_monthly: Usage costs per month
+        current_usage_costs_hourly: Current usage costs per hour
+        current_usage_costs_monthly: Current usage costs per month
         only_in_status: only in status
         only_in_status_and: and
         while_in_status: while in status
         while_in_status_and: and
-        provisioning_costs_per_hour: Current storage costs per hour (until rig is removed)
+        provisioning_costs_hourly: Storage costs per hour (until rig is removed)
+        provisioning_costs_monthly: Storage costs per month (until rig is removed)
         auto_stop_info: "Cost protection: This cloud gaming rig will automatically stop on"
         auto_stop_change_first: "Set cost protection to stop this rig at the end of the"
         auto_stop_change_last: "usage hour from now."

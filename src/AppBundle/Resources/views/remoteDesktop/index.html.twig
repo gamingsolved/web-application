@@ -131,19 +131,19 @@
                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
                                             <div class="well well-sm pull-right usagecostsforoneintervalbox text-right">
                                                 <small>
-                                                    {{ "remoteDesktop.index.current_usage_costs_per_hour"|trans }}
+                                                    {{ ("remoteDesktop.index.current_usage_costs_" ~ remoteDesktop.usageCostsIntervalAsString)|trans }}
                                                     ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong> {{ "remoteDesktop.index.while_in_status_and"|trans }} <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>): {{ remoteDesktop.usageCostsForOneInterval|localizedcurrency('USD') }}
                                                     <br>
-                                                    {{ "remoteDesktop.index.provisioning_costs_per_hour"|trans }}: {{ remoteDesktop.provisioningCostsForOneInterval|localizedcurrency('USD') }}
+                                                    {{ ("remoteDesktop.index.provisioning_costs_" ~ remoteDesktop.provisioningCostsIntervalAsString)|trans }}: {{ remoteDesktop.provisioningCostsForOneInterval|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% else %}
-                                            <div class="well well-sm pull-right usagecostsforoneintervalbox">
+                                            <div class="well well-sm pull-right usagecostsforoneintervalbox text-right">
                                                 <small>
-                                                    {{ "remoteDesktop.index.usage_costs_per_hour"|trans }}
+                                                    {{ ("remoteDesktop.index.usage_costs_" ~ remoteDesktop.usageCostsIntervalAsString)|trans }}
                                                     ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong> {{ "remoteDesktop.index.only_in_status_and"|trans }} <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>): {{ remoteDesktop.usageCostsForOneInterval|localizedcurrency('USD') }}
                                                     <br>
-                                                    {{ "remoteDesktop.index.provisioning_costs_per_hour"|trans }}: {{ remoteDesktop.provisioningCostsForOneInterval|localizedcurrency('USD') }}
+                                                    {{ ("remoteDesktop.index.provisioning_costs_" ~ remoteDesktop.provisioningCostsIntervalAsString)|trans }}: {{ remoteDesktop.provisioningCostsForOneInterval|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% endif %}

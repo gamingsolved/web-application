@@ -40,14 +40,12 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
 
 
         $this->regions = [
-            new Region($this, 'East Coast (NY2)', 'cloudprovider.paperspace.region.ny2'),
-            new Region($this, 'West Coast (CA1)', 'cloudprovider.paperspace.region.ca1')
+            new Region($this, 'East Coast (NY2)', 'cloudprovider.paperspace.region.ny2')
         ];
 
         $this->kindToRegionToImage = [
             RemoteDesktopKind::GAMING_PRO_PAPERSPACE => [
-                'East Coast (NY2)'   => $this->getImageByInternalName('t2q0g8n'),
-                'West Coast (CA1)'   => $this->getImageByInternalName('t6ixobq')
+                'East Coast (NY2)'   => $this->getImageByInternalName('t2q0g8n')
             ]
         ];
     }
