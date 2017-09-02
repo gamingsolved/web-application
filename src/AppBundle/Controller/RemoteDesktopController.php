@@ -129,7 +129,7 @@ class RemoteDesktopController extends Controller
 
         $choices = [];
 
-        $availableRemoteDesktopKinds = RemoteDesktopKind::getAvailableKinds();
+        $availableRemoteDesktopKinds = RemoteDesktopKind::getAvailableKinds($user);
         /** @var RemoteDesktopKind $remoteDesktopKind */
         foreach ($availableRemoteDesktopKinds as $remoteDesktopKind) {
             $choices[] = $remoteDesktopKind->getIdentifier();

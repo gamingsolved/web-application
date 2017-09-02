@@ -4,10 +4,12 @@ namespace AppBundle\Entity\RemoteDesktop;
 
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
+use AppBundle\Entity\User;
 
 interface RemoteDesktopKindInterface
 {
     public function __toString() : string;
+    public static function getAvailableKinds(User $user) : array;
     public function getName() : string;
     public function getCloudInstanceProvider() : CloudInstanceProvider;
     public function getIdentifier() : int;
@@ -64,12 +66,18 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
         throw new \Exception('Unknown remote desktop kind ' . $kind);
     }
 
-    public static function getAvailableKinds() : array
+    public static function getAvailableKinds(User $user) : array
     {
-        return [
-            self::createRemoteDesktopKind(self::GAMING_PRO),
-            self::createRemoteDesktopKind(self::GAMING_PRO_PAPERSPACE)
-        ];
+        if (in_array('ROLE_BETATESTER_LEVEL_0', $user->getRoles())) {
+            return [
+                self::createRemoteDesktopKind(self::GAMING_PRO),
+                self::createRemoteDesktopKind(self::GAMING_PRO_PAPERSPACE)
+            ];
+        } else {
+            return [
+                self::createRemoteDesktopKind(self::GAMING_PRO)
+            ];
+        }
     }
 
     public function getName() : string
