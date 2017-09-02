@@ -331,11 +331,12 @@ remoteDesktop:
             title_label: Title for this cloud gaming rig:
             kind_label: What kind of cloud gaming rig do you want to create?
             kind_label_if_only_one_kind: These are your new cloud gaming rig specs:
+            available_in_regions: Available in these regions:
             per_usage_hour: per usage hour
             submit_label: Continue
     kind:
-        gamingpro: "Gaming (EC2): Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™"
-        gamingpropaperspace: "Gaming (Paperspace): Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™"
+        gamingpro: "Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™"
+        gamingpropaperspace: "[BETA] Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™"
         cadpro: "CAD Pro: Preinstalled Autodesk® AutoCAD® 2017 and Revit® 2017"
         cadultra: "CAD Ultra: Preinstalled Autodesk® AutoCAD® 2017 and Revit® 2017"
         3dmediapro: "3D Media Pro: Preinstalled Autodesk® Maya® 2017 and 3ds Max® 2017"

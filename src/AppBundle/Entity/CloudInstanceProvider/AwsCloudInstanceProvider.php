@@ -16,7 +16,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
     protected $images = [];
     protected $regions = [];
 
-    protected $kindToRegionToImage = [];
+    protected $kindsToRegionsToImages = [];
 
     protected $usageCostsInterval = RemoteDesktop::COSTS_INTERVAL_HOURLY;
     protected $provisioningCostsInterval = RemoteDesktop::COSTS_INTERVAL_HOURLY;
@@ -82,7 +82,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             new Region($this, 'ap-southeast-2', 'cloudprovider.aws.region.ap-southeast-2', false)
         ];
 
-        $this->kindToRegionToImage = [
+        $this->kindsToRegionsToImages = [
             RemoteDesktopKind::GAMING_PRO => [
                 'eu-central-1'   => $this->getImageByInternalName('ami-14c0107b'),
                 'eu-west-1'      => $this->getImageByInternalName('ami-a2437cc4'),
@@ -146,6 +146,19 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         return $this->regions;
     }
 
+    public function getAvailableRegionsForKind(RemoteDesktopKind $remoteDesktopKind) : array
+    {
+        $result = [];
+        foreach ($this->kindsToRegionsToImages as $kind => $regionsToImages) {
+            if ($kind === $remoteDesktopKind->getIdentifier()) {
+                foreach ($regionsToImages as $region => $image) {
+                    $result[] = $this->getRegionByInternalName($region);
+                }
+            }
+        }
+        return $result;
+    }
+
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstance
     {
         $instance = new AwsCloudInstance();
@@ -153,10 +166,10 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         // We use this indirection because it ensures we work with a valid flavor
         $instance->setFlavor($this->getFlavorByInternalName($remoteDesktop->getKind()->getFlavor()->getInternalName()));
 
-        if (array_key_exists($remoteDesktop->getKind()->getIdentifier(), $this->kindToRegionToImage)) {
-            if (array_key_exists($region->getInternalName(), $this->kindToRegionToImage[$remoteDesktop->getKind()->getIdentifier()])) {
+        if (array_key_exists($remoteDesktop->getKind()->getIdentifier(), $this->kindsToRegionsToImages)) {
+            if (array_key_exists($region->getInternalName(), $this->kindsToRegionsToImages[$remoteDesktop->getKind()->getIdentifier()])) {
                 $instance->setImage(
-                    $this->kindToRegionToImage[$remoteDesktop->getKind()->getIdentifier()][$region->getInternalName()]
+                    $this->kindsToRegionsToImages[$remoteDesktop->getKind()->getIdentifier()][$region->getInternalName()]
                 );
             } else {
                 throw new \Exception('Cannot match region ' . $region->getInternalName() . ' to an AMI.');

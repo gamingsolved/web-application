@@ -86,4 +86,9 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
     {
         return 'false';
     }
+
+    public function getAvailableRegions() : array
+    {
+        return $this->getCloudInstanceProvider()->getAvailableRegionsForKind($this);
+    }
 }

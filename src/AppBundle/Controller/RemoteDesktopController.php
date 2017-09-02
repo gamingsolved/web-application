@@ -132,12 +132,7 @@ class RemoteDesktopController extends Controller
         $availableRemoteDesktopKinds = RemoteDesktopKind::getAvailableKinds();
         /** @var RemoteDesktopKind $remoteDesktopKind */
         foreach ($availableRemoteDesktopKinds as $remoteDesktopKind) {
-            $choices[
-                $t->trans((string)$remoteDesktopKind)
-                . ' — ' . $remoteDesktopKind->getFlavor()->getHumanName()
-                . ' — $' . $remoteDesktopKind->getMaximumUsageCostsForOneInterval()
-                . '/h'
-            ] = $remoteDesktopKind->getIdentifier();
+            $choices[] = $remoteDesktopKind->getIdentifier();
         }
 
         $form = $this->createFormBuilder()->getForm();

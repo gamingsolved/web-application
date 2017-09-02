@@ -7,6 +7,7 @@ use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Region;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktopKind;
 
 interface CloudInstanceProviderInterface
 {
@@ -21,6 +22,8 @@ interface CloudInstanceProviderInterface
     public function getImageByInternalName(string $imageInternalName) : Image;
 
     public function getRegionByInternalName(string $regionInternalName) : Region;
+
+    public function getAvailableRegionsForKind(RemoteDesktopKind $remoteDesktopKind) : array;
 
     public function createInstanceForRemoteDesktopAndRegion(RemoteDesktop $remoteDesktop, Region $region) : CloudInstance;
 

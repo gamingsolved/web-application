@@ -36,6 +36,13 @@
                                         <span class="remotedesktopkind-name">{{ remoteDesktopKind.name|trans }}</span>
                                         <br>
                                         <span class="label label-default">{{ remoteDesktopKind.flavor.humanName|trans }}</span>
+
+                                        <hr>
+                                        {{ "remoteDesktop.new.form.available_in_regions"|trans }}
+                                        {% for region in remoteDesktopKind.availableRegions %}
+                                            <span class="label label-success">{{ region.humanName|trans }}</span>
+                                        {% endfor %}
+
                                         <span class="pull-right remotedesktopkind-usagecostsforoneinterval">
                                             <strong>{{ remoteDesktopKind.maximumUsageCostsForOneInterval|localizedcurrency('USD') }}</strong>
                                             {{ "remoteDesktop.new.form.per_usage_hour"|trans }}
