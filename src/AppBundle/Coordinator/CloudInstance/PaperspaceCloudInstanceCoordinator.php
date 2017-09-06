@@ -59,7 +59,7 @@ class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInte
             $machine = $this->paperspaceMachinesApiClient->createMachine($createMachineParams);
             $this->cloudInstanceIds2PsInstanceIds[$cloudInstance->getId()] = $machine->getId();
         } catch (\Exception $e) {
-            throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
+            throw new CloudProviderProblemException('Unknown Paperspace error', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
         }
     }
 
@@ -70,7 +70,12 @@ class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInte
      */
     public function updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void
     {
-        $cloudInstance->setPsInstanceId($this->cloudInstanceIds2PsInstanceIds[$cloudInstance->getId()]);
+        if (array_key_exists($cloudInstance->getId(), $this->cloudInstanceIds2PsInstanceIds)) {
+            $cloudInstance->setPsInstanceId($this->cloudInstanceIds2PsInstanceIds[$cloudInstance->getId()]);
+        } else {
+            throw new \Exception('Cloud instance id ' . $cloudInstance->getId() . ' is not known to coordinator.');
+        }
+
     }
 
     /**

@@ -82,6 +82,8 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinatorInterface
         } catch (Ec2Exception $e) {
             if ($e->getAwsErrorCode() === 'InsufficientInstanceCapacity') {
                 throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_OUT_OF_INSTANCE_CAPACITY, $e);
+            } else {
+                throw new CloudProviderProblemException('Unknown EC2 error', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
             }
         }
     }
@@ -93,7 +95,11 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinatorInterface
      */
     public function updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void
     {
-        $cloudInstance->setEc2InstanceId($this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()]);
+        if (array_key_exists($cloudInstance->getId(), $this->cloudInstanceIds2Ec2InstanceIds)) {
+            $cloudInstance->setEc2InstanceId($this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()]);
+        } else {
+            throw new \Exception('Cloud instance id ' . $cloudInstance->getId() . ' is not known to coordinator.');
+        }
     }
 
     /**

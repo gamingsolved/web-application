@@ -5,6 +5,7 @@ namespace AppBundle\Command;
 use AppBundle\Coordinator\CloudInstance\CloudInstanceCoordinatorFactory;
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
+use AppBundle\Entity\CloudInstance\PaperspaceCloudInstance;
 use AppBundle\Service\CloudInstanceManagementService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -18,7 +19,7 @@ ini_set('memory_limit', '2048M');
 
 class CloudInstanceManagementCommand extends ContainerAwareCommand
 {
-    const CLOUD_INSTANCE_CLASSES = [AwsCloudInstance::class];
+    const CLOUD_INSTANCE_CLASSES = [AwsCloudInstance::class, PaperspaceCloudInstance::class];
 
     protected function configure()
     {

@@ -194,8 +194,7 @@ class CloudInstanceManagementService
                     $output->writeln('Action result: success');
                 } catch (\Exception $e) {
                     $output->writeln('Action result: failure, exception output follows');
-                    $output->writeln(get_class($e));
-                    $output->writeln($e->getMessage());
+                    $this->outputException($output, $e);
                 }
             }
         }
@@ -346,5 +345,15 @@ class CloudInstanceManagementService
 
 
         $output->writeln('');
+    }
+
+    protected function outputException(OutputInterface $output, \Exception $e) : void
+    {
+        $output->writeln(get_class($e));
+        $output->writeln($e->getMessage());
+        if (!is_null($e->getPrevious())) {
+            $output->writeln(get_class($e->getPrevious()));
+            $output->writeln($e->getPrevious()->getMessage());
+        }
     }
 }
