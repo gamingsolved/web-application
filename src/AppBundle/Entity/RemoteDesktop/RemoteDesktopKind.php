@@ -15,6 +15,7 @@ interface RemoteDesktopKindInterface
     public function getIdentifier() : int;
     public function getFlavor(): Flavor;
     public function getMaximumUsageCostsForOneInterval(): float;
+    public function getMaximumProvisioningCostsForOneInterval(): float;
     public function getMouseRelativeValue(): string;
 }
 
@@ -87,7 +88,12 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
 
     public function getMaximumUsageCostsForOneInterval() : float
     {
-        return $this->getCloudInstanceProvider()->getMaximumUsageCostsForFlavorForOneInterval($this->getFlavor());
+        return $this->getCloudInstanceProvider()->getMaximumUsageCostsForKindForOneInterval($this);
+    }
+
+    public function getMaximumProvisioningCostsForOneInterval(): float
+    {
+        return $this->getCloudInstanceProvider()->getMaximumProvisioningCostsForKindForOneInterval($this);
     }
 
     public function getMouseRelativeValue(): string

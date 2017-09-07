@@ -120,20 +120,27 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
      */
     public function getUsageCostsForFlavorImageRegionCombinationForOneInterval(Flavor $flavor, Image $image, Region $region) : float
     {
-        return $this->getMaximumUsageCostsForFlavorForOneInterval($flavor);
+        return $this->getMaximumUsageCostsForKindForOneInterval($flavor);
     }
 
-    public function getMaximumUsageCostsForFlavorForOneInterval(Flavor $flavor) : float
+    public function getMaximumUsageCostsForKindForOneInterval(RemoteDesktopKind $kind) : float
     {
-        if ($flavor->getInternalName() === 'Air') {
+        if ($kind->getFlavor()->getInternalName() === 'Air') {
             return 0.07;
         }
 
-        if ($flavor->getInternalName() === 'GPU+') {
+        if ($kind->getFlavor()->getInternalName() === 'GPU+') {
             return 0.60;
         }
 
-        throw new \Exception('Unknown flavor ' . $flavor->getInternalName());
+        throw new \Exception('Unknown flavor ' . $kind->getFlavor()->getInternalName());
+    }
+
+    public function getMaximumProvisioningCostsForKindForOneInterval(RemoteDesktopKind $kind) : float
+    {
+        return $this->getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
+            $kind->getFlavor(), $this->images[0], $this->regions[0], 100, 0
+        );
     }
 
     public function getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(

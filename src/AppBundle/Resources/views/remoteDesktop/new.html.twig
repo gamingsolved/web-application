@@ -33,22 +33,38 @@
                                     >
 
                                     <label for="remotedesktopkind-{{ remoteDesktopKind.identifier }}" class="required well remotedesktopkind-label">
-                                        <span class="remotedesktopkind-name">{{ remoteDesktopKind.name|trans }}</span>
-                                        <br>
-                                        <span class="label label-default">{{ remoteDesktopKind.flavor.humanName|trans }}</span>
+                                        <p>
+                                            <span class="remotedesktopkind-name">{{ remoteDesktopKind.name|trans }}</span>
+                                        </p>
+
+                                        <p>
+                                            &#8226; {{ "remoteDesktop.new.form.available_in_regions"|trans }}
+                                            {% for region in remoteDesktopKind.availableRegions %}
+                                                <span class="label label-success">{{ region.humanName|trans }}</span>
+                                            {% endfor %}
+                                        </p>
+                                        <p>
+                                            &#8226; {{ "remoteDesktop.new.form.hardware_setup"|trans }}
+                                            <strong>{{ remoteDesktopKind.flavor.humanName|trans }}</strong>
+                                        </p>
 
                                         <hr>
-                                        {{ "remoteDesktop.new.form.available_in_regions"|trans }}
-                                        {% for region in remoteDesktopKind.availableRegions %}
-                                            <span class="label label-success">{{ region.humanName|trans }}</span>
-                                        {% endfor %}
+                                        <div class="panel panel-success remotedesktopkind-usagecostsforoneinterval">
+                                            <div class="panel-heading text-center">
+                                                <strong>
+                                                    {{ remoteDesktopKind.maximumUsageCostsForOneInterval|localizedcurrency('USD') }}
+                                                    {{ ("remoteDesktop.new.form.usage_"  ~ remoteDesktopKind.cloudInstanceProvider.usageCostsIntervalAsString)|trans }}
+                                                </strong>
+                                                &#8226;
+                                                {{ remoteDesktopKind.maximumProvisioningCostsForOneInterval|localizedcurrency('USD') }}
+                                                {{ ("remoteDesktop.new.form.storage_"  ~ remoteDesktopKind.cloudInstanceProvider.provisioningCostsIntervalAsString)|trans }}
+                                            </div>
+                                        </div>
 
-                                        <span class="pull-right remotedesktopkind-usagecostsforoneinterval">
-                                            <strong>{{ remoteDesktopKind.maximumUsageCostsForOneInterval|localizedcurrency('USD') }}</strong>
-                                            {{ "remoteDesktop.new.form.per_usage_hour"|trans }}
-                                        </span>
                                     </label>
                                 </div>
+
+                                <hr>
 
                             {% endfor %}
 

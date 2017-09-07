@@ -412,28 +412,14 @@ class RemoteDesktop
         return $this->getCloudInstanceProvider()->getProvisioningCostsInterval();
     }
 
-    protected function getCostsIntervalAsString(int $costsIntervalIntValue) : string
-    {
-        switch ($costsIntervalIntValue) {
-            case RemoteDesktop::COSTS_INTERVAL_HOURLY:
-                return 'hourly';
-                break;
-            case RemoteDesktop::COSTS_INTERVAL_MONTHLY:
-                return 'monthly';
-                break;
-            default:
-                throw new \Exception('Unknown costs interval ' . $this->getUsageCostsInterval());
-        }
-    }
-
     public function getUsageCostsIntervalAsString() : string
     {
-        return $this->getCostsIntervalAsString($this->getUsageCostsInterval());
+        return $this->getCloudInstanceProvider()->getUsageCostsIntervalAsString();
     }
 
     public function getProvisioningCostsIntervalAsString() : string
     {
-        return $this->getCostsIntervalAsString($this->getProvisioningCostsInterval());
+        return $this->getCloudInstanceProvider()->getProvisioningCostsIntervalAsString();
     }
 
     public function getUsageCostsForOneInterval() : float

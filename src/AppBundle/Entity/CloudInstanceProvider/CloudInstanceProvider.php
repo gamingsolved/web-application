@@ -31,12 +31,18 @@ interface CloudInstanceProviderInterface
 
     public function getProvisioningCostsInterval(): int;
 
+    public function getUsageCostsIntervalAsString() : string;
+
+    public function getProvisioningCostsIntervalAsString() : string;
+
     public function getUsageCostsForFlavorImageRegionCombinationForOneInterval(Flavor $flavor, Image $image, Region $region) : float;
 
     public function getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
         Flavor $flavor, Image $image, Region $region, int $rootVolumeSize, int $additionalVolumeSize) : float;
 
-    public function getMaximumUsageCostsForFlavorForOneInterval(Flavor $flavor) : float;
+    public function getMaximumUsageCostsForKindForOneInterval(RemoteDesktopKind $kind) : float;
+
+    public function getMaximumProvisioningCostsForKindForOneInterval(RemoteDesktopKind $kind) : float;
 
     public function hasLatencycheckEndpoints() : bool;
 }
@@ -93,6 +99,30 @@ abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
     public function getProvisioningCostsInterval(): int
     {
         return $this->provisioningCostsInterval;
+    }
+
+    public function getUsageCostsIntervalAsString() : string
+    {
+        return $this->getCostsIntervalAsString($this->getUsageCostsInterval());
+    }
+
+    public function getProvisioningCostsIntervalAsString() : string
+    {
+        return $this->getCostsIntervalAsString($this->getProvisioningCostsInterval());
+    }
+
+    protected function getCostsIntervalAsString(int $costsIntervalIntValue) : string
+    {
+        switch ($costsIntervalIntValue) {
+            case RemoteDesktop::COSTS_INTERVAL_HOURLY:
+                return 'hourly';
+                break;
+            case RemoteDesktop::COSTS_INTERVAL_MONTHLY:
+                return 'monthly';
+                break;
+            default:
+                throw new \Exception('Unknown costs interval ' . $this->getUsageCostsInterval());
+        }
     }
 
 }

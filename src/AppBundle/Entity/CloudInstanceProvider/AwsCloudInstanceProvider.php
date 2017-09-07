@@ -201,24 +201,44 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
      */
     public function getUsageCostsForFlavorImageRegionCombinationForOneInterval(Flavor $flavor, Image $image, Region $region) : float
     {
-        return $this->getMaximumUsageCostsForFlavorForOneInterval($flavor);
+        return $this->getMaximumUsageCostsForKindForOneInterval($flavor);
     }
 
-    public function getMaximumUsageCostsForFlavorForOneInterval(Flavor $flavor) : float
+    public function getMaximumUsageCostsForKindForOneInterval(RemoteDesktopKind $kind) : float
     {
-        if ($flavor->getInternalName() === 'g2.2xlarge') {
+        if ($kind->getFlavor()->getInternalName() === 'g2.2xlarge') {
             return 1.95;
         }
 
-        if ($flavor->getInternalName() === 'c4.4xlarge') {
+        if ($kind->getFlavor()->getInternalName() === 'c4.4xlarge') {
             return 1.95;
         }
 
-        if ($flavor->getInternalName() === 'g2.8xlarge') {
+        if ($kind->getFlavor()->getInternalName() === 'g2.8xlarge') {
             return 4.95;
         }
 
-        throw new \Exception('Unknown flavor ' . $flavor->getInternalName());
+        throw new \Exception('Unknown flavor ' . $kind->getFlavor()->getInternalName());
+    }
+
+    public function getMaximumProvisioningCostsForKindForOneInterval(RemoteDesktopKind $kind) : float
+    {
+        if ($kind->getFlavor()->getInternalName() === 'g2.2xlarge') {
+            $rootVolumeSize = 60;
+            $additionalVolumeSize = 200;
+        } elseif ($kind->getFlavor()->getInternalName() === 'g2.8xlarge') {
+            $rootVolumeSize = 240;
+            $additionalVolumeSize = 0;
+        } elseif ($kind->getFlavor()->getInternalName() === 'c4.4xlarge') {
+            $rootVolumeSize = 60;
+            $additionalVolumeSize = 200;
+        } else {
+            throw new \Exception('Missing root volume size mapping for flavor ' . $kind->getFlavor()->getInternalName());
+        }
+
+        return $this->getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
+            $kind->getFlavor(), $this->images[0], $this->regions[0], $rootVolumeSize, $additionalVolumeSize
+        );
     }
 
     public function getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
