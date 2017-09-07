@@ -19,8 +19,6 @@ interface RemoteDesktopKindInterface
     public function getMouseRelativeValue(): string;
 }
 
-// Never remove kinds, only add new - existing customers might have old desktops with existing kinds!
-
 /**
  * Class RemoteDesktopKind
  *
@@ -30,9 +28,15 @@ interface RemoteDesktopKindInterface
  *
  * It also encapsulates or maps to low-level cloud provider details like "in which regions can this kind of remote
  * desktop be provisioned?" or "how much does a usage hour for this kind of remote desktop cost?"
+ *
+ * This is in contrast to cloud provider specific stuff like image names etc., which are encapsulated in
+ * @see CloudInstanceProvider subclasses.
  */
 abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
 {
+
+    // Never remove kinds, only add new - existing customers might have old desktops with existing kinds!
+
     const GAMING_PRO = 0;
     const CAD_PRO = 1;
     const CAD_ULTRA = 2;
