@@ -92,6 +92,9 @@ abstract class CloudInstance implements CloudInstanceInterface
     protected $id;
 
     /* Due to the ORM 'inversedBy' logic, the ORM mapping must be defined in all children of this class! */
+    /**
+     * @var RemoteDesktop
+     */
     protected $remoteDesktop;
 
     /**
@@ -438,8 +441,8 @@ abstract class CloudInstance implements CloudInstanceInterface
     {
         return $this
             ->getCloudInstanceProvider()
-            ->getUsageCostsForFlavorImageRegionCombinationForOneInterval(
-                $this->getFlavor(),
+            ->getUsageCostsForKindImageRegionCombinationForOneInterval(
+                $this->remoteDesktop->getKind(),
                 $this->getImage(),
                 $this->getRegion()
             );

@@ -118,9 +118,9 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
     /**
      * @throws \Exception
      */
-    public function getUsageCostsForFlavorImageRegionCombinationForOneInterval(Flavor $flavor, Image $image, Region $region) : float
+    public function getUsageCostsForKindImageRegionCombinationForOneInterval(RemoteDesktopKind $kind, Image $image, Region $region) : float
     {
-        return $this->getMaximumUsageCostsForKindForOneInterval($flavor);
+        return $this->getMaximumUsageCostsForKindForOneInterval($kind);
     }
 
     public function getMaximumUsageCostsForKindForOneInterval(RemoteDesktopKind $kind) : float

@@ -68,8 +68,8 @@ class CloudInstanceController extends Controller
 
             $usageCostsForOneInterval = $cloudInstance
                 ->getCloudInstanceProvider()
-                ->getUsageCostsForFlavorImageRegionCombinationForOneInterval(
-                    $cloudInstance->getFlavor(),
+                ->getUsageCostsForKindImageRegionCombinationForOneInterval(
+                    $remoteDesktop->getKind(),
                     $cloudInstance->getImage(),
                     $cloudInstance->getRegion()
                 );
