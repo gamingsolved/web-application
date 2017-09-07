@@ -25,6 +25,18 @@ Type::addType('RemoteDesktopKindType', 'AppBundle\Entity\RemoteDesktop\RemoteDes
 Type::addType('CloudInstanceProviderType', 'AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderType');
 
 /**
+ * A RemoteDesktop is a very central (and very GamingSolved-specific) metaphor in this code base. It is the
+ * abstract representation of the product the user actually rents on GS: a remote desktop system which they can use.
+ *
+ * Abstract, however, because e.g. it does not directly represent a running VM at a cloud provider. @see CloudInstance
+ * for this. The relation of a remote desktop to a concrete VM isn't even 1:1 - when created by the end user, a remote
+ * desktop is only an "empty hull", because unless the user launches the remote desktop, there is no VM yet. Only
+ * by choosing a region to operate the remote desktop in, a concrete VM is provisioned in this region (and a
+ * CloudInstance is attached to this RemoteDesktop).
+ *
+ * It is even possible in future versions of GS that one remote desktop represents a cluster of more than one cloud VM
+ * instances.
+ *
  * @ORM\Entity
  * @ORM\Table(name="remote_desktops")
  */
