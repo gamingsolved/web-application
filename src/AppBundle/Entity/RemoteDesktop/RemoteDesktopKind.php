@@ -21,6 +21,16 @@ interface RemoteDesktopKindInterface
 
 // Never remove kinds, only add new - existing customers might have old desktops with existing kinds!
 
+/**
+ * Class RemoteDesktopKind
+ *
+ * A remote desktop kind is a high level abstraction which allows to get from a functional choice by the user - what
+ * type of desktop do I want to create - to the low-level cloud computing details (what kind of machine at which cloud
+ * provider provides the requested kind of desktop?).
+ *
+ * It also encapsulates or maps to low-level cloud provider details like "in which regions can this kind of remote
+ * desktop be provisioned?" or "how much does a usage hour for this kind of remote desktop cost?"
+ */
 abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
 {
     const GAMING_PRO = 0;
