@@ -30,7 +30,7 @@ interface RemoteDesktopKindInterface
  * desktop be provisioned?" or "how much does a usage hour for this kind of remote desktop cost?"
  *
  * This is in contrast to cloud provider specific stuff like image names etc., which are encapsulated in
- * @see CloudInstanceProvider subclasses.
+ * {@see CloudInstanceProvider} subclasses.
  */
 abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
 {
