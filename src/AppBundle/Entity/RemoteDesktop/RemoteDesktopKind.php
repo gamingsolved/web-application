@@ -17,6 +17,8 @@ interface RemoteDesktopKindInterface
     public function getMaximumUsageCostsForOneInterval(): float;
     public function getMaximumProvisioningCostsForOneInterval(): float;
     public function getMouseRelativeValue(): string;
+    public function getRootVolumeSize(): int;
+    public function getAdditionalVolumeSize(): int;
 }
 
 /**
@@ -44,6 +46,9 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
     const THREED_MEDIA_ULTRA = 4;
     const UNITY_PRO = 5;
     const GAMING_PRO_PAPERSPACE = 6;
+
+    protected $rootVolumeSize = null;
+    protected $additionalVolumeSize = null;
 
     /**
      * @throws \Exception
@@ -119,4 +124,23 @@ abstract class RemoteDesktopKind implements RemoteDesktopKindInterface
     {
         return $this->getCloudInstanceProvider()->getAvailableRegionsForKind($this);
     }
+
+    public function getRootVolumeSize(): int
+    {
+        if (!isset($this->rootVolumeSize)) {
+            throw new \Exception('Root volume size for kind ' . $this->getName() . ' is not set.');
+        } else {
+            return $this->rootVolumeSize;
+        }
+    }
+
+    public function getAdditionalVolumeSize(): int
+    {
+        if (!is_int($this->rootVolumeSize)) {
+            throw new \Exception('Additional volume size for kind ' . $this->getName() . ' is not set.');
+        } else {
+            return $this->additionalVolumeSize;
+        }
+    }
+
 }

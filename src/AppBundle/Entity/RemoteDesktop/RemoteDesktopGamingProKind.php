@@ -7,7 +7,10 @@ use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 
-class RemoteDesktopGamingProKind extends RemoteDesktopKind {
+class RemoteDesktopGamingProKind extends RemoteDesktopKind
+{
+    protected $rootVolumeSize = 60;
+    protected $additionalVolumeSize = 200;
 
     public function getIdentifier() : int
     {

@@ -8,7 +8,10 @@ use AppBundle\Entity\CloudInstanceProvider\PaperspaceCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 
-class RemoteDesktopGamingProPaperspaceKind extends RemoteDesktopKind {
+class RemoteDesktopGamingProPaperspaceKind extends RemoteDesktopKind
+{
+    protected $rootVolumeSize = 100;
+    protected $additionalVolumeSize = 0;
 
     public function getIdentifier() : int
     {

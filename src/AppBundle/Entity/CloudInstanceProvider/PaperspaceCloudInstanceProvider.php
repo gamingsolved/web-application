@@ -106,8 +106,8 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
             throw new \Exception('Cannot match kind ' . get_class($remoteDesktop->getKind()) . ' to an image.');
         }
 
-        $instance->setRootVolumeSize(100);
-        $instance->setAdditionalVolumeSize(0);
+        $instance->setRootVolumeSize($remoteDesktop->getKind()->getRootVolumeSize());
+        $instance->setAdditionalVolumeSize($remoteDesktop->getKind()->getAdditionalVolumeSize());
 
         // We use this indirection because it ensures we work with a valid region
         $instance->setRegion($this->getRegionByInternalName($region->getInternalName()));

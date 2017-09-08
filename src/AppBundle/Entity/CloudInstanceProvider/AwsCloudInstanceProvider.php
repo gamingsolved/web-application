@@ -178,17 +178,8 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             throw new \Exception('Cannot match kind ' . get_class($remoteDesktop->getKind()) . ' to an AMI.');
         }
 
-        if ($instance->getFlavor()->getInternalName() === 'g2.2xlarge') {
-            $instance->setRootVolumeSize(60);
-            $instance->setAdditionalVolumeSize(200);
-        } elseif ($instance->getFlavor()->getInternalName() === 'g2.8xlarge') {
-            $instance->setRootVolumeSize(240);
-        } elseif ($instance->getFlavor()->getInternalName() === 'c4.4xlarge') {
-            $instance->setRootVolumeSize(60);
-            $instance->setAdditionalVolumeSize(200);
-        } else {
-            throw new \Exception('Missing root volume size mapping for flavor ' . $instance->getFlavor()->getInternalName());
-        }
+        $instance->setRootVolumeSize($remoteDesktop->getKind()->getRootVolumeSize());
+        $instance->setAdditionalVolumeSize($remoteDesktop->getKind()->getAdditionalVolumeSize());
 
         // We use this indirection because it ensures we work with a valid region
         $instance->setRegion($this->getRegionByInternalName($region->getInternalName()));
