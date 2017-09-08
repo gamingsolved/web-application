@@ -233,7 +233,7 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
             $rootVolumeSize = 60;
             $additionalVolumeSize = 200;
         } else {
-            throw new \Exception('Missing root volume size mapping for flavor ' . $kind->getFlavor()->getInternalName());
+            throw new \Exception('Missing volume size mapping for flavor ' . $kind->getFlavor()->getInternalName());
         }
 
         return $this->getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
