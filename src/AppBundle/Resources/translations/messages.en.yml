@@ -284,7 +284,9 @@ remoteDesktop:
         while_in_status_and: and
         provisioning_costs_hourly: Storage costs per hour (until rig is removed)
         provisioning_costs_monthly: Storage costs per month (until rig is removed)
-        auto_stop_info: "Cost protection: This cloud gaming rig will automatically stop on"
+        auto_stop_info_1: "Auto stop cost protection feature"
+        auto_stop_info_2: "This cloud gaming rig will automatically stop on"
+        auto_stop_change_title: "Change auto stop setting:"
         auto_stop_change_first: "Set cost protection to stop this rig at the end of the"
         auto_stop_change_last: "usage hour from now."
         auto_stop_change_btn_title: "This would stop the rig on "
@@ -296,13 +298,13 @@ remoteDesktop:
         auto_stop_change_hour_5: "6th"
         auto_stop_change_hour_6: "7th"
         auto_stop_change_hour_7: "8th"
+        stop_data_safe_info: Your data is safe - everything is kept in place when your cloud gaming rig is stopped.
         add_button: Create a new cloud gaming rig
         download_client_windows: Download the Windows client
         download_client_mac: Download the Mac client
         download_client_note: "Our client needs to be installed on your local computer in order to connect to your remote gaming rig. You don't need to ever launch or configure the client application yourself - it is automatically triggered when you initiate a remote session from this webpage."
         launch_button: Launch this cloud gaming rig
         refresh_button: Refresh status
-        stop_data_safe_info: Your data is safe - everything is kept in place when your cloud gaming rig is stopped.
         start_button: Start this cloud gaming rig
         stop_button: Stop this cloud gaming rig
         stop_while_running_info: This will shedule the rig to be stopped right before you are billed another hour.

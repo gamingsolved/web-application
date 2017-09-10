@@ -143,7 +143,7 @@ class LaunchRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());
-        $this->assertContains('Cost protection', $crawler->filter('.costprotectionblock')->first()->text());
+        $this->assertContains('Auto stop cost protection feature', $crawler->filter('.costprotectionblock')->first()->text());
         $this->assertContains('current', $crawler->filter('.costprotectionblock a.btn')->first()->text());
         $this->assertContains('8th', $crawler->filter('.costprotectionblock a.btn')->eq(7)->text());
         $this->assertContains('Your data is safe - everything is kept in place when your cloud gaming rig is stopped.', $crawler->filter('.dataissafeinfo')->first()->text());
