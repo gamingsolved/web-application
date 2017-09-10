@@ -175,4 +175,19 @@ class PaperspaceCloudInstanceProvider extends CloudInstanceProvider
         return false;
     }
 
+    /**
+     * The current problem with the Paperspace integration is that upon reboot, the API for a while still reports the
+     * instance as "ready". Our code then assumes the reboot is already done and sets the instance status back to "running".
+     * Only then, after a while, the Paperspace API reports the instance as "off", so the instance management service
+     * thinks it is permanently shut down and sets our instance model to this state. THEN, again a while later, the
+     * Paperspace instance is actually rebooted and back to "ready", but we don't know this because we think the machine
+     * is and stays off.
+     *
+     * @return bool
+     */
+    public function instancesAreRebootable() : bool
+    {
+        return false;
+    }
+
 }

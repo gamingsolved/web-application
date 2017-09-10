@@ -478,4 +478,9 @@ class RemoteDesktop
         return $this->optimalHourlyAutostopTimes;
     }
 
+    public function isRebootable() : bool
+    {
+        return $this->getCloudInstanceProvider()->instancesAreRebootable();
+    }
+
 }

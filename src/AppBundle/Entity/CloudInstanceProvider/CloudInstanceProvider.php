@@ -45,6 +45,8 @@ interface CloudInstanceProviderInterface
     public function getMaximumProvisioningCostsForKindForOneInterval(RemoteDesktopKind $kind) : float;
 
     public function hasLatencycheckEndpoints() : bool;
+
+    public function instancesAreRebootable() : bool;
 }
 
 abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
@@ -61,6 +63,7 @@ abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
     public function getFlavorByInternalName(string $flavorInternalName) : Flavor
     {
         $flavors = $this->getFlavors();
+        /** @var Flavor $flavor */
         foreach ($flavors as $flavor) {
             if ($flavor->getInternalName() == $flavorInternalName) {
                 return $flavor;
@@ -72,6 +75,7 @@ abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
     public function getImageByInternalName(string $imageInternalName) : Image
     {
         $images = $this->getImages();
+        /** @var Image $image */
         foreach ($images as $image) {
             if ($image->getInternalName() == $imageInternalName) {
                 return $image;
@@ -83,6 +87,7 @@ abstract class CloudInstanceProvider implements CloudInstanceProviderInterface
     public function getRegionByInternalName(string $regionInternalName) : Region
     {
         $regions = $this->getRegions();
+        /** @var Region $region */
         foreach ($regions as $region) {
             if ($region->getInternalName() == $regionInternalName) {
                 return $region;

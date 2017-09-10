@@ -308,14 +308,16 @@
                                         <hr>
 
 
-                                        <p class="statemanagementelement">
-                                            <a href="{{ path('remotedesktops.reboot', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-warning remotedesktop-action-button">
-                                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                                                {{ "remoteDesktop.index.reboot_button"|trans }}
-                                            </a>
-                                            <br>
-                                            <span class="label label-warning">{{ "remoteDesktop.index.reboot_while_running_info"|trans }}</span>
-                                        </p>
+                                        {% if remoteDesktop.isRebootable %}
+                                            <p class="statemanagementelement">
+                                                <a href="{{ path('remotedesktops.reboot', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-warning remotedesktop-action-button">
+                                                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                                    {{ "remoteDesktop.index.reboot_button"|trans }}
+                                                </a>
+                                                <br>
+                                                <span class="label label-warning">{{ "remoteDesktop.index.reboot_while_running_info"|trans }}</span>
+                                            </p>
+                                        {% endif %}
 
                                         <p class="statemanagementelement">
                                             <a href="{{ path('remotedesktops.scheduleForStopAtEndOfUsageHour', {'remoteDesktop': remoteDesktop.id, 'usageHour': 0}) }}" class="btn btn-default remotedesktop-action-button">

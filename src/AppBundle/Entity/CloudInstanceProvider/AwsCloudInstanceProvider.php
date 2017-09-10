@@ -247,4 +247,9 @@ class AwsCloudInstanceProvider extends CloudInstanceProvider
         return true;
     }
 
+    public function instancesAreRebootable() : bool
+    {
+        return true;
+    }
+
 }
