@@ -66,7 +66,7 @@ class StopRemoteDesktopFunctionalTest extends WebTestCase
             $crawler = $client->followRedirect();
             $this->assertContains(
                 $optimalHourlyAutostopTimesForRemoteDesktop[$i]->format('F j, Y H:i:s') . ' (UTC)',
-                $crawler->filter('.costprotectionblock p')->first()->text()
+                $crawler->filter('.costprotectionblock div')->first()->text()
             );
         }
 
