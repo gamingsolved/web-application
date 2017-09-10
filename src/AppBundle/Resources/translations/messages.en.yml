@@ -415,9 +415,11 @@ accountMovement:
         thead_balance: Balance
         oclock: "h"
         account_movement_deposit_description: An amount of %moneyValue% was deposited onto your account.
-        account_movement_debit_description: An amount of %moneyValue% was debited from your account for 1 %billableItemTypeTranslation% hour of rig '%remoteDesktopTitle%'.
+        account_movement_debit_description: An amount of %moneyValue% was debited from your account for 1 %billableItemTypeTranslation% %billingInterval% of rig '%remoteDesktopTitle%'.
         billable_item_type_translation_0: usage
         billable_item_type_translation_1: storage space
+        billing_interval_hourly: hour
+        billing_interval_monthly: month
         new_account_balance: Your new account balance at this point in time is %moneyValue%.
         remote_desktop_event_became_available: The cloud gaming rig '%stringValue%' became available for remote sessions.
         remote_desktop_event_became_unavailable: The cloud gaming rig '%stringValue%' became unavailable for remote sessions.

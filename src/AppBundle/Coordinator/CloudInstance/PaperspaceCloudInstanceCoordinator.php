@@ -51,6 +51,7 @@ class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInte
             'GamingSolved machine for remoteDesktop id '
             . $cloudInstance->getRemoteDesktop()->getId()
             . ' of user ' . $cloudInstance->getRemoteDesktop()->getUser()->getUsername()
+            . ' (' . $cloudInstance->getRemoteDesktop()->getUser()->getId() . ')'
         );
         $createMachineParams->setTemplateId($cloudInstance->getImage()->getInternalName());
         $createMachineParams->setAssignPublicIp(true);

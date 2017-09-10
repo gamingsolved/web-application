@@ -146,7 +146,7 @@ class CloudInstanceManagementService
             || $cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STARTING) {
             $output->writeln('Action: probing if launch or start is complete');
             if ($cloudInstanceCoordinator->cloudInstanceIsRunning($cloudInstance)) {
-                $output->writeln('Action result: success');
+                $output->writeln('Action result: launch or start is complete');
 
                 $output->writeln('Action: Trying to get public address and Windows admin password');
 
@@ -164,7 +164,7 @@ class CloudInstanceManagementService
                     $output->writeln('Action result: failure');
                 }
             } else {
-                $output->writeln('Action result: failure');
+                $output->writeln('Action result: launch or start is not yet complete');
             }
         }
 
@@ -337,9 +337,9 @@ class CloudInstanceManagementService
                 $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
                 $this->em->persist($cloudInstance);
                 $this->em->flush();
-                $output->writeln('Action result: success');
+                $output->writeln('Action result: reboot is complete');
             } else {
-                $output->writeln('Action result: failure');
+                $output->writeln('Action result: reboot is not yet complete');
             }
         }
 
