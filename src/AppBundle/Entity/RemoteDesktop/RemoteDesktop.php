@@ -3,9 +3,11 @@
 namespace AppBundle\Entity\RemoteDesktop;
 
 use AppBundle\Entity\CloudInstance\AwsCloudInstance;
+use AppBundle\Entity\CloudInstance\PaperspaceCloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstance;
 use AppBundle\Entity\CloudInstance\CloudInstanceInterface;
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
+use AppBundle\Entity\CloudInstanceProvider\PaperspaceCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
@@ -23,6 +25,18 @@ Type::addType('RemoteDesktopKindType', 'AppBundle\Entity\RemoteDesktop\RemoteDes
 Type::addType('CloudInstanceProviderType', 'AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderType');
 
 /**
+ * A RemoteDesktop is a very central (and very GamingSolved-specific) metaphor in this code base. It is the
+ * abstract representation of the product the user actually rents on GS: a remote desktop system which they can use.
+ *
+ * Abstract, however, because e.g. it does not directly represent a running VM at a cloud provider. {@see CloudInstance}
+ * for this. The relation of a remote desktop to a concrete VM isn't even 1:1 - when created by the end user, a remote
+ * desktop is only an "empty hull", because unless the user launches the remote desktop, there is no VM yet. Only
+ * by choosing a region to operate the remote desktop in, a concrete VM is provisioned in this region (and a
+ * CloudInstance is attached to this RemoteDesktop).
+ *
+ * It is even possible in future versions of GS that one remote desktop represents a cluster of more than one cloud VM
+ * instances.
+ *
  * @ORM\Entity
  * @ORM\Table(name="remote_desktops")
  */
@@ -38,6 +52,9 @@ class RemoteDesktop
     const STATUS_TERMINATING = 5;
     const STATUS_TERMINATED = 6;
     const STATUS_REBOOTING = 7;
+
+    const COSTS_INTERVAL_HOURLY = 0;
+    const COSTS_INTERVAL_MONTHLY = 1;
 
     const HASH_SECRET = '>"13!V{_:E7 KQ3*ttV,\n|^2,a""k~Q';
 
@@ -87,6 +104,12 @@ class RemoteDesktop
     private $awsCloudInstances;
 
     /**
+     * @var Collection|\AppBundle\Entity\CloudInstance\PaperspaceCloudInstance
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\CloudInstance\PaperspaceCloudInstance", mappedBy="remoteDesktop", cascade="all")
+     */
+    private $paperspaceCloudInstances;
+
+    /**
      * @var Collection|\AppBundle\Entity\Billing\BillableItem
      * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Billing\BillableItem", mappedBy="remoteDesktop", cascade="all")
      */
@@ -105,6 +128,7 @@ class RemoteDesktop
 
     public function __construct() {
         $this->awsCloudInstances = new ArrayCollection();
+        $this->paperspaceCloudInstances = new ArrayCollection();
         $this->billableItems = new ArrayCollection();
         $this->remoteDesktopRelevantForBillingEvents = new ArrayCollection();
     }
@@ -184,6 +208,9 @@ class RemoteDesktop
         if ($this->cloudInstanceProvider instanceof AwsCloudInstanceProvider && $cloudInstance instanceof AwsCloudInstance) {
             $cloudInstance->setRemoteDesktop($this);
             $this->awsCloudInstances[] = $cloudInstance;
+        } elseif ($this->cloudInstanceProvider instanceof PaperspaceCloudInstanceProvider && $cloudInstance instanceof PaperspaceCloudInstance) {
+            $cloudInstance->setRemoteDesktop($this);
+            $this->paperspaceCloudInstances[] = $cloudInstance;
         } else {
             throw new \Exception(
                 'Cannot add cloud instance of class ' . get_class($cloudInstance) .
@@ -215,7 +242,15 @@ class RemoteDesktop
      */
     public function getCloudInstances() : Collection
     {
-        return $this->awsCloudInstances;
+        if ($this->cloudInstanceProvider instanceof AwsCloudInstanceProvider) {
+            return $this->awsCloudInstances;
+        } elseif ($this->cloudInstanceProvider instanceof PaperspaceCloudInstanceProvider) {
+            return $this->paperspaceCloudInstances;
+        } else {
+            throw new \Exception(
+                'Cannot get cloud instances of class ' . get_class($this->cloudInstanceProvider)
+            );
+        }
     }
 
     public function getStatus() : int
@@ -379,14 +414,34 @@ class RemoteDesktop
         }
     }
 
-    public function getHourlyUsageCosts() : float
+    public function getUsageCostsInterval() : int
     {
-        return $this->getActiveCloudInstance()->getHourlyUsageCosts();
+        return $this->getCloudInstanceProvider()->getUsageCostsInterval();
     }
 
-    public function getHourlyProvisioningCosts() : float
+    public function getProvisioningCostsInterval() : int
     {
-        return $this->getActiveCloudInstance()->getHourlyProvisioningCosts();
+        return $this->getCloudInstanceProvider()->getProvisioningCostsInterval();
+    }
+
+    public function getUsageCostsIntervalAsString() : string
+    {
+        return $this->getCloudInstanceProvider()->getUsageCostsIntervalAsString();
+    }
+
+    public function getProvisioningCostsIntervalAsString() : string
+    {
+        return $this->getCloudInstanceProvider()->getProvisioningCostsIntervalAsString();
+    }
+
+    public function getUsageCostsForOneInterval() : float
+    {
+        return $this->getActiveCloudInstance()->getUsageCostsForOneInterval();
+    }
+
+    public function getProvisioningCostsForOneInterval() : float
+    {
+        return $this->getActiveCloudInstance()->getProvisioningCostsForOneInterval();
     }
 
     public function getScheduledForStopAt()
@@ -421,6 +476,11 @@ class RemoteDesktop
     public function getOptimalHourlyAutostopTimes() : array
     {
         return $this->optimalHourlyAutostopTimes;
+    }
+
+    public function isRebootable() : bool
+    {
+        return $this->getCloudInstanceProvider()->instancesAreRebootable();
     }
 
 }

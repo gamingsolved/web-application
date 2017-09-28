@@ -49,6 +49,7 @@
                                                 '%moneyValue%': event.moneyValue|localizedcurrency('USD'),
                                                 '%stringValue%': event.stringValue,
                                                 '%billableItemTypeTranslation%': ('accountMovement.index.billable_item_type_translation_' ~ event.billableItemType)|trans,
+                                                '%billingInterval%': ('accountMovement.index.billing_interval_' ~ event.billingInterval)|trans,
                                                 '%remoteDesktopTitle%': event.remoteDesktopTitle
                                                 })|replace({'[br]': '<br>'})|raw
                                             }}

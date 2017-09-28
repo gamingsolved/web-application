@@ -4,31 +4,32 @@ namespace AppBundle\Entity\RemoteDesktop;
 
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
+use AppBundle\Entity\CloudInstanceProvider\PaperspaceCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Image;
 
-class RemoteDesktopGamingProKind extends RemoteDesktopKind
+class RemoteDesktopGamingProPaperspaceKind extends RemoteDesktopKind
 {
-    protected $rootVolumeSize = 60;
-    protected $additionalVolumeSize = 200;
+    protected $rootVolumeSize = 100;
+    protected $additionalVolumeSize = 0;
 
     public function getIdentifier() : int
     {
-        return RemoteDesktopKind::GAMING_PRO;
+        return RemoteDesktopKind::GAMING_PRO_PAPERSPACE;
     }
 
     public function __toString(): string
     {
-        return 'remoteDesktop.kind.gamingpro';
+        return 'remoteDesktop.kind.gamingpropaperspace';
     }
 
     public function getCloudInstanceProvider() : CloudInstanceProvider
     {
-        return new AwsCloudInstanceProvider();
+        return new PaperspaceCloudInstanceProvider();
     }
 
     public function getFlavor(): Flavor {
-        return $this->getCloudInstanceProvider()->getFlavorByInternalName('g2.2xlarge');
+        return $this->getCloudInstanceProvider()->getFlavorByInternalName('GPU+');
     }
 
     // Absolute mode makes the mouse unusable in game

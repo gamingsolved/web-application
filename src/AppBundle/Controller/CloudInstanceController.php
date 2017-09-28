@@ -66,10 +66,10 @@ class CloudInstanceController extends Controller
                 $cloudInstanceProvider->getRegionByInternalName($form->get('region')->getData())
             );
 
-            $hourlyUsageCosts = $cloudInstance
+            $usageCostsForOneInterval = $cloudInstance
                 ->getCloudInstanceProvider()
-                ->getHourlyUsageCostsForFlavorImageRegionCombination(
-                    $cloudInstance->getFlavor(),
+                ->getUsageCostsForKindImageRegionCombinationForOneInterval(
+                    $remoteDesktop->getKind(),
                     $cloudInstance->getImage(),
                     $cloudInstance->getRegion()
                 );
@@ -78,13 +78,15 @@ class CloudInstanceController extends Controller
             /** @var AccountMovementRepository $accountMovementRepository */
             $accountMovementRepository = $em->getRepository(AccountMovement::class);
 
-            if ($hourlyUsageCosts > $accountMovementRepository->getAccountBalanceForUser($user)) {
+            if ($usageCostsForOneInterval > $accountMovementRepository->getAccountBalanceForUser($user)) {
                 return $this->render(
                     'AppBundle:cloudInstance:new.html.twig',
                     [
+                        'remoteDesktop' => $remoteDesktop,
                         'insufficientAccountBalance' => true,
                         'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user),
-                        'hourlyUsageCosts' => $hourlyUsageCosts,
+                        'usageCostsForOneInterval' => $usageCostsForOneInterval,
+                        'usageCostsIntervalAsString' => $remoteDesktop->getUsageCostsIntervalAsString(),
                         'form' => $form->createView()
                     ]
                 );
@@ -102,9 +104,10 @@ class CloudInstanceController extends Controller
             return $this->render(
                 'AppBundle:cloudInstance:new.html.twig',
                 [
+                    'remoteDesktop' => $remoteDesktop,
                     'insufficientAccountBalance' => false,
                     'currentAccountBalance' => null,
-                    'hourlyUsageCosts' => null,
+                    'usageCostsForOneInterval' => null,
                     'form' => $form->createView()
                 ]
             );
@@ -145,7 +148,7 @@ class CloudInstanceController extends Controller
             }
 
         } else {
-            return $this->json('Unknown provider ' . $cloudInstanceProvider, Response::HTTP_BAD_REQUEST);
+            return $this->json('Unknown or unsupported provider ' . $cloudInstanceProvider, Response::HTTP_BAD_REQUEST);
         }
     }
 }

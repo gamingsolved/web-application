@@ -105,11 +105,11 @@ class StartRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('Current usage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(while in status Ready to use and Rebooting): $1.95', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('Current usage costs per hour', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
+        $this->assertContains('(while in status Ready to use and Rebooting): $1.95', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
 
-        $this->assertContains('Current storage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('Storage costs per hour', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
+        $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Ready to use', $crawler->filter('.remotedesktopstatus')->first()->text());

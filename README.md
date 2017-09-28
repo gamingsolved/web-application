@@ -25,6 +25,7 @@ Go to https://gamingsolved.com/en/administration/
     // Wait a moment for MySQL to start
 
     docker exec -ti ubiqmachine-mysql mysql -psecret -e "CREATE DATABASE ubiqmachine_webapp_dev;"
+    docker exec -ti ubiqmachine-mysql mysql -psecret -e "CREATE DATABASE ubiqmachine_webapp_test;"
 
     php composer.phar install
 
@@ -44,6 +45,7 @@ Go to https://gamingsolved.com/en/administration/
         jms_payment_core_encryption_secret (ThisTokenIsNotSoSecretChangeIt): def00000195a17f4515bcdbdbc271b343f07ecc53cb64d7e9ccdbdb3c10f7a74d31cbc51a1af971a0231f87976d506351213ee791c6cf8e74dc2c91e3198943eb7b7be88
 
     php bin/console --env=dev doctrine:migrations:migrate
+    php bin/console --env=test doctrine:migrations:migrate
     
     php bin/console server:start
 
@@ -105,7 +107,7 @@ If you want to present a datetime to the user, please convert at the last moment
 
     php bin/console assets:install --symlink
 
-    php bin/console --env=dev app:cloudinstancemanagement `cat ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-api-key.txt` `cat ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-api-secret.txt` ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-keypair-private-key.pem
+    php bin/console --env=dev app:cloudinstancemanagement `cat ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-api-key.txt` `cat ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-api-secret.txt` ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/aws-keypair-private-key.pem `cat ../infrastructure/puppet/modules/ubiqmachine-webapp/templates/etc/ubiqmachine-webapp/secrets/preprod/paperspace-api-key.txt`
 
     php bin/console -v --env=dev app:generatebillableitems
 

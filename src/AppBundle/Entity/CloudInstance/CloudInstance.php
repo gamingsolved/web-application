@@ -18,8 +18,8 @@ interface CloudInstanceInterface
 
     public function getCloudInstanceProvider() : CloudInstanceProviderInterface;
 
-    public function getHourlyUsageCosts() : float;
-    public function getHourlyProvisioningCosts() : float;
+    public function getUsageCostsForOneInterval() : float;
+    public function getProvisioningCostsForOneInterval() : float;
 
     public function setStatus(int $status);
     public function getStatus() : int;
@@ -91,10 +91,9 @@ abstract class CloudInstance implements CloudInstanceInterface
      */
     protected $id;
 
+    /* Due to the ORM 'inversedBy' logic, the ORM mapping must be defined in all children of this class! */
     /**
      * @var RemoteDesktop
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="awsCloudInstances")
-     * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id")
      */
     protected $remoteDesktop;
 
@@ -330,30 +329,6 @@ abstract class CloudInstance implements CloudInstanceInterface
         }
     }
 
-    public function getHourlyUsageCosts(): float
-    {
-        return $this
-            ->getCloudInstanceProvider()
-            ->getHourlyUsageCostsForFlavorImageRegionCombination(
-                $this->getFlavor(),
-                $this->getImage(),
-                $this->getRegion()
-            );
-    }
-
-    public function getHourlyProvisioningCosts(): float
-    {
-        return $this
-            ->getCloudInstanceProvider()
-            ->getHourlyProvisioningCostsForFlavorImageRegionVolumeSizesCombination(
-                $this->getFlavor(),
-                $this->getImage(),
-                $this->getRegion(),
-                $this->getRootVolumeSize(),
-                $this->getAdditionalVolumeSize()
-            );
-    }
-
     public static function getStatusName(int $status) : string {
         switch ($status) {
             case self::STATUS_IN_USE:
@@ -460,6 +435,30 @@ abstract class CloudInstance implements CloudInstanceInterface
         } else {
             return null;
         }
+    }
+
+    public function getUsageCostsForOneInterval(): float
+    {
+        return $this
+            ->getCloudInstanceProvider()
+            ->getUsageCostsForKindImageRegionCombinationForOneInterval(
+                $this->remoteDesktop->getKind(),
+                $this->getImage(),
+                $this->getRegion()
+            );
+    }
+
+    public function getProvisioningCostsForOneInterval(): float
+    {
+        return $this
+            ->getCloudInstanceProvider()
+            ->getProvisioningCostsForFlavorImageRegionVolumeSizesCombinationForOneInterval(
+                $this->getFlavor(),
+                $this->getImage(),
+                $this->getRegion(),
+                $this->getRootVolumeSize(),
+                $this->getAdditionalVolumeSize()
+            );
     }
 
 }

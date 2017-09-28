@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Billing\AccountMovement;
 use AppBundle\Entity\Billing\AccountMovementRepository;
+use AppBundle\Entity\Billing\BillableItem;
 use AppBundle\Entity\RemoteDesktop\Event\RemoteDesktopRelevantForBillingEvent;
 use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\EntityManager;
@@ -23,8 +24,19 @@ class AccountMovementController extends Controller
         float $moneyValue = 0.0,
         string $stringValue = '',
         int $billableItemType = null,
-        string $remoteDesktopTitle = '')
+        RemoteDesktop $remoteDesktop = null)
     {
+        $billingInterval = null;
+        $remoteDesktopTitle = '';
+        if (!is_null($remoteDesktop)) {
+            $remoteDesktopTitle = $remoteDesktop->getTitle();
+            if ($billableItemType === BillableItem::TYPE_USAGE) {
+                $billingInterval = $remoteDesktop->getUsageCostsIntervalAsString();
+            } elseif ($billableItemType == BillableItem::TYPE_PROVISIONING) {
+                $billingInterval = $remoteDesktop->getProvisioningCostsIntervalAsString();
+            }
+        }
+
         $key = $at->format('Y-m-d H:i');
         if (array_key_exists($key, $eventblocks)) {
             $eventblocks[$key]['events'][] = [
@@ -32,7 +44,8 @@ class AccountMovementController extends Controller
                 'moneyValue'  => $moneyValue,
                 'stringValue' => $stringValue,
                 'billableItemType' => $billableItemType,
-                'remoteDesktopTitle' => $remoteDesktopTitle
+                'remoteDesktopTitle' => $remoteDesktopTitle,
+                'billingInterval' => $billingInterval
             ];
         } else {
             $eventblocks[$key]['occuredAt'] = $at;
@@ -41,7 +54,8 @@ class AccountMovementController extends Controller
                 'moneyValue'  => $moneyValue,
                 'stringValue' => $stringValue,
                 'billableItemType' => $billableItemType,
-                'remoteDesktopTitle' => $remoteDesktopTitle
+                'remoteDesktopTitle' => $remoteDesktopTitle,
+                'billingInterval' => $billingInterval
             ];
         }
     }
@@ -97,7 +111,7 @@ class AccountMovementController extends Controller
                         abs($accountMovement->getAmount()),
                         '',
                         $accountMovement->getBillableItem()->getType(),
-                        $accountMovement->getBillableItem()->getRemoteDesktop()->getTitle()
+                        $accountMovement->getBillableItem()->getRemoteDesktop()
                     );
                 }
 

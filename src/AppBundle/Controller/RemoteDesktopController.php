@@ -129,15 +129,10 @@ class RemoteDesktopController extends Controller
 
         $choices = [];
 
-        $availableRemoteDesktopKinds = RemoteDesktopKind::getAvailableKinds();
+        $availableRemoteDesktopKinds = RemoteDesktopKind::getAvailableKinds($user);
         /** @var RemoteDesktopKind $remoteDesktopKind */
         foreach ($availableRemoteDesktopKinds as $remoteDesktopKind) {
-            $choices[
-                $t->trans((string)$remoteDesktopKind)
-                . ' — ' . $remoteDesktopKind->getFlavor()->getHumanName()
-                . ' — $' . $remoteDesktopKind->getMaximumHourlyUsageCosts()
-                . '/h'
-            ] = $remoteDesktopKind->getIdentifier();
+            $choices[] = $remoteDesktopKind->getIdentifier();
         }
 
         $form = $this->createFormBuilder()->getForm();
@@ -224,11 +219,12 @@ class RemoteDesktopController extends Controller
         /** @var AccountMovementRepository $accountMovementRepository */
         $accountMovementRepository = $em->getRepository(AccountMovement::class);
 
-        if ($remoteDesktop->getHourlyUsageCosts() > $accountMovementRepository->getAccountBalanceForUser($user)) {
+        if ($remoteDesktop->getUsageCostsForOneInterval() > $accountMovementRepository->getAccountBalanceForUser($user)) {
             return $this->render(
                 'AppBundle:remoteDesktop:insufficientAccountBalance.html.twig',
                 [
-                    'hourlyUsageCosts' => $remoteDesktop->getHourlyUsageCosts(),
+                    'usageCostsForOneInterval' => $remoteDesktop->getUsageCostsForOneInterval(),
+                    'usageCostsIntervalAsString' => $remoteDesktop->getUsageCostsIntervalAsString(),
                     'currentAccountBalance' => $accountMovementRepository->getAccountBalanceForUser($user)
                 ]
             );

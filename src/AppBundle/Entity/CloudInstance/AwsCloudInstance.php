@@ -4,6 +4,7 @@ namespace AppBundle\Entity\CloudInstance;
 
 use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProviderInterface;
+use AppBundle\Entity\RemoteDesktop\RemoteDesktop;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,6 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AwsCloudInstance extends CloudInstance
 {
+    /**
+     * @var RemoteDesktop
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\RemoteDesktop\RemoteDesktop", inversedBy="awsCloudInstances")
+     * @ORM\JoinColumn(name="remote_desktops_id", referencedColumnName="id")
+     */
+    protected $remoteDesktop;
+
     // The following fields are AWS specific
 
     /**
@@ -19,7 +27,6 @@ class AwsCloudInstance extends CloudInstance
      * @ORM\Column(name="ec2_instance_id", type="string", length=128, nullable=true)
      */
     protected $ec2InstanceId;
-
 
     public function getCloudInstanceProvider(): CloudInstanceProviderInterface
     {

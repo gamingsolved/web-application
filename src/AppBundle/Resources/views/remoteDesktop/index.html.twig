@@ -129,21 +129,21 @@
                                         </h3>
                                     {% else %}
                                         {% if remoteDesktop.status == constant('AppBundle\\Entity\\RemoteDesktop\\RemoteDesktop::STATUS_READY_TO_USE') %}
-                                            <div class="well well-sm pull-right hourlyusagecostsbox text-right">
+                                            <div class="well well-sm pull-right usagecostsforoneintervalbox text-right">
                                                 <small>
-                                                    {{ "remoteDesktop.index.current_usage_costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong> {{ "remoteDesktop.index.while_in_status_and"|trans }} <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
+                                                    {{ ("remoteDesktop.index.current_usage_costs_" ~ remoteDesktop.usageCostsIntervalAsString)|trans }}
+                                                    ({{ "remoteDesktop.index.while_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong> {{ "remoteDesktop.index.while_in_status_and"|trans }} <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>): {{ remoteDesktop.usageCostsForOneInterval|localizedcurrency('USD') }}
                                                     <br>
-                                                    {{ "remoteDesktop.index.provisioning_costs_per_hour"|trans }}: {{ remoteDesktop.hourlyProvisioningCosts|localizedcurrency('USD') }}
+                                                    {{ ("remoteDesktop.index.provisioning_costs_" ~ remoteDesktop.provisioningCostsIntervalAsString)|trans }}: {{ remoteDesktop.provisioningCostsForOneInterval|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% else %}
-                                            <div class="well well-sm pull-right hourlyusagecostsbox">
+                                            <div class="well well-sm pull-right usagecostsforoneintervalbox text-right">
                                                 <small>
-                                                    {{ "remoteDesktop.index.usage_costs_per_hour"|trans }}
-                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong> {{ "remoteDesktop.index.only_in_status_and"|trans }} <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>): {{ remoteDesktop.hourlyUsageCosts|localizedcurrency('USD') }}
+                                                    {{ ("remoteDesktop.index.usage_costs_" ~ remoteDesktop.usageCostsIntervalAsString)|trans }}
+                                                    ({{ "remoteDesktop.index.only_in_status"|trans }} <strong>{{ "remoteDesktop.status.ready_to_use"|trans }}</strong> {{ "remoteDesktop.index.only_in_status_and"|trans }} <strong>{{ "remoteDesktop.status.rebooting"|trans }}</strong>): {{ remoteDesktop.usageCostsForOneInterval|localizedcurrency('USD') }}
                                                     <br>
-                                                    {{ "remoteDesktop.index.provisioning_costs_per_hour"|trans }}: {{ remoteDesktop.hourlyProvisioningCosts|localizedcurrency('USD') }}
+                                                    {{ ("remoteDesktop.index.provisioning_costs_" ~ remoteDesktop.provisioningCostsIntervalAsString)|trans }}: {{ remoteDesktop.provisioningCostsForOneInterval|localizedcurrency('USD') }}
                                                 </small>
                                             </div>
                                         {% endif %}
@@ -308,14 +308,16 @@
                                         <hr>
 
 
-                                        <p class="statemanagementelement">
-                                            <a href="{{ path('remotedesktops.reboot', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-warning remotedesktop-action-button">
-                                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                                                {{ "remoteDesktop.index.reboot_button"|trans }}
-                                            </a>
-                                            <br>
-                                            <span class="label label-warning">{{ "remoteDesktop.index.reboot_while_running_info"|trans }}</span>
-                                        </p>
+                                        {% if remoteDesktop.isRebootable %}
+                                            <p class="statemanagementelement">
+                                                <a href="{{ path('remotedesktops.reboot', { 'remoteDesktop': remoteDesktop.id }) }}" class="btn btn-warning remotedesktop-action-button">
+                                                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                                    {{ "remoteDesktop.index.reboot_button"|trans }}
+                                                </a>
+                                                <br>
+                                                <span class="label label-warning">{{ "remoteDesktop.index.reboot_while_running_info"|trans }}</span>
+                                            </p>
+                                        {% endif %}
 
                                         <p class="statemanagementelement">
                                             <a href="{{ path('remotedesktops.scheduleForStopAtEndOfUsageHour', {'remoteDesktop': remoteDesktop.id, 'usageHour': 0}) }}" class="btn btn-default remotedesktop-action-button">
@@ -339,31 +341,37 @@
 
 
                                         <hr>
+
                                         <div class="costprotectionblock">
                                             {% if remoteDesktop.scheduledForStopAt != null %}
-                                                <p>
-                                                    <strong>
-                                                        {{ "remoteDesktop.index.auto_stop_info"|trans }}
-                                                        {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', timezone) }} ({{ timezone }}).
-                                                    </strong>
-                                                </p>
+                                                <div class="alert alert-warning">
+                                                    <strong>{{ "remoteDesktop.index.auto_stop_info_1"|trans }}</strong>
+                                                    <br>
+                                                    {{ "remoteDesktop.index.auto_stop_info_2"|trans }}
+                                                    {{ remoteDesktop.scheduledForStopAt|date('F j, Y H:i:s', timezone) }} ({{ timezone }}).
+                                                </div>
                                             {% endif %}
 
-                                            <p>
+                                            <div class="well">
+                                                <strong>{{ "remoteDesktop.index.auto_stop_change_title"|trans }}</strong>
+                                                <br>
                                                 {{ "remoteDesktop.index.auto_stop_change_first"|trans }}
+                                                <br>
                                                 {% for usageHour,optimalHourlyAutostopTime in remoteDesktop.optimalHourlyAutostopTimes %}
                                                     <a
                                                         class="btn btn-sm btn-default"
                                                         href="{{ path('remotedesktops.scheduleForStopAtEndOfUsageHour', {'remoteDesktop': remoteDesktop.id, 'usageHour': usageHour}) }}"
-                                                        title="{{ "remoteDesktop.index.auto_stop_change_btn_title"|trans }}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', timezone) }}.">
+                                                        title="{{ "remoteDesktop.index.auto_stop_change_btn_title"|trans }}{{ optimalHourlyAutostopTime|date('F j, Y H:i:s', timezone) }} ({{ timezone }}).">
                                                         {{ ("remoteDesktop.index.auto_stop_change_hour_" ~ usageHour)|trans }}
                                                     </a>
                                                 {% endfor %}
+                                                <br>
                                                 {{ "remoteDesktop.index.auto_stop_change_last"|trans }}
-                                            </p>
-                                            <p class="dataissafeinfo">
+                                            </div>
+
+                                            <div class="dataissafeinfo alert alert-success">
                                                 {{ "remoteDesktop.index.stop_data_safe_info"|trans }}
-                                            </p>
+                                            </div>
                                         </div>
                                     {% endif %}
 

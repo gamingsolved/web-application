@@ -9,9 +9,10 @@
         {{
         "insufficientAccountBalance.message_two"
         |trans(
-        {
-            "%hourlyUsageCosts%": hourlyUsageCosts|localizedcurrency('USD')
-        }
+            {
+                "%usageCostsForOneInterval%": usageCostsForOneInterval|localizedcurrency('USD'),
+                "%usageCostsInterval%": ("insufficientAccountBalance.billing_interval_" ~ usageCostsIntervalAsString)|trans
+            }
         )
         }}
 

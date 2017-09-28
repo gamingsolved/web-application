@@ -57,6 +57,6 @@ class CreateRemoteDesktopFunctionalTest extends WebTestCase
 
         $this->assertSame(400, $client->getResponse()->getStatusCode());
         $this->assertSame('application/json', $client->getResponse()->headers->get('Content-Type'));
-        $this->assertSame('"Unknown provider wrong"', $client->getResponse()->getContent());
+        $this->assertSame('"Unknown or unsupported provider wrong"', $client->getResponse()->getContent());
     }
 }

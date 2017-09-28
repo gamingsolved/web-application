@@ -22,11 +22,11 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
 
         $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('Usage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(only in status Ready to use and Rebooting): $1.95', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('Usage costs per hour', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
+        $this->assertContains('(only in status Ready to use and Rebooting): $1.95', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
 
-        $this->assertContains('Current storage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('Storage costs per hour', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
+        $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Removing...', $crawler->filter('.remotedesktopstatus')->first()->text());
@@ -59,7 +59,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         // Because it was never launched, the desktop is immediately gone
 
         $this->assertEmpty($crawler->filter('h2'));
-        $this->assertEmpty($crawler->filter('div.hourlyusagecostsbox'));
+        $this->assertEmpty($crawler->filter('div.usagecostsforoneintervalbox'));
         $this->assertEmpty($crawler->filter('h3'));
         $this->assertEmpty($crawler->filter('.remotedesktopstatus'));
 
@@ -123,7 +123,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         $crawler = $client->click($link);
 
         $this->assertEmpty($crawler->filter('h2'));
-        $this->assertEmpty($crawler->filter('div.hourlyusagecostsbox'));
+        $this->assertEmpty($crawler->filter('div.usagecostsforoneintervalbox'));
         $this->assertEmpty($crawler->filter('h3'));
         $this->assertEmpty($crawler->filter('.remotedesktopstatus'));
 
@@ -221,7 +221,7 @@ class RemoveRemoteDesktopsFunctionalTest extends WebTestCase
         $crawler = $client->click($link);
 
         $this->assertEmpty($crawler->filter('h2'));
-        $this->assertEmpty($crawler->filter('div.hourlyusagecostsbox'));
+        $this->assertEmpty($crawler->filter('div.usagecostsforoneintervalbox'));
         $this->assertEmpty($crawler->filter('h3'));
         $this->assertEmpty($crawler->filter('.remotedesktopstatus'));
 

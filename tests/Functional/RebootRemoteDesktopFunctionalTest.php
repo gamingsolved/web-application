@@ -20,11 +20,11 @@ class RebootRemoteDesktopFunctionalTest extends WebTestCase
         $crawler = $client->request('GET', '/en/remoteDesktops/');
         $this->assertContains('My first cloud gaming rig', $crawler->filter('h2')->first()->text());
 
-        $this->assertContains('Usage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(only in status Ready to use and Rebooting): $1.95', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('Usage costs per hour', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
+        $this->assertContains('(only in status Ready to use and Rebooting): $1.95', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
 
-        $this->assertContains('Current storage costs per hour', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
-        $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.hourlyusagecostsbox')->first()->text());
+        $this->assertContains('Storage costs per hour', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
+        $this->assertContains('(until rig is removed): $0.04', $crawler->filter('div.usagecostsforoneintervalbox')->first()->text());
 
         $this->assertContains('Current status:', $crawler->filter('h3')->first()->text());
         $this->assertContains('Rebooting', $crawler->filter('.remotedesktopstatus')->first()->text());

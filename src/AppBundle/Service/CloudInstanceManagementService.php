@@ -42,6 +42,7 @@ class CloudInstanceManagementService
             $input->getArgument('awsApiKey'),
             $input->getArgument('awsApiSecret'),
             $input->getArgument('awsKeypairPrivateKeyFile'),
+            $input->getArgument('paperspaceApiKey'),
             $output
         );
 
@@ -145,7 +146,7 @@ class CloudInstanceManagementService
             || $cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STARTING) {
             $output->writeln('Action: probing if launch or start is complete');
             if ($cloudInstanceCoordinator->cloudInstanceIsRunning($cloudInstance)) {
-                $output->writeln('Action result: success');
+                $output->writeln('Action result: launch or start is complete');
 
                 $output->writeln('Action: Trying to get public address and Windows admin password');
 
@@ -163,7 +164,7 @@ class CloudInstanceManagementService
                     $output->writeln('Action result: failure');
                 }
             } else {
-                $output->writeln('Action result: failure');
+                $output->writeln('Action result: launch or start is not yet complete');
             }
         }
 
@@ -172,15 +173,15 @@ class CloudInstanceManagementService
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_LAUNCH) {
 
-            $hourlyUsageCosts = $cloudInstance->getHourlyUsageCosts();
+            $usageCostsForOneInterval = $cloudInstance->getUsageCostsForOneInterval();
             $accountBalance =
                 $this->accountMovementRepository->getAccountBalanceForUser(
                     $cloudInstance->getRemoteDesktop()->getUser()
                 );
 
-            if ($hourlyUsageCosts > $accountBalance) {
+            if ($usageCostsForOneInterval > $accountBalance) {
                 $output->writeln('Action: would launch the cloud instance, but owner has insufficient balance');
-                $output->writeln('Hourly costs would be ' . $hourlyUsageCosts . ', balance is only ' . $accountBalance);
+                $output->writeln('Interval costs would be ' . $usageCostsForOneInterval . ', balance is only ' . $accountBalance);
             } else {
                 $output->writeln('Action: launching the cloud instance');
 
@@ -193,8 +194,7 @@ class CloudInstanceManagementService
                     $output->writeln('Action result: success');
                 } catch (\Exception $e) {
                     $output->writeln('Action result: failure, exception output follows');
-                    $output->writeln(get_class($e));
-                    $output->writeln($e->getMessage());
+                    $this->outputException($output, $e);
                 }
             }
         }
@@ -212,7 +212,7 @@ class CloudInstanceManagementService
                 $this->em->flush();
             } catch (\Exception $e) {
                 $output->writeln('Action result: failure, exception output follows');
-                $output->writeln($e->getMessage());
+                $this->outputException($output, $e);
             }
         }
 
@@ -236,15 +236,15 @@ class CloudInstanceManagementService
 
         if ($cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_SCHEDULED_FOR_START) {
 
-            $hourlyUsageCosts = $cloudInstance->getHourlyUsageCosts();
+            $usageCostsForOneInterval = $cloudInstance->getUsageCostsForOneInterval();
             $accountBalance = $this->accountMovementRepository
                 ->getAccountBalanceForUser(
                     $cloudInstance->getRemoteDesktop()->getUser()
                 );
 
-            if ($hourlyUsageCosts > $accountBalance) {
+            if ($usageCostsForOneInterval > $accountBalance) {
                 $output->writeln('Action: would start the cloud instance, but owner has insufficient balance');
-                $output->writeln('Hourly costs would be ' . $hourlyUsageCosts . ', balance is only ' . $accountBalance);
+                $output->writeln('Interval costs would be ' . $usageCostsForOneInterval . ', balance is only ' . $accountBalance);
             } else {
                 $output->writeln('Action: asking the cloud instance to start');
                 try {
@@ -337,13 +337,23 @@ class CloudInstanceManagementService
                 $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
                 $this->em->persist($cloudInstance);
                 $this->em->flush();
-                $output->writeln('Action result: success');
+                $output->writeln('Action result: reboot is complete');
             } else {
-                $output->writeln('Action result: failure');
+                $output->writeln('Action result: reboot is not yet complete');
             }
         }
 
 
         $output->writeln('');
+    }
+
+    protected function outputException(OutputInterface $output, \Exception $e) : void
+    {
+        $output->writeln(get_class($e));
+        $output->writeln($e->getMessage());
+        if (!is_null($e->getPrevious())) {
+            $output->writeln(get_class($e->getPrevious()));
+            $output->writeln($e->getPrevious()->getMessage());
+        }
     }
 }

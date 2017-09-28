@@ -274,14 +274,19 @@ remoteDesktop:
         click_here_to_increase_your_balance: Click here to increase your balance
         headline: Your cloud gaming rigs
         no_remote_desktops_yet: You do not yet have any cloud gaming rigs.
-        usage_costs_per_hour: Usage costs per hour
-        current_usage_costs_per_hour: Current usage costs per hour
+        usage_costs_hourly: Usage costs per hour
+        usage_costs_monthly: Usage costs per month
+        current_usage_costs_hourly: Current usage costs per hour
+        current_usage_costs_monthly: Current usage costs per month
         only_in_status: only in status
         only_in_status_and: and
         while_in_status: while in status
         while_in_status_and: and
-        provisioning_costs_per_hour: Current storage costs per hour (until rig is removed)
-        auto_stop_info: "Cost protection: This cloud gaming rig will automatically stop on"
+        provisioning_costs_hourly: Storage costs per hour (until rig is removed)
+        provisioning_costs_monthly: Storage costs per month (until rig is removed)
+        auto_stop_info_1: "Auto stop cost protection feature"
+        auto_stop_info_2: "This cloud gaming rig will automatically stop on"
+        auto_stop_change_title: "Change auto stop setting:"
         auto_stop_change_first: "Set cost protection to stop this rig at the end of the"
         auto_stop_change_last: "usage hour from now."
         auto_stop_change_btn_title: "This would stop the rig on "
@@ -293,13 +298,13 @@ remoteDesktop:
         auto_stop_change_hour_5: "6th"
         auto_stop_change_hour_6: "7th"
         auto_stop_change_hour_7: "8th"
+        stop_data_safe_info: Your data is safe - everything is kept in place when your cloud gaming rig is stopped.
         add_button: Create a new cloud gaming rig
         download_client_windows: Download the Windows client
         download_client_mac: Download the Mac client
         download_client_note: "Our client needs to be installed on your local computer in order to connect to your remote gaming rig. You don't need to ever launch or configure the client application yourself - it is automatically triggered when you initiate a remote session from this webpage."
         launch_button: Launch this cloud gaming rig
         refresh_button: Refresh status
-        stop_data_safe_info: Your data is safe - everything is kept in place when your cloud gaming rig is stopped.
         start_button: Start this cloud gaming rig
         stop_button: Stop this cloud gaming rig
         stop_while_running_info: This will shedule the rig to be stopped right before you are billed another hour.
@@ -328,10 +333,16 @@ remoteDesktop:
             title_label: Title for this cloud gaming rig:
             kind_label: What kind of cloud gaming rig do you want to create?
             kind_label_if_only_one_kind: These are your new cloud gaming rig specs:
-            per_usage_hour: per usage hour
+            available_in_regions: Available in these regions:
+            hardware_setup: Hardware setup:
+            usage_hourly: per usage hour
+            usage_monthly: per usage month
+            storage_hourly: per storage hour
+            storage_monthly: per storage month
             submit_label: Continue
     kind:
-        gamingpro: "Gaming: Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™"
+        gamingpro: "Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™"
+        gamingpropaperspace: "[BETA] Preinstalled with Steam®, Uplay™, GOG.com™ and Origin™"
         cadpro: "CAD Pro: Preinstalled Autodesk® AutoCAD® 2017 and Revit® 2017"
         cadultra: "CAD Ultra: Preinstalled Autodesk® AutoCAD® 2017 and Revit® 2017"
         3dmediapro: "3D Media Pro: Preinstalled Autodesk® Maya® 2017 and 3ds Max® 2017"
@@ -365,6 +376,7 @@ cloudInstance:
                 connecting: "Connecting..."
                 pinging: "Pinging..."
                 explanation: "Choose the region with the lowest connection latency for the best experience."
+                explanation_if_latencycheck_unavailable: "Choose the region closest to your current location."
         launch_later_button: Launch later
 
 cloudprovider:
@@ -375,6 +387,10 @@ cloudprovider:
             us-east-1: US East
             us-west-1: US West
             ap-southeast-2: Australia
+    paperspace:
+        region:
+            ny2: US East
+            ca1: US West
 
 payment:
     new:
@@ -401,9 +417,11 @@ accountMovement:
         thead_balance: Balance
         oclock: "h"
         account_movement_deposit_description: An amount of %moneyValue% was deposited onto your account.
-        account_movement_debit_description: An amount of %moneyValue% was debited from your account for 1 %billableItemTypeTranslation% hour of rig '%remoteDesktopTitle%'.
+        account_movement_debit_description: An amount of %moneyValue% was debited from your account for 1 %billableItemTypeTranslation% %billingInterval% of rig '%remoteDesktopTitle%'.
         billable_item_type_translation_0: usage
         billable_item_type_translation_1: storage space
+        billing_interval_hourly: hour
+        billing_interval_monthly: month
         new_account_balance: Your new account balance at this point in time is %moneyValue%.
         remote_desktop_event_became_available: The cloud gaming rig '%stringValue%' became available for remote sessions.
         remote_desktop_event_became_unavailable: The cloud gaming rig '%stringValue%' became unavailable for remote sessions.
@@ -420,5 +438,7 @@ accountMovement:
 
 insufficientAccountBalance:
     message_one: Your account balance is too low to use this cloud gaming rig.
-    message_two: Running this cloud gaming rig costs %hourlyUsageCosts% per hour, but your current balance is
+    message_two: Running this cloud gaming rig costs %usageCostsForOneInterval% %usageCostsInterval%, but your current balance is
     click_here_to_increase_your_balance: Click here to increase your balance now
+    billing_interval_hourly: per hour
+    billing_interval_monthly: per month

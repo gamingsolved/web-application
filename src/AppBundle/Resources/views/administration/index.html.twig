@@ -99,8 +99,8 @@
                                                                         <hr>
                                                                         <a target="_blank" href="https://{{ cloudInstance.region.internalName }}.console.aws.amazon.com/ec2/v2/home?region={{ cloudInstance.region.internalName }}#Volumes:instanceId={{ cloudInstance.providerInstanceId }};sort=desc:createTime">{{ cloudInstance.rootVolumeSize }} GiB + {{ cloudInstance.additionalVolumeSize }} GiB</a>
                                                                     </td>
-                                                                    <td width="20%">{{ cloudInstance.hourlyUsageCosts|localizedcurrency('USD') }}</td>
-                                                                    <td width="20%">{{ cloudInstance.hourlyProvisioningCosts|localizedcurrency('USD') }}</td>
+                                                                    <td width="20%">{{ cloudInstance.usageCostsForOneInterval|localizedcurrency('USD') }}</td>
+                                                                    <td width="20%">{{ cloudInstance.provisioningCostsForOneInterval|localizedcurrency('USD') }}</td>
                                                                     <td width="20%">{{ cloudInstance.runstatus }}</td>
                                                                 </tr>
                                                             {% endfor %}

@@ -6,7 +6,10 @@ use AppBundle\Entity\CloudInstanceProvider\AwsCloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\CloudInstanceProvider;
 use AppBundle\Entity\CloudInstanceProvider\ProviderElement\Flavor;
 
-class RemoteDesktop3dMediaUltraKind extends RemoteDesktopKind {
+class RemoteDesktop3dMediaUltraKind extends RemoteDesktopKind
+{
+    protected $rootVolumeSize = 240;
+    protected $additionalVolumeSize = 0;
 
     public function getIdentifier() : int
     {

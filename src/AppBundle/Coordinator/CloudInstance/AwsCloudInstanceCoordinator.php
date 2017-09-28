@@ -25,13 +25,13 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinatorInterface
      * @param array $credentials
      * @param Region $region
      * @param OutputInterface $output
-     * @param null|\Aws\Ec2\Ec2Client $ec2Client If provided, this constructor does not build its own ec2 API client
+     * @param null|\Aws\Ec2\Ec2Client $paperspaceMachinesApiClient If provided, this constructor does not build its own ec2 API client
      */
-    public function __construct(array $credentials, Region $region, OutputInterface $output, $ec2Client = null)
+    public function __construct(array $credentials, Region $region, OutputInterface $output, $paperspaceMachinesApiClient = null)
     {
         $this->keypairPrivateKey = $credentials['keypairPrivateKey'];
-        if (!is_null($ec2Client)) {
-            $this->ec2Client = $ec2Client;
+        if (!is_null($paperspaceMachinesApiClient)) {
+            $this->ec2Client = $paperspaceMachinesApiClient;
         } else {
             $sdk = new Sdk(
                 [
@@ -82,6 +82,8 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinatorInterface
         } catch (Ec2Exception $e) {
             if ($e->getAwsErrorCode() === 'InsufficientInstanceCapacity') {
                 throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_OUT_OF_INSTANCE_CAPACITY, $e);
+            } else {
+                throw new CloudProviderProblemException('Unknown EC2 error', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
             }
         }
     }
@@ -93,7 +95,11 @@ class AwsCloudInstanceCoordinator implements CloudInstanceCoordinatorInterface
      */
     public function updateCloudInstanceWithProviderSpecificInfoAfterLaunchWasTriggered(CloudInstance $cloudInstance) : void
     {
-        $cloudInstance->setEc2InstanceId($this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()]);
+        if (array_key_exists($cloudInstance->getId(), $this->cloudInstanceIds2Ec2InstanceIds)) {
+            $cloudInstance->setEc2InstanceId($this->cloudInstanceIds2Ec2InstanceIds[$cloudInstance->getId()]);
+        } else {
+            throw new \Exception('Cloud instance id ' . $cloudInstance->getId() . ' is not known to coordinator.');
+        }
     }
 
     /**
