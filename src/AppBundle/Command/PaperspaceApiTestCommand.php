@@ -22,7 +22,7 @@ class PaperspaceApiTestCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $config = PaperspaceApiClient\Configuration::getDefaultConfiguration();
-        $config->setApiKey('X-API-Key', 'c913c320317288cedd3ead548ca097');
+        $config->setApiKey('X-API-Key', '1fb6a2b8a5350cd4c05f5c30866ab2');
 
         $machinesApiClient = new PaperspaceApiClient\Api\MachinesApi(null, $config);
 

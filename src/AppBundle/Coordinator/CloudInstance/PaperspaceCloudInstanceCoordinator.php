@@ -159,10 +159,17 @@ class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInte
             $this->paperspaceMachinesApiClient->stopMachine($cloudInstance->getPsInstanceId());
         } catch (\Exception $e) {
             if ($e->getCode() === 404) {
-                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_INSTANCE_UNKNOWN, $e);
+                throw new CloudProviderProblemException(
+                    'Instance with id ' . $cloudInstance->getPsInstanceId() . ' is not known at Paperspace.',
+                    CloudProviderProblemException::CODE_INSTANCE_UNKNOWN, $e
+                );
             } else {
-                throw new CloudProviderProblemException('', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
+                throw new CloudProviderProblemException('General Paperspace API problem.', CloudProviderProblemException::CODE_GENERAL_PROBLEM, $e);
             }
+            /*
+             [401] Client error: `POST https://api.paperspace.io/machines/ps7c8hwb/stop` resulted in a `401 Unauthorized` response:
+            {"status":401,"message":"API token request quota reached"}
+             */
         }
     }
 

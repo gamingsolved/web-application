@@ -212,7 +212,7 @@ class CloudInstanceManagementService
                 $this->em->flush();
             } catch (\Exception $e) {
                 $output->writeln('Action result: failure, exception output follows');
-                $output->writeln($e->getMessage());
+                $this->outputException($output, $e);
             }
         }
 
