@@ -145,26 +145,36 @@ class CloudInstanceManagementService
         if (   $cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_LAUNCHING
             || $cloudInstance->getRunstatus() === CloudInstance::RUNSTATUS_STARTING) {
             $output->writeln('Action: probing if launch or start is complete');
-            if ($cloudInstanceCoordinator->cloudInstanceIsRunning($cloudInstance)) {
-                $output->writeln('Action result: launch or start is complete');
+            try {
+                if ($cloudInstanceCoordinator->cloudInstanceIsRunning($cloudInstance)) {
+                    $output->writeln('Action result: launch or start is complete');
 
-                $output->writeln('Action: Trying to get public address and Windows admin password');
+                    $output->writeln('Action: Trying to get public address and Windows admin password');
 
-                $publicAddress = $cloudInstanceCoordinator->getPublicAddressOfRunningCloudInstance($cloudInstance);
-                $adminPassword = $cloudInstanceCoordinator->getAdminPasswordOfRunningCloudInstance($cloudInstance);
+                    $publicAddress = $cloudInstanceCoordinator->getPublicAddressOfRunningCloudInstance($cloudInstance);
+                    $adminPassword = $cloudInstanceCoordinator->getAdminPasswordOfRunningCloudInstance($cloudInstance);
 
-                if (!is_null($publicAddress) && !is_null($adminPassword)) {
-                    $cloudInstance->setPublicAddress($publicAddress);
-                    $cloudInstance->setAdminPassword($adminPassword);
-                    $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
+                    if (!is_null($publicAddress) && !is_null($adminPassword)) {
+                        $cloudInstance->setPublicAddress($publicAddress);
+                        $cloudInstance->setAdminPassword($adminPassword);
+                        $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_RUNNING);
+                        $this->em->persist($cloudInstance);
+                        $this->em->flush();
+                        $output->writeln('Action result: success');
+                    } else {
+                        $output->writeln('Action result: failure');
+                    }
+                } else {
+                    $output->writeln('Action result: launch or start is not yet complete');
+                }
+            } catch (CloudProviderProblemException $e) {
+                $output->writeln('Action result: treatable failure');
+                if ($e->getCode() === CloudProviderProblemException::CODE_INSTANCE_UNKNOWN) {
+                    $output->writeln('Action result: the instance is unknown, setting to terminated');
+                    $cloudInstance->setRunstatus(CloudInstance::RUNSTATUS_TERMINATED);
                     $this->em->persist($cloudInstance);
                     $this->em->flush();
-                    $output->writeln('Action result: success');
-                } else {
-                    $output->writeln('Action result: failure');
                 }
-            } else {
-                $output->writeln('Action result: launch or start is not yet complete');
             }
         }
 

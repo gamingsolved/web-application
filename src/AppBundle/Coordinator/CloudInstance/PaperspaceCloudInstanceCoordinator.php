@@ -113,7 +113,11 @@ class PaperspaceCloudInstanceCoordinator implements CloudInstanceCoordinatorInte
             }
         } catch (\Exception $e) {
             $this->output->writeln($e->getMessage());
-            return false;
+            if ($e->getCode() === 404) {
+                throw new CloudProviderProblemException('instance not found', CloudProviderProblemException::CODE_INSTANCE_UNKNOWN);
+            } else {
+                return false;
+            }
         }
     }
 
