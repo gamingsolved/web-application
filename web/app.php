@@ -1,5 +1,18 @@
 <?php
 
+if (! (   $_SERVER['REQUEST_URI'] === '/'
+       || $_SERVER['REQUEST_URI'] === '/en'
+       || $_SERVER['REQUEST_URI'] === '/en/'
+       || $_SERVER['REQUEST_URI'] === '/en/mac'
+       || $_SERVER['REQUEST_URI'] === '/en/mac/'
+       || $_SERVER['REQUEST_URI'] === '/en/administration'
+       || $_SERVER['REQUEST_URI'] === '/en/administration/'
+      )
+) {
+    header('Location: /maintenance.html', true, 307);
+    die();
+}
+
 use Symfony\Component\HttpFoundation\Request;
 
 date_default_timezone_set('UTC');
