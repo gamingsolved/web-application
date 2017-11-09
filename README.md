@@ -1,12 +1,26 @@
-# ubiqmachine-webapp
+# *Gaming: Solved!* web application
 
-## Administration
+## About
 
-Promote your user:
+This is the full code base of the web application behind http://gamingsolved.com.
 
-    ./bin/console fos:user:promote your-user-name ROLE_ADMIN
+The *Gaming: Solved!* service itself is no longer actively maintained - as of November 2017, the website is still
+running, but account log in and account registration are deactivated.
 
-Go to https://gamingsolved.com/en/administration/
+The project started as a for-profit experiment in the cloud gaming market, but due to lack of time and too much
+competition, it will not be continued.
+
+Because it was built on Open Source components, I would like to give back what I can and thus publish the source code
+for educational reasons.
+
+The web application is a relatively complex Symfony 3.x application which integrates with Amazon AWS.
+
+You will find the identifier `ubiqmache` in several places of this codebase - this was the product name of the early
+version.
+
+I'm not wiping this codebase of secrets. Accounts/access related to these secrets have been removed - I hope :-)
+
+If I should ever find the time, I will write a guide to the codebase. Until then, you are on your own.
 
 
 ## Dev setup
@@ -81,6 +95,7 @@ Now open [http://127.0.0.1:8000]
     
 Now open [http://ubiqmachine.local]
 
+
 ## Coding Rules
 
 All DateTime values must always be handled as UTC, and must always explicitly be created so:
@@ -138,8 +153,6 @@ If you want to present a datetime to the user, please convert at the last moment
     screen -d -m bash -c "sudo -u www-data watch -n5 'cd /opt/ubiqmachine-webapp/prod && /usr/bin/php bin/console -v --env=prod app:generatebillableitems >> /var/tmp/ubiqmachine-webapp.prod.generatebillableitems.`date +%Y-%m-%d`.log 2>&1'"
         
     screen -d -m bash -c "sudo -u www-data watch -n5 'cd /opt/ubiqmachine-webapp/prod && /usr/bin/php bin/console --env=prod app:cloudinstancemanagement $(cat /etc/ubiqmachine-webapp/secrets/prod/aws-api-key.txt) $(cat /etc/ubiqmachine-webapp/secrets/prod/aws-api-secret.txt) /etc/ubiqmachine-webapp/secrets/prod/aws-keypair-private-key.pem >> /var/tmp/ubiqmachine-webapp.prod.cloudinstancemanagement.`date +%Y-%m-%d`.log 2>&1'"
-    
-
 
 
 ## Color scheme
