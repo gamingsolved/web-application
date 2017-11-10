@@ -4,7 +4,7 @@
 
 This is the full code base of the web application behind http://gamingsolved.com.
 
-The *Gaming: Solved!* service itself is no longer actively maintained - as of November 2017, the website is still
+The *Gaming: Solved.* service itself is no longer actively maintained - as of November 2017, the website is still
 running, but account log in and account registration are deactivated.
 
 The project started as a for-profit experiment in the cloud gaming market, but due to lack of time and too much
