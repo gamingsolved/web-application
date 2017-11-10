@@ -1,4 +1,4 @@
-# *Gaming: Solved!* web application
+# *Gaming: Solved.* web application
 
 ## About
 
